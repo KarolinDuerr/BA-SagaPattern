@@ -1,0 +1,5 @@
+rootProject.name = 'SagaPattern-EventuateTram'
+include 'FlightService'
+include 'HotelService'
+include 'TravelService'
+
