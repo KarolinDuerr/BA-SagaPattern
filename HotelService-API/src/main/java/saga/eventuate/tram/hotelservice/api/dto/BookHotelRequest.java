@@ -2,8 +2,6 @@ package saga.eventuate.tram.hotelservice.api.dto;
 
 public class BookHotelRequest {
 
-    private long id;
-
     private String country;
 
     private String city;
@@ -70,8 +68,7 @@ public class BookHotelRequest {
     @Override
     public String toString() {
         return "BookHotelRequest{" +
-                "id=" + id +
-                ", country='" + country + '\'' +
+                " country='" + country + '\'' +
                 ", city='" + city + '\'' +
                 ", duration=" + duration +
                 ", numberOfPersons=" + numberOfPersons +

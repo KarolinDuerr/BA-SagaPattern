@@ -1,5 +1,8 @@
 package saga.eventuate.tram.hotelservice.model;
 
+import saga.eventuate.tram.hotelservice.error.ErrorType;
+import saga.eventuate.tram.hotelservice.error.HotelException;
+
 import javax.persistence.Embeddable;
 import java.time.Duration;
 import java.util.Date;
@@ -7,9 +10,9 @@ import java.util.Date;
 @Embeddable
 public class StayDuration {
 
-    private Date startDate;
+    private Date arrival;
 
-    private Date endDate;
+    private Date departure;
 
     private long numberOfNights;
 
@@ -17,30 +20,30 @@ public class StayDuration {
 
     }
 
-    public StayDuration(final Date startDate, final Date endDate) {
-        validateDates(startDate, endDate);
+    public StayDuration(final Date arrival, final Date departure) throws HotelException {
+        validateDates(arrival, departure);
 
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.arrival = arrival;
+        this.departure = departure;
         this.numberOfNights = calculateNumberOfNights();
     }
 
-    public void setStartDate(final Date startDate) {
-        validateDates(startDate, endDate);
-        this.startDate = startDate;
+    public void setArrival(final Date arrival) throws HotelException {
+        validateDates(arrival, departure);
+        this.arrival = arrival;
     }
 
-    public Date getStartDate() {
-        return startDate;
+    public Date getArrival() {
+        return arrival;
     }
 
-    public void setEndDate(final Date endDate) {
-        validateDates(startDate, endDate);
-        this.endDate = endDate;
+    public void setDeparture(final Date departure) throws HotelException {
+        validateDates(arrival, departure);
+        this.departure = departure;
     }
 
-    public Date getEndDate() {
-        return endDate;
+    public Date getDeparture() {
+        return departure;
     }
 
     public void setNumberOfNights(final long numberOfNights) {
@@ -51,22 +54,22 @@ public class StayDuration {
         return numberOfNights;
     }
 
-    private void validateDates(Date startDate, Date endDate) {
-        if (!startDate.before(endDate)) {
-            // TODO throw Exception
+    private void validateDates(Date arrival, Date departure) throws HotelException {
+        if (!arrival.before(departure)) {
+            throw new HotelException(ErrorType.INVALID_PARAMETER, "The departure is before the actual arrival.");
         }
     }
 
     private long calculateNumberOfNights() {
-        Duration duration = Duration.between(startDate.toInstant(), endDate.toInstant());
+        Duration duration = Duration.between(arrival.toInstant(), departure.toInstant());
         return duration == null ? 0 : duration.toDays() - 1;
     }
 
     @Override
     public String toString() {
         return "StayDuration{" +
-                "startDate=" + startDate +
-                ", endDate=" + endDate +
+                "startDate=" + arrival +
+                ", endDate=" + departure +
                 ", numberOfNights=" + numberOfNights +
                 '}';
     }

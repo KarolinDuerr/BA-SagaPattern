@@ -4,40 +4,40 @@ import java.util.Date;
 
 public class StayDurationDTO {
 
-    private Date startDate;
+    private Date arrival;
 
-    private Date endDate;
+    private Date departure;
 
     public StayDurationDTO() {
 
     }
 
-    public StayDurationDTO(final Date startDate, final Date endDate) {
-        this.startDate = startDate;
-        this.endDate = endDate;
+    public StayDurationDTO(final Date arrival, final Date departure) {
+        this.arrival = arrival;
+        this.departure = departure;
     }
 
-    public void setStartDate(final Date startDate) {
-        this.startDate = startDate;
+    public void setArrvival(final Date arrival) {
+        this.arrival = arrival;
     }
 
-    public Date getStartDate() {
-        return startDate;
+    public Date getArrvival() {
+        return arrival;
     }
 
-    public void setEndDate(final Date endDate) {
-        this.endDate = endDate;
+    public void setDeparture(final Date departure) {
+        this.departure = departure;
     }
 
-    public Date getEndDate() {
-        return endDate;
+    public Date getDeparture() {
+        return departure;
     }
 
     @Override
     public String toString() {
         return "DurationDTO{" +
-                "startDate=" + startDate +
-                ", endDate=" + endDate +
+                "startDate=" + arrival +
+                ", endDate=" + departure +
                 '}';
     }
 }
