@@ -5,21 +5,36 @@ plugins {
 
 group 'org.example'
 version '1.0-SNAPSHOT'
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 repositories {
+    eventuateMavenRepoUrl.split(',').each { repoUrl -> maven { url repoUrl } }
+
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
     compile project(":TravelService-API")
 
+    // Springframework
     compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
     compile "org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion"
     compile "org.springframework.boot:spring-boot-starter-jetty:$springBootVersion"
 
+    // MySQL
     compile "mysql:mysql-connector-java:$mySQLVersion"
+
+    // Eventuate Tram Sagas
+    compile "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-orchestration-simple-dsl:$eventuateTramSagasVersion"
+    compile "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-participant:$eventuateTramSagasVersion"
+
+    // Eventuate Tram Core for JDB and Kafka
+    compile "io.eventuate.tram.core:eventuate-tram-spring-producer-jdbc:$eventuateTramVersion"
+    compile "io.eventuate.tram.core:eventuate-tram-spring-consumer-jdbc:$eventuateTramVersion"
+    compile "io.eventuate.tram.core:eventuate-tram-spring-consumer-kafka:$eventuateTramVersion"
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
