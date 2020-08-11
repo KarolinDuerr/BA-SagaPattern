@@ -1,14 +1,25 @@
 plugins {
     id 'java'
+    id 'org.springframework.boot' version '2.3.1.RELEASE'
 }
 
 group 'org.example'
 version '1.0-SNAPSHOT'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
+    compile project(":TravelService-API")
+
+    compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
+    compile "org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion"
+    compile "org.springframework.boot:spring-boot-starter-jetty:$springBootVersion"
+
+    compile "mysql:mysql-connector-java:$mySQLVersion"
+
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
