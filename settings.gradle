@@ -3,4 +3,5 @@ include 'FlightService'
 include 'HotelService'
 include 'TravelService'
 include 'HotelService-API'
+include 'FlightService-API'
 
