@@ -17,11 +17,11 @@ public class StayDurationDTO {
         this.departure = departure;
     }
 
-    public void setArrvival(final Date arrival) {
+    public void setArrival(final Date arrival) {
         this.arrival = arrival;
     }
 
-    public Date getArrvival() {
+    public Date getArrival() {
         return arrival;
     }
 

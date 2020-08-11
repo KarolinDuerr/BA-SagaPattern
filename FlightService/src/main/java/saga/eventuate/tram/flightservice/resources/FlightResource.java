@@ -34,14 +34,28 @@ public class FlightResource {
         logger.info("Get information about all flights.");
 
         List<FlightInformation> flightsInformation = flightService.getFlightsInformation();
+
+        if (flightsInformation == null) {
+            logger.info("Something went wrong during receiving the flights information.");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong during " +
+                    "receiving the flights information.");
+        }
+
         return ResponseEntity.ok(dtoConverter.convertToFlightInformationDTOList(flightsInformation));
     }
 
     @GetMapping("/bookings/{flightBookingId}")
-    public ResponseEntity<FlightInformationDTO> getHotelBooking(@PathVariable(value = "flightBookingId") Long flightBookingId) throws ConverterException, FlightException {
+    public ResponseEntity<FlightInformationDTO> getFlightInformation(@PathVariable(value = "flightBookingId") Long flightBookingId) throws ConverterException, FlightException {
         logger.info("Get flight booking with ID: " + flightBookingId);
 
         FlightInformation flightInformation = flightService.getFlightInformation(flightBookingId);
+
+        if (flightInformation == null) {
+            logger.info("Something went wrong during receiving the flight information.");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong during " +
+                    "receiving the flight information.");
+        }
+
         return ResponseEntity.ok(dtoConverter.convertToFlightInformationDTO(flightInformation));
     }
 

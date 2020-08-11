@@ -31,11 +31,11 @@ public class DtoConverter {
             throw new ConverterException("The duration for the stay is missing.");
         }
 
-        if (stayDurationDTO.getArrvival() == null || stayDurationDTO.getDeparture() == null) {
+        if (stayDurationDTO.getArrival() == null || stayDurationDTO.getDeparture() == null) {
             throw new ConverterException("The duration start or end date for the stay is missing.");
         }
 
-        return new StayDuration(stayDurationDTO.getArrvival(), stayDurationDTO.getDeparture());
+        return new StayDuration(stayDurationDTO.getArrival(), stayDurationDTO.getDeparture());
     }
 
     public List<HotelBookingDTO> convertToHotelBookingDTOList(List<HotelBooking> hotelBookings) throws ConverterException {
@@ -56,7 +56,6 @@ public class DtoConverter {
     public HotelBookingDTO convertToHotelBookingDTO(HotelBooking hotelBooking) throws ConverterException {
         if (hotelBooking == null) {
             throw new ConverterException(ErrorType.INTERNAL_ERROR, "The generated hotel booking could not be received" +
-                    "." +
                     ".");
         }
 

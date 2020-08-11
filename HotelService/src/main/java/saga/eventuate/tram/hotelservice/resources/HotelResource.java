@@ -35,6 +35,12 @@ public class HotelResource {
         logger.info("Get hotels.");
 
         List<HotelBooking> hotelBookings = hotelService.getHotelBookings();
+
+        if (hotelBookings == null) {
+            logger.info("Something went wrong during receiving the hotel bookings.");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong during receiving the hotel bookings.");
+        }
+
         return ResponseEntity.ok(dtoConverter.convertToHotelBookingDTOList(hotelBookings));
     }
 
@@ -43,11 +49,17 @@ public class HotelResource {
         logger.info("Get hotel with ID: " + bookingId);
 
         HotelBooking hotelBooking = hotelService.getHotelBooking(bookingId);
+
+        if (hotelBooking == null) {
+            logger.info("Something went wrong during receiving the hotel booking.");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong during receiving the hotel booking.");
+        }
+
         return ResponseEntity.ok(dtoConverter.convertToHotelBookingDTO(hotelBooking));
     }
 
     @PostMapping
-    public ResponseEntity<BookHotelResponse> bookHotel(@RequestBody final BookHotelRequest bookHotelRequest) throws ConverterException {
+    public ResponseEntity<BookHotelResponse> bookHotel(@RequestBody final BookHotelRequest bookHotelRequest) throws ConverterException, HotelException {
         logger.info("Book hotel: " + bookHotelRequest);
 
         if (bookHotelRequest == null) {
