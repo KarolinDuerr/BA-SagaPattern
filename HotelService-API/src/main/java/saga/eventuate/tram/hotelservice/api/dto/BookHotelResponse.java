@@ -8,8 +8,6 @@ public class BookHotelResponse {
 
     private String bookingStatus;
 
-    //TODO: Status?
-
     public BookHotelResponse() {
 
     }

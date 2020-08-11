@@ -14,6 +14,7 @@ import saga.eventuate.tram.hotelservice.error.ConverterException;
 import saga.eventuate.tram.hotelservice.error.HotelException;
 import saga.eventuate.tram.hotelservice.model.HotelBooking;
 import saga.eventuate.tram.hotelservice.model.HotelBookingInformation;
+import saga.eventuate.tram.hotelservice.model.dto.HotelBookingDTO;
 
 import java.util.List;
 
@@ -26,20 +27,23 @@ public class HotelResource {
     @Autowired
     private IHotelService hotelService;
 
+    @Autowired
+    private DtoConverter dtoConverter;
+
     @GetMapping("/bookings")
-    public ResponseEntity<List<HotelBooking>> getHotelBookings() { // TODO DTO
+    public ResponseEntity<List<HotelBookingDTO>> getHotelBookings() throws ConverterException {
         logger.info("Get hotels.");
 
         List<HotelBooking> hotelBookings = hotelService.getHotelBookings();
-        return ResponseEntity.ok(hotelBookings); // TODO DTO
+        return ResponseEntity.ok(dtoConverter.convertToHotelBookingDTOList(hotelBookings));
     }
 
     @GetMapping("/bookings/{bookingId}")
-    public ResponseEntity<HotelBooking> getHotelBooking(@PathVariable(value = "bookingId") Long bookingId) throws HotelException { // TODO DTO
+    public ResponseEntity<HotelBookingDTO> getHotelBooking(@PathVariable(value = "bookingId") Long bookingId) throws HotelException, ConverterException {
         logger.info("Get hotel with ID: " + bookingId);
 
         HotelBooking hotelBooking = hotelService.getHotelBooking(bookingId);
-        return ResponseEntity.ok(hotelBooking); // TODO DTO
+        return ResponseEntity.ok(dtoConverter.convertToHotelBookingDTO(hotelBooking));
     }
 
     @PostMapping
@@ -51,7 +55,7 @@ public class HotelResource {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The information to book the hotel is missing.");
         }
 
-        HotelBookingInformation requestedHotelBooking = DtoConverter.instance.convertToHotelBooking(bookHotelRequest);
+        HotelBookingInformation requestedHotelBooking = dtoConverter.convertToHotelBookingInformation(bookHotelRequest);
         HotelBooking receivedHotelBooking = hotelService.bookHotel(requestedHotelBooking);
 
         if (receivedHotelBooking == null) {
