@@ -5,9 +5,8 @@ import javax.persistence.*;
 @Embeddable
 public class HotelBookingInformation {
 
-    private String country;
-
-    private String city;
+    @Embedded
+    private Destination destination;
 
     @Embedded
     private StayDuration duration;
@@ -20,29 +19,20 @@ public class HotelBookingInformation {
 
     }
 
-    public HotelBookingInformation(final String country, final String city, final StayDuration duration,
+    public HotelBookingInformation(final Destination destination, final StayDuration duration,
                                    final int numberOfPersons, final int numberOfRooms) {
-        this.country = country;
-        this.city = city;
+        this.destination = destination;
         this.duration = duration;
         this.numberOfPersons = numberOfPersons;
         this.numberOfRooms = numberOfRooms;
     }
 
-    public void setCity(final String city) {
-        this.city = city;
+    public void setDestination(final Destination destination) {
+        this.destination = destination;
     }
 
-    public String getCity() {
-        return city;
-    }
-
-    public void setCountry(final String country) {
-        this.country = country;
-    }
-
-    public String getCountry() {
-        return country;
+    public Destination getDestination() {
+        return destination;
     }
 
     public void setDuration(final StayDuration duration) {
@@ -72,8 +62,7 @@ public class HotelBookingInformation {
     @Override
     public String toString() {
         return "HotelBookingInformation{" +
-                "country='" + country + '\'' +
-                ", city='" + city + '\'' +
+                "destination=" + destination +
                 ", duration=" + duration +
                 ", numberOfPersons=" + numberOfPersons +
                 ", numberOfRooms=" + numberOfRooms +

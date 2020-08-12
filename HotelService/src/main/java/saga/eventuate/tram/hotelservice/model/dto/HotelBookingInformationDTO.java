@@ -1,12 +1,11 @@
 package saga.eventuate.tram.hotelservice.model.dto;
 
+import saga.eventuate.tram.hotelservice.api.dto.DestinationDTO;
 import saga.eventuate.tram.hotelservice.api.dto.StayDurationDTO;
 
 public class HotelBookingInformationDTO {
 
-    private String country;
-
-    private String city;
+    private DestinationDTO destination;
 
     private StayDurationDTO duration;
 
@@ -18,29 +17,20 @@ public class HotelBookingInformationDTO {
 
     }
 
-    public HotelBookingInformationDTO(final String country, final String city, final StayDurationDTO duration,
+    public HotelBookingInformationDTO(final DestinationDTO destination, final StayDurationDTO duration,
                                       final int numberOfPersons, final int numberOfRooms) {
-        this.country = country;
-        this.city = city;
+        this.destination = destination;
         this.duration = duration;
         this.numberOfPersons = numberOfPersons;
         this.numberOfRooms = numberOfRooms;
     }
 
-    public void setCity(final String city) {
-        this.city = city;
+    public void setDestination(final DestinationDTO destination) {
+        this.destination = destination;
     }
 
-    public String getCity() {
-        return city;
-    }
-
-    public void setCountry(final String country) {
-        this.country = country;
-    }
-
-    public String getCountry() {
-        return country;
+    public DestinationDTO getDestination() {
+        return destination;
     }
 
     public void setDuration(final StayDurationDTO duration) {
@@ -69,9 +59,8 @@ public class HotelBookingInformationDTO {
 
     @Override
     public String toString() {
-        return "HotelBookingInformation{" +
-                "country='" + country + '\'' +
-                ", city='" + city + '\'' +
+        return "HotelBookingInformationDTO{" +
+                "destination=" + destination +
                 ", duration=" + duration +
                 ", numberOfPersons=" + numberOfPersons +
                 ", numberOfRooms=" + numberOfRooms +

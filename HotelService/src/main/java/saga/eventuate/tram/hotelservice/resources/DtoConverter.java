@@ -1,12 +1,14 @@
 package saga.eventuate.tram.hotelservice.resources;
 
 import saga.eventuate.tram.hotelservice.api.dto.BookHotelRequest;
+import saga.eventuate.tram.hotelservice.api.dto.DestinationDTO;
 import saga.eventuate.tram.hotelservice.api.dto.StayDurationDTO;
 import saga.eventuate.tram.hotelservice.error.ConverterException;
 import saga.eventuate.tram.hotelservice.error.ErrorType;
 import saga.eventuate.tram.hotelservice.error.HotelException;
 import saga.eventuate.tram.hotelservice.model.HotelBooking;
 import saga.eventuate.tram.hotelservice.model.HotelBookingInformation;
+import saga.eventuate.tram.hotelservice.model.Destination;
 import saga.eventuate.tram.hotelservice.model.StayDuration;
 import saga.eventuate.tram.hotelservice.model.dto.HotelBookingDTO;
 import saga.eventuate.tram.hotelservice.model.dto.HotelBookingInformationDTO;
@@ -21,12 +23,21 @@ public class DtoConverter {
             throw new ConverterException("The information to book a hotel is missing.");
         }
 
-        return new HotelBookingInformation(bookHotelRequest.getCountry(), bookHotelRequest.getCity(),
-                convertToStayDuration(bookHotelRequest.getDuration()),
-                bookHotelRequest.getNumberOfPersons(), bookHotelRequest.getNumberOfRooms());
+        return new HotelBookingInformation(convertToDestination(bookHotelRequest.getDestination()),
+                convertToStayDuration(bookHotelRequest.getDuration()), bookHotelRequest.getNumberOfPersons(),
+                bookHotelRequest.getNumberOfRooms());
     }
 
-    public StayDuration convertToStayDuration(StayDurationDTO stayDurationDTO) throws ConverterException, HotelException {
+    public Destination convertToDestination(DestinationDTO destinationDTO) throws ConverterException {
+        if (destinationDTO == null) {
+            throw new ConverterException("The destination for the stay is missing.");
+        }
+
+        return new Destination(destinationDTO.getCountry(), destinationDTO.getCity());
+    }
+
+    public StayDuration convertToStayDuration(StayDurationDTO stayDurationDTO) throws ConverterException,
+            HotelException {
         if (stayDurationDTO == null) {
             throw new ConverterException("The duration for the stay is missing.");
         }
@@ -69,9 +80,17 @@ public class DtoConverter {
                     "booking is missing.");
         }
 
-        return new HotelBookingInformationDTO(hotelBookingInformation.getCountry(), hotelBookingInformation.getCity()
-                , convertToStayDurationDTO(hotelBookingInformation.getDuration()),
+        return new HotelBookingInformationDTO(convertToDestinationDTO(hotelBookingInformation.getDestination()), convertToStayDurationDTO(hotelBookingInformation.getDuration()),
                 hotelBookingInformation.getNumberOfPersons(), hotelBookingInformation.getNumberOfRooms());
+    }
+
+    public DestinationDTO convertToDestinationDTO(Destination destination) throws ConverterException {
+        if (destination == null) {
+            throw new ConverterException(ErrorType.INTERNAL_ERROR, "The destination for the received hotel booking is" +
+                    " missing.");
+        }
+
+        return new DestinationDTO(destination.getCountry(), destination.getCity());
     }
 
     public StayDurationDTO convertToStayDurationDTO(StayDuration stayDuration) throws ConverterException {
