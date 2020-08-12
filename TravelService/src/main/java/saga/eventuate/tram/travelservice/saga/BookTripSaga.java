@@ -7,7 +7,9 @@ import io.eventuate.tram.sagas.simpledsl.SimpleSaga;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import saga.eventuate.tram.flightservice.api.dto.BookFlightResponse;
+import saga.eventuate.tram.hotelservice.api.HotelServiceChannels;
 import saga.eventuate.tram.hotelservice.api.dto.BookHotelResponse;
+import saga.eventuate.tram.hotelservice.api.dto.CancelHotelBooking;
 import saga.eventuate.tram.travelservice.api.TravelServiceChannels;
 import saga.eventuate.tram.travelservice.command.RejectTripCommand;
 
@@ -49,15 +51,25 @@ public class BookTripSaga implements SimpleSaga<BookTripSagaData> {
     }
 
     private CommandWithDestination bookHotel(BookTripSagaData bookTripSagaData) {
-        return null;
+        logger.info("Trying to book a hotel.");
+
+        return CommandWithDestinationBuilder.send(bookTripSagaData.makeBookHotelRequest())
+                .to(HotelServiceChannels.hotelServiceChannel)
+                .build();
     }
 
     private void handleBookHotelReply(BookTripSagaData bookTripSagaData, BookHotelResponse bookHotelResponse) {
+        logger.info("Hotel has been successfully booked: " + bookHotelResponse.getBookingId());
 
+        bookTripSagaData.setHotelId(bookHotelResponse.getBookingId());
     }
 
     private CommandWithDestination cancelHotel(BookTripSagaData bookTripSagaData) {
-        return null;
+        logger.info("Compensating hotel booking --> cancel");
+
+        return CommandWithDestinationBuilder.send(new CancelHotelBooking(bookTripSagaData.getHotelId()))
+                .to(HotelServiceChannels.hotelServiceChannel)
+                .build();
     }
 
     private CommandWithDestination bookFlight(BookTripSagaData bookTripSagaData) {
@@ -68,7 +80,11 @@ public class BookTripSaga implements SimpleSaga<BookTripSagaData> {
     }
 
     private CommandWithDestination confirmHotel(BookTripSagaData bookTripSagaData) {
-        return null;
+        logger.info("Confirming the hotel booking: " + bookTripSagaData.getHotelId());
+
+        return CommandWithDestinationBuilder.send(new CancelHotelBooking(bookTripSagaData.getHotelId()))
+                .to(HotelServiceChannels.hotelServiceChannel)
+                .build();
     }
 
     private CommandWithDestination confirmTrip(BookTripSagaData bookTripSagaData) {
