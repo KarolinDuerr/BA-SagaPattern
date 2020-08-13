@@ -25,8 +25,9 @@ public class DtoConverter {
         TripDuration tripDuration = convertToTripDuration(bookTripRequest.getDuration());
         Location start = convertToLocation(bookTripRequest.getStart());
         Location destination = convertToLocation(bookTripRequest.getDestination());
-        return new TripInformation(tripDuration, start, destination, bookTripRequest.getNumberOfPersons(),
-                bookTripRequest.getNumberOfRooms(), bookTripRequest.getOneWayFlight(), bookTripRequest.getCustomerId());
+        return new TripInformation(tripDuration, start, destination, bookTripRequest.getTravellerNames(),
+                bookTripRequest.getNumberOfPersons(), bookTripRequest.getNumberOfRooms(),
+                bookTripRequest.getOneWayFlight(), bookTripRequest.getCustomerId());
     }
 
     public TripDuration convertToTripDuration(TripDurationDTO tripDurationDTO) throws ConverterException,
@@ -71,8 +72,9 @@ public class DtoConverter {
         LocationDTO start = convertToLocationDTO(tripInformation.getStart());
         LocationDTO destination = convertToLocationDTO(tripInformation.getDestination());
         return new TripInformationDTO(tripInformation.getId(), tripDuration, destination, start,
-                tripInformation.getNumberOfPersons(), tripInformation.getNumberOfRooms(),
-                tripInformation.getOneWayFlight(), tripInformation.getCustomerId(), tripInformation.getBookingStatus());
+                tripInformation.getTravellerNames(), tripInformation.getNumberOfPersons(),
+                tripInformation.getNumberOfRooms(), tripInformation.getOneWayFlight(),
+                tripInformation.getCustomerId(), tripInformation.getBookingStatus());
     }
 
     public TripDurationDTO convertToTripDurationDTO(TripDuration tripDuration) throws ConverterException {

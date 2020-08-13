@@ -4,6 +4,7 @@ import saga.eventuate.tram.flightservice.error.ErrorType;
 import saga.eventuate.tram.flightservice.error.FlightException;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "flightsInformation")
@@ -27,7 +28,8 @@ public class FlightInformation {
 
     private boolean oneWay;
 
-    private String travellerName;
+    @ElementCollection
+    private List<String> travellerNames;
 
     @Enumerated(EnumType.STRING)
     private BookingStatus bookingStatus;
@@ -39,27 +41,27 @@ public class FlightInformation {
     }
 
     public FlightInformation(final Flight outboundFlight, final Flight returnFlight, final boolean oneWay,
-                             final String travellerName) throws FlightException {
+                             final List<String> travellerNames) throws FlightException {
         this.oneWay = oneWay;
         if (!oneWay) {
             validateFlightDates(outboundFlight, returnFlight);
         }
         this.outboundFlight = outboundFlight;
         this.returnFlight = returnFlight;
-        this.travellerName = travellerName;
+        this.travellerNames = travellerNames;
         this.tripId = -1; // no trip assigned to this booking
         this.bookingStatus = BookingStatus.APPROVED;
     }
 
     public FlightInformation(final Flight outboundFlight, final Flight returnFlight, final boolean oneWay,
-                             final String travellerName, final int tripId) throws FlightException {
+                             final List<String> travellerNames, final int tripId) throws FlightException {
         this.oneWay = oneWay;
         if (!oneWay) {
             validateFlightDates(outboundFlight, returnFlight);
         }
         this.outboundFlight = outboundFlight;
         this.returnFlight = returnFlight;
-        this.travellerName = travellerName;
+        this.travellerNames = travellerNames;
         this.tripId = tripId;
         this.bookingStatus = BookingStatus.APPROVED;
     }
@@ -102,12 +104,12 @@ public class FlightInformation {
         this.oneWay = oneWay;
     }
 
-    public String getTravellerName() {
-        return travellerName;
+    public List<String> getTravellerNames() {
+        return travellerNames;
     }
 
-    public void setTravellerName(final String travellerName) {
-        this.travellerName = travellerName;
+    public void setTravellerNames(final List<String> travellerNames) {
+        this.travellerNames = travellerNames;
     }
 
     public BookingStatus getBookingStatus() {
@@ -119,7 +121,7 @@ public class FlightInformation {
     }
 
     private void validateFlightDates(Flight outboundFlight, Flight returnFlight) throws FlightException {
-        if (returnFlight.getFlightDateArrival().before(outboundFlight.getFlightDateDeparture())) {
+        if (returnFlight.getFlightDate().before(outboundFlight.getFlightDate())) {
             throw new FlightException(ErrorType.INVALID_PARAMETER, "The date of the return flight is before the actual " +
                     "outbound flight.");
         }
@@ -141,8 +143,9 @@ public class FlightInformation {
                 ", outboundFlight=" + outboundFlight +
                 ", returnFlight=" + returnFlight +
                 ", oneWay=" + oneWay +
-                ", travellerName='" + travellerName + '\'' +
+                ", travellerNames=" + travellerNames +
                 ", bookingStatus=" + bookingStatus +
+                ", tripId=" + tripId +
                 '}';
     }
 }

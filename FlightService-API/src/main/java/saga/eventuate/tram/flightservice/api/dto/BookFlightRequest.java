@@ -1,5 +1,7 @@
 package saga.eventuate.tram.flightservice.api.dto;
 
+import java.util.List;
+
 public class BookFlightRequest {
 
     private FlightDTO outboundFlight;
@@ -8,25 +10,25 @@ public class BookFlightRequest {
 
     private boolean oneWay;
 
-    private String travellerName;
+    private List<String> travellerNames;
 
     public BookFlightRequest() {
 
     }
 
     public BookFlightRequest(final FlightDTO outboundFlight, final FlightDTO returnFlight, final boolean oneWay,
-                             final String travellerName) {
+                             final List<String> travellerNames) {
         this.outboundFlight = outboundFlight;
         this.returnFlight = returnFlight;
         this.oneWay = oneWay;
-        this.travellerName = travellerName;
+        this.travellerNames = travellerNames;
     }
 
     public FlightDTO getOutboundFlight() {
         return outboundFlight;
     }
 
-    public void setOutboundFlight(FlightDTO outboundFlight) {
+    public void setOutboundFlight(final FlightDTO outboundFlight) {
         this.outboundFlight = outboundFlight;
     }
 
@@ -34,7 +36,7 @@ public class BookFlightRequest {
         return returnFlight;
     }
 
-    public void setReturnFlight(FlightDTO returnFlight) {
+    public void setReturnFlight(final FlightDTO returnFlight) {
         this.returnFlight = returnFlight;
     }
 
@@ -46,12 +48,12 @@ public class BookFlightRequest {
         this.oneWay = oneWay;
     }
 
-    public String getTravellerName() {
-        return travellerName;
+    public List<String> getTravellerNames() {
+        return travellerNames;
     }
 
-    public void setTravellerName(String travellerName) {
-        this.travellerName = travellerName;
+    public void setTravellerNames(final List<String> travellerNames) {
+        this.travellerNames = travellerNames;
     }
 
     @Override
@@ -60,7 +62,7 @@ public class BookFlightRequest {
                 "outboundFlight=" + outboundFlight +
                 ", returnFlight=" + returnFlight +
                 ", oneWay=" + oneWay +
-                ", travellerName='" + travellerName + '\'' +
+                ", travellerNames=" + travellerNames +
                 '}';
     }
 }

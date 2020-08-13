@@ -1,5 +1,7 @@
 package saga.eventuate.tram.travelservice.api.dto;
 
+import java.util.List;
+
 public class BookTripRequest {
 
     private TripDurationDTO duration;
@@ -7,6 +9,8 @@ public class BookTripRequest {
     private LocationDTO destination;
 
     private LocationDTO start;
+
+    private List<String> travellerNames;
 
     private int numberOfPersons;
 
@@ -20,12 +24,13 @@ public class BookTripRequest {
 
     }
 
-    private BookTripRequest(final TripDurationDTO duration, final LocationDTO destination,
-                            final LocationDTO start, final int numberOfPersons, final int numberOfRooms,
+    private BookTripRequest(final TripDurationDTO duration, final LocationDTO destination, final LocationDTO start,
+                            final List<String> travellerNames, final int numberOfPersons, final int numberOfRooms,
                             final boolean oneWayFlight, final long customerId) {
         this.duration = duration;
         this.destination = destination;
         this.start = start;
+        this.travellerNames = travellerNames;
         this.numberOfPersons = numberOfPersons;
         this.numberOfRooms = numberOfRooms;
         this.oneWayFlight = oneWayFlight;
@@ -54,6 +59,14 @@ public class BookTripRequest {
 
     public void setStart(final LocationDTO start) {
         this.start = start;
+    }
+
+    public List<String> getTravellerNames() {
+        return travellerNames;
+    }
+
+    public void setTravellerNames(List<String> travellerNames) {
+        this.travellerNames = travellerNames;
     }
 
     public int getNumberOfPersons() {
@@ -94,6 +107,7 @@ public class BookTripRequest {
                 "duration=" + duration +
                 ", destination=" + destination +
                 ", start=" + start +
+                ", travellerNames=" + travellerNames +
                 ", numberOfPersons=" + numberOfPersons +
                 ", numberOfRooms=" + numberOfRooms +
                 ", oneWayFlight=" + oneWayFlight +

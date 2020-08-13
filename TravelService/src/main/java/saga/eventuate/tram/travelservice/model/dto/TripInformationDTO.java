@@ -4,6 +4,8 @@ import saga.eventuate.tram.travelservice.api.dto.LocationDTO;
 import saga.eventuate.tram.travelservice.api.dto.TripDurationDTO;
 import saga.eventuate.tram.travelservice.model.BookingStatus;
 
+import java.util.List;
+
 public class TripInformationDTO {
 
     private Long id;
@@ -13,6 +15,8 @@ public class TripInformationDTO {
     private LocationDTO destination;
 
     private LocationDTO start;
+
+    private List<String> travellerNames;
 
     private int numberOfPersons;
 
@@ -29,12 +33,14 @@ public class TripInformationDTO {
     }
 
     public TripInformationDTO(final long id, final TripDurationDTO duration, final LocationDTO destination,
-                               final LocationDTO start, final int numberOfPersons, final int numberOfRooms,
-                               final boolean oneWayFlight, final long customerId, final BookingStatus bookingStatus) {
+                              final LocationDTO start, final List<String> travellerNames, final int numberOfPersons,
+                              final int numberOfRooms, final boolean oneWayFlight, final long customerId,
+                              final BookingStatus bookingStatus) {
         this.id = id;
         this.duration = duration;
         this.destination = destination;
         this.start = start;
+        this.travellerNames = travellerNames;
         this.numberOfPersons = numberOfPersons;
         this.numberOfRooms = numberOfRooms;
         this.oneWayFlight = oneWayFlight;
@@ -72,6 +78,14 @@ public class TripInformationDTO {
 
     public void setStart(final LocationDTO start) {
         this.start = start;
+    }
+
+    public List<String> getTravellerNames() {
+        return travellerNames;
+    }
+
+    public void setTravellerNames(List<String> travellerNames) {
+        this.travellerNames = travellerNames;
     }
 
     public int getNumberOfPersons() {
@@ -121,6 +135,7 @@ public class TripInformationDTO {
                 ", duration=" + duration +
                 ", destination=" + destination +
                 ", start=" + start +
+                ", travellerNames=" + travellerNames +
                 ", numberOfPersons=" + numberOfPersons +
                 ", numberOfRooms=" + numberOfRooms +
                 ", oneWayFlight=" + oneWayFlight +

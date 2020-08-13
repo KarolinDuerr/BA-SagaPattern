@@ -3,6 +3,8 @@ package saga.eventuate.tram.flightservice.model.dto;
 import saga.eventuate.tram.flightservice.api.dto.FlightDTO;
 import saga.eventuate.tram.flightservice.model.BookingStatus;
 
+import java.util.List;
+
 public class FlightInformationDTO {
 
     private Long id;
@@ -13,7 +15,7 @@ public class FlightInformationDTO {
 
     private boolean oneWay;
 
-    private String travellerName;
+    private List<String> travellerNames;
 
     private BookingStatus bookingStatus;
 
@@ -22,12 +24,12 @@ public class FlightInformationDTO {
     }
 
     public FlightInformationDTO(final long id, final FlightDTO outboundFlight, final FlightDTO returnFlight, final boolean oneWay,
-                                final String travellerName, BookingStatus bookingStatus) {
+                                final List<String> travellerNames, BookingStatus bookingStatus) {
         this.id = id;
         this.outboundFlight = outboundFlight;
         this.returnFlight = returnFlight;
         this.oneWay = oneWay;
-        this.travellerName = travellerName;
+        this.travellerNames = travellerNames;
         this.bookingStatus = bookingStatus;
     }
 
@@ -63,12 +65,12 @@ public class FlightInformationDTO {
         this.oneWay = oneWay;
     }
 
-    public String getTravellerName() {
-        return travellerName;
+    public List<String> getTravellerNames() {
+        return travellerNames;
     }
 
-    public void setTravellerName(final String travellerName) {
-        this.travellerName = travellerName;
+    public void setTravellerNames(final List<String> travellerNames) {
+        this.travellerNames = travellerNames;
     }
 
     public BookingStatus getBookingStatus() {
@@ -81,12 +83,12 @@ public class FlightInformationDTO {
 
     @Override
     public String toString() {
-        return "FlightInformation{" +
+        return "FlightInformationDTO{" +
                 "id=" + id +
                 ", outboundFlight=" + outboundFlight +
                 ", returnFlight=" + returnFlight +
                 ", oneWay=" + oneWay +
-                ", travellerName='" + travellerName + '\'' +
+                ", travellerNames=" + travellerNames +
                 ", bookingStatus=" + bookingStatus +
                 '}';
     }

@@ -10,23 +10,17 @@ public class FlightDTO {
 
     private String toAirport;
 
-    private Date flightDateDeparture;
-
-    private Date flightDateArrival;
-
-    private String seatNumber;
+    private Date flightDate;
 
     public FlightDTO() {
 
     }
 
-    public FlightDTO(final String country, final String fromAirport, final String toAirport, final Date flightDateDeparture, final Date flightDateArrival, final String seatNumber) {
+    public FlightDTO(final String country, final String fromAirport, final String toAirport, final Date flightDate) {
         this.country = country;
         this.fromAirport = fromAirport;
         this.toAirport = toAirport;
-        this.flightDateDeparture = flightDateDeparture;
-        this.flightDateArrival = flightDateArrival;
-        this.seatNumber = seatNumber;
+        this.flightDate = flightDate;
     }
 
     public String getCountry() {
@@ -53,28 +47,12 @@ public class FlightDTO {
         this.toAirport = toAirport;
     }
 
-    public Date getFlightDateDeparture() {
-        return flightDateDeparture;
+    public Date getFlightDate() {
+        return flightDate;
     }
 
-    public void setFlightDateDeparture(final Date flightDateDeparture) {
-        this.flightDateDeparture = flightDateDeparture;
-    }
-
-    public Date getFlightDateArrival() {
-        return flightDateArrival;
-    }
-
-    public void setFlightDateArrival(final Date flightDateArrival) {
-        this.flightDateArrival = flightDateArrival;
-    }
-
-    public String getSeatNumber() {
-        return seatNumber;
-    }
-
-    public void setSeatNumber(final String seatNumber) {
-        this.seatNumber = seatNumber;
+    public void setFlightDate(final Date flightDate) {
+        this.flightDate = flightDate;
     }
 
     @Override
@@ -83,9 +61,7 @@ public class FlightDTO {
                 "country='" + country + '\'' +
                 ", fromAirport='" + fromAirport + '\'' +
                 ", toAirport='" + toAirport + '\'' +
-                ", flightDateDeparture=" + flightDateDeparture +
-                ", flightDateArrival=" + flightDateArrival +
-                ", seatNumber='" + seatNumber + '\'' +
+                ", flightDate=" + flightDate +
                 '}';
     }
 }

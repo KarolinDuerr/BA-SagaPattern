@@ -1,6 +1,5 @@
 package saga.eventuate.tram.flightservice.model;
 
-import saga.eventuate.tram.flightservice.error.ErrorType;
 import saga.eventuate.tram.flightservice.error.FlightException;
 
 import javax.persistence.*;
@@ -24,25 +23,18 @@ public class Flight {
 
     private String toAirport;
 
-    private Date flightDateDeparture;
-
-    private Date flightDateArrival;
-
-    private String seatNumber;
+    private Date flightDate;
 
     public Flight() {
 
     }
 
     public Flight(final String country, final String fromAirport, final String toAirport,
-                  final Date flightDateDeparture, final Date flightDateArrival, final String seatNumber) throws FlightException {
+                  final Date flightDate) {
         this.country = country;
         this.fromAirport = fromAirport;
         this.toAirport = toAirport;
-        validateFlightDates(flightDateDeparture, flightDateArrival);
-        this.flightDateDeparture = flightDateDeparture;
-        this.flightDateArrival = flightDateArrival;
-        this.seatNumber = seatNumber;
+        this.flightDate = flightDate;
     }
 
     public Long getId() {
@@ -77,50 +69,23 @@ public class Flight {
         this.toAirport = toAirport;
     }
 
-    public Date getFlightDateDeparture() {
-        return flightDateDeparture;
+    public Date getFlightDate() {
+        return flightDate;
     }
 
-    public void setFlightDateDeparture(final Date flightDateDeparture) throws FlightException {
-        validateFlightDates(flightDateDeparture, this.flightDateArrival);
-        this.flightDateDeparture = flightDateDeparture;
-    }
-
-    public Date getFlightDateArrival() {
-        return flightDateArrival;
-    }
-
-    public void setFlightDateArrival(final Date flightDateArrival) throws FlightException {
-        validateFlightDates(this.flightDateDeparture, flightDateArrival);
-        this.flightDateArrival = flightDateArrival;
-    }
-
-    public String getSeatNumber() {
-        return seatNumber;
-    }
-
-    public void setSeatNumber(final String seatNumber) {
-        this.seatNumber = seatNumber;
-    }
-
-    private void validateFlightDates(Date departure, Date arrival) throws FlightException {
-        if (!departure.before(arrival)) {
-            throw new FlightException(ErrorType.INVALID_PARAMETER, "The date of the arrival is before the actual " +
-                    "departure.");
-        }
+    public void setFlightDate(final Date flightDate) {
+        this.flightDate = flightDate;
     }
 
     @Override
     public String toString() {
         return "Flight{" +
                 "id=" + id +
-//                ", version=" + version +
+                ", version=" + version +
                 ", country='" + country + '\'' +
                 ", fromAirport='" + fromAirport + '\'' +
                 ", toAirport='" + toAirport + '\'' +
-                ", flightDateDeparture=" + flightDateDeparture +
-                ", flightDateArrival=" + flightDateArrival +
-                ", seatNumber='" + seatNumber + '\'' +
+                ", flightDate=" + flightDate +
                 '}';
     }
 }

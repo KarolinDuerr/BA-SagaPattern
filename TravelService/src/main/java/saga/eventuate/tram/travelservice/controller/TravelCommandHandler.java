@@ -27,7 +27,7 @@ public class TravelCommandHandler {
     }
 
     private Message rejectTrip(CommandMessage<RejectTripCommand> command) {
-
+        return null;
     }
 
 }

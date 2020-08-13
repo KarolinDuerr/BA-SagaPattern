@@ -1,6 +1,7 @@
 package saga.eventuate.tram.travelservice.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "tripsInformation")
@@ -19,17 +20,20 @@ public class TripInformation {
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name="country", column = @Column(name="destination_country")),
-            @AttributeOverride(name="city", column = @Column(name="destination_city"))
+            @AttributeOverride(name = "country", column = @Column(name = "destination_country")),
+            @AttributeOverride(name = "city", column = @Column(name = "destination_city"))
     })
     private Location destination;
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name="country", column = @Column(name="start_country")),
-            @AttributeOverride(name="city", column = @Column(name="start_city"))
+            @AttributeOverride(name = "country", column = @Column(name = "start_country")),
+            @AttributeOverride(name = "city", column = @Column(name = "start_city"))
     })
     private Location start;
+
+    @ElementCollection
+    private List<String> travellerNames;
 
     private int numberOfPersons;
 
@@ -47,11 +51,12 @@ public class TripInformation {
     }
 
     public TripInformation(final TripDuration duration, final Location start, final Location destination,
-                            final int numberOfPersons, final int numberOfRooms,
-                            final boolean oneWayFlight, final long customerId) {
+                           final List<String> travellerNames, final int numberOfPersons, final int numberOfRooms,
+                           final boolean oneWayFlight, final long customerId) {
         this.duration = duration;
         this.start = start;
         this.destination = destination;
+        this.travellerNames = travellerNames;
         this.numberOfPersons = numberOfPersons;
         this.numberOfRooms = numberOfRooms;
         this.oneWayFlight = oneWayFlight;
@@ -89,6 +94,14 @@ public class TripInformation {
 
     public void setStart(final Location start) {
         this.start = start;
+    }
+
+    public List<String> getTravellerNames() {
+        return travellerNames;
+    }
+
+    public void setTravellerNames(List<String> travellerNames) {
+        this.travellerNames = travellerNames;
     }
 
     public int getNumberOfPersons() {
@@ -139,6 +152,7 @@ public class TripInformation {
                 ", duration=" + duration +
                 ", destination=" + destination +
                 ", start=" + start +
+                ", travellerNames=" + travellerNames +
                 ", numberOfPersons=" + numberOfPersons +
                 ", numberOfRooms=" + numberOfRooms +
                 ", oneWayFlight=" + oneWayFlight +
