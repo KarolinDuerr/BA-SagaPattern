@@ -16,6 +16,9 @@ import saga.eventuate.tram.travelservice.api.TravelServiceChannels;
 import saga.eventuate.tram.travelservice.command.ConfirmTripBooking;
 import saga.eventuate.tram.travelservice.command.RejectTripCommand;
 
+/**
+ * The defined Saga Orchestrator for booking a trip.
+ */
 public class BookTripSaga implements SimpleSaga<BookTripSagaData> {
 
     private static final Logger logger = LoggerFactory.getLogger(BookTripSaga.class);
@@ -48,7 +51,8 @@ public class BookTripSaga implements SimpleSaga<BookTripSagaData> {
     private CommandWithDestination rejectBooking(BookTripSagaData bookTripSagaData) {
         logger.info("Rejecting the trip booking.");
 
-        return CommandWithDestinationBuilder.send(new RejectTripCommand(bookTripSagaData.getTripId()))
+        return CommandWithDestinationBuilder.send(new RejectTripCommand(bookTripSagaData.getTripId(),
+                bookTripSagaData.getRejectionReason()))
                 .to(TravelServiceChannels.travelServiceChannel)
                 .build();
     }

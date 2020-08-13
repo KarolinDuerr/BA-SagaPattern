@@ -1,5 +1,8 @@
 package saga.eventuate.tram.travelservice.model;
 
+import saga.eventuate.tram.travelservice.error.ErrorType;
+import saga.eventuate.tram.travelservice.error.UnsupportedStateTransition;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -140,8 +143,36 @@ public class TripInformation {
         return bookingStatus;
     }
 
-    public void setBookingStatus(BookingStatus bookingStatus) {
-        this.bookingStatus = bookingStatus;
+    public void cancel(BookingStatus bookingStatus) throws UnsupportedStateTransition {
+        switch (bookingStatus) {
+            case PENDING:
+                this.bookingStatus = bookingStatus;
+            case CONFIRMED:
+                this.bookingStatus = bookingStatus;
+            default:
+                throw new UnsupportedStateTransition(ErrorType.UNSUPPORTED_STATE_TRANSITION, "Trip can only be " +
+                        "rejected if its still PENDING, but the current status is: " + getBookingStatus());
+        }
+    }
+
+    public void reject(BookingStatus bookingStatus) throws UnsupportedStateTransition {
+        switch (bookingStatus) {
+            case PENDING:
+                this.bookingStatus = bookingStatus;
+            default:
+                throw new UnsupportedStateTransition(ErrorType.UNSUPPORTED_STATE_TRANSITION, "Trip can only be " +
+                        "rejected if its still PENDING, but the current status is: " + getBookingStatus());
+        }
+    }
+
+    public void confirm(BookingStatus bookingStatus) throws UnsupportedStateTransition {
+        switch (bookingStatus) {
+            case PENDING:
+                this.bookingStatus = bookingStatus;
+            default:
+                throw new UnsupportedStateTransition(ErrorType.UNSUPPORTED_STATE_TRANSITION, "Trip can only be " +
+                        "confirmed if its still PENDING, but the current status is: " + getBookingStatus());
+        }
     }
 
     @Override
