@@ -1,12 +1,8 @@
 package saga.eventuate.tram.travelservice.error;
 
-public class UnsupportedStateTransition extends TravelException {
+public class UnsupportedStateTransition extends RuntimeException {
 
-    public UnsupportedStateTransition(ErrorType errorType, String message) {
-        super(errorType, message);
-    }
-
-    public UnsupportedStateTransition(ErrorType errorType, String message, Throwable cause) {
-        super(errorType, message, cause);
+    public UnsupportedStateTransition(String message) {
+        super(message);
     }
 }

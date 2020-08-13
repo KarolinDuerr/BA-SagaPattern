@@ -16,7 +16,7 @@ import saga.eventuate.tram.travelservice.error.TravelException;
 import saga.eventuate.tram.travelservice.model.RejectionReason;
 
 /**
- * The travel service saga participant for handling the commands created by the BookTripSaga.
+ * The travel service Saga Participant for handling the commands created by the BookTripSaga.
  */
 @Component
 public class TravelCommandHandler {
@@ -43,11 +43,7 @@ public class TravelCommandHandler {
         final RejectionReason rejectionReason = command.getCommand().getRejectionReason();
         logger.info("Received RejectTripCommand for tripId = " + tripId + ", rejection reason: " + rejectionReason);
 
-        try {
-            travelService.rejectTrip(tripId, rejectionReason);
-        } catch (TravelException exception) {
-            return CommandHandlerReplyBuilder.withFailure(exception);
-        }
+        travelService.rejectTrip(tripId, rejectionReason);
 
         logger.info("Successfully rejected trip with tripId = " + tripId);
         return CommandHandlerReplyBuilder.withSuccess();
@@ -57,11 +53,8 @@ public class TravelCommandHandler {
         final long tripId = command.getCommand().getTripId();
         logger.info("Received ConfirmTripBooking for tripId = " + tripId);
 
-        try {
-            travelService.confirmTripBooking(tripId);
-        } catch (TravelException exception) {
-            return CommandHandlerReplyBuilder.withFailure(exception);
-        }
+        travelService.confirmTripBooking(tripId);
+
         logger.info("Successfully confirmed trip with tripId = " + tripId);
         return CommandHandlerReplyBuilder.withSuccess();
     }

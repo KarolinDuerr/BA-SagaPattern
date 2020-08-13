@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import saga.eventuate.tram.travelservice.error.BookingNotFound;
 import saga.eventuate.tram.travelservice.error.ErrorType;
 import saga.eventuate.tram.travelservice.error.TravelException;
 import saga.eventuate.tram.travelservice.model.BookingStatus;
@@ -102,37 +103,34 @@ public class TravelService implements  ITravelService {
     }
 
     @Override
-    public void rejectTrip(Long tripId, RejectionReason rejectionReason) throws TravelException {
+    public void rejectTrip(Long tripId, RejectionReason rejectionReason) {
         logger.info("Rejecting the booked trip with ID " + tripId);
 
-        TripInformation tripInformation = getTripInformation(tripId);
+        TripInformation tripInformation = null;
+        try {
+            tripInformation = getTripInformation(tripId);
 
-        if (tripInformation == null) {
-            String message = String.format("The trip booking (ID: %d) could not be rejected.", tripId);
-            logger.info(message);
-            throw new TravelException(ErrorType.INTERNAL_ERROR, message);
+            BookingStatus newBookingStatus = convertToBookingStatus(rejectionReason);
+            tripInformation.reject(newBookingStatus);
+            tripInformationRepository.save(tripInformation);
+        } catch (TravelException exception) {
+            throw new BookingNotFound(tripId);
         }
-
-
-        BookingStatus newBookingStatus = convertToBookingStatus(rejectionReason);
-        tripInformation.reject(newBookingStatus);
-        tripInformationRepository.save(tripInformation);
     }
 
     @Override
-    public void confirmTripBooking(Long tripId) throws TravelException {
+    public void confirmTripBooking(Long tripId) {
         logger.info("Confirming the booked trip with ID " + tripId);
 
-        TripInformation tripInformation = getTripInformation(tripId);
+        TripInformation tripInformation = null;
+        try {
+            tripInformation = getTripInformation(tripId);
 
-        if (tripInformation == null) {
-            String message = String.format("The trip booking (ID: %d) could not be confirmed.", tripId);
-            logger.info(message);
-            throw new TravelException(ErrorType.INTERNAL_ERROR, message);
+            tripInformation.confirm(BookingStatus.CONFIRMED);
+            tripInformationRepository.save(tripInformation);
+        } catch (TravelException exception) {
+            throw new BookingNotFound(tripId);
         }
-
-        tripInformation.confirm(BookingStatus.CONFIRMED);
-        tripInformationRepository.save(tripInformation);
     }
 
     private BookingStatus convertToBookingStatus(RejectionReason rejectionReason) {

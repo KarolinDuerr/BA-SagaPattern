@@ -70,7 +70,7 @@ public class BookTripSagaData {
                 tripInformation.getDestination().getCity());
         StayDurationDTO stayDuration = new StayDurationDTO(tripInformation.getDuration().getStart(),
                 tripInformation.getDuration().getEnd());
-        return new BookHotelRequest(destination, stayDuration, tripInformation.getNumberOfPersons(),
+        return new BookHotelRequest(getTripId(), destination, stayDuration, tripInformation.getNumberOfPersons(),
                 tripInformation.getNumberOfPersons());
     }
 

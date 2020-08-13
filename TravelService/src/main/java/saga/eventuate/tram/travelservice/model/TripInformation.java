@@ -143,35 +143,35 @@ public class TripInformation {
         return bookingStatus;
     }
 
-    public void cancel(BookingStatus bookingStatus) throws UnsupportedStateTransition {
+    public void cancel(BookingStatus bookingStatus) {
         switch (bookingStatus) {
             case PENDING:
                 this.bookingStatus = bookingStatus;
             case CONFIRMED:
                 this.bookingStatus = bookingStatus;
             default:
-                throw new UnsupportedStateTransition(ErrorType.UNSUPPORTED_STATE_TRANSITION, "Trip can only be " +
-                        "rejected if its still PENDING, but the current status is: " + getBookingStatus());
+                throw new UnsupportedStateTransition("The trip can only be rejected if its still PENDING, but the " +
+                        "current status is: " + getBookingStatus());
         }
     }
 
-    public void reject(BookingStatus bookingStatus) throws UnsupportedStateTransition {
+    public void reject(BookingStatus bookingStatus) {
         switch (bookingStatus) {
             case PENDING:
                 this.bookingStatus = bookingStatus;
             default:
-                throw new UnsupportedStateTransition(ErrorType.UNSUPPORTED_STATE_TRANSITION, "Trip can only be " +
-                        "rejected if its still PENDING, but the current status is: " + getBookingStatus());
+                throw new UnsupportedStateTransition("The trip can only be rejected if its still PENDING, but the " +
+                        "current status is: " + getBookingStatus());
         }
     }
 
-    public void confirm(BookingStatus bookingStatus) throws UnsupportedStateTransition {
+    public void confirm(BookingStatus bookingStatus) {
         switch (bookingStatus) {
             case PENDING:
                 this.bookingStatus = bookingStatus;
             default:
-                throw new UnsupportedStateTransition(ErrorType.UNSUPPORTED_STATE_TRANSITION, "Trip can only be " +
-                        "confirmed if its still PENDING, but the current status is: " + getBookingStatus());
+                throw new UnsupportedStateTransition("The trip can only be confirmed if its still PENDING, but the " +
+                        "current status is: " + getBookingStatus());
         }
     }
 

@@ -74,7 +74,8 @@ public class BookTripSaga implements SimpleSaga<BookTripSagaData> {
     private CommandWithDestination cancelHotel(BookTripSagaData bookTripSagaData) {
         logger.info("Compensating hotel booking --> cancel");
 
-        return CommandWithDestinationBuilder.send(new CancelHotelBooking(bookTripSagaData.getHotelId()))
+        return CommandWithDestinationBuilder.send(new CancelHotelBooking(bookTripSagaData.getHotelId(),
+                bookTripSagaData.getTripId()))
                 .to(HotelServiceChannels.hotelServiceChannel)
                 .build();
     }
@@ -96,7 +97,8 @@ public class BookTripSaga implements SimpleSaga<BookTripSagaData> {
     private CommandWithDestination confirmHotel(BookTripSagaData bookTripSagaData) {
         logger.info("Confirming the hotel booking: " + bookTripSagaData.getHotelId());
 
-        return CommandWithDestinationBuilder.send(new ConfirmHotelBooking(bookTripSagaData.getHotelId()))
+        return CommandWithDestinationBuilder.send(new ConfirmHotelBooking(bookTripSagaData.getHotelId(),
+                bookTripSagaData.getTripId()))
                 .to(HotelServiceChannels.hotelServiceChannel)
                 .build();
     }

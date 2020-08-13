@@ -18,8 +18,8 @@ public interface ITravelService {
 
     boolean cancelTrip(final Long tripId) throws TravelException;
 
-    void rejectTrip(final Long tripId, final RejectionReason rejectionReason) throws TravelException;
+    void rejectTrip(final Long tripId, final RejectionReason rejectionReason);
 
-    void confirmTripBooking(final Long tripId) throws TravelException;
+    void confirmTripBooking(final Long tripId);
 
 }
