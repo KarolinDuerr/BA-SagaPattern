@@ -16,7 +16,9 @@ public interface IHotelService {
 
     HotelBooking bookHotel(HotelBookingInformation hotelBooking);
 
-    HotelBooking bookHotel(HotelBookingInformation hotelBooking, int tripId);
-
     boolean cancelHotelBooking(Long bookingId) throws HotelException;
+
+    void cancelHotelBooking(Long bookingId, Long tripId);
+
+    void confirmHotelBooking(Long bookingId, Long tripId);
 }

@@ -22,14 +22,14 @@ public class HotelBookingDTO {
         this.hotelName = hotelName;
         this.bookingInformation = bookingInformation;
         this.tripId = -1; // no trip assigned to this booking
-        this.bookingStatus = BookingStatus.APPROVED;
+        this.bookingStatus = BookingStatus.CONFIRMED;
     }
 
     public HotelBookingDTO(final String hotelName, final HotelBookingInformationDTO bookingInformation, final int tripId) {
         this.hotelName = hotelName;
         this.bookingInformation = bookingInformation;
         this.tripId = tripId;
-        this.bookingStatus = BookingStatus.APPROVED;
+        this.bookingStatus = BookingStatus.CONFIRMED;
     }
 
     public Long getId() {

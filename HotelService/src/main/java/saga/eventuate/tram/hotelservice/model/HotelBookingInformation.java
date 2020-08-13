@@ -15,12 +15,24 @@ public class HotelBookingInformation {
 
     private int numberOfRooms;
 
-    public HotelBookingInformation() {
+    private final long tripId;
 
+    public HotelBookingInformation() {
+        tripId = -1; // no trip assigned to this booking
     }
 
     public HotelBookingInformation(final Destination destination, final StayDuration duration,
                                    final int numberOfPersons, final int numberOfRooms) {
+        tripId = -1; // no trip assigned to this booking
+        this.destination = destination;
+        this.duration = duration;
+        this.numberOfPersons = numberOfPersons;
+        this.numberOfRooms = numberOfRooms;
+    }
+
+    public HotelBookingInformation(final long tripId, final Destination destination, final StayDuration duration,
+                                   final int numberOfPersons, final int numberOfRooms) {
+        this.tripId = tripId;
         this.destination = destination;
         this.duration = duration;
         this.numberOfPersons = numberOfPersons;
@@ -59,6 +71,10 @@ public class HotelBookingInformation {
         return numberOfRooms;
     }
 
+    public long getTripId() {
+        return tripId;
+    }
+
     @Override
     public String toString() {
         return "HotelBookingInformation{" +
@@ -66,6 +82,7 @@ public class HotelBookingInformation {
                 ", duration=" + duration +
                 ", numberOfPersons=" + numberOfPersons +
                 ", numberOfRooms=" + numberOfRooms +
+                ", tripId=" + tripId +
                 '}';
     }
 }

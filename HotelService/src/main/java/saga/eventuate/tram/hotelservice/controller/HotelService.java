@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import saga.eventuate.tram.hotelservice.error.BookingNotFound;
 import saga.eventuate.tram.hotelservice.error.ErrorType;
 import saga.eventuate.tram.hotelservice.error.HotelException;
 import saga.eventuate.tram.hotelservice.model.BookingStatus;
@@ -68,16 +69,6 @@ public class HotelService implements IHotelService {
     }
 
     @Override
-    public HotelBooking bookHotel(HotelBookingInformation hotelBooking, int tripId) {
-        logger.info(String.format("Saving the booked hotel: %s, with tripId= %d", hotelBooking, tripId));
-
-        HotelBooking newHotelBooking = new HotelBooking("TestHotel", hotelBooking, tripId);
-        hotelBookingRepository.save(newHotelBooking);
-
-        return newHotelBooking;
-    }
-
-    @Override
     public boolean cancelHotelBooking(Long bookingId) throws HotelException {
         logger.info("Cancelling the booked hotel with ID " + bookingId);
 
@@ -89,9 +80,47 @@ public class HotelService implements IHotelService {
             throw new HotelException(ErrorType.INTERNAL_ERROR, message);
         }
 
-        hotelBooking.setBookingStatus(BookingStatus.CANCELLED);
+        hotelBooking.cancel(BookingStatus.CANCELLED);
         hotelBookingRepository.save(hotelBooking);
 
         return true;
+    }
+
+    @Override
+    public void cancelHotelBooking(Long bookingId, Long tripId) {
+        logger.info("Cancelling the booked hotel with ID " + bookingId);
+
+        HotelBooking hotelBooking = null;
+        try {
+            hotelBooking = getHotelBooking(bookingId);
+
+            if (hotelBooking.getTripId() != tripId) {
+                throw new BookingNotFound(bookingId);
+            }
+
+            hotelBooking.cancel(BookingStatus.CANCELLED);
+            hotelBookingRepository.save(hotelBooking);
+        } catch (HotelException e) {
+            throw new BookingNotFound(bookingId);
+        }
+    }
+
+    @Override
+    public void confirmHotelBooking(Long bookingId, Long tripId) {
+        logger.info("Cancelling the booked hotel with ID " + bookingId);
+
+        HotelBooking hotelBooking = null;
+        try {
+            hotelBooking = getHotelBooking(bookingId);
+
+            if (hotelBooking.getTripId() != tripId) {
+                throw new BookingNotFound(bookingId);
+            }
+
+            hotelBooking.confirm(BookingStatus.CONFIRMED);
+            hotelBookingRepository.save(hotelBooking);
+        } catch (HotelException e) {
+            throw new BookingNotFound(bookingId);
+        }
     }
 }

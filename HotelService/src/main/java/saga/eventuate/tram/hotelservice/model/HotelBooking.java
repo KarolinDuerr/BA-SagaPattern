@@ -1,5 +1,7 @@
 package saga.eventuate.tram.hotelservice.model;
 
+import saga.eventuate.tram.hotelservice.error.UnsupportedStateTransition;
+
 import javax.persistence.*;
 
 @Entity
@@ -32,14 +34,14 @@ public class HotelBooking {
         this.hotelName = hotelName;
         this.bookingInformation = bookingInformation;
         this.tripId = -1; // no trip assigned to this booking
-        this.bookingStatus = BookingStatus.APPROVED;
+        this.bookingStatus = BookingStatus.CONFIRMED;
     }
 
     public HotelBooking(final String hotelName, final HotelBookingInformation bookingInformation, final int tripId) {
         this.hotelName = hotelName;
         this.bookingInformation = bookingInformation;
         this.tripId = tripId;
-        this.bookingStatus = BookingStatus.APPROVED;
+        this.bookingStatus = BookingStatus.PENDING;
     }
 
     public Long getId() {
@@ -70,16 +72,32 @@ public class HotelBooking {
         return bookingStatus;
     }
 
-    public void setBookingStatus(BookingStatus bookingStatus) {
-        this.bookingStatus = bookingStatus;
-    }
-
     public int getTripId() {
         return tripId;
     }
 
     public void setTripId(int tripId) {
         this.tripId = tripId;
+    }
+
+    public void cancel(BookingStatus bookingStatus) {
+        switch (bookingStatus) {
+            case PENDING:
+                this.bookingStatus = bookingStatus;
+            default:
+                throw new UnsupportedStateTransition("The hotel booking can only be rejected if its still PENDING, " +
+                        "but the current status is: " + getBookingStatus());
+        }
+    }
+
+    public void confirm(BookingStatus bookingStatus) {
+        switch (bookingStatus) {
+            case PENDING:
+                this.bookingStatus = bookingStatus;
+            default:
+                throw new UnsupportedStateTransition("The hotel booking  can only be confirmed if its still PENDING, " +
+                        "but the current status is: " + getBookingStatus());
+        }
     }
 
     @Override

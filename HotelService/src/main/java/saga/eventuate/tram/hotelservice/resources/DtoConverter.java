@@ -23,7 +23,8 @@ public class DtoConverter {
             throw new ConverterException("The information to book a hotel is missing.");
         }
 
-        return new HotelBookingInformation(convertToDestination(bookHotelRequest.getDestination()),
+        return new HotelBookingInformation(bookHotelRequest.getTripId(),
+                convertToDestination(bookHotelRequest.getDestination()),
                 convertToStayDuration(bookHotelRequest.getDuration()), bookHotelRequest.getNumberOfPersons(),
                 bookHotelRequest.getNumberOfRooms());
     }
@@ -80,7 +81,8 @@ public class DtoConverter {
                     "booking is missing.");
         }
 
-        return new HotelBookingInformationDTO(convertToDestinationDTO(hotelBookingInformation.getDestination()), convertToStayDurationDTO(hotelBookingInformation.getDuration()),
+        return new HotelBookingInformationDTO(convertToDestinationDTO(hotelBookingInformation.getDestination()),
+                convertToStayDurationDTO(hotelBookingInformation.getDuration()),
                 hotelBookingInformation.getNumberOfPersons(), hotelBookingInformation.getNumberOfRooms());
     }
 

@@ -4,6 +4,8 @@ import io.eventuate.tram.commands.common.Command;
 
 public class BookHotelRequest implements Command {
 
+    private final long tripId;
+
     private DestinationDTO destination;
 
     private StayDurationDTO duration;
@@ -13,15 +15,29 @@ public class BookHotelRequest implements Command {
     private int numberOfRooms;
 
     public BookHotelRequest() {
-
+        this.tripId = -1; // no trip assigned to this booking
     }
 
     public BookHotelRequest(final DestinationDTO destination, final StayDurationDTO duration,
+                            final int numberOfPersons, final int numberOfRooms) {
+        this.tripId = -1; // no trip assigned to this booking
+        this.destination = destination;
+        this.duration = duration;
+        this.numberOfPersons = numberOfPersons;
+        this.numberOfRooms = numberOfRooms;
+    }
+
+    public BookHotelRequest(final long tripId, final DestinationDTO destination, final StayDurationDTO duration,
                             final int numberOfPersons, final int numberOfRooms) {
         this.destination = destination;
         this.duration = duration;
         this.numberOfPersons = numberOfPersons;
         this.numberOfRooms = numberOfRooms;
+        this.tripId = tripId;
+    }
+
+    public long getTripId() {
+        return tripId;
     }
 
     public void setDestination(final DestinationDTO destination) {
@@ -59,7 +75,8 @@ public class BookHotelRequest implements Command {
     @Override
     public String toString() {
         return "BookHotelRequest{" +
-                "destination=" + destination +
+                "tripId=" + tripId +
+                ", destination=" + destination +
                 ", duration=" + duration +
                 ", numberOfPersons=" + numberOfPersons +
                 ", numberOfRooms=" + numberOfRooms +
