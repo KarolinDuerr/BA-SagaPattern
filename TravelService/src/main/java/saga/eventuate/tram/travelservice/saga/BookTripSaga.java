@@ -13,6 +13,7 @@ import saga.eventuate.tram.hotelservice.api.dto.BookHotelResponse;
 import saga.eventuate.tram.hotelservice.api.dto.CancelHotelBooking;
 import saga.eventuate.tram.hotelservice.api.dto.ConfirmHotelBooking;
 import saga.eventuate.tram.travelservice.api.TravelServiceChannels;
+import saga.eventuate.tram.travelservice.command.ConfirmTripBooking;
 import saga.eventuate.tram.travelservice.command.RejectTripCommand;
 
 public class BookTripSaga implements SimpleSaga<BookTripSagaData> {
@@ -99,7 +100,7 @@ public class BookTripSaga implements SimpleSaga<BookTripSagaData> {
     private CommandWithDestination confirmTrip(BookTripSagaData bookTripSagaData) {
         logger.info("Confirming the trip booking: " + bookTripSagaData.getTripId());
 
-        return CommandWithDestinationBuilder.send(new ConfirmHotelBooking(bookTripSagaData.getTripId()))
+        return CommandWithDestinationBuilder.send(new ConfirmTripBooking(bookTripSagaData.getTripId()))
                 .to(HotelServiceChannels.hotelServiceChannel)
                 .build();
     }

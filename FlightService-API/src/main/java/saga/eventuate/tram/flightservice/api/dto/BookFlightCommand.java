@@ -23,8 +23,8 @@ public class BookFlightCommand implements Command {
 
     }
 
-    public BookFlightCommand(final LocationDTO home, final LocationDTO destination, Date outboundFlightDate,
-                             Date returnFlightDate, final boolean oneWay, final List<String> travellerNames) {
+    public BookFlightCommand(final LocationDTO home, final LocationDTO destination, final Date outboundFlightDate,
+                             final Date returnFlightDate, final boolean oneWay, final List<String> travellerNames) {
         this.home = home;
         this.destination = destination;
         this.outboundFlightDate = outboundFlightDate;
@@ -45,7 +45,7 @@ public class BookFlightCommand implements Command {
         return destination;
     }
 
-    public void setDestination(LocationDTO destination) {
+    public void setDestination(final LocationDTO destination) {
         this.destination = destination;
     }
 
@@ -53,7 +53,7 @@ public class BookFlightCommand implements Command {
         return outboundFlightDate;
     }
 
-    public void setOutboundFlightDate(Date outboundFlightDate) {
+    public void setOutboundFlightDate(final Date outboundFlightDate) {
         this.outboundFlightDate = outboundFlightDate;
     }
 
@@ -61,7 +61,7 @@ public class BookFlightCommand implements Command {
         return returnFlightDate;
     }
 
-    public void setReturnFlightDate(Date returnFlightDate) {
+    public void setReturnFlightDate(final Date returnFlightDate) {
         this.returnFlightDate = returnFlightDate;
     }
 
@@ -69,7 +69,7 @@ public class BookFlightCommand implements Command {
         return oneWay;
     }
 
-    public void setOneWay(boolean oneWay) {
+    public void setOneWay(final boolean oneWay) {
         this.oneWay = oneWay;
     }
 

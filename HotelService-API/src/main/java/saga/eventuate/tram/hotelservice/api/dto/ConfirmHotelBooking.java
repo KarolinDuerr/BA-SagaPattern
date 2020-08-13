@@ -4,10 +4,10 @@ import io.eventuate.tram.commands.common.Command;
 
 public class ConfirmHotelBooking implements Command {
 
-    private long bookingId;
+    private final long bookingId;
 
     public ConfirmHotelBooking() {
-
+        bookingId = -1;
     }
 
     public ConfirmHotelBooking(final long bookingId) {
@@ -16,9 +16,5 @@ public class ConfirmHotelBooking implements Command {
 
     public long getBookingId() {
         return bookingId;
-    }
-
-    public void setBookingId(long bookingId) {
-        this.bookingId = bookingId;
     }
 }
