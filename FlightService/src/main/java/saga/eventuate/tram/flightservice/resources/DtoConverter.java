@@ -23,16 +23,16 @@ public class DtoConverter {
         Flight outboundFlight = convertToFlight(bookFlightRequest.getOutboundFlight());
         Flight returnFlight = convertToFlight(bookFlightRequest.getReturnFlight());
         return new FlightInformation(outboundFlight, returnFlight, bookFlightRequest.getOneWay(),
-                bookFlightRequest.getTravellerName());
+                bookFlightRequest.getTravellerNames());
     }
 
-    public Flight convertToFlight(final FlightDTO flightDTO) throws FlightException {
+    public Flight convertToFlight(final FlightDTO flightDTO) {
         if (flightDTO == null) {
             return null;
         }
 
         return new Flight(flightDTO.getCountry(), flightDTO.getFromAirport(), flightDTO.getToAirport(),
-                flightDTO.getFlightDateDeparture(), flightDTO.getFlightDateArrival(), flightDTO.getSeatNumber());
+                flightDTO.getFlightDate());
     }
 
     public List<FlightInformationDTO> convertToFlightInformationDTOList(List<FlightInformation> flightsInformation) throws ConverterException {
@@ -60,7 +60,7 @@ public class DtoConverter {
         FlightDTO outboundFlight = convertToFlightDTO(flightInformation.getOutboundFlight());
         FlightDTO returnFlight = convertToFlightDTO(flightInformation.getReturnFlight());
         return new FlightInformationDTO(flightInformation.getId(), outboundFlight, returnFlight,
-                flightInformation.getOneWay(), flightInformation.getTravellerName(),
+                flightInformation.getOneWay(), flightInformation.getTravellerNames(),
                 flightInformation.getBookingStatus());
     }
 
@@ -70,7 +70,7 @@ public class DtoConverter {
         }
 
         return new FlightDTO(flight.getCountry(), flight.getFromAirport(), flight.getToAirport(),
-                flight.getFlightDateDeparture(), flight.getFlightDateArrival(), flight.getSeatNumber());
+                flight.getFlightDate());
     }
 
     private void checkIfOneWayTicketOrInformationIsMissing(BookFlightRequest bookFlightRequest) throws ConverterException {

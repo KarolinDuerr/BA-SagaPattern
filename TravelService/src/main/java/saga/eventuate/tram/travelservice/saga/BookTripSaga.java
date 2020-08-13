@@ -6,10 +6,12 @@ import io.eventuate.tram.sagas.orchestration.SagaDefinition;
 import io.eventuate.tram.sagas.simpledsl.SimpleSaga;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import saga.eventuate.tram.flightservice.api.FlightServiceChannels;
 import saga.eventuate.tram.flightservice.api.dto.BookFlightResponse;
 import saga.eventuate.tram.hotelservice.api.HotelServiceChannels;
 import saga.eventuate.tram.hotelservice.api.dto.BookHotelResponse;
 import saga.eventuate.tram.hotelservice.api.dto.CancelHotelBooking;
+import saga.eventuate.tram.hotelservice.api.dto.ConfirmHotelBooking;
 import saga.eventuate.tram.travelservice.api.TravelServiceChannels;
 import saga.eventuate.tram.travelservice.command.RejectTripCommand;
 
@@ -22,18 +24,18 @@ public class BookTripSaga implements SimpleSaga<BookTripSagaData> {
     public BookTripSaga() {
         this.sagaDefinition =
                 step()
-                            .withCompensation(this::rejectBooking)
+                        .withCompensation(this::rejectBooking)
                         .step()
-                            .invokeParticipant(this::bookHotel)
-                            .onReply(BookHotelResponse.class, this::handleBookHotelReply)
-                            .withCompensation(this::cancelHotel)
+                        .invokeParticipant(this::bookHotel)
+                        .onReply(BookHotelResponse.class, this::handleBookHotelReply)
+                        .withCompensation(this::cancelHotel)
                         .step()
-                            .invokeParticipant(this::bookFlight)
-                            .onReply(BookFlightResponse.class, this::handleBookFlightReply)
+                        .invokeParticipant(this::bookFlight)
+                        .onReply(BookFlightResponse.class, this::handleBookFlightReply)
                         .step()
-                            .invokeParticipant(this::confirmHotel)
+                        .invokeParticipant(this::confirmHotel)
                         .step()
-                            .invokeParticipant(this::confirmTrip)
+                        .invokeParticipant(this::confirmTrip)
                         .build();
     }
 
@@ -73,22 +75,33 @@ public class BookTripSaga implements SimpleSaga<BookTripSagaData> {
     }
 
     private CommandWithDestination bookFlight(BookTripSagaData bookTripSagaData) {
-        return null;
+        logger.info("Trying to book a flight.");
+
+        return CommandWithDestinationBuilder.send(bookTripSagaData.makeBookFlightCommand())
+                .to(FlightServiceChannels.flightServiceChannel)
+                .build();
     }
 
     private void handleBookFlightReply(BookTripSagaData bookTripSagaData, BookFlightResponse bookFlightResponse) {
+        logger.info("Flight has been successfully booked: " + bookFlightResponse.getFlightBookingId());
+
+        bookTripSagaData.setFlightId(bookFlightResponse.getFlightBookingId());
     }
 
     private CommandWithDestination confirmHotel(BookTripSagaData bookTripSagaData) {
         logger.info("Confirming the hotel booking: " + bookTripSagaData.getHotelId());
 
-        return CommandWithDestinationBuilder.send(new CancelHotelBooking(bookTripSagaData.getHotelId()))
+        return CommandWithDestinationBuilder.send(new ConfirmHotelBooking(bookTripSagaData.getHotelId()))
                 .to(HotelServiceChannels.hotelServiceChannel)
                 .build();
     }
 
     private CommandWithDestination confirmTrip(BookTripSagaData bookTripSagaData) {
-        return null;
+        logger.info("Confirming the trip booking: " + bookTripSagaData.getTripId());
+
+        return CommandWithDestinationBuilder.send(new ConfirmHotelBooking(bookTripSagaData.getTripId()))
+                .to(HotelServiceChannels.hotelServiceChannel)
+                .build();
     }
 
 }
