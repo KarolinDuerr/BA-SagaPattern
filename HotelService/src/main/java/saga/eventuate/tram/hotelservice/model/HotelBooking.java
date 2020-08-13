@@ -24,8 +24,6 @@ public class HotelBooking {
     @Enumerated(EnumType.STRING)
     private BookingStatus bookingStatus;
 
-    private int tripId;
-
     public HotelBooking() {
 
     }
@@ -33,14 +31,6 @@ public class HotelBooking {
     public HotelBooking(final String hotelName, final HotelBookingInformation bookingInformation) {
         this.hotelName = hotelName;
         this.bookingInformation = bookingInformation;
-        this.tripId = -1; // no trip assigned to this booking
-        this.bookingStatus = BookingStatus.CONFIRMED;
-    }
-
-    public HotelBooking(final String hotelName, final HotelBookingInformation bookingInformation, final int tripId) {
-        this.hotelName = hotelName;
-        this.bookingInformation = bookingInformation;
-        this.tripId = tripId;
         this.bookingStatus = BookingStatus.PENDING;
     }
 
@@ -48,7 +38,7 @@ public class HotelBooking {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(final Long id) {
         this.id = id;
     }
 
@@ -56,7 +46,7 @@ public class HotelBooking {
         return hotelName;
     }
 
-    public void setHotelName(String hotelName) {
+    public void setHotelName(final String hotelName) {
         this.hotelName = hotelName;
     }
 
@@ -64,7 +54,7 @@ public class HotelBooking {
         return bookingInformation;
     }
 
-    public void setBookingInformation(HotelBookingInformation bookingInformation) {
+    public void setBookingInformation(final HotelBookingInformation bookingInformation) {
         this.bookingInformation = bookingInformation;
     }
 
@@ -72,28 +62,22 @@ public class HotelBooking {
         return bookingStatus;
     }
 
-    public int getTripId() {
-        return tripId;
-    }
-
-    public void setTripId(int tripId) {
-        this.tripId = tripId;
-    }
-
-    public void cancel(BookingStatus bookingStatus) {
-        switch (bookingStatus) {
+    public void cancel(final BookingStatus bookingStatus) {
+        switch (this.bookingStatus) {
             case PENDING:
                 this.bookingStatus = bookingStatus;
+                break;
             default:
                 throw new UnsupportedStateTransition("The hotel booking can only be rejected if its still PENDING, " +
                         "but the current status is: " + getBookingStatus());
         }
     }
 
-    public void confirm(BookingStatus bookingStatus) {
-        switch (bookingStatus) {
+    public void confirm() {
+        switch (this.bookingStatus) {
             case PENDING:
-                this.bookingStatus = bookingStatus;
+                this.bookingStatus = BookingStatus.CONFIRMED;
+                break;
             default:
                 throw new UnsupportedStateTransition("The hotel booking  can only be confirmed if its still PENDING, " +
                         "but the current status is: " + getBookingStatus());
@@ -108,7 +92,6 @@ public class HotelBooking {
                 ", hotelName='" + hotelName + '\'' +
                 ", bookingInformation=" + bookingInformation +
                 ", bookingStatus=" + bookingStatus +
-                ", tripId=" + tripId +
                 '}';
     }
 }

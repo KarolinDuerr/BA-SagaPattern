@@ -96,7 +96,7 @@ public class TravelService implements  ITravelService {
             throw new TravelException(ErrorType.INTERNAL_ERROR, message);
         }
 
-        tripInformation.cancel(BookingStatus.CANCELLED);
+        tripInformation.cancel();
         tripInformationRepository.save(tripInformation);
 
         return true;
@@ -126,7 +126,7 @@ public class TravelService implements  ITravelService {
         try {
             tripInformation = getTripInformation(tripId);
 
-            tripInformation.confirm(BookingStatus.CONFIRMED);
+            tripInformation.confirm();
             tripInformationRepository.save(tripInformation);
         } catch (TravelException exception) {
             throw new BookingNotFound(tripId);

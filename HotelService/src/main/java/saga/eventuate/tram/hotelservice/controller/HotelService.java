@@ -63,6 +63,12 @@ public class HotelService implements IHotelService {
         logger.info("Saving the booked Hotel: " + hotelBooking);
 
         HotelBooking newHotelBooking = new HotelBooking("TestHotel", hotelBooking);
+
+        // no trip assigned therefore the booking has already been confirmed
+        if (newHotelBooking.getBookingInformation() != null && newHotelBooking.getBookingInformation().getTripId() == -1) {
+            newHotelBooking.confirm();
+        }
+
         hotelBookingRepository.save(newHotelBooking);
 
         return newHotelBooking;
@@ -94,7 +100,7 @@ public class HotelService implements IHotelService {
         try {
             hotelBooking = getHotelBooking(bookingId);
 
-            if (hotelBooking.getTripId() != tripId) {
+            if (hotelBooking.getBookingInformation() == null || hotelBooking.getBookingInformation().getTripId() != tripId) {
                 throw new BookingNotFound(bookingId);
             }
 
@@ -113,11 +119,11 @@ public class HotelService implements IHotelService {
         try {
             hotelBooking = getHotelBooking(bookingId);
 
-            if (hotelBooking.getTripId() != tripId) {
+            if (hotelBooking.getBookingInformation() == null || hotelBooking.getBookingInformation().getTripId() != tripId) {
                 throw new BookingNotFound(bookingId);
             }
 
-            hotelBooking.confirm(BookingStatus.CONFIRMED);
+            hotelBooking.confirm();
             hotelBookingRepository.save(hotelBooking);
         } catch (HotelException e) {
             throw new BookingNotFound(bookingId);

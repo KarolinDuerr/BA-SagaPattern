@@ -71,7 +71,7 @@ public class DtoConverter {
                     ".");
         }
 
-        return new HotelBookingDTO(hotelBooking.getHotelName(),
+        return new HotelBookingDTO(hotelBooking.getId(), hotelBooking.getHotelName(),
                 convertToHotelBookingInformationDTO(hotelBooking.getBookingInformation()));
     }
 
@@ -83,7 +83,8 @@ public class DtoConverter {
 
         return new HotelBookingInformationDTO(convertToDestinationDTO(hotelBookingInformation.getDestination()),
                 convertToStayDurationDTO(hotelBookingInformation.getDuration()),
-                hotelBookingInformation.getNumberOfPersons(), hotelBookingInformation.getNumberOfRooms());
+                hotelBookingInformation.getNumberOfPersons(), hotelBookingInformation.getNumberOfRooms(),
+                hotelBookingInformation.getTripId());
     }
 
     public DestinationDTO convertToDestinationDTO(Destination destination) throws ConverterException {

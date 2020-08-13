@@ -8,6 +8,7 @@ import io.eventuate.tram.sagas.participant.SagaCommandHandlersBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import saga.eventuate.tram.flightservice.api.FlightServiceChannels;
 import saga.eventuate.tram.flightservice.api.dto.BookFlightCommand;
 import saga.eventuate.tram.flightservice.api.dto.BookFlightResponse;
@@ -17,6 +18,7 @@ import saga.eventuate.tram.flightservice.model.FindAndBookFlightInformation;
 import saga.eventuate.tram.flightservice.model.FlightInformation;
 import saga.eventuate.tram.flightservice.resources.DtoConverter;
 
+@Component
 public class FlightCommandHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(FlightCommandHandler.class);

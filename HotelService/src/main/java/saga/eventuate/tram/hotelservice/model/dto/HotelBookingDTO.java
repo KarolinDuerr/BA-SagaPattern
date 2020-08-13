@@ -12,24 +12,23 @@ public class HotelBookingDTO {
 
     private BookingStatus bookingStatus;
 
-    private int tripId;
-
     public HotelBookingDTO() {
 
     }
 
-    public HotelBookingDTO(final String hotelName, final HotelBookingInformationDTO bookingInformation) {
+    public HotelBookingDTO(final long id, final String hotelName, final HotelBookingInformationDTO bookingInformation) {
+        this.id = id;
         this.hotelName = hotelName;
         this.bookingInformation = bookingInformation;
-        this.tripId = -1; // no trip assigned to this booking
         this.bookingStatus = BookingStatus.CONFIRMED;
     }
 
-    public HotelBookingDTO(final String hotelName, final HotelBookingInformationDTO bookingInformation, final int tripId) {
+    public HotelBookingDTO(final long id, final String hotelName, final HotelBookingInformationDTO bookingInformation
+            , final BookingStatus bookingStatus) {
+        this.id = id;
         this.hotelName = hotelName;
         this.bookingInformation = bookingInformation;
-        this.tripId = tripId;
-        this.bookingStatus = BookingStatus.CONFIRMED;
+        this.bookingStatus = bookingStatus;
     }
 
     public Long getId() {
@@ -64,14 +63,6 @@ public class HotelBookingDTO {
         this.bookingStatus = bookingStatus;
     }
 
-    public int getTripId() {
-        return tripId;
-    }
-
-    public void setTripId(int tripId) {
-        this.tripId = tripId;
-    }
-
     @Override
     public String toString() {
         return "HotelBooking{" +
@@ -79,7 +70,6 @@ public class HotelBookingDTO {
                 ", hotelName='" + hotelName + '\'' +
                 ", bookingInformation=" + bookingInformation +
                 ", bookingStatus=" + bookingStatus +
-                ", tripId=" + tripId +
                 '}';
     }
 }
