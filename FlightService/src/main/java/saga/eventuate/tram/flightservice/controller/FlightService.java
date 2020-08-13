@@ -6,9 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import saga.eventuate.tram.flightservice.error.ErrorType;
 import saga.eventuate.tram.flightservice.error.FlightException;
-import saga.eventuate.tram.flightservice.model.BookingStatus;
-import saga.eventuate.tram.flightservice.model.FlightInformation;
-import saga.eventuate.tram.flightservice.model.FlightInformationRepository;
+import saga.eventuate.tram.flightservice.model.*;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -66,10 +64,10 @@ public class FlightService implements IFlightService {
     }
 
     @Override
-    public FlightInformation bookFlight(FlightInformation flightInformation, int tripId) {
-        logger.info(String.format("Saving the flight information: %s, with tripId= %d", flightInformation, tripId));
+    public FlightInformation findAndBookFlight(FindAndBookFlightInformation findAndBookFlightInformation) throws FlightException {
+        logger.info("Finding a flight for the flight information: " + findAndBookFlightInformation);
 
-        flightInformation.setTripId(tripId);
+        FlightInformation flightInformation = findAvailableFlight(findAndBookFlightInformation);
         flightInformationRepository.save(flightInformation);
 
         return flightInformation;
@@ -91,5 +89,23 @@ public class FlightService implements IFlightService {
         flightInformationRepository.save(flightInformation);
 
         return true;
+    }
+
+    // only mocking the general function of this method
+    private FlightInformation findAvailableFlight(FindAndBookFlightInformation flightInformation) throws FlightException {
+        if (flightInformation.getHome().getCountry().equalsIgnoreCase("Provoke flight failure")) {
+            logger.info("Provoked flight exception: no available flight for trip: " + flightInformation.getTripId());
+            throw new FlightException(ErrorType.INTERNAL_ERROR, "No available flight found.");
+        }
+
+        Flight outboundFlight = new Flight(flightInformation.getHome().getCountry(),
+                flightInformation.getHome().getCity(), flightInformation.getDestination().getCity(),
+                flightInformation.getOutboundFlightDate());
+        Flight returnFlight = new Flight(flightInformation.getDestination().getCountry(),
+                flightInformation.getDestination().getCity(), flightInformation.getHome().getCity(),
+                flightInformation.getReturnFlightDate());
+
+        return new FlightInformation(outboundFlight, returnFlight, flightInformation.getOneWay(),
+                flightInformation.getTravellerNames(), flightInformation.getTripId());
     }
 }

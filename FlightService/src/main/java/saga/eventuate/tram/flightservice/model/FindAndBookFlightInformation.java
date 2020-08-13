@@ -1,17 +1,18 @@
-package saga.eventuate.tram.flightservice.api.dto;
+package saga.eventuate.tram.flightservice.model;
 
-import io.eventuate.tram.commands.common.Command;
+import saga.eventuate.tram.flightservice.error.ErrorType;
+import saga.eventuate.tram.flightservice.error.FlightException;
 
 import java.util.Date;
 import java.util.List;
 
-public class BookFlightCommand implements Command {
+public class FindAndBookFlightInformation {
 
-    private final long tripId;
+    private long tripId;
 
-    private LocationDTO home;
+    private Location home;
 
-    private LocationDTO destination;
+    private Location destination;
 
     private Date outboundFlightDate;
 
@@ -21,26 +22,30 @@ public class BookFlightCommand implements Command {
 
     private List<String> travellerNames;
 
-    public BookFlightCommand() {
+    public FindAndBookFlightInformation() {
         this.tripId = -1; // no trip assigned to this booking
     }
 
-    public BookFlightCommand(final LocationDTO home, final LocationDTO destination, final Date outboundFlightDate,
-                             final Date returnFlightDate, final boolean oneWay, final List<String> travellerNames) {
+    public FindAndBookFlightInformation(final Location home, final Location destination, final Date outboundFlightDate,
+                                        final Date returnFlightDate, final boolean oneWay, final List<String> travellerNames) throws FlightException {
         this.tripId = -1; // no trip assigned to this booking
         this.home = home;
         this.destination = destination;
+
+        validateFlightDates(outboundFlightDate, returnFlightDate);
         this.outboundFlightDate = outboundFlightDate;
         this.returnFlightDate = returnFlightDate;
         this.oneWay = oneWay;
         this.travellerNames = travellerNames;
     }
 
-    public BookFlightCommand(final long tripId, final LocationDTO home, final LocationDTO destination, final Date outboundFlightDate,
-                             final Date returnFlightDate, final boolean oneWay, final List<String> travellerNames) {
+    public FindAndBookFlightInformation(final long tripId, final Location home, final Location destination, final Date outboundFlightDate,
+                                        final Date returnFlightDate, final boolean oneWay, final List<String> travellerNames) throws FlightException {
         this.tripId = tripId;
         this.home = home;
         this.destination = destination;
+
+        validateFlightDates(outboundFlightDate, returnFlightDate);
         this.outboundFlightDate = outboundFlightDate;
         this.returnFlightDate = returnFlightDate;
         this.oneWay = oneWay;
@@ -51,19 +56,19 @@ public class BookFlightCommand implements Command {
         return tripId;
     }
 
-    public LocationDTO getHome() {
+    public Location getHome() {
         return home;
     }
 
-    public void setHome(LocationDTO home) {
+    public void setHome(Location home) {
         this.home = home;
     }
 
-    public LocationDTO getDestination() {
+    public Location getDestination() {
         return destination;
     }
 
-    public void setDestination(final LocationDTO destination) {
+    public void setDestination(final Location destination) {
         this.destination = destination;
     }
 
@@ -71,7 +76,8 @@ public class BookFlightCommand implements Command {
         return outboundFlightDate;
     }
 
-    public void setOutboundFlightDate(final Date outboundFlightDate) {
+    public void setOutboundFlightDate(final Date outboundFlightDate) throws FlightException {
+        validateFlightDates(outboundFlightDate, returnFlightDate);
         this.outboundFlightDate = outboundFlightDate;
     }
 
@@ -79,7 +85,8 @@ public class BookFlightCommand implements Command {
         return returnFlightDate;
     }
 
-    public void setReturnFlightDate(final Date returnFlightDate) {
+    public void setReturnFlightDate(final Date returnFlightDate) throws FlightException {
+        validateFlightDates(outboundFlightDate, returnFlightDate);
         this.returnFlightDate = returnFlightDate;
     }
 
@@ -99,9 +106,16 @@ public class BookFlightCommand implements Command {
         this.travellerNames = travellerNames;
     }
 
+    private void validateFlightDates(Date outboundFlightDate, Date returnFlightDate) throws FlightException {
+        if (returnFlightDate.before(outboundFlightDate)) {
+            throw new FlightException(ErrorType.INVALID_PARAMETER, "The date of the return flight is before the actual " +
+                    "outbound flight.");
+        }
+    }
+
     @Override
     public String toString() {
-        return "BookFlightCommand{" +
+        return "FindAndBookFlightInformation{" +
                 "tripId=" + tripId +
                 ", home=" + home +
                 ", destination=" + destination +

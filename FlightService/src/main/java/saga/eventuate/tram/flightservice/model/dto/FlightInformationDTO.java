@@ -19,6 +19,8 @@ public class FlightInformationDTO {
 
     private BookingStatus bookingStatus;
 
+    private Long tripId;
+
     public FlightInformationDTO() {
 
     }
@@ -31,6 +33,17 @@ public class FlightInformationDTO {
         this.oneWay = oneWay;
         this.travellerNames = travellerNames;
         this.bookingStatus = bookingStatus;
+    }
+
+    public FlightInformationDTO(final long id, final FlightDTO outboundFlight, final FlightDTO returnFlight, final boolean oneWay,
+                                final List<String> travellerNames, BookingStatus bookingStatus, final long tripId) {
+        this.id = id;
+        this.outboundFlight = outboundFlight;
+        this.returnFlight = returnFlight;
+        this.oneWay = oneWay;
+        this.travellerNames = travellerNames;
+        this.bookingStatus = bookingStatus;
+        this.tripId = tripId;
     }
 
     public Long getId() {
@@ -79,6 +92,14 @@ public class FlightInformationDTO {
 
     public void setBookingStatus(final BookingStatus bookingStatus) {
         this.bookingStatus = bookingStatus;
+    }
+
+    public Long getTripId() {
+        return tripId;
+    }
+
+    public void setTripId(Long tripId) {
+        this.tripId = tripId;
     }
 
     @Override

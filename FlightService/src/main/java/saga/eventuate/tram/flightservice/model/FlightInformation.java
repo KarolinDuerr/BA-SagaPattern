@@ -34,7 +34,7 @@ public class FlightInformation {
     @Enumerated(EnumType.STRING)
     private BookingStatus bookingStatus;
 
-    private int tripId;
+    private long tripId;
 
     public FlightInformation() {
 
@@ -54,7 +54,7 @@ public class FlightInformation {
     }
 
     public FlightInformation(final Flight outboundFlight, final Flight returnFlight, final boolean oneWay,
-                             final List<String> travellerNames, final int tripId) throws FlightException {
+                             final List<String> travellerNames, final long tripId) throws FlightException {
         this.oneWay = oneWay;
         if (!oneWay) {
             validateFlightDates(outboundFlight, returnFlight);
@@ -127,11 +127,11 @@ public class FlightInformation {
         }
     }
 
-    public int getTripId() {
+    public long getTripId() {
         return tripId;
     }
 
-    public void setTripId(int tripId) {
+    public void setTripId(long tripId) {
         this.tripId = tripId;
     }
 
