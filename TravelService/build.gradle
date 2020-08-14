@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
     id 'org.springframework.boot' version '2.3.1.RELEASE'
 }
 
@@ -8,6 +9,12 @@ version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-sleuth:${springCloudSleuthVersion}"
+    }
+}
 
 repositories {
     eventuateMavenRepoUrl.split(',').each { repoUrl -> maven { url repoUrl } }
@@ -37,6 +44,11 @@ dependencies {
     compile "io.eventuate.tram.core:eventuate-tram-spring-producer-jdbc:$eventuateTramVersion"
     compile "io.eventuate.tram.core:eventuate-tram-spring-consumer-jdbc:$eventuateTramVersion"
     compile "io.eventuate.tram.core:eventuate-tram-spring-consumer-kafka:$eventuateTramVersion"
+
+    // Sleuth and Zipkin for tracing logs
+    compile 'org.springframework.cloud:spring-cloud-starter-sleuth'
+    compile "org.springframework.cloud:spring-cloud-starter-zipkin"
+    compile "io.eventuate.tram.core:eventuate-tram-spring-cloud-sleuth-integration:${eventuateTramVersion}"
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
