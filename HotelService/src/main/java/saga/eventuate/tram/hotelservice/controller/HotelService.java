@@ -113,7 +113,7 @@ public class HotelService implements IHotelService {
 
     @Override
     public void confirmHotelBooking(Long bookingId, Long tripId) {
-        logger.info("Cancelling the booked hotel with ID " + bookingId);
+        logger.info("Confirming the booked hotel with ID " + bookingId);
 
         HotelBooking hotelBooking = null;
         try {

@@ -7,14 +7,15 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import saga.eventuate.tram.hotelservice.error.ConverterException;
 import saga.eventuate.tram.hotelservice.error.ErrorType;
+import saga.eventuate.tram.hotelservice.error.HotelException;
+import saga.eventuate.tram.hotelservice.error.HotelServiceException;
 
 @ControllerAdvice
-public class ConverterExceptionHandler extends ResponseEntityExceptionHandler {
+public class HotelServiceExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(value = ConverterException.class)
-    protected ResponseEntity<Object> handle(ConverterException exception, WebRequest webRequest) {
+    @ExceptionHandler(value = HotelServiceException.class)
+    protected ResponseEntity<Object> handle(HotelServiceException exception, WebRequest webRequest) {
         return handleExceptionInternal(exception, exception.getMessage(), new HttpHeaders(),
                 mapErrorTypeToResponseStatus(exception.getErrorType()), webRequest);
     }
@@ -29,5 +30,4 @@ public class ConverterExceptionHandler extends ResponseEntityExceptionHandler {
                 return HttpStatus.INTERNAL_SERVER_ERROR;
         }
     }
-
 }

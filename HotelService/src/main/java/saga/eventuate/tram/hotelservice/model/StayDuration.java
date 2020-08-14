@@ -55,6 +55,10 @@ public class StayDuration {
     }
 
     private void validateDates(Date arrival, Date departure) throws HotelException {
+        if (arrival == null  || departure == null) {
+            return;
+        }
+
         if (!arrival.before(departure)) {
             throw new HotelException(ErrorType.INVALID_PARAMETER, "The departure is before the actual arrival.");
         }

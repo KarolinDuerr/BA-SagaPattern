@@ -1,31 +1,20 @@
 package saga.eventuate.tram.hotelservice.error;
 
-public class ConverterException extends Exception {
-
-    private ErrorType errorType;
+public class ConverterException extends HotelServiceException {
 
     public ConverterException(String message) {
-        super(message);
-        errorType = ErrorType.INVALID_PARAMETER;
+        super(ErrorType.INVALID_PARAMETER, message);
     }
 
     public ConverterException(ErrorType errorType, String message) {
-        super(message);
-        this.errorType = errorType;
+        super(errorType, message);
     }
 
     public ConverterException(String message, Throwable cause) {
-        super(message, cause);
-        errorType = ErrorType.INVALID_PARAMETER;
+        super(ErrorType.INVALID_PARAMETER, message, cause);
     }
 
     public ConverterException(ErrorType errorType, String message, Throwable cause) {
-        super(message, cause);
-        this.errorType = errorType;
+        super(errorType, message, cause);
     }
-
-    public ErrorType getErrorType() {
-        return this.errorType;
-    }
-
 }

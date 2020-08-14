@@ -8,14 +8,10 @@ import io.eventuate.tram.sagas.participant.SagaCommandHandlersBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import saga.eventuate.tram.hotelservice.api.HotelServiceChannels;
-import saga.eventuate.tram.hotelservice.api.dto.BookHotelRequest;
-import saga.eventuate.tram.hotelservice.api.dto.BookHotelResponse;
-import saga.eventuate.tram.hotelservice.api.dto.CancelHotelBooking;
-import saga.eventuate.tram.hotelservice.api.dto.ConfirmHotelBooking;
-import saga.eventuate.tram.hotelservice.error.ConverterException;
-import saga.eventuate.tram.hotelservice.error.HotelException;
+import saga.eventuate.tram.hotelservice.api.dto.*;
+import saga.eventuate.tram.hotelservice.error.ErrorType;
+import saga.eventuate.tram.hotelservice.error.HotelServiceException;
 import saga.eventuate.tram.hotelservice.model.HotelBooking;
 import saga.eventuate.tram.hotelservice.model.HotelBookingInformation;
 import saga.eventuate.tram.hotelservice.resources.DtoConverter;
@@ -23,7 +19,6 @@ import saga.eventuate.tram.hotelservice.resources.DtoConverter;
 /**
  * The hotel service Saga Participant for handling the commands created by the BookTripSaga.
  */
-@Component
 public class HotelCommandHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(HotelCommandHandler.class);
@@ -60,10 +55,12 @@ public class HotelCommandHandler {
             BookHotelResponse bookingResponse = new BookHotelResponse(hotelBooking.getId(),
                     hotelBooking.getHotelName(), hotelBooking.getBookingStatus().toString());
             return CommandHandlerReplyBuilder.withSuccess(bookingResponse);
-        } catch (ConverterException exception) {
-            return CommandHandlerReplyBuilder.withFailure(exception);
-        } catch (HotelException exception) {
-            return CommandHandlerReplyBuilder.withFailure(exception);
+        } catch (HotelServiceException exception) {
+            logger.error(exception.toString());
+            if (exception.getErrorType() == ErrorType.PROVOKED_ERROR) {
+                return CommandHandlerReplyBuilder.withFailure(new NoHotelAvailable(bookHotelRequest.getTripId()));
+            }
+            return CommandHandlerReplyBuilder.withFailure(exception.toString());
         }
     }
 
