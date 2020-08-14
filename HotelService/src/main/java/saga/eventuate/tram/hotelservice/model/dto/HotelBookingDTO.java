@@ -15,14 +15,7 @@ public class HotelBookingDTO {
     private HotelBookingDTO() {
 
     }
-
-    public HotelBookingDTO(final long id, final String hotelName, final HotelBookingInformationDTO bookingInformation) {
-        this.id = id;
-        this.hotelName = hotelName;
-        this.bookingInformation = bookingInformation;
-        this.bookingStatus = BookingStatus.CONFIRMED;
-    }
-
+    
     public HotelBookingDTO(final long id, final String hotelName, final HotelBookingInformationDTO bookingInformation
             , final BookingStatus bookingStatus) {
         this.id = id;

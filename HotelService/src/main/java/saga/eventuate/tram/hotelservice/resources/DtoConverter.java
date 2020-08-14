@@ -51,7 +51,8 @@ public class DtoConverter {
         }
 
         return new HotelBookingDTO(hotelBooking.getId(), hotelBooking.getHotelName(),
-                convertToHotelBookingInformationDTO(hotelBooking.getBookingInformation()));
+                convertToHotelBookingInformationDTO(hotelBooking.getBookingInformation()),
+                hotelBooking.getBookingStatus());
     }
 
     public HotelBookingInformationDTO convertToHotelBookingInformationDTO(final HotelBookingInformation hotelBookingInformation) throws ConverterException {

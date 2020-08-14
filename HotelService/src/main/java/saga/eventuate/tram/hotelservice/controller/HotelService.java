@@ -61,10 +61,10 @@ public class HotelService implements IHotelService {
     }
 
     @Override
-    public HotelBooking bookHotel(HotelBookingInformation hotelBooking) {
+    public HotelBooking bookHotel(HotelBookingInformation hotelBooking) throws HotelException {
         logger.info("Saving the booked Hotel: " + hotelBooking);
 
-        HotelBooking newHotelBooking = new HotelBooking("TestHotel", hotelBooking);
+        HotelBooking newHotelBooking = findAvailableHotel(hotelBooking);
 
         // no trip assigned therefore the booking has already been confirmed
         if (newHotelBooking.getBookingInformation() != null && newHotelBooking.getBookingInformation().getTripId() == -1) {
@@ -130,5 +130,15 @@ public class HotelService implements IHotelService {
         } catch (HotelException e) {
             throw new BookingNotFound(bookingId);
         }
+    }
+
+    // only mocking the general function of this method
+    private HotelBooking findAvailableHotel(final HotelBookingInformation hotelBookingInformation) throws HotelException {
+        if (hotelBookingInformation.getDestination().getCountry().equalsIgnoreCase("Provoke hotel failure")) {
+            logger.info("Provoked hotel exception: no available hotel for trip: " + hotelBookingInformation.getTripId());
+            throw new HotelException(ErrorType.NO_AVAILABLE_HOTEL, "No available flight found.");
+        }
+
+        return new HotelBooking("Example_Hotel", hotelBookingInformation);
     }
 }

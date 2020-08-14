@@ -57,7 +57,7 @@ public class HotelCommandHandler {
             return CommandHandlerReplyBuilder.withSuccess(bookingResponse);
         } catch (HotelServiceException exception) {
             logger.error(exception.toString());
-            if (exception.getErrorType() == ErrorType.PROVOKED_ERROR) {
+            if (exception.getErrorType() == ErrorType.NO_AVAILABLE_HOTEL) {
                 return CommandHandlerReplyBuilder.withFailure(new NoHotelAvailable(bookHotelRequest.getTripId()));
             }
             return CommandHandlerReplyBuilder.withFailure(exception.toString());
