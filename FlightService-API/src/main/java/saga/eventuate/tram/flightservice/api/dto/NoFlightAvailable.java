@@ -6,7 +6,7 @@ public class NoFlightAvailable implements Command {
 
     private final long tripId;
 
-    public NoFlightAvailable() {
+    private NoFlightAvailable() {
         tripId = -1;
     }
 

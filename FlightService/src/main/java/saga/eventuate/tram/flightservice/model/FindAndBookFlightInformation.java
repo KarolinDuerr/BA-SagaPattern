@@ -22,33 +22,39 @@ public class FindAndBookFlightInformation {
 
     private List<String> travellerNames;
 
-    public FindAndBookFlightInformation() {
+    private FindAndBookFlightInformation() {
         this.tripId = -1; // no trip assigned to this booking
     }
 
     public FindAndBookFlightInformation(final Location home, final Location destination, final Date outboundFlightDate,
-                                        final Date returnFlightDate, final boolean oneWay, final List<String> travellerNames) throws FlightException {
+                                        final Date returnFlightDate, final boolean oneWay,
+                                        final List<String> travellerNames) throws FlightException {
+        this.oneWay = oneWay;
+        if (!oneWay) {
+            validateFlightDates(outboundFlightDate, returnFlightDate);
+        }
+
         this.tripId = -1; // no trip assigned to this booking
         this.home = home;
         this.destination = destination;
-
-        validateFlightDates(outboundFlightDate, returnFlightDate);
         this.outboundFlightDate = outboundFlightDate;
         this.returnFlightDate = returnFlightDate;
-        this.oneWay = oneWay;
         this.travellerNames = travellerNames;
     }
 
-    public FindAndBookFlightInformation(final long tripId, final Location home, final Location destination, final Date outboundFlightDate,
-                                        final Date returnFlightDate, final boolean oneWay, final List<String> travellerNames) throws FlightException {
+    public FindAndBookFlightInformation(final long tripId, final Location home, final Location destination,
+                                        final Date outboundFlightDate, final Date returnFlightDate,
+                                        final boolean oneWay, final List<String> travellerNames) throws FlightException {
+        this.oneWay = oneWay;
+        if (!oneWay) {
+            validateFlightDates(outboundFlightDate, returnFlightDate);
+        }
+
         this.tripId = tripId;
         this.home = home;
         this.destination = destination;
-
-        validateFlightDates(outboundFlightDate, returnFlightDate);
         this.outboundFlightDate = outboundFlightDate;
         this.returnFlightDate = returnFlightDate;
-        this.oneWay = oneWay;
         this.travellerNames = travellerNames;
     }
 
@@ -60,7 +66,7 @@ public class FindAndBookFlightInformation {
         return home;
     }
 
-    public void setHome(Location home) {
+    public void setHome(final Location home) {
         this.home = home;
     }
 
@@ -106,13 +112,14 @@ public class FindAndBookFlightInformation {
         this.travellerNames = travellerNames;
     }
 
-    private void validateFlightDates(Date outboundFlightDate, Date returnFlightDate) throws FlightException {
+    private void validateFlightDates(final Date outboundFlightDate, final Date returnFlightDate) throws FlightException {
         if (outboundFlightDate == null || returnFlightDate == null) {
             return;
         }
 
         if (returnFlightDate.before(outboundFlightDate)) {
-            throw new FlightException(ErrorType.INVALID_PARAMETER, "The date of the return flight is before the actual " +
+            throw new FlightException(ErrorType.INVALID_PARAMETER, "The date of the return flight is before the " +
+                    "actual " +
                     "outbound flight.");
         }
     }

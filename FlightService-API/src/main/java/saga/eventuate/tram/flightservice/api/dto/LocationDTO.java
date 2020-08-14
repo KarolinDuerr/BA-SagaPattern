@@ -6,7 +6,7 @@ public class LocationDTO {
 
     private String city;
 
-    public LocationDTO() {
+    private LocationDTO() {
 
     }
 

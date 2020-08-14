@@ -28,7 +28,7 @@ public class FlightCommandHandler {
     @Autowired
     private final DtoConverter dtoConverter;
 
-    public FlightCommandHandler(IFlightService flightService, DtoConverter dtoConverter) {
+    public FlightCommandHandler(final IFlightService flightService, final DtoConverter dtoConverter) {
         this.flightService = flightService;
         this.dtoConverter = dtoConverter;
     }

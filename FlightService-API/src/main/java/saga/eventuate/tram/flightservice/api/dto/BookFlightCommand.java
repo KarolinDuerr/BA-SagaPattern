@@ -21,7 +21,7 @@ public class BookFlightCommand implements Command {
 
     private List<String> travellerNames;
 
-    public BookFlightCommand() {
+    private BookFlightCommand() {
         this.tripId = -1; // no trip assigned to this booking
     }
 
@@ -55,7 +55,7 @@ public class BookFlightCommand implements Command {
         return home;
     }
 
-    public void setHome(LocationDTO home) {
+    public void setHome(final LocationDTO home) {
         this.home = home;
     }
 

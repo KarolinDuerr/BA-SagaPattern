@@ -43,7 +43,7 @@ public class DtoConverter {
                 bookFlightCommand.getOneWay(), bookFlightCommand.getTravellerNames());
     }
 
-    public List<FlightInformationDTO> convertToFlightInformationDTOList(List<FlightInformation> flightsInformation) throws ConverterException {
+    public List<FlightInformationDTO> convertToFlightInformationDTOList(final List<FlightInformation> flightsInformation) throws ConverterException {
         if (flightsInformation == null) {
             throw new ConverterException(ErrorType.INTERNAL_ERROR, "The generated flights information could not be " +
                     "received.");
@@ -99,19 +99,19 @@ public class DtoConverter {
     }
 
 
-    private void checkIfOneWayTicketOrInformationIsMissing(BookFlightCommand bookFlightCommand) throws ConverterException {
+    private void checkIfOneWayTicketOrInformationIsMissing(final BookFlightCommand bookFlightCommand) throws ConverterException {
         if (!bookFlightCommand.getOneWay() && (bookFlightCommand.getOutboundFlightDate() == null || bookFlightCommand.getReturnFlightDate() == null)) {
             throw new ConverterException("Information about a flight date is missing.");
         }
     }
 
-    private void checkIfOneWayTicketOrInformationIsMissing(BookFlightRequest bookFlightRequest) throws ConverterException {
+    private void checkIfOneWayTicketOrInformationIsMissing(final BookFlightRequest bookFlightRequest) throws ConverterException {
         if (!bookFlightRequest.getOneWay() && (bookFlightRequest.getOutboundFlight() == null || bookFlightRequest.getReturnFlight() == null)) {
             throw new ConverterException("Information about a flight is missing.");
         }
     }
 
-    private void checkIfOneWayTicketOrInformationIsMissing(FlightInformation flightInformation) throws ConverterException {
+    private void checkIfOneWayTicketOrInformationIsMissing(final FlightInformation flightInformation) throws ConverterException {
         if (!flightInformation.getOneWay() && (flightInformation.getOutboundFlight() == null || flightInformation.getReturnFlight() == null)) {
             throw new ConverterException("Information for an included flight is missing.");
         }

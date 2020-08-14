@@ -12,7 +12,7 @@ public class FlightDTO {
 
     private Date flightDate;
 
-    public FlightDTO() {
+    private FlightDTO() {
 
     }
 

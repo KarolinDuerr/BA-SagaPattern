@@ -36,8 +36,8 @@ public class FlightInformation {
 
     private long tripId;
 
-    public FlightInformation() {
-
+    private FlightInformation() {
+        this.tripId = -1; // no trip assigned to this booking
     }
 
     public FlightInformation(final Flight outboundFlight, final Flight returnFlight, final boolean oneWay,

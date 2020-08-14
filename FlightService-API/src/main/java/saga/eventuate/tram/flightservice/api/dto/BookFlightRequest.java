@@ -12,7 +12,7 @@ public class BookFlightRequest {
 
     private List<String> travellerNames;
 
-    public BookFlightRequest() {
+    private BookFlightRequest() {
 
     }
 
@@ -44,7 +44,7 @@ public class BookFlightRequest {
         return oneWay;
     }
 
-    public void setOneWay(boolean oneWay) {
+    public void setOneWay(final boolean oneWay) {
         this.oneWay = oneWay;
     }
 

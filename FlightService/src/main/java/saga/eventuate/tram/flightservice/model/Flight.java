@@ -23,12 +23,11 @@ public class Flight {
 
     private Date flightDate;
 
-    public Flight() {
+    private Flight() {
 
     }
 
-    public Flight(final String country, final String fromAirport, final String toAirport,
-                  final Date flightDate) {
+    public Flight(final String country, final String fromAirport, final String toAirport, final Date flightDate) {
         this.country = country;
         this.fromAirport = fromAirport;
         this.toAirport = toAirport;
@@ -39,7 +38,7 @@ public class Flight {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(final Long id) {
         this.id = id;
     }
 

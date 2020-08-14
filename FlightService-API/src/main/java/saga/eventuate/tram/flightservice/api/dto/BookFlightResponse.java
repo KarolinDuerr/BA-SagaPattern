@@ -6,7 +6,7 @@ public class BookFlightResponse {
 
     private String bookingStatus;
 
-    public BookFlightResponse() {
+    private BookFlightResponse() {
 
     }
 

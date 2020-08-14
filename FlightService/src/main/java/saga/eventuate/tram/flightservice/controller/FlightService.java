@@ -22,7 +22,7 @@ public class FlightService implements IFlightService {
     @Autowired
     private final FlightInformationRepository flightInformationRepository;
 
-    public FlightService(FlightInformationRepository flightInformationRepository) {
+    public FlightService(final FlightInformationRepository flightInformationRepository) {
         this.flightInformationRepository = flightInformationRepository;
     }
 
@@ -42,7 +42,7 @@ public class FlightService implements IFlightService {
     }
 
     @Override
-    public FlightInformation getFlightInformation(Long flightBookingId) throws FlightException {
+    public FlightInformation getFlightInformation(final Long flightBookingId) throws FlightException {
         logger.info(String.format("Get flight information (ID: %d) from Repository.", flightBookingId));
 
         Optional<FlightInformation> flightInformation = flightInformationRepository.findById(flightBookingId);
@@ -57,7 +57,7 @@ public class FlightService implements IFlightService {
     }
 
     @Override
-    public FlightInformation bookFlight(FlightInformation flightInformation) {
+    public FlightInformation bookFlight(final FlightInformation flightInformation) {
         logger.info("Saving the flight information: " + flightInformation);
 
         flightInformationRepository.save(flightInformation);
@@ -66,7 +66,7 @@ public class FlightService implements IFlightService {
     }
 
     @Override
-    public FlightInformation findAndBookFlight(FindAndBookFlightInformation findAndBookFlightInformation) throws FlightException {
+    public FlightInformation findAndBookFlight(final FindAndBookFlightInformation findAndBookFlightInformation) throws FlightException {
         logger.info("Finding a flight for the flight information: " + findAndBookFlightInformation);
 
         FlightInformation flightInformation = findAvailableFlight(findAndBookFlightInformation);
@@ -76,7 +76,7 @@ public class FlightService implements IFlightService {
     }
 
     @Override
-    public boolean cancelFlightBooking(Long flightBookingId) throws FlightException {
+    public boolean cancelFlightBooking(final Long flightBookingId) throws FlightException {
         logger.info("Cancelling the booked flight with ID " + flightBookingId);
 
         FlightInformation flightInformation = getFlightInformation(flightBookingId);
@@ -94,7 +94,7 @@ public class FlightService implements IFlightService {
     }
 
     // only mocking the general function of this method
-    private FlightInformation findAvailableFlight(FindAndBookFlightInformation flightInformation) throws FlightException {
+    private FlightInformation findAvailableFlight(final FindAndBookFlightInformation flightInformation) throws FlightException {
         if (flightInformation.getHome().getCountry().equalsIgnoreCase("Provoke flight failure")) {
             logger.info("Provoked flight exception: no available flight for trip: " + flightInformation.getTripId());
             throw new FlightException(ErrorType.NO_FLIGHT_AVAILABLE, "No available flight found.");
