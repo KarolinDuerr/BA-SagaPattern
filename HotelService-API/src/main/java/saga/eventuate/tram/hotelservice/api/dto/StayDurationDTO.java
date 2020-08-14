@@ -8,7 +8,7 @@ public class StayDurationDTO {
 
     private Date departure;
 
-    public StayDurationDTO() {
+    private StayDurationDTO() {
 
     }
 

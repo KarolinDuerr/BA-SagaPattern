@@ -6,10 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import saga.eventuate.tram.hotelservice.error.ErrorMessage;
-import saga.eventuate.tram.hotelservice.error.ErrorType;
-import saga.eventuate.tram.hotelservice.error.HotelServiceException;
+import saga.eventuate.tram.hotelservice.error.*;
 
 @ControllerAdvice
 public class HotelServiceExceptionHandler extends ResponseEntityExceptionHandler {
@@ -19,6 +18,33 @@ public class HotelServiceExceptionHandler extends ResponseEntityExceptionHandler
         ErrorMessage errorMessage = new ErrorMessage(exception.getErrorType(), exception.getMessage());
         return handleExceptionInternal(exception, errorMessage, new HttpHeaders(),
                 mapErrorTypeToResponseStatus(exception.getErrorType()), webRequest);
+    }
+
+    @ExceptionHandler(value = BookingNotFound.class)
+    protected ResponseEntity<Object> handle(BookingNotFound exception, WebRequest webRequest) {
+        ErrorMessage errorMessage = new ErrorMessage(ErrorType.NON_EXISTING_ITEM, exception.getMessage());
+        return handleExceptionInternal(exception, errorMessage, new HttpHeaders(),
+                HttpStatus.NOT_FOUND, webRequest);
+    }
+
+    @ExceptionHandler(value = UnsupportedStateTransition.class)
+    protected ResponseEntity<Object> handle(UnsupportedStateTransition exception, WebRequest webRequest) {
+        ErrorMessage errorMessage = new ErrorMessage(ErrorType.NON_ALLOWED_STATE_TRANSITION, exception.getMessage());
+        return handleExceptionInternal(exception, errorMessage, new HttpHeaders(),
+                HttpStatus.FORBIDDEN, webRequest);
+    }
+
+    @ExceptionHandler(value = ResponseStatusException.class)
+    protected ResponseEntity<Object> handle(ResponseStatusException exception, WebRequest webRequest) {
+        throw exception;
+    }
+
+    @ExceptionHandler(value = Exception.class)
+    protected ResponseEntity<Object> handle(Exception exception, WebRequest webRequest) {
+        logger.error("An exception occurred: " + exception.getMessage() + ", of type " + exception.getClass() + " " +
+                "with the following cause: " + exception.getCause());
+        return handleExceptionInternal(exception, "There has been an error, please check your input and try again.",
+                new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, webRequest);
     }
 
     private HttpStatus mapErrorTypeToResponseStatus(ErrorType errorType) {
