@@ -74,7 +74,8 @@ public class DtoConverter {
         return new TripInformationDTO(tripInformation.getId(), tripDuration, destination, start,
                 tripInformation.getTravellerNames(), tripInformation.getNumberOfPersons(),
                 tripInformation.getNumberOfRooms(), tripInformation.getOneWayFlight(),
-                tripInformation.getCustomerId(), tripInformation.getBookingStatus());
+                tripInformation.getCustomerId(), tripInformation.getBookingStatus(), tripInformation.getHotelId(),
+                tripInformation.getFlightId());
     }
 
     public TripDurationDTO convertToTripDurationDTO(TripDuration tripDuration) throws ConverterException {

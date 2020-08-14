@@ -42,6 +42,10 @@ public class TripDuration {
     }
 
     private void validateDates(Date start, Date end) throws TravelException {
+        if (start == null  || end == null) {
+            return;
+        }
+
         if (!start.before(end)) {
             throw new TravelException(ErrorType.INVALID_PARAMETER, "The departure is before the actual arrival.");
         }

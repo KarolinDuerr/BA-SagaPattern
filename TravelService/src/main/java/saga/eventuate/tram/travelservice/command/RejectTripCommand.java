@@ -11,7 +11,7 @@ public class RejectTripCommand implements Command {
 
     public RejectTripCommand() {
         tripId = -1;
-        rejectionReason = RejectionReason.UNKNOWN;
+        rejectionReason = RejectionReason.REASON_UNKNOWN;
     }
 
     public RejectTripCommand(final long tripId, final RejectionReason rejectionReason) {

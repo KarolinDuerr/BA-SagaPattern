@@ -28,6 +28,10 @@ public class TripInformationDTO {
 
     private BookingStatus bookingStatus;
 
+    private long hotelId = -1;
+
+    private long flightId = -1;
+
     private TripInformationDTO() {
 
     }
@@ -46,6 +50,24 @@ public class TripInformationDTO {
         this.oneWayFlight = oneWayFlight;
         this.customerId = customerId;
         this.bookingStatus = bookingStatus;
+    }
+
+    public TripInformationDTO(final long id, final TripDurationDTO duration, final LocationDTO destination,
+                              final LocationDTO start, final List<String> travellerNames, final int numberOfPersons,
+                              final int numberOfRooms, final boolean oneWayFlight, final long customerId,
+                              final BookingStatus bookingStatus, final long hotelId, final long flightId) {
+        this.id = id;
+        this.duration = duration;
+        this.destination = destination;
+        this.start = start;
+        this.travellerNames = travellerNames;
+        this.numberOfPersons = numberOfPersons;
+        this.numberOfRooms = numberOfRooms;
+        this.oneWayFlight = oneWayFlight;
+        this.customerId = customerId;
+        this.bookingStatus = bookingStatus;
+        this.hotelId = hotelId;
+        this.flightId = flightId;
     }
 
     public Long getId() {
@@ -126,6 +148,22 @@ public class TripInformationDTO {
 
     public void setBookingStatus(BookingStatus bookingStatus) {
         this.bookingStatus = bookingStatus;
+    }
+
+    public long getHotelId() {
+        return hotelId;
+    }
+
+    public void setHotelId(long hotelId) {
+        this.hotelId = hotelId;
+    }
+
+    public long getFlightId() {
+        return flightId;
+    }
+
+    public void setFlightId(long flightId) {
+        this.flightId = flightId;
     }
 
     @Override

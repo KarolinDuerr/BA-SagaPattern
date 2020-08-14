@@ -20,6 +20,6 @@ public interface ITravelService {
 
     void rejectTrip(final Long tripId, final RejectionReason rejectionReason);
 
-    void confirmTripBooking(final Long tripId);
+    void confirmTripBooking(final Long tripId, final long hotelId, final long flightId);
 
 }

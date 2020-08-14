@@ -49,8 +49,11 @@ public class TripInformation {
     @Enumerated(EnumType.STRING)
     private BookingStatus bookingStatus;
 
-    private TripInformation() {
+    private long hotelId = -1;
 
+    private long flightId = -1;
+
+    private TripInformation() {
     }
 
     public TripInformation(final TripDuration duration, final Location start, final Location destination,
@@ -141,6 +144,22 @@ public class TripInformation {
 
     public BookingStatus getBookingStatus() {
         return bookingStatus;
+    }
+
+    public long getHotelId() {
+        return hotelId;
+    }
+
+    public void setHotelId(long hotelId) {
+        this.hotelId = hotelId;
+    }
+
+    public long getFlightId() {
+        return flightId;
+    }
+
+    public void setFlightId(long flightId) {
+        this.flightId = flightId;
     }
 
     public void cancel() {

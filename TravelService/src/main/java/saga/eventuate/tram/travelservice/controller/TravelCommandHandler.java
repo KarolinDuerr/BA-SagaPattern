@@ -8,17 +8,14 @@ import io.eventuate.tram.sagas.participant.SagaCommandHandlersBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import saga.eventuate.tram.travelservice.api.TravelServiceChannels;
 import saga.eventuate.tram.travelservice.command.ConfirmTripBooking;
 import saga.eventuate.tram.travelservice.command.RejectTripCommand;
-import saga.eventuate.tram.travelservice.error.TravelException;
 import saga.eventuate.tram.travelservice.model.RejectionReason;
 
 /**
  * The travel service Saga Participant for handling the commands created by the BookTripSaga.
  */
-@Component
 public class TravelCommandHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(TravelCommandHandler.class);
@@ -50,12 +47,13 @@ public class TravelCommandHandler {
     }
 
     private Message confirmBooking(CommandMessage<ConfirmTripBooking> command) {
-        final long tripId = command.getCommand().getTripId();
-        logger.info("Received ConfirmTripBooking for tripId = " + tripId);
+        final ConfirmTripBooking confirmTripBooking = command.getCommand();
+        logger.info("Received ConfirmTripBooking for tripId = " + confirmTripBooking.getTripId());
 
-        travelService.confirmTripBooking(tripId);
+        travelService.confirmTripBooking(confirmTripBooking.getTripId(), confirmTripBooking.getHotelId(),
+                confirmTripBooking.getFlightId());
 
-        logger.info("Successfully confirmed trip with tripId = " + tripId);
+        logger.info("Successfully confirmed trip with tripId = " + confirmTripBooking.getTripId());
         return CommandHandlerReplyBuilder.withSuccess();
     }
 

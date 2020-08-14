@@ -21,7 +21,7 @@ public class BookTripSagaData {
     private RejectionReason rejectionReason;
 
     public BookTripSagaData() {
-        this.tripId = -1;
+        this.tripId = 0;
         this.hotelId = -1;
         this.flightId = -1;
     }
@@ -71,7 +71,7 @@ public class BookTripSagaData {
         StayDurationDTO stayDuration = new StayDurationDTO(tripInformation.getDuration().getStart(),
                 tripInformation.getDuration().getEnd());
         return new BookHotelRequest(getTripId(), destination, stayDuration, tripInformation.getNumberOfPersons(),
-                tripInformation.getNumberOfPersons());
+                tripInformation.getNumberOfRooms());
     }
 
     public BookFlightCommand makeBookFlightCommand() {
@@ -79,7 +79,7 @@ public class BookTripSagaData {
                 tripInformation.getStart().getCountry());
         LocationDTO destination = new LocationDTO(tripInformation.getDestination().getCountry(),
                 tripInformation.getDestination().getCountry());
-        return new BookFlightCommand(home, destination, tripInformation.getDuration().getStart(),
+        return new BookFlightCommand(getTripId(), home, destination, tripInformation.getDuration().getStart(),
                 tripInformation.getDuration().getEnd(),
                 tripInformation.getOneWayFlight(), tripInformation.getTravellerNames());
     }
