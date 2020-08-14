@@ -24,7 +24,7 @@ public class HotelBooking {
     @Enumerated(EnumType.STRING)
     private BookingStatus bookingStatus;
 
-    public HotelBooking() {
+    private HotelBooking() {
 
     }
 

@@ -5,20 +5,27 @@ import saga.eventuate.tram.hotelservice.error.HotelException;
 import saga.eventuate.tram.hotelservice.model.HotelBooking;
 import saga.eventuate.tram.hotelservice.model.HotelBookingInformation;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Qualifier("HotelService")
 public interface IHotelService {
 
+    @Transactional
     List<HotelBooking> getHotelBookings();
 
-    HotelBooking getHotelBooking(Long bookingId) throws HotelException;
+    @Transactional
+    HotelBooking getHotelBooking(final Long bookingId) throws HotelException;
 
-    HotelBooking bookHotel(HotelBookingInformation hotelBooking);
+    @Transactional
+    HotelBooking bookHotel(final HotelBookingInformation hotelBooking);
 
-    boolean cancelHotelBooking(Long bookingId) throws HotelException;
+    @Transactional
+    boolean cancelHotelBooking(final Long bookingId) throws HotelException;
 
-    void cancelHotelBooking(Long bookingId, Long tripId);
+    @Transactional
+    void cancelHotelBooking(final Long bookingId, final Long tripId);
 
-    void confirmHotelBooking(Long bookingId, Long tripId);
+    @Transactional
+    void confirmHotelBooking(final Long bookingId, final Long tripId);
 }

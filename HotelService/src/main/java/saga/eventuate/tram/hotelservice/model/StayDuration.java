@@ -16,7 +16,7 @@ public class StayDuration {
 
     private long numberOfNights;
 
-    public StayDuration() {
+    private StayDuration() {
 
     }
 
@@ -54,7 +54,7 @@ public class StayDuration {
         return numberOfNights;
     }
 
-    private void validateDates(Date arrival, Date departure) throws HotelException {
+    private void validateDates(final Date arrival, final Date departure) throws HotelException {
         if (arrival == null  || departure == null) {
             return;
         }

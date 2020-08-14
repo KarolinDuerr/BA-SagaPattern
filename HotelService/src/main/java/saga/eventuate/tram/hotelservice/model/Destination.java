@@ -9,7 +9,7 @@ public class Destination {
 
     private String city;
 
-    public Destination() {
+    private Destination() {
 
     }
 

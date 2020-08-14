@@ -12,7 +12,7 @@ public class HotelBookingDTO {
 
     private BookingStatus bookingStatus;
 
-    public HotelBookingDTO() {
+    private HotelBookingDTO() {
 
     }
 
@@ -35,7 +35,7 @@ public class HotelBookingDTO {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(final Long id) {
         this.id = id;
     }
 
@@ -43,7 +43,7 @@ public class HotelBookingDTO {
         return hotelName;
     }
 
-    public void setHotelName(String hotelName) {
+    public void setHotelName(final String hotelName) {
         this.hotelName = hotelName;
     }
 
@@ -51,7 +51,7 @@ public class HotelBookingDTO {
         return bookingInformation;
     }
 
-    public void setBookingInformation(HotelBookingInformationDTO bookingInformation) {
+    public void setBookingInformation(final HotelBookingInformationDTO bookingInformation) {
         this.bookingInformation = bookingInformation;
     }
 
@@ -59,7 +59,7 @@ public class HotelBookingDTO {
         return bookingStatus;
     }
 
-    public void setBookingStatus(BookingStatus bookingStatus) {
+    public void setBookingStatus(final BookingStatus bookingStatus) {
         this.bookingStatus = bookingStatus;
     }
 

@@ -15,7 +15,7 @@ public class HotelBookingInformationDTO {
 
     private final long tripId;
 
-    public HotelBookingInformationDTO() {
+    private HotelBookingInformationDTO() {
         this.tripId = -1; // no trip assigned to this booking
     }
 

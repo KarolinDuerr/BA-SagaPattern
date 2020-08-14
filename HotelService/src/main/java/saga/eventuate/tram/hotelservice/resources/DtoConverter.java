@@ -18,7 +18,7 @@ import java.util.List;
 
 public class DtoConverter {
 
-    public HotelBookingInformation convertToHotelBookingInformation(BookHotelRequest bookHotelRequest) throws ConverterException, HotelException {
+    public HotelBookingInformation convertToHotelBookingInformation(final BookHotelRequest bookHotelRequest) throws ConverterException, HotelException {
         if (bookHotelRequest == null) {
             throw new ConverterException("The information to book a hotel is missing.");
         }
@@ -29,7 +29,7 @@ public class DtoConverter {
                 bookHotelRequest.getNumberOfRooms());
     }
 
-    public Destination convertToDestination(DestinationDTO destinationDTO) throws ConverterException {
+    public Destination convertToDestination(final DestinationDTO destinationDTO) throws ConverterException {
         if (destinationDTO == null) {
             throw new ConverterException("The destination for the stay is missing.");
         }
@@ -37,7 +37,7 @@ public class DtoConverter {
         return new Destination(destinationDTO.getCountry(), destinationDTO.getCity());
     }
 
-    public StayDuration convertToStayDuration(StayDurationDTO stayDurationDTO) throws ConverterException,
+    public StayDuration convertToStayDuration(final StayDurationDTO stayDurationDTO) throws ConverterException,
             HotelException {
         if (stayDurationDTO == null) {
             throw new ConverterException("The duration for the stay is missing.");
@@ -50,7 +50,7 @@ public class DtoConverter {
         return new StayDuration(stayDurationDTO.getArrival(), stayDurationDTO.getDeparture());
     }
 
-    public List<HotelBookingDTO> convertToHotelBookingDTOList(List<HotelBooking> hotelBookings) throws ConverterException {
+    public List<HotelBookingDTO> convertToHotelBookingDTOList(final List<HotelBooking> hotelBookings) throws ConverterException {
         if (hotelBookings == null) {
             throw new ConverterException(ErrorType.INTERNAL_ERROR, "The generated hotel bookings could not be " +
                     "received.");
@@ -65,7 +65,7 @@ public class DtoConverter {
         return hotelBookingDTOs;
     }
 
-    public HotelBookingDTO convertToHotelBookingDTO(HotelBooking hotelBooking) throws ConverterException {
+    public HotelBookingDTO convertToHotelBookingDTO(final HotelBooking hotelBooking) throws ConverterException {
         if (hotelBooking == null) {
             throw new ConverterException(ErrorType.INTERNAL_ERROR, "The generated hotel booking could not be received" +
                     ".");
@@ -75,7 +75,7 @@ public class DtoConverter {
                 convertToHotelBookingInformationDTO(hotelBooking.getBookingInformation()));
     }
 
-    public HotelBookingInformationDTO convertToHotelBookingInformationDTO(HotelBookingInformation hotelBookingInformation) throws ConverterException {
+    public HotelBookingInformationDTO convertToHotelBookingInformationDTO(final HotelBookingInformation hotelBookingInformation) throws ConverterException {
         if (hotelBookingInformation == null) {
             throw new ConverterException(ErrorType.INTERNAL_ERROR, "The included hotel information for the received " +
                     "booking is missing.");
@@ -87,7 +87,7 @@ public class DtoConverter {
                 hotelBookingInformation.getTripId());
     }
 
-    public DestinationDTO convertToDestinationDTO(Destination destination) throws ConverterException {
+    public DestinationDTO convertToDestinationDTO(final Destination destination) throws ConverterException {
         if (destination == null) {
             throw new ConverterException(ErrorType.INTERNAL_ERROR, "The destination for the received hotel booking is" +
                     " missing.");
@@ -96,7 +96,7 @@ public class DtoConverter {
         return new DestinationDTO(destination.getCountry(), destination.getCity());
     }
 
-    public StayDurationDTO convertToStayDurationDTO(StayDuration stayDuration) throws ConverterException {
+    public StayDurationDTO convertToStayDurationDTO(final StayDuration stayDuration) throws ConverterException {
         if (stayDuration == null) {
             throw new ConverterException(ErrorType.INTERNAL_ERROR, "The stay duration for the received hotel booking " +
                     "is missing.");

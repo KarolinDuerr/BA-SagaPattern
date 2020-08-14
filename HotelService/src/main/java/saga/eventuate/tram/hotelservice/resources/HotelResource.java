@@ -10,8 +10,7 @@ import org.springframework.web.server.ResponseStatusException;
 import saga.eventuate.tram.hotelservice.api.dto.BookHotelRequest;
 import saga.eventuate.tram.hotelservice.api.dto.BookHotelResponse;
 import saga.eventuate.tram.hotelservice.controller.IHotelService;
-import saga.eventuate.tram.hotelservice.error.ConverterException;
-import saga.eventuate.tram.hotelservice.error.HotelException;
+import saga.eventuate.tram.hotelservice.error.*;
 import saga.eventuate.tram.hotelservice.model.HotelBooking;
 import saga.eventuate.tram.hotelservice.model.HotelBookingInformation;
 import saga.eventuate.tram.hotelservice.model.dto.HotelBookingDTO;
@@ -45,7 +44,7 @@ public class HotelResource {
     }
 
     @GetMapping("/bookings/{bookingId}")
-    public ResponseEntity<HotelBookingDTO> getHotelBooking(@PathVariable(value = "bookingId") Long bookingId) throws HotelException, ConverterException {
+    public ResponseEntity<HotelBookingDTO> getHotelBooking(@PathVariable(value = "bookingId") final Long bookingId) throws HotelException, ConverterException {
         logger.info("Get hotel with ID: " + bookingId);
 
         HotelBooking hotelBooking = hotelService.getHotelBooking(bookingId);
@@ -80,7 +79,7 @@ public class HotelResource {
     }
 
     @DeleteMapping("/bookings/{bookingId}")
-    public ResponseEntity cancelHotel(@PathVariable(value = "bookingId") Long bookingId) throws HotelException {
+    public ResponseEntity cancelHotel(@PathVariable(value = "bookingId") final Long bookingId) throws HotelException {
         logger.info("Cancel hotel booking with ID " + bookingId);
 
         boolean hotelCancelled = hotelService.cancelHotelBooking(bookingId);

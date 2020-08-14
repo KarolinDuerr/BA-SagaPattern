@@ -17,7 +17,7 @@ public class HotelBookingInformation {
 
     private final long tripId;
 
-    public HotelBookingInformation() {
+    private HotelBookingInformation() {
         tripId = -1; // no trip assigned to this booking
     }
 
