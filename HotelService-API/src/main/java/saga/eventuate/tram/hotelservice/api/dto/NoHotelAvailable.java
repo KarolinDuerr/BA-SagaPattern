@@ -6,7 +6,7 @@ public class NoHotelAvailable implements Command {
 
     private final long tripId;
 
-    public NoHotelAvailable() {
+    private NoHotelAvailable() {
         tripId = -1;
     }
 

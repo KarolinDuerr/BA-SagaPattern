@@ -8,7 +8,7 @@ public class ConfirmHotelBooking implements Command {
 
     private final long bookingId;
 
-    public ConfirmHotelBooking() {
+    private ConfirmHotelBooking() {
         bookingId = -1;
         tripId = -1;
     }

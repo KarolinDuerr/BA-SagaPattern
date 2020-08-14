@@ -6,7 +6,7 @@ public class DestinationDTO {
 
     private String city;
 
-    public DestinationDTO() {
+    private DestinationDTO() {
 
     }
 

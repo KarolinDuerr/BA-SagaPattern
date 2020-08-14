@@ -8,7 +8,7 @@ public class BookHotelResponse {
 
     private String bookingStatus;
 
-    public BookHotelResponse() {
+    private BookHotelResponse() {
 
     }
 

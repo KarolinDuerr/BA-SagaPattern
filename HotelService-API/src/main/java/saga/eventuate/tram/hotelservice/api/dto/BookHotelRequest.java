@@ -14,7 +14,7 @@ public class BookHotelRequest implements Command {
 
     private int numberOfRooms;
 
-    public BookHotelRequest() {
+    private BookHotelRequest() {
         this.tripId = -1; // no trip assigned to this booking
     }
 

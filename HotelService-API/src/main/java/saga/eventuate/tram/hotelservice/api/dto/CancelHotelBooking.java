@@ -8,7 +8,7 @@ public class CancelHotelBooking implements Command {
 
     private final long bookingId;
 
-    public CancelHotelBooking() {
+    private CancelHotelBooking() {
         bookingId = -1;
         tripId = -1;
     }
