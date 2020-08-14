@@ -1,6 +1,5 @@
 package saga.eventuate.tram.travelservice.model;
 
-import saga.eventuate.tram.travelservice.error.ErrorType;
 import saga.eventuate.tram.travelservice.error.UnsupportedStateTransition;
 
 import javax.persistence.*;
@@ -23,17 +22,17 @@ public class TripInformation {
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name = "country", column = @Column(name = "destination_country")),
-            @AttributeOverride(name = "city", column = @Column(name = "destination_city"))
-    })
-    private Location destination;
-
-    @Embedded
-    @AttributeOverrides({
             @AttributeOverride(name = "country", column = @Column(name = "start_country")),
             @AttributeOverride(name = "city", column = @Column(name = "start_city"))
     })
     private Location start;
+
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "country", column = @Column(name = "destination_country")),
+            @AttributeOverride(name = "city", column = @Column(name = "destination_city"))
+    })
+    private Location destination;
 
     @ElementCollection
     private List<String> travellerNames;
@@ -54,6 +53,7 @@ public class TripInformation {
     private long flightId = -1;
 
     private TripInformation() {
+
     }
 
     public TripInformation(final TripDuration duration, final Location start, final Location destination,
@@ -210,6 +210,8 @@ public class TripInformation {
                 ", oneWayFlight=" + oneWayFlight +
                 ", customerId=" + customerId +
                 ", bookingStatus=" + bookingStatus +
+                ", hotelId=" + hotelId +
+                ", flightId=" + flightId +
                 '}';
     }
 }

@@ -8,7 +8,7 @@ public class TripDurationDTO {
 
     private Date end;
 
-    public TripDurationDTO() {
+    private TripDurationDTO() {
 
     }
 

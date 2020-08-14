@@ -20,7 +20,7 @@ public class BookTripSagaData {
 
     private RejectionReason rejectionReason;
 
-    public BookTripSagaData() {
+    private BookTripSagaData() {
         this.tripId = 0;
         this.hotelId = -1;
         this.flightId = -1;

@@ -21,9 +21,9 @@ public class TravelCommandHandler {
     private static final Logger logger = LoggerFactory.getLogger(TravelCommandHandler.class);
 
     @Autowired
-    private ITravelService travelService;
+    private final ITravelService travelService;
 
-    public TravelCommandHandler(ITravelService travelService) {
+    public TravelCommandHandler(final ITravelService travelService) {
         this.travelService = travelService;
     }
 

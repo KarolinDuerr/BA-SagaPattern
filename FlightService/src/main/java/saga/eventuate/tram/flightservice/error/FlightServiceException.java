@@ -11,7 +11,7 @@ public class FlightServiceException extends Exception {
     /**
      * The {@link ErrorType} that occurred and lead to this exception.
      */
-    private ErrorType errorType;
+    private final ErrorType errorType;
 
     public FlightServiceException(ErrorType errorType, String message) {
         super(message);

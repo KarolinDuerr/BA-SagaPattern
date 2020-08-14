@@ -9,7 +9,7 @@ public class RejectTripCommand implements Command {
 
     private final RejectionReason rejectionReason;
 
-    public RejectTripCommand() {
+    private RejectTripCommand() {
         tripId = -1;
         rejectionReason = RejectionReason.REASON_UNKNOWN;
     }
@@ -25,5 +25,13 @@ public class RejectTripCommand implements Command {
 
     public RejectionReason getRejectionReason() {
         return rejectionReason;
+    }
+
+    @Override
+    public String toString() {
+        return "RejectTripCommand{" +
+                "tripId=" + tripId +
+                ", rejectionReason=" + rejectionReason +
+                '}';
     }
 }

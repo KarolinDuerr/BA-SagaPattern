@@ -57,7 +57,7 @@ public class TravelService implements  ITravelService {
     }
 
     @Override
-    public TripInformation getTripInformation(Long tripId) throws TravelException {
+    public TripInformation getTripInformation(final Long tripId) throws TravelException {
         logger.info(String.format("Get trip booking (ID: %d) from Repository.", tripId));
 
         Optional<TripInformation> tripInformation = tripInformationRepository.findById(tripId);
@@ -72,7 +72,7 @@ public class TravelService implements  ITravelService {
     }
 
     @Override
-    public TripInformation bookTrip(TripInformation tripInformation) {
+    public TripInformation bookTrip(final TripInformation tripInformation) {
         logger.info("Saving the booked Trip: " + tripInformation);
 
         tripInformationRepository.save(tripInformation);
@@ -85,7 +85,7 @@ public class TravelService implements  ITravelService {
     }
 
     @Override
-    public boolean cancelTrip(Long tripId) throws TravelException {
+    public boolean cancelTrip(final Long tripId) throws TravelException {
         logger.info("Cancelling the booked trip with ID " + tripId);
 
         TripInformation tripInformation = getTripInformation(tripId);
@@ -103,7 +103,7 @@ public class TravelService implements  ITravelService {
     }
 
     @Override
-    public void rejectTrip(Long tripId, RejectionReason rejectionReason) {
+    public void rejectTrip(final Long tripId, final RejectionReason rejectionReason) {
         logger.info("Rejecting the booked trip with ID " + tripId);
 
         TripInformation tripInformation = null;
@@ -119,13 +119,15 @@ public class TravelService implements  ITravelService {
     }
 
     @Override
-    public void confirmTripBooking(Long tripId) {
+    public void confirmTripBooking(final Long tripId, final long hotelId, final long flightId) {
         logger.info("Confirming the booked trip with ID " + tripId);
 
         TripInformation tripInformation = null;
         try {
             tripInformation = getTripInformation(tripId);
 
+            tripInformation.setHotelId(hotelId);
+            tripInformation.setFlightId(flightId);
             tripInformation.confirm();
             tripInformationRepository.save(tripInformation);
         } catch (TravelException exception) {
@@ -133,7 +135,7 @@ public class TravelService implements  ITravelService {
         }
     }
 
-    private BookingStatus convertToBookingStatus(RejectionReason rejectionReason) {
+    private BookingStatus convertToBookingStatus(final RejectionReason rejectionReason) {
         switch(rejectionReason) {
             case NO_HOTEL_AVAILABLE:
                 return BookingStatus.REJECTED_NO_HOTEL_AVAILABLE;

@@ -6,9 +6,9 @@ public class BookTripRequest {
 
     private TripDurationDTO duration;
 
-    private LocationDTO destination;
-
     private LocationDTO start;
+
+    private LocationDTO destination;
 
     private List<String> travellerNames;
 
@@ -24,7 +24,7 @@ public class BookTripRequest {
 
     }
 
-    private BookTripRequest(final TripDurationDTO duration, final LocationDTO destination, final LocationDTO start,
+    private BookTripRequest(final TripDurationDTO duration, final LocationDTO start, final LocationDTO destination,
                             final List<String> travellerNames, final int numberOfPersons, final int numberOfRooms,
                             final boolean oneWayFlight, final long customerId) {
         this.duration = duration;
@@ -45,20 +45,20 @@ public class BookTripRequest {
         this.duration = duration;
     }
 
-    public LocationDTO getDestination() {
-        return destination;
-    }
-
-    public void setDestination(final LocationDTO destination) {
-        this.destination = destination;
-    }
-
     public LocationDTO getStart() {
         return start;
     }
 
     public void setStart(final LocationDTO start) {
         this.start = start;
+    }
+
+    public LocationDTO getDestination() {
+        return destination;
+    }
+
+    public void setDestination(final LocationDTO destination) {
+        this.destination = destination;
     }
 
     public List<String> getTravellerNames() {
@@ -105,8 +105,8 @@ public class BookTripRequest {
     public String toString() {
         return "BookTripRequest{" +
                 "duration=" + duration +
-                ", destination=" + destination +
                 ", start=" + start +
+                ", destination=" + destination +
                 ", travellerNames=" + travellerNames +
                 ", numberOfPersons=" + numberOfPersons +
                 ", numberOfRooms=" + numberOfRooms +

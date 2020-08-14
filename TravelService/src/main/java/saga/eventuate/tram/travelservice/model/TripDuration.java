@@ -13,7 +13,7 @@ public class TripDuration {
 
     private Date end;
 
-    public TripDuration() {
+    private TripDuration() {
 
     }
 

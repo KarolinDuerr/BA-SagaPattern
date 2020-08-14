@@ -1,24 +1,24 @@
-package saga.eventuate.tram.hotelservice.error;
+package saga.eventuate.tram.travelservice.error;
 
 /**
- * This is the general exception for the hotel service, if there are any issues
- * faced, during using the hotel service.
+ * This is the general exception for the travel service, if there are any issues
+ * faced, during using the travel service.
  *
  * @see Exception
  */
-public class HotelServiceException extends Exception {
+public class TravelServiceException extends Exception {
 
     /**
      * The {@link ErrorType} that occurred and lead to this exception.
      */
     private final ErrorType errorType;
 
-    public HotelServiceException(ErrorType errorType, String message) {
+    public TravelServiceException(ErrorType errorType, String message) {
         super(message);
         this.errorType = errorType;
     }
 
-    public HotelServiceException(ErrorType errorType, String message, Throwable cause) {
+    public TravelServiceException(ErrorType errorType, String message, Throwable cause) {
         super(message, cause);
         this.errorType = errorType;
     }

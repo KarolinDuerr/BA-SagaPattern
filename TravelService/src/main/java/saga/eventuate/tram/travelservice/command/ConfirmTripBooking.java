@@ -10,7 +10,7 @@ public class ConfirmTripBooking implements Command {
 
     private final long flightId;
 
-    public ConfirmTripBooking() {
+    private ConfirmTripBooking() {
         tripId = -1;
         hotelId = -1;
         flightId = -1;
@@ -32,5 +32,14 @@ public class ConfirmTripBooking implements Command {
 
     public long getFlightId() {
         return flightId;
+    }
+
+    @Override
+    public String toString() {
+        return "ConfirmTripBooking{" +
+                "tripId=" + tripId +
+                ", hotelId=" + hotelId +
+                ", flightId=" + flightId +
+                '}';
     }
 }

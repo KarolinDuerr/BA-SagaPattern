@@ -12,9 +12,9 @@ public class TripInformationDTO {
 
     private TripDurationDTO duration;
 
-    private LocationDTO destination;
-
     private LocationDTO start;
+
+    private LocationDTO destination;
 
     private List<String> travellerNames;
 
@@ -32,14 +32,14 @@ public class TripInformationDTO {
 
     private long flightId = -1;
 
-    private TripInformationDTO() {
+    public TripInformationDTO() {
 
     }
 
-    public TripInformationDTO(final long id, final TripDurationDTO duration, final LocationDTO destination,
-                              final LocationDTO start, final List<String> travellerNames, final int numberOfPersons,
-                              final int numberOfRooms, final boolean oneWayFlight, final long customerId,
-                              final BookingStatus bookingStatus) {
+    public TripInformationDTO(final long id, final TripDurationDTO duration, final LocationDTO start,
+                              final LocationDTO destination, final List<String> travellerNames,
+                              final int numberOfPersons, final int numberOfRooms, final boolean oneWayFlight,
+                              final long customerId, final BookingStatus bookingStatus) {
         this.id = id;
         this.duration = duration;
         this.destination = destination;
@@ -52,10 +52,11 @@ public class TripInformationDTO {
         this.bookingStatus = bookingStatus;
     }
 
-    public TripInformationDTO(final long id, final TripDurationDTO duration, final LocationDTO destination,
-                              final LocationDTO start, final List<String> travellerNames, final int numberOfPersons,
-                              final int numberOfRooms, final boolean oneWayFlight, final long customerId,
-                              final BookingStatus bookingStatus, final long hotelId, final long flightId) {
+    public TripInformationDTO(final long id, final TripDurationDTO duration, final LocationDTO start,
+                              final LocationDTO destination, final List<String> travellerNames,
+                              final int numberOfPersons, final int numberOfRooms, final boolean oneWayFlight,
+                              final long customerId, final BookingStatus bookingStatus, final long hotelId,
+                              final long flightId) {
         this.id = id;
         this.duration = duration;
         this.destination = destination;
@@ -86,20 +87,20 @@ public class TripInformationDTO {
         this.duration = duration;
     }
 
-    public LocationDTO getDestination() {
-        return destination;
-    }
-
-    public void setDestination(final LocationDTO destination) {
-        this.destination = destination;
-    }
-
     public LocationDTO getStart() {
         return start;
     }
 
     public void setStart(final LocationDTO start) {
         this.start = start;
+    }
+
+    public LocationDTO getDestination() {
+        return destination;
+    }
+
+    public void setDestination(final LocationDTO destination) {
+        this.destination = destination;
     }
 
     public List<String> getTravellerNames() {
@@ -171,14 +172,16 @@ public class TripInformationDTO {
         return "TripInformationDTO{" +
                 "id=" + id +
                 ", duration=" + duration +
-                ", destination=" + destination +
                 ", start=" + start +
+                ", destination=" + destination +
                 ", travellerNames=" + travellerNames +
                 ", numberOfPersons=" + numberOfPersons +
                 ", numberOfRooms=" + numberOfRooms +
                 ", oneWayFlight=" + oneWayFlight +
                 ", customerId=" + customerId +
                 ", bookingStatus=" + bookingStatus +
+                ", hotelId=" + hotelId +
+                ", flightId=" + flightId +
                 '}';
     }
 }

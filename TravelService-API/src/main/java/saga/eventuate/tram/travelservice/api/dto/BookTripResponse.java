@@ -2,13 +2,13 @@ package saga.eventuate.tram.travelservice.api.dto;
 
 public class BookTripResponse {
 
-    private long tripId;
-
-//    private String hotelName; // TODO
-
-//    private String // TODO
+    private final long tripId;
 
     private String bookingStatus;
+
+    private BookTripResponse() {
+        tripId = -1;
+    }
 
     public BookTripResponse(final Long tripId, final String bookingStatus) {
         this.tripId = tripId;
