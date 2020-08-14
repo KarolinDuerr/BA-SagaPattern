@@ -24,12 +24,12 @@ public class HotelCommandHandler {
     private static final Logger logger = LoggerFactory.getLogger(HotelCommandHandler.class);
 
     @Autowired
-    private IHotelService hotelService;
+    private final IHotelService hotelService;
 
     @Autowired
-    private DtoConverter dtoConverter;
+    private final DtoConverter dtoConverter;
 
-    public HotelCommandHandler(IHotelService hotelService, DtoConverter dtoConverter) {
+    public HotelCommandHandler(final IHotelService hotelService, final DtoConverter dtoConverter) {
         this.hotelService = hotelService;
         this.dtoConverter = dtoConverter;
     }

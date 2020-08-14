@@ -65,7 +65,7 @@ public class HotelBookingDTO {
 
     @Override
     public String toString() {
-        return "HotelBooking{" +
+        return "HotelBookingDTO{" +
                 "id=" + id +
                 ", hotelName='" + hotelName + '\'' +
                 ", bookingInformation=" + bookingInformation +

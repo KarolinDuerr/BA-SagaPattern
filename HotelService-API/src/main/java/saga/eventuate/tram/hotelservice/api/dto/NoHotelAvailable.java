@@ -17,4 +17,11 @@ public class NoHotelAvailable implements Command {
     public long getTripId() {
         return tripId;
     }
+
+    @Override
+    public String toString() {
+        return "NoHotelAvailable{" +
+                "tripId=" + tripId +
+                '}';
+    }
 }

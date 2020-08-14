@@ -25,4 +25,12 @@ public class ConfirmHotelBooking implements Command {
     public long getTripId() {
         return tripId;
     }
+
+    @Override
+    public String toString() {
+        return "ConfirmHotelBooking{" +
+                "tripId=" + tripId +
+                ", bookingId=" + bookingId +
+                '}';
+    }
 }

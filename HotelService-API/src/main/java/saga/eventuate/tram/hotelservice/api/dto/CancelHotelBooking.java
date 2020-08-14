@@ -25,4 +25,12 @@ public class CancelHotelBooking implements Command {
     public long getTripId() {
         return tripId;
     }
+
+    @Override
+    public String toString() {
+        return "CancelHotelBooking{" +
+                "tripId=" + tripId +
+                ", bookingId=" + bookingId +
+                '}';
+    }
 }

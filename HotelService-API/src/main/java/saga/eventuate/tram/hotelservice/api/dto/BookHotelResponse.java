@@ -29,4 +29,13 @@ public class BookHotelResponse {
     public String getBookingStatus() {
         return bookingStatus;
     }
+
+    @Override
+    public String toString() {
+        return "BookHotelResponse{" +
+                "bookingId=" + bookingId +
+                ", hotelName='" + hotelName + '\'' +
+                ", bookingStatus='" + bookingStatus + '\'' +
+                '}';
+    }
 }
