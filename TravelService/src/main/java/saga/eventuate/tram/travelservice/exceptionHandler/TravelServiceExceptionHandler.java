@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import saga.eventuate.tram.travelservice.error.ErrorMessage;
 import saga.eventuate.tram.travelservice.error.ErrorType;
 import saga.eventuate.tram.travelservice.error.TravelServiceException;
 
@@ -15,7 +16,8 @@ public class TravelServiceExceptionHandler extends ResponseEntityExceptionHandle
 
     @ExceptionHandler(value = TravelServiceException.class)
     protected ResponseEntity<Object> handle(TravelServiceException exception, WebRequest webRequest) {
-        return handleExceptionInternal(exception, exception.getMessage(), new HttpHeaders(),
+        ErrorMessage errorMessage = new ErrorMessage(exception.getErrorType(), exception.getMessage());
+        return handleExceptionInternal(exception, errorMessage, new HttpHeaders(),
                 mapErrorTypeToResponseStatus(exception.getErrorType()), webRequest);
     }
 
