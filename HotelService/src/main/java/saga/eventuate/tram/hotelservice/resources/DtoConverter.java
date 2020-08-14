@@ -29,27 +29,6 @@ public class DtoConverter {
                 bookHotelRequest.getNumberOfRooms());
     }
 
-    public Destination convertToDestination(final DestinationDTO destinationDTO) throws ConverterException {
-        if (destinationDTO == null) {
-            throw new ConverterException("The destination for the stay is missing.");
-        }
-
-        return new Destination(destinationDTO.getCountry(), destinationDTO.getCity());
-    }
-
-    public StayDuration convertToStayDuration(final StayDurationDTO stayDurationDTO) throws ConverterException,
-            HotelException {
-        if (stayDurationDTO == null) {
-            throw new ConverterException("The duration for the stay is missing.");
-        }
-
-        if (stayDurationDTO.getArrival() == null || stayDurationDTO.getDeparture() == null) {
-            throw new ConverterException("The duration start or end date for the stay is missing.");
-        }
-
-        return new StayDuration(stayDurationDTO.getArrival(), stayDurationDTO.getDeparture());
-    }
-
     public List<HotelBookingDTO> convertToHotelBookingDTOList(final List<HotelBooking> hotelBookings) throws ConverterException {
         if (hotelBookings == null) {
             throw new ConverterException(ErrorType.INTERNAL_ERROR, "The generated hotel bookings could not be " +
@@ -87,7 +66,28 @@ public class DtoConverter {
                 hotelBookingInformation.getTripId());
     }
 
-    public DestinationDTO convertToDestinationDTO(final Destination destination) throws ConverterException {
+    private Destination convertToDestination(final DestinationDTO destinationDTO) throws ConverterException {
+        if (destinationDTO == null) {
+            throw new ConverterException("The destination for the stay is missing.");
+        }
+
+        return new Destination(destinationDTO.getCountry(), destinationDTO.getCity());
+    }
+
+    private StayDuration convertToStayDuration(final StayDurationDTO stayDurationDTO) throws ConverterException,
+            HotelException {
+        if (stayDurationDTO == null) {
+            throw new ConverterException("The duration for the stay is missing.");
+        }
+
+        if (stayDurationDTO.getArrival() == null || stayDurationDTO.getDeparture() == null) {
+            throw new ConverterException("The duration start or end date for the stay is missing.");
+        }
+
+        return new StayDuration(stayDurationDTO.getArrival(), stayDurationDTO.getDeparture());
+    }
+
+    private DestinationDTO convertToDestinationDTO(final Destination destination) throws ConverterException {
         if (destination == null) {
             throw new ConverterException(ErrorType.INTERNAL_ERROR, "The destination for the received hotel booking is" +
                     " missing.");
@@ -96,7 +96,7 @@ public class DtoConverter {
         return new DestinationDTO(destination.getCountry(), destination.getCity());
     }
 
-    public StayDurationDTO convertToStayDurationDTO(final StayDuration stayDuration) throws ConverterException {
+    private StayDurationDTO convertToStayDurationDTO(final StayDuration stayDuration) throws ConverterException {
         if (stayDuration == null) {
             throw new ConverterException(ErrorType.INTERNAL_ERROR, "The stay duration for the received hotel booking " +
                     "is missing.");
