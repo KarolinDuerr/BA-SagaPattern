@@ -12,11 +12,13 @@ import saga.eventuate.tram.hotelservice.model.HotelBooking;
 import saga.eventuate.tram.hotelservice.model.HotelBookingInformation;
 import saga.eventuate.tram.hotelservice.model.HotelBookingRepository;
 
+import javax.transaction.Transactional;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
 @Component("HotelService")
+@Transactional
 public class HotelService implements IHotelService {
 
     private static final Logger logger = LoggerFactory.getLogger(HotelService.class);
@@ -24,7 +26,7 @@ public class HotelService implements IHotelService {
     @Autowired
     private final HotelBookingRepository hotelBookingRepository;
 
-    public HotelService(HotelBookingRepository hotelBookingRepository) {
+    public HotelService(final HotelBookingRepository hotelBookingRepository) {
         this.hotelBookingRepository = hotelBookingRepository;
     }
 
@@ -96,7 +98,7 @@ public class HotelService implements IHotelService {
     public void cancelHotelBooking(Long bookingId, Long tripId) {
         logger.info("Cancelling the booked hotel with ID " + bookingId);
 
-        HotelBooking hotelBooking = null;
+        HotelBooking hotelBooking;
         try {
             hotelBooking = getHotelBooking(bookingId);
 
@@ -115,7 +117,7 @@ public class HotelService implements IHotelService {
     public void confirmHotelBooking(Long bookingId, Long tripId) {
         logger.info("Confirming the booked hotel with ID " + bookingId);
 
-        HotelBooking hotelBooking = null;
+        HotelBooking hotelBooking;
         try {
             hotelBooking = getHotelBooking(bookingId);
 

@@ -8,11 +8,13 @@ import saga.eventuate.tram.flightservice.error.ErrorType;
 import saga.eventuate.tram.flightservice.error.FlightException;
 import saga.eventuate.tram.flightservice.model.*;
 
+import javax.transaction.Transactional;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
 @Component("FlightService")
+@Transactional
 public class FlightService implements IFlightService {
 
     private static final Logger logger = LoggerFactory.getLogger(FlightService.class);
