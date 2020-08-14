@@ -1,7 +1,5 @@
 package saga.eventuate.tram.flightservice.model;
 
-import saga.eventuate.tram.flightservice.error.FlightException;
-
 import javax.persistence.*;
 import java.util.Date;
 

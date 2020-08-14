@@ -8,7 +8,7 @@ import java.util.List;
 
 public class FindAndBookFlightInformation {
 
-    private long tripId;
+    private final long tripId;
 
     private Location home;
 
@@ -107,6 +107,10 @@ public class FindAndBookFlightInformation {
     }
 
     private void validateFlightDates(Date outboundFlightDate, Date returnFlightDate) throws FlightException {
+        if (outboundFlightDate == null || returnFlightDate == null) {
+            return;
+        }
+
         if (returnFlightDate.before(outboundFlightDate)) {
             throw new FlightException(ErrorType.INVALID_PARAMETER, "The date of the return flight is before the actual " +
                     "outbound flight.");

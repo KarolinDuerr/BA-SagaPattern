@@ -50,7 +50,7 @@ public class FlightInformation {
         this.returnFlight = returnFlight;
         this.travellerNames = travellerNames;
         this.tripId = -1; // no trip assigned to this booking
-        this.bookingStatus = BookingStatus.APPROVED;
+        this.bookingStatus = BookingStatus.CONFIRMED;
     }
 
     public FlightInformation(final Flight outboundFlight, final Flight returnFlight, final boolean oneWay,
@@ -63,7 +63,7 @@ public class FlightInformation {
         this.returnFlight = returnFlight;
         this.travellerNames = travellerNames;
         this.tripId = tripId;
-        this.bookingStatus = BookingStatus.APPROVED;
+        this.bookingStatus = BookingStatus.CONFIRMED;
     }
 
     public Long getId() {

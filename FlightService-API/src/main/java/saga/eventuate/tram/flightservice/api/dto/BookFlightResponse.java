@@ -4,8 +4,6 @@ public class BookFlightResponse {
 
     private long flightBookingId;
 
-    private String flightCompany;
-
     private String bookingStatus;
 
     public BookFlightResponse() {
@@ -29,7 +27,6 @@ public class BookFlightResponse {
     public String toString() {
         return "BookFlightResponse{" +
                 "flightBookingId=" + flightBookingId +
-                ", flightCompany='" + flightCompany + '\'' +
                 ", bookingStatus='" + bookingStatus + '\'' +
                 '}';
     }
