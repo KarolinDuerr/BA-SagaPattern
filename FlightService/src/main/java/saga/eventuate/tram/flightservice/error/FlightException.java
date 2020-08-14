@@ -1,20 +1,12 @@
 package saga.eventuate.tram.flightservice.error;
 
-public class FlightException extends Exception {
-
-    private ErrorType errorType;
+public class FlightException extends FlightServiceException {
 
     public FlightException(ErrorType errorType, String message) {
-        super(message);
-        this.errorType = errorType;
+        super(errorType, message);
     }
 
     public FlightException(ErrorType errorType, String message, Throwable cause) {
-        super(message, cause);
-        this.errorType = errorType;
-    }
-
-    public ErrorType getErrorType() {
-        return this.errorType;
+        super(errorType, message, cause);
     }
 }

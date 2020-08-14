@@ -121,6 +121,10 @@ public class FlightInformation {
     }
 
     private void validateFlightDates(Flight outboundFlight, Flight returnFlight) throws FlightException {
+        if (outboundFlight == null  || returnFlight == null) {
+            return;
+        }
+
         if (returnFlight.getFlightDate().before(outboundFlight.getFlightDate())) {
             throw new FlightException(ErrorType.INVALID_PARAMETER, "The date of the return flight is before the actual " +
                     "outbound flight.");

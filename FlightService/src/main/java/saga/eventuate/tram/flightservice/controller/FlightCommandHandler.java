@@ -12,13 +12,16 @@ import org.springframework.stereotype.Component;
 import saga.eventuate.tram.flightservice.api.FlightServiceChannels;
 import saga.eventuate.tram.flightservice.api.dto.BookFlightCommand;
 import saga.eventuate.tram.flightservice.api.dto.BookFlightResponse;
+import saga.eventuate.tram.flightservice.api.dto.NoFlightAvailable;
 import saga.eventuate.tram.flightservice.error.ConverterException;
+import saga.eventuate.tram.flightservice.error.ErrorType;
 import saga.eventuate.tram.flightservice.error.FlightException;
+import saga.eventuate.tram.flightservice.error.FlightServiceException;
 import saga.eventuate.tram.flightservice.model.FindAndBookFlightInformation;
 import saga.eventuate.tram.flightservice.model.FlightInformation;
 import saga.eventuate.tram.flightservice.resources.DtoConverter;
 
-@Component
+//@Component
 public class FlightCommandHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(FlightCommandHandler.class);
@@ -53,8 +56,14 @@ public class FlightCommandHandler {
             BookFlightResponse bookFlightResponse = new BookFlightResponse(receivedFlightInformation.getId(),
                     receivedFlightInformation.getBookingStatus().toString());
             return CommandHandlerReplyBuilder.withSuccess(bookFlightResponse);
-        } catch (ConverterException | FlightException exception) {
-            return CommandHandlerReplyBuilder.withFailure(exception);
+        } catch (FlightServiceException exception) {
+            logger.error(exception.toString());
+
+            if (exception.getErrorType() == ErrorType.NO_FLIGHT_AVAILABLE) {
+                return CommandHandlerReplyBuilder.withFailure(new NoFlightAvailable(bookFlightCommand.getTripId()));
+            }
+
+            return CommandHandlerReplyBuilder.withFailure(exception.toString());
         }
     }
 }
