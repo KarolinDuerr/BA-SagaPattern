@@ -65,7 +65,7 @@ public class BookTripRequest {
         return travellerNames;
     }
 
-    public void setTravellerNames(List<String> travellerNames) {
+    public void setTravellerNames(final List<String> travellerNames) {
         this.travellerNames = travellerNames;
     }
 

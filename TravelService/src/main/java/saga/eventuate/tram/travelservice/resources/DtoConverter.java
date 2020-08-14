@@ -16,7 +16,7 @@ import java.util.List;
 
 public class DtoConverter {
 
-    public TripInformation convertToTripInformation(BookTripRequest bookTripRequest) throws ConverterException,
+    public TripInformation convertToTripInformation(final BookTripRequest bookTripRequest) throws ConverterException,
             TravelException {
         if (bookTripRequest == null) {
             throw new ConverterException("The information to book a trip is missing.");
@@ -30,24 +30,7 @@ public class DtoConverter {
                 bookTripRequest.getOneWayFlight(), bookTripRequest.getCustomerId());
     }
 
-    public TripDuration convertToTripDuration(TripDurationDTO tripDurationDTO) throws ConverterException,
-            TravelException {
-        if (tripDurationDTO == null) {
-            throw new ConverterException("The duration of the trip is missing.");
-        }
-
-        return new TripDuration(tripDurationDTO.getStart(), tripDurationDTO.getEnd());
-    }
-
-    public Location convertToLocation(LocationDTO locationDTO) throws ConverterException {
-        if (locationDTO == null) {
-            throw new ConverterException("The location information of the trip is missing.");
-        }
-
-        return new Location(locationDTO.getCountry(), locationDTO.getCity());
-    }
-
-    public List<TripInformationDTO> convertToTripInformationDTOList(List<TripInformation> tripsInformation) throws ConverterException {
+   public List<TripInformationDTO> convertToTripInformationDTOList(final List<TripInformation> tripsInformation) throws ConverterException {
         if (tripsInformation == null) {
             throw new ConverterException(ErrorType.INTERNAL_ERROR, "The generated trips information could not be " +
                     "received.");
@@ -62,7 +45,7 @@ public class DtoConverter {
         return tripsInformationDTOs;
     }
 
-    public TripInformationDTO convertToTripInformationDTO(TripInformation tripInformation) throws ConverterException {
+    public TripInformationDTO convertToTripInformationDTO(final TripInformation tripInformation) throws ConverterException {
         if (tripInformation == null) {
             throw new ConverterException(ErrorType.INTERNAL_ERROR, "The generated trip booking could not be " +
                     "received.");
@@ -78,7 +61,24 @@ public class DtoConverter {
                 tripInformation.getFlightId());
     }
 
-    public TripDurationDTO convertToTripDurationDTO(TripDuration tripDuration) throws ConverterException {
+    private TripDuration convertToTripDuration(final TripDurationDTO tripDurationDTO) throws ConverterException,
+            TravelException {
+        if (tripDurationDTO == null) {
+            throw new ConverterException("The duration of the trip is missing.");
+        }
+
+        return new TripDuration(tripDurationDTO.getStart(), tripDurationDTO.getEnd());
+    }
+
+    private Location convertToLocation(final LocationDTO locationDTO) throws ConverterException {
+        if (locationDTO == null) {
+            throw new ConverterException("The location information of the trip is missing.");
+        }
+
+        return new Location(locationDTO.getCountry(), locationDTO.getCity());
+    }
+
+    private TripDurationDTO convertToTripDurationDTO(final TripDuration tripDuration) throws ConverterException {
         if (tripDuration == null) {
             throw new ConverterException(ErrorType.INTERNAL_ERROR, "The included trip duration could not be received.");
         }
@@ -86,7 +86,7 @@ public class DtoConverter {
         return new TripDurationDTO(tripDuration.getStart(), tripDuration.getEnd());
     }
 
-    public LocationDTO convertToLocationDTO(Location location) throws ConverterException {
+    private LocationDTO convertToLocationDTO(final Location location) throws ConverterException {
         if (location == null) {
             throw new ConverterException(ErrorType.INTERNAL_ERROR, "The included location could not be received.");
         }

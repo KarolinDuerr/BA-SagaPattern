@@ -74,7 +74,7 @@ public class TripInformation {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(final Long id) {
         this.id = id;
     }
 
@@ -106,7 +106,7 @@ public class TripInformation {
         return travellerNames;
     }
 
-    public void setTravellerNames(List<String> travellerNames) {
+    public void setTravellerNames(final List<String> travellerNames) {
         this.travellerNames = travellerNames;
     }
 
@@ -150,7 +150,7 @@ public class TripInformation {
         return hotelId;
     }
 
-    public void setHotelId(long hotelId) {
+    public void setHotelId(final long hotelId) {
         this.hotelId = hotelId;
     }
 
@@ -158,7 +158,7 @@ public class TripInformation {
         return flightId;
     }
 
-    public void setFlightId(long flightId) {
+    public void setFlightId(final long flightId) {
         this.flightId = flightId;
     }
 
@@ -174,7 +174,7 @@ public class TripInformation {
         }
     }
 
-    public void reject(BookingStatus bookingStatus) {
+    public void reject(final BookingStatus bookingStatus) {
         switch (this.bookingStatus) {
             case PENDING:
                 this.bookingStatus = bookingStatus;

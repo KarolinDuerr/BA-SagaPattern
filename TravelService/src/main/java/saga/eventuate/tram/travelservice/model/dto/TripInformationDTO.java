@@ -32,7 +32,7 @@ public class TripInformationDTO {
 
     private long flightId = -1;
 
-    public TripInformationDTO() {
+    private TripInformationDTO() {
 
     }
 
@@ -75,7 +75,7 @@ public class TripInformationDTO {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(final Long id) {
         this.id = id;
     }
 
@@ -107,7 +107,7 @@ public class TripInformationDTO {
         return travellerNames;
     }
 
-    public void setTravellerNames(List<String> travellerNames) {
+    public void setTravellerNames(final List<String> travellerNames) {
         this.travellerNames = travellerNames;
     }
 
@@ -147,7 +147,7 @@ public class TripInformationDTO {
         return bookingStatus;
     }
 
-    public void setBookingStatus(BookingStatus bookingStatus) {
+    public void setBookingStatus(final BookingStatus bookingStatus) {
         this.bookingStatus = bookingStatus;
     }
 
@@ -155,7 +155,7 @@ public class TripInformationDTO {
         return hotelId;
     }
 
-    public void setHotelId(long hotelId) {
+    public void setHotelId(final long hotelId) {
         this.hotelId = hotelId;
     }
 
@@ -163,7 +163,7 @@ public class TripInformationDTO {
         return flightId;
     }
 
-    public void setFlightId(long flightId) {
+    public void setFlightId(final long flightId) {
         this.flightId = flightId;
     }
 

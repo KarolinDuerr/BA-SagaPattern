@@ -45,7 +45,7 @@ public class TravelResource {
     }
 
     @GetMapping("trips/{tripId}")
-    public ResponseEntity<TripInformationDTO> getTrip(@PathVariable(value = "tripId") final Long tripId) throws ConverterException, TravelException { // TODO check ob die Info ausreicht?
+    public ResponseEntity<TripInformationDTO> getTrip(@PathVariable(value = "tripId") final Long tripId) throws ConverterException, TravelException {
         logger.info("Get trip with ID: " + tripId);
 
         TripInformation tripInformation = travelService.getTripInformation(tripId);

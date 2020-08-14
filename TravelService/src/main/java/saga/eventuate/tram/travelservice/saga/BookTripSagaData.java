@@ -45,7 +45,7 @@ public class BookTripSagaData {
         return hotelId;
     }
 
-    public void setHotelId(long hotelId) {
+    public void setHotelId(final long hotelId) {
         this.hotelId = hotelId;
     }
 
@@ -53,7 +53,7 @@ public class BookTripSagaData {
         return flightId;
     }
 
-    public void setFlightId(long flightId) {
+    public void setFlightId(final long flightId) {
         this.flightId = flightId;
     }
 
@@ -61,7 +61,7 @@ public class BookTripSagaData {
         return rejectionReason;
     }
 
-    public void setRejectionReason(RejectionReason rejectionReason) {
+    public void setRejectionReason(final RejectionReason rejectionReason) {
         this.rejectionReason = rejectionReason;
     }
 

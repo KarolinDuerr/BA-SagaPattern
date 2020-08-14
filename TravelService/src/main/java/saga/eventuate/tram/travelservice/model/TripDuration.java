@@ -41,7 +41,7 @@ public class TripDuration {
         this.end = end;
     }
 
-    private void validateDates(Date start, Date end) throws TravelException {
+    private void validateDates(final Date start, final Date end) throws TravelException {
         if (start == null  || end == null) {
             return;
         }
