@@ -76,9 +76,9 @@ public class BookTripSagaData {
 
     public BookFlightCommand makeBookFlightCommand() {
         LocationDTO home = new LocationDTO(tripInformation.getStart().getCountry(),
-                tripInformation.getStart().getCountry());
+                tripInformation.getStart().getCity());
         LocationDTO destination = new LocationDTO(tripInformation.getDestination().getCountry(),
-                tripInformation.getDestination().getCountry());
+                tripInformation.getDestination().getCity());
         return new BookFlightCommand(getTripId(), home, destination, tripInformation.getDuration().getStart(),
                 tripInformation.getDuration().getEnd(),
                 tripInformation.getOneWayFlight(), tripInformation.getTravellerNames());
