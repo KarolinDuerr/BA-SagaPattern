@@ -26,4 +26,6 @@ public interface IFlightService {
     @Transactional
     boolean cancelFlightBooking(final Long flightBookingId) throws FlightException;
 
+    @Transactional
+    void cancelFlightBooking(final Long flightBookingId, final Long tripId);
 }

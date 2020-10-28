@@ -2,6 +2,7 @@ package saga.eventuate.tram.flightservice.model;
 
 import saga.eventuate.tram.flightservice.error.ErrorType;
 import saga.eventuate.tram.flightservice.error.FlightException;
+import saga.eventuate.tram.flightservice.error.UnsupportedStateTransition;
 
 import javax.persistence.*;
 import java.util.List;
@@ -120,6 +121,14 @@ public class FlightInformation {
         this.bookingStatus = bookingStatus;
     }
 
+    public long getTripId() {
+        return tripId;
+    }
+
+    public void setTripId(long tripId) {
+        this.tripId = tripId;
+    }
+
     private void validateFlightDates(Flight outboundFlight, Flight returnFlight) throws FlightException {
         if (outboundFlight == null  || returnFlight == null) {
             return;
@@ -131,12 +140,26 @@ public class FlightInformation {
         }
     }
 
-    public long getTripId() {
-        return tripId;
+    public void cancel(final BookingStatus bookingStatus) {
+        switch (this.bookingStatus) {
+            case PENDING:
+                this.bookingStatus = bookingStatus;
+                break;
+            default:
+                throw new UnsupportedStateTransition("The flight booking can only be rejected if its still PENDING, " +
+                        "but the current status is: " + getBookingStatus());
+        }
     }
 
-    public void setTripId(long tripId) {
-        this.tripId = tripId;
+    public void confirm() {
+        switch (this.bookingStatus) {
+            case PENDING:
+                this.bookingStatus = BookingStatus.CONFIRMED;
+                break;
+            default:
+                throw new UnsupportedStateTransition("The flight booking  can only be confirmed if its still PENDING, " +
+                        "but the current status is: " + getBookingStatus());
+        }
     }
 
     @Override

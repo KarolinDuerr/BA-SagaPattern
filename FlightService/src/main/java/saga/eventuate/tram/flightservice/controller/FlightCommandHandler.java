@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import saga.eventuate.tram.flightservice.api.FlightServiceChannels;
 import saga.eventuate.tram.flightservice.api.dto.BookFlightCommand;
 import saga.eventuate.tram.flightservice.api.dto.BookFlightResponse;
+import saga.eventuate.tram.flightservice.api.dto.CancelFlightBooking;
 import saga.eventuate.tram.flightservice.api.dto.NoFlightAvailable;
 import saga.eventuate.tram.flightservice.error.ErrorType;
 import saga.eventuate.tram.flightservice.error.FlightServiceException;
@@ -37,6 +38,7 @@ public class FlightCommandHandler {
         return SagaCommandHandlersBuilder
                 .fromChannel(FlightServiceChannels.flightServiceChannel)
                 .onMessage(BookFlightCommand.class, this::bookFlight)
+                .onMessage(CancelFlightBooking.class, this::cancelFlight)
                 .build();
     }
 
@@ -61,5 +63,13 @@ public class FlightCommandHandler {
 
             return CommandHandlerReplyBuilder.withFailure(exception.toString());
         }
+    }
+
+    private Message cancelFlight(CommandMessage<CancelFlightBooking> command) {
+        CancelFlightBooking cancelFlightBooking = command.getCommand();
+        logger.info("Received CancelHotelBooking: " + cancelFlightBooking);
+
+        flightService.cancelFlightBooking(cancelFlightBooking.getBookingId(), cancelFlightBooking.getTripId());
+        return CommandHandlerReplyBuilder.withSuccess();
     }
 }

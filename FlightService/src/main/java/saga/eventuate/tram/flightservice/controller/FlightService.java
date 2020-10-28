@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import saga.eventuate.tram.flightservice.error.BookingNotFound;
 import saga.eventuate.tram.flightservice.error.ErrorType;
 import saga.eventuate.tram.flightservice.error.FlightException;
 import saga.eventuate.tram.flightservice.model.*;
@@ -91,6 +92,25 @@ public class FlightService implements IFlightService {
         flightInformationRepository.save(flightInformation);
 
         return true;
+    }
+
+    @Override
+    public void cancelFlightBooking(Long bookingId, Long tripId) {
+        logger.info("Cancelling the booked flight with ID " + bookingId);
+
+        FlightInformation flightInformation;
+        try {
+            flightInformation = getFlightInformation(bookingId);
+
+            if (flightInformation.getTripId() != tripId) {
+                throw new BookingNotFound(bookingId);
+            }
+
+            flightInformation.cancel(BookingStatus.CANCELLED);
+            flightInformationRepository.save(flightInformation);
+        } catch (FlightException e) {
+            throw new BookingNotFound(bookingId);
+        }
     }
 
     // only mocking the general function of this method

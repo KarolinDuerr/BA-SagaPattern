@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import saga.eventuate.tram.flightservice.api.FlightServiceChannels;
 import saga.eventuate.tram.flightservice.api.dto.BookFlightResponse;
+import saga.eventuate.tram.flightservice.api.dto.CancelFlightBooking;
 import saga.eventuate.tram.flightservice.api.dto.NoFlightAvailable;
 import saga.eventuate.tram.hotelservice.api.HotelServiceChannels;
 import saga.eventuate.tram.hotelservice.api.dto.BookHotelResponse;
@@ -41,6 +42,7 @@ public class BookTripSaga implements SimpleSaga<BookTripSagaData> {
                         .invokeParticipant(this::bookFlight)
                         .onReply(BookFlightResponse.class, this::handleBookFlightReply)
                         .onReply(NoFlightAvailable.class, this::handleNoFlightAvailableReply)
+                        .withCompensation(this::cancelFlight)
                         .step()
                         .invokeParticipant(this::confirmHotel)
                         .step()
@@ -107,6 +109,15 @@ public class BookTripSaga implements SimpleSaga<BookTripSagaData> {
     private void handleNoFlightAvailableReply(BookTripSagaData bookTripSagaData, NoFlightAvailable noFlightAvailable) {
         logger.debug("Received provoked NoFlightAvailable response for trip " + noFlightAvailable.getTripId());
         bookTripSagaData.setRejectionReason(RejectionReason.NO_FLIGHT_AVAILABLE);
+    }
+
+    private CommandWithDestination cancelFlight(BookTripSagaData bookTripSagaData) {
+        logger.info("Compensating flight booking --> cancel");
+
+        return CommandWithDestinationBuilder.send(new CancelFlightBooking(bookTripSagaData.getFlightId(),
+                bookTripSagaData.getTripId()))
+                .to(FlightServiceChannels.flightServiceChannel)
+                .build();
     }
 
     private CommandWithDestination confirmHotel(BookTripSagaData bookTripSagaData) {
