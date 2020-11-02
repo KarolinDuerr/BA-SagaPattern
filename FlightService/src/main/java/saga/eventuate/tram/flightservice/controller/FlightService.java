@@ -127,7 +127,7 @@ public class FlightService implements IFlightService {
                 flightInformation.getDestination().getCity(), flightInformation.getHome().getCity(),
                 flightInformation.getReturnFlightDate());
 
-        return new FlightInformation(outboundFlight, returnFlight, flightInformation.getOneWay(),
-                flightInformation.getTravellerNames(), flightInformation.getTripId());
+        return new FlightInformation(outboundFlight, returnFlight, flightInformation.getTravellerName(),
+                flightInformation.getTripId());
     }
 }

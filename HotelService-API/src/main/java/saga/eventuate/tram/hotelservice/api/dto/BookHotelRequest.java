@@ -10,29 +10,24 @@ public class BookHotelRequest implements Command {
 
     private StayDurationDTO duration;
 
-    private int numberOfPersons;
-
-    private int numberOfRooms;
+    private String boardType;
 
     private BookHotelRequest() {
         this.tripId = -1; // no trip assigned to this booking
     }
 
-    public BookHotelRequest(final DestinationDTO destination, final StayDurationDTO duration,
-                            final int numberOfPersons, final int numberOfRooms) {
+    public BookHotelRequest(final DestinationDTO destination, final StayDurationDTO duration, final String boardType) {
         this.tripId = -1; // no trip assigned to this booking
         this.destination = destination;
         this.duration = duration;
-        this.numberOfPersons = numberOfPersons;
-        this.numberOfRooms = numberOfRooms;
+        this.boardType = boardType;
     }
 
     public BookHotelRequest(final long tripId, final DestinationDTO destination, final StayDurationDTO duration,
-                            final int numberOfPersons, final int numberOfRooms) {
+                            final String boardType) {
         this.destination = destination;
         this.duration = duration;
-        this.numberOfPersons = numberOfPersons;
-        this.numberOfRooms = numberOfRooms;
+        this.boardType = boardType;
         this.tripId = tripId;
     }
 
@@ -56,20 +51,12 @@ public class BookHotelRequest implements Command {
         return duration;
     }
 
-    public void setNumberOfPersons(final int numberOfPersons) {
-        this.numberOfPersons = numberOfPersons;
+    public void setBoardType(final String boardType) {
+        this.boardType = boardType;
     }
 
-    public int getNumberOfPersons() {
-        return numberOfPersons;
-    }
-
-    public void setNumberOfRooms(final int numberOfRooms) {
-        this.numberOfRooms = numberOfRooms;
-    }
-
-    public int getNumberOfRooms() {
-        return numberOfRooms;
+    public String getBoardType() {
+        return boardType;
     }
 
     @Override
@@ -78,8 +65,7 @@ public class BookHotelRequest implements Command {
                 "tripId=" + tripId +
                 ", destination=" + destination +
                 ", duration=" + duration +
-                ", numberOfPersons=" + numberOfPersons +
-                ", numberOfRooms=" + numberOfRooms +
+                ", boardType=" + boardType +
                 '}';
     }
 }

@@ -13,9 +13,7 @@ public class FlightInformationDTO {
 
     private FlightDTO returnFlight;
 
-    private boolean oneWay;
-
-    private List<String> travellerNames;
+    private String travellerName;
 
     private BookingStatus bookingStatus;
 
@@ -25,23 +23,21 @@ public class FlightInformationDTO {
 
     }
 
-    public FlightInformationDTO(final long id, final FlightDTO outboundFlight, final FlightDTO returnFlight, final boolean oneWay,
-                                final List<String> travellerNames, final BookingStatus bookingStatus) {
+    public FlightInformationDTO(final long id, final FlightDTO outboundFlight, final FlightDTO returnFlight,
+                                final String travellerName, final BookingStatus bookingStatus) {
         this.id = id;
         this.outboundFlight = outboundFlight;
         this.returnFlight = returnFlight;
-        this.oneWay = oneWay;
-        this.travellerNames = travellerNames;
+        this.travellerName = travellerName;
         this.bookingStatus = bookingStatus;
     }
 
-    public FlightInformationDTO(final long id, final FlightDTO outboundFlight, final FlightDTO returnFlight, final boolean oneWay,
-                                final List<String> travellerNames, final BookingStatus bookingStatus, final long tripId) {
+    public FlightInformationDTO(final long id, final FlightDTO outboundFlight, final FlightDTO returnFlight,
+                                final String travellerName, final BookingStatus bookingStatus, final long tripId) {
         this.id = id;
         this.outboundFlight = outboundFlight;
         this.returnFlight = returnFlight;
-        this.oneWay = oneWay;
-        this.travellerNames = travellerNames;
+        this.travellerName = travellerName;
         this.bookingStatus = bookingStatus;
         this.tripId = tripId;
     }
@@ -70,20 +66,12 @@ public class FlightInformationDTO {
         this.returnFlight = returnFlight;
     }
 
-    public boolean getOneWay() {
-        return oneWay;
+    public String getTravellerName() {
+        return travellerName;
     }
 
-    public void setOneWay(final boolean oneWay) {
-        this.oneWay = oneWay;
-    }
-
-    public List<String> getTravellerNames() {
-        return travellerNames;
-    }
-
-    public void setTravellerNames(final List<String> travellerNames) {
-        this.travellerNames = travellerNames;
+    public void setTravellerName(final String travellerName) {
+        this.travellerName = travellerName;
     }
 
     public BookingStatus getBookingStatus() {
@@ -108,8 +96,7 @@ public class FlightInformationDTO {
                 "id=" + id +
                 ", outboundFlight=" + outboundFlight +
                 ", returnFlight=" + returnFlight +
-                ", oneWay=" + oneWay +
-                ", travellerNames=" + travellerNames +
+                ", travellerName=" + travellerName +
                 ", bookingStatus=" + bookingStatus +
                 '}';
     }

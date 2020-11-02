@@ -20,17 +20,14 @@ public class FlightInformation {
     private Long version;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="outboundFlightId", referencedColumnName = "id")
+    @JoinColumn(name = "outboundFlightId", referencedColumnName = "id")
     private Flight outboundFlight;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="returnFlightId", referencedColumnName = "id")
+    @JoinColumn(name = "returnFlightId", referencedColumnName = "id")
     private Flight returnFlight;
 
-    private boolean oneWay;
-
-    @ElementCollection
-    private List<String> travellerNames;
+    private String travellerName;
 
     @Enumerated(EnumType.STRING)
     private BookingStatus bookingStatus;
@@ -41,28 +38,23 @@ public class FlightInformation {
         this.tripId = -1; // no trip assigned to this booking
     }
 
-    public FlightInformation(final Flight outboundFlight, final Flight returnFlight, final boolean oneWay,
-                             final List<String> travellerNames) throws FlightException {
-        this.oneWay = oneWay;
-        if (!oneWay) {
-            validateFlightDates(outboundFlight, returnFlight);
-        }
+    public FlightInformation(final Flight outboundFlight, final Flight returnFlight, final String travellerName) throws FlightException {
+        validateFlightDates(outboundFlight, returnFlight);
+
         this.outboundFlight = outboundFlight;
         this.returnFlight = returnFlight;
-        this.travellerNames = travellerNames;
+        this.travellerName = travellerName;
         this.tripId = -1; // no trip assigned to this booking
         this.bookingStatus = BookingStatus.CONFIRMED;
     }
 
-    public FlightInformation(final Flight outboundFlight, final Flight returnFlight, final boolean oneWay,
-                             final List<String> travellerNames, final long tripId) throws FlightException {
-        this.oneWay = oneWay;
-        if (!oneWay) {
-            validateFlightDates(outboundFlight, returnFlight);
-        }
+    public FlightInformation(final Flight outboundFlight, final Flight returnFlight, final String travellerName,
+                             final long tripId) throws FlightException {
+        validateFlightDates(outboundFlight, returnFlight);
+
         this.outboundFlight = outboundFlight;
         this.returnFlight = returnFlight;
-        this.travellerNames = travellerNames;
+        this.travellerName = travellerName;
         this.tripId = tripId;
         this.bookingStatus = BookingStatus.CONFIRMED;
     }
@@ -80,9 +72,7 @@ public class FlightInformation {
     }
 
     public void setOutboundFlight(final Flight outboundFlight) throws FlightException {
-        if (!oneWay) {
-            validateFlightDates(outboundFlight, returnFlight);
-        }
+        validateFlightDates(outboundFlight, returnFlight);
         this.outboundFlight = outboundFlight;
     }
 
@@ -91,26 +81,16 @@ public class FlightInformation {
     }
 
     public void setReturnFlight(final Flight returnFlight) throws FlightException {
-        if (!oneWay) {
-            validateFlightDates(outboundFlight, returnFlight);
-        }
+        validateFlightDates(outboundFlight, returnFlight);
         this.returnFlight = returnFlight;
     }
 
-    public boolean getOneWay() {
-        return oneWay;
+    public String getTravellerName() {
+        return travellerName;
     }
 
-    public void setOneWay(final boolean oneWay) {
-        this.oneWay = oneWay;
-    }
-
-    public List<String> getTravellerNames() {
-        return travellerNames;
-    }
-
-    public void setTravellerNames(final List<String> travellerNames) {
-        this.travellerNames = travellerNames;
+    public void setTravellerName(final String travellerName) {
+        this.travellerName = travellerName;
     }
 
     public BookingStatus getBookingStatus() {
@@ -130,12 +110,13 @@ public class FlightInformation {
     }
 
     private void validateFlightDates(Flight outboundFlight, Flight returnFlight) throws FlightException {
-        if (outboundFlight == null  || returnFlight == null) {
+        if (outboundFlight == null || returnFlight == null) {
             return;
         }
 
         if (returnFlight.getFlightDate().before(outboundFlight.getFlightDate())) {
-            throw new FlightException(ErrorType.INVALID_PARAMETER, "The date of the return flight is before the actual " +
+            throw new FlightException(ErrorType.INVALID_PARAMETER, "The date of the return flight is before the " +
+                    "actual " +
                     "outbound flight.");
         }
     }
@@ -157,7 +138,8 @@ public class FlightInformation {
                 this.bookingStatus = BookingStatus.CONFIRMED;
                 break;
             default:
-                throw new UnsupportedStateTransition("The flight booking  can only be confirmed if its still PENDING, " +
+                throw new UnsupportedStateTransition("The flight booking  can only be confirmed if its still PENDING," +
+                        " " +
                         "but the current status is: " + getBookingStatus());
         }
     }
@@ -169,8 +151,7 @@ public class FlightInformation {
                 ", version=" + version +
                 ", outboundFlight=" + outboundFlight +
                 ", returnFlight=" + returnFlight +
-                ", oneWay=" + oneWay +
-                ", travellerNames=" + travellerNames +
+                ", travellerName=" + travellerName +
                 ", bookingStatus=" + bookingStatus +
                 ", tripId=" + tripId +
                 '}';

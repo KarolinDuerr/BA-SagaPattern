@@ -18,44 +18,35 @@ public class FindAndBookFlightInformation {
 
     private Date returnFlightDate;
 
-    private boolean oneWay;
-
-    private List<String> travellerNames;
+    private String travellerName;
 
     private FindAndBookFlightInformation() {
         this.tripId = -1; // no trip assigned to this booking
     }
 
     public FindAndBookFlightInformation(final Location home, final Location destination, final Date outboundFlightDate,
-                                        final Date returnFlightDate, final boolean oneWay,
-                                        final List<String> travellerNames) throws FlightException {
-        this.oneWay = oneWay;
-        if (!oneWay) {
-            validateFlightDates(outboundFlightDate, returnFlightDate);
-        }
+                                        final Date returnFlightDate, final String travellerName) throws FlightException {
+        validateFlightDates(outboundFlightDate, returnFlightDate);
 
         this.tripId = -1; // no trip assigned to this booking
         this.home = home;
         this.destination = destination;
         this.outboundFlightDate = outboundFlightDate;
         this.returnFlightDate = returnFlightDate;
-        this.travellerNames = travellerNames;
+        this.travellerName = travellerName;
     }
 
     public FindAndBookFlightInformation(final long tripId, final Location home, final Location destination,
                                         final Date outboundFlightDate, final Date returnFlightDate,
-                                        final boolean oneWay, final List<String> travellerNames) throws FlightException {
-        this.oneWay = oneWay;
-        if (!oneWay) {
-            validateFlightDates(outboundFlightDate, returnFlightDate);
-        }
+                                        final String travellerName) throws FlightException {
+        validateFlightDates(outboundFlightDate, returnFlightDate);
 
         this.tripId = tripId;
         this.home = home;
         this.destination = destination;
         this.outboundFlightDate = outboundFlightDate;
         this.returnFlightDate = returnFlightDate;
-        this.travellerNames = travellerNames;
+        this.travellerName = travellerName;
     }
 
     public long getTripId() {
@@ -96,20 +87,12 @@ public class FindAndBookFlightInformation {
         this.returnFlightDate = returnFlightDate;
     }
 
-    public boolean getOneWay() {
-        return oneWay;
+    public String getTravellerName() {
+        return travellerName;
     }
 
-    public void setOneWay(final boolean oneWay) {
-        this.oneWay = oneWay;
-    }
-
-    public List<String> getTravellerNames() {
-        return travellerNames;
-    }
-
-    public void setTravellerNames(final List<String> travellerNames) {
-        this.travellerNames = travellerNames;
+    public void setTravellerName(final String travellerName) {
+        this.travellerName = travellerName;
     }
 
     private void validateFlightDates(final Date outboundFlightDate, final Date returnFlightDate) throws FlightException {
@@ -132,8 +115,7 @@ public class FindAndBookFlightInformation {
                 ", destination=" + destination +
                 ", outboundFlightDate=" + outboundFlightDate +
                 ", returnFlightDate=" + returnFlightDate +
-                ", oneWay=" + oneWay +
-                ", travellerNames=" + travellerNames +
+                ", travellerName=" + travellerName +
                 '}';
     }
 }

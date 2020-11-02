@@ -26,8 +26,7 @@ public class DtoConverter {
         checkIfOneWayTicketOrInformationIsMissing(bookFlightRequest);
         Flight outboundFlight = convertToFlight(bookFlightRequest.getOutboundFlight());
         Flight returnFlight = convertToFlight(bookFlightRequest.getReturnFlight());
-        return new FlightInformation(outboundFlight, returnFlight, bookFlightRequest.getOneWay(),
-                bookFlightRequest.getTravellerNames());
+        return new FlightInformation(outboundFlight, returnFlight, bookFlightRequest.getTravellerName());
     }
 
     public FindAndBookFlightInformation convertToFindAndBookFlightInformation(final BookFlightCommand bookFlightCommand) throws ConverterException, FlightException {
@@ -40,7 +39,7 @@ public class DtoConverter {
         Location destination = convertToLocation(bookFlightCommand.getDestination());
         return new FindAndBookFlightInformation(bookFlightCommand.getTripId(), home, destination,
                 bookFlightCommand.getOutboundFlightDate(), bookFlightCommand.getReturnFlightDate(),
-                bookFlightCommand.getOneWay(), bookFlightCommand.getTravellerNames());
+                bookFlightCommand.getTravellerName());
     }
 
     public List<FlightInformationDTO> convertToFlightInformationDTOList(final List<FlightInformation> flightsInformation) throws ConverterException {
@@ -67,8 +66,7 @@ public class DtoConverter {
         checkIfOneWayTicketOrInformationIsMissing(flightInformation);
         FlightDTO outboundFlight = convertToFlightDTO(flightInformation.getOutboundFlight());
         FlightDTO returnFlight = convertToFlightDTO(flightInformation.getReturnFlight());
-        return new FlightInformationDTO(flightInformation.getId(), outboundFlight, returnFlight,
-                flightInformation.getOneWay(), flightInformation.getTravellerNames(),
+        return new FlightInformationDTO(flightInformation.getId(), outboundFlight, returnFlight, flightInformation.getTravellerName(),
                 flightInformation.getBookingStatus(), flightInformation.getTripId());
     }
 
@@ -100,19 +98,19 @@ public class DtoConverter {
 
 
     private void checkIfOneWayTicketOrInformationIsMissing(final BookFlightCommand bookFlightCommand) throws ConverterException {
-        if (!bookFlightCommand.getOneWay() && (bookFlightCommand.getOutboundFlightDate() == null || bookFlightCommand.getReturnFlightDate() == null)) {
+        if (bookFlightCommand.getOutboundFlightDate() == null || bookFlightCommand.getReturnFlightDate() == null) {
             throw new ConverterException("Information about a flight date is missing.");
         }
     }
 
     private void checkIfOneWayTicketOrInformationIsMissing(final BookFlightRequest bookFlightRequest) throws ConverterException {
-        if (!bookFlightRequest.getOneWay() && (bookFlightRequest.getOutboundFlight() == null || bookFlightRequest.getReturnFlight() == null)) {
+        if (bookFlightRequest.getOutboundFlight() == null || bookFlightRequest.getReturnFlight() == null) {
             throw new ConverterException("Information about a flight is missing.");
         }
     }
 
     private void checkIfOneWayTicketOrInformationIsMissing(final FlightInformation flightInformation) throws ConverterException {
-        if (!flightInformation.getOneWay() && (flightInformation.getOutboundFlight() == null || flightInformation.getReturnFlight() == null)) {
+        if (flightInformation.getOutboundFlight() == null || flightInformation.getReturnFlight() == null) {
             throw new ConverterException("Information for an included flight is missing.");
         }
     }

@@ -9,9 +9,7 @@ public class HotelBookingInformationDTO {
 
     private StayDurationDTO duration;
 
-    private int numberOfPersons;
-
-    private int numberOfRooms;
+    private String boardType;
 
     private final long tripId;
 
@@ -20,20 +18,18 @@ public class HotelBookingInformationDTO {
     }
 
     public HotelBookingInformationDTO(final DestinationDTO destination, final StayDurationDTO duration,
-                                      final int numberOfPersons, final int numberOfRooms) {
+                                      final String boardType) {
         this.destination = destination;
         this.duration = duration;
-        this.numberOfPersons = numberOfPersons;
-        this.numberOfRooms = numberOfRooms;
+        this.boardType = boardType;
         this.tripId = -1; // no trip assigned to this booking
     }
 
     public HotelBookingInformationDTO(final DestinationDTO destination, final StayDurationDTO duration,
-                                      final int numberOfPersons, final int numberOfRooms, final long tripId) {
+                                      final String boardType, final long tripId) {
         this.destination = destination;
         this.duration = duration;
-        this.numberOfPersons = numberOfPersons;
-        this.numberOfRooms = numberOfRooms;
+        this.boardType = boardType;
         this.tripId = tripId;
     }
 
@@ -53,20 +49,12 @@ public class HotelBookingInformationDTO {
         return duration;
     }
 
-    public void setNumberOfPersons(final int numberOfPersons) {
-        this.numberOfPersons = numberOfPersons;
+    public void setBoardType(final String boardType) {
+        this.boardType = boardType;
     }
 
-    public int getNumberOfPersons() {
-        return numberOfPersons;
-    }
-
-    public void setNumberOfRooms(final int numberOfRooms) {
-        this.numberOfRooms = numberOfRooms;
-    }
-
-    public int getNumberOfRooms() {
-        return numberOfRooms;
+    public String getBoardType() {
+        return boardType;
     }
 
     public long getTripId() {
@@ -78,8 +66,7 @@ public class HotelBookingInformationDTO {
         return "HotelBookingInformationDTO{" +
                 "destination=" + destination +
                 ", duration=" + duration +
-                ", numberOfPersons=" + numberOfPersons +
-                ", numberOfRooms=" + numberOfRooms +
+                ", boardType=" + boardType +
                 ", tripId=" + tripId +
                 '}';
     }

@@ -25,8 +25,7 @@ public class DtoConverter {
 
         return new HotelBookingInformation(bookHotelRequest.getTripId(),
                 convertToDestination(bookHotelRequest.getDestination()),
-                convertToStayDuration(bookHotelRequest.getDuration()), bookHotelRequest.getNumberOfPersons(),
-                bookHotelRequest.getNumberOfRooms());
+                convertToStayDuration(bookHotelRequest.getDuration()), bookHotelRequest.getBoardType());
     }
 
     public List<HotelBookingDTO> convertToHotelBookingDTOList(final List<HotelBooking> hotelBookings) throws ConverterException {
@@ -63,7 +62,7 @@ public class DtoConverter {
 
         return new HotelBookingInformationDTO(convertToDestinationDTO(hotelBookingInformation.getDestination()),
                 convertToStayDurationDTO(hotelBookingInformation.getDuration()),
-                hotelBookingInformation.getNumberOfPersons(), hotelBookingInformation.getNumberOfRooms(),
+                hotelBookingInformation.getBoardType(),
                 hotelBookingInformation.getTripId());
     }
 

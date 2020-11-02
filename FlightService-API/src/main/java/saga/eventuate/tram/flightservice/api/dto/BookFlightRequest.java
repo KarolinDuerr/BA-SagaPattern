@@ -8,20 +8,17 @@ public class BookFlightRequest {
 
     private FlightDTO returnFlight;
 
-    private boolean oneWay;
-
-    private List<String> travellerNames;
+    private String travellerName;
 
     private BookFlightRequest() {
 
     }
 
     public BookFlightRequest(final FlightDTO outboundFlight, final FlightDTO returnFlight, final boolean oneWay,
-                             final List<String> travellerNames) {
+                             final String travellerName) {
         this.outboundFlight = outboundFlight;
         this.returnFlight = returnFlight;
-        this.oneWay = oneWay;
-        this.travellerNames = travellerNames;
+        this.travellerName = travellerName;
     }
 
     public FlightDTO getOutboundFlight() {
@@ -40,20 +37,12 @@ public class BookFlightRequest {
         this.returnFlight = returnFlight;
     }
 
-    public boolean getOneWay() {
-        return oneWay;
+    public String getTravellerName() {
+        return travellerName;
     }
 
-    public void setOneWay(final boolean oneWay) {
-        this.oneWay = oneWay;
-    }
-
-    public List<String> getTravellerNames() {
-        return travellerNames;
-    }
-
-    public void setTravellerNames(final List<String> travellerNames) {
-        this.travellerNames = travellerNames;
+    public void setTravellerName(final String travellerName) {
+        this.travellerName = travellerName;
     }
 
     @Override
@@ -61,8 +50,7 @@ public class BookFlightRequest {
         return "BookFlightRequest{" +
                 "outboundFlight=" + outboundFlight +
                 ", returnFlight=" + returnFlight +
-                ", oneWay=" + oneWay +
-                ", travellerNames=" + travellerNames +
+                ", travellerName=" + travellerName +
                 '}';
     }
 }

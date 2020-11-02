@@ -70,8 +70,7 @@ public class BookTripSagaData {
                 tripInformation.getDestination().getCity());
         StayDurationDTO stayDuration = new StayDurationDTO(tripInformation.getDuration().getStart(),
                 tripInformation.getDuration().getEnd());
-        return new BookHotelRequest(getTripId(), destination, stayDuration, tripInformation.getNumberOfPersons(),
-                tripInformation.getNumberOfRooms());
+        return new BookHotelRequest(getTripId(), destination, stayDuration, tripInformation.getBoardType());
     }
 
     public BookFlightCommand makeBookFlightCommand() {
@@ -80,8 +79,7 @@ public class BookTripSagaData {
         LocationDTO destination = new LocationDTO(tripInformation.getDestination().getCountry(),
                 tripInformation.getDestination().getCity());
         return new BookFlightCommand(getTripId(), home, destination, tripInformation.getDuration().getStart(),
-                tripInformation.getDuration().getEnd(),
-                tripInformation.getOneWayFlight(), tripInformation.getTravellerNames());
+                tripInformation.getDuration().getEnd(), tripInformation.getTravellerName());
     }
 
     @Override

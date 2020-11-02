@@ -11,9 +11,7 @@ public class HotelBookingInformation {
     @Embedded
     private StayDuration duration;
 
-    private int numberOfPersons;
-
-    private int numberOfRooms;
+    private String boardType;
 
     private final long tripId;
 
@@ -22,21 +20,19 @@ public class HotelBookingInformation {
     }
 
     public HotelBookingInformation(final Destination destination, final StayDuration duration,
-                                   final int numberOfPersons, final int numberOfRooms) {
+                                   final String boardType) {
         tripId = -1; // no trip assigned to this booking
         this.destination = destination;
         this.duration = duration;
-        this.numberOfPersons = numberOfPersons;
-        this.numberOfRooms = numberOfRooms;
+        this.boardType = boardType;
     }
 
     public HotelBookingInformation(final long tripId, final Destination destination, final StayDuration duration,
-                                   final int numberOfPersons, final int numberOfRooms) {
+                                   final String boardType) {
         this.tripId = tripId;
         this.destination = destination;
         this.duration = duration;
-        this.numberOfPersons = numberOfPersons;
-        this.numberOfRooms = numberOfRooms;
+        this.boardType = boardType;
     }
 
     public void setDestination(final Destination destination) {
@@ -55,20 +51,12 @@ public class HotelBookingInformation {
         return duration;
     }
 
-    public void setNumberOfPersons(final int numberOfPersons) {
-        this.numberOfPersons = numberOfPersons;
+    public void setBoardType(final String boardType) {
+        this.boardType = boardType;
     }
 
-    public int getNumberOfPersons() {
-        return numberOfPersons;
-    }
-
-    public void setNumberOfRooms(final int numberOfRooms) {
-        this.numberOfRooms = numberOfRooms;
-    }
-
-    public int getNumberOfRooms() {
-        return numberOfRooms;
+    public String getBoardType() {
+        return boardType;
     }
 
     public long getTripId() {
@@ -80,8 +68,7 @@ public class HotelBookingInformation {
         return "HotelBookingInformation{" +
                 "destination=" + destination +
                 ", duration=" + duration +
-                ", numberOfPersons=" + numberOfPersons +
-                ", numberOfRooms=" + numberOfRooms +
+                ", boardType=" + boardType +
                 ", tripId=" + tripId +
                 '}';
     }

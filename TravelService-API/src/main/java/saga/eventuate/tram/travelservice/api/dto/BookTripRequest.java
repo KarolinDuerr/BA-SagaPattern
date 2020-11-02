@@ -1,7 +1,5 @@
 package saga.eventuate.tram.travelservice.api.dto;
 
-import java.util.List;
-
 public class BookTripRequest {
 
     private TripDurationDTO duration;
@@ -10,13 +8,9 @@ public class BookTripRequest {
 
     private LocationDTO destination;
 
-    private List<String> travellerNames;
+    private String travellerName;
 
-    private int numberOfPersons;
-
-    private int numberOfRooms;
-
-    private boolean oneWayFlight;
+    private String boardType;
 
     private long customerId;
 
@@ -25,15 +19,12 @@ public class BookTripRequest {
     }
 
     private BookTripRequest(final TripDurationDTO duration, final LocationDTO start, final LocationDTO destination,
-                            final List<String> travellerNames, final int numberOfPersons, final int numberOfRooms,
-                            final boolean oneWayFlight, final long customerId) {
+                            final String travellerName, final String boardType, final long customerId) {
         this.duration = duration;
         this.destination = destination;
         this.start = start;
-        this.travellerNames = travellerNames;
-        this.numberOfPersons = numberOfPersons;
-        this.numberOfRooms = numberOfRooms;
-        this.oneWayFlight = oneWayFlight;
+        this.travellerName = travellerName;
+        this.boardType = boardType;
         this.customerId = customerId;
     }
 
@@ -61,36 +52,20 @@ public class BookTripRequest {
         this.destination = destination;
     }
 
-    public List<String> getTravellerNames() {
-        return travellerNames;
+    public String getTravellerName() {
+        return travellerName;
     }
 
-    public void setTravellerNames(final List<String> travellerNames) {
-        this.travellerNames = travellerNames;
+    public void setTravellerName(final String travellerName) {
+        this.travellerName = travellerName;
     }
 
-    public int getNumberOfPersons() {
-        return numberOfPersons;
+    public String getBoardType() {
+        return boardType;
     }
 
-    public void setNumberOfPersons(final int numberOfPersons) {
-        this.numberOfPersons = numberOfPersons;
-    }
-
-    public int getNumberOfRooms() {
-        return numberOfRooms;
-    }
-
-    public void setNumberOfRooms(final int numberOfRooms) {
-        this.numberOfRooms = numberOfRooms;
-    }
-
-    public boolean getOneWayFlight() {
-        return oneWayFlight;
-    }
-
-    public void setOneWayFlight(final boolean oneWayFlight) {
-        this.oneWayFlight = oneWayFlight;
+    public void setBoardType(final String boardType) {
+        this.boardType = boardType;
     }
 
     public long getCustomerId() {
@@ -107,10 +82,8 @@ public class BookTripRequest {
                 "duration=" + duration +
                 ", start=" + start +
                 ", destination=" + destination +
-                ", travellerNames=" + travellerNames +
-                ", numberOfPersons=" + numberOfPersons +
-                ", numberOfRooms=" + numberOfRooms +
-                ", oneWayFlight=" + oneWayFlight +
+                ", travellerName='" + travellerName + '\'' +
+                ", boardType='" + boardType + '\'' +
                 ", customerId=" + customerId +
                 '}';
     }
