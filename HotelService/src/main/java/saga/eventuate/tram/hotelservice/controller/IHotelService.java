@@ -1,11 +1,11 @@
 package saga.eventuate.tram.hotelservice.controller;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.transaction.annotation.Transactional;
 import saga.eventuate.tram.hotelservice.error.HotelException;
 import saga.eventuate.tram.hotelservice.model.HotelBooking;
 import saga.eventuate.tram.hotelservice.model.HotelBookingInformation;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Qualifier("HotelService")

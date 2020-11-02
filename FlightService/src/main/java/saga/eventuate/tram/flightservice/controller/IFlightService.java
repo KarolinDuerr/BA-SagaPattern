@@ -1,11 +1,11 @@
 package saga.eventuate.tram.flightservice.controller;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.transaction.annotation.Transactional;
 import saga.eventuate.tram.flightservice.error.FlightException;
 import saga.eventuate.tram.flightservice.model.FindAndBookFlightInformation;
 import saga.eventuate.tram.flightservice.model.FlightInformation;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Qualifier("FlightService")
