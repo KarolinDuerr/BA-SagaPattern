@@ -46,7 +46,7 @@ public class HotelService implements IHotelService {
     }
 
     @Override
-    public HotelBooking getHotelBooking(Long bookingId) throws HotelException {
+    public HotelBooking getHotelBooking(final Long bookingId) throws HotelException {
         logger.info(String.format("Get hotel booking (ID: %d) from Repository.", bookingId));
 
         Optional<HotelBooking> hotelBooking = hotelBookingRepository.findById(bookingId);
@@ -61,14 +61,20 @@ public class HotelService implements IHotelService {
     }
 
     @Override
-    public HotelBooking bookHotel(HotelBookingInformation hotelBooking) throws HotelException {
+    public HotelBooking bookHotel(final String travellerName, final HotelBookingInformation hotelBooking) throws HotelException {
         logger.info("Saving the booked Hotel: " + hotelBooking);
 
-        HotelBooking newHotelBooking = findAvailableHotel(hotelBooking);
+        HotelBooking newHotelBooking = findAvailableHotel(travellerName, hotelBooking); // TODO --> unterscheiden zwischen normaler HotelBuchung und TripBuchung? siehe flights
 
         // no trip assigned therefore the booking has already been confirmed
         if (newHotelBooking.getBookingInformation() != null && newHotelBooking.getBookingInformation().getTripId() == -1) {
             newHotelBooking.confirm();
+        }
+
+        //ensure idempotence of hotel bookings
+        HotelBooking alreadyExistingHotelBooking = checkIfBookingAlreadyExists(newHotelBooking);
+        if (alreadyExistingHotelBooking != null) {
+            return alreadyExistingHotelBooking;
         }
 
         hotelBookingRepository.save(newHotelBooking);
@@ -77,7 +83,7 @@ public class HotelService implements IHotelService {
     }
 
     @Override
-    public boolean cancelHotelBooking(Long bookingId) throws HotelException {
+    public boolean cancelHotelBooking(final Long bookingId) throws HotelException {
         logger.info("Cancelling the booked hotel with ID " + bookingId);
 
         HotelBooking hotelBooking = getHotelBooking(bookingId);
@@ -95,7 +101,7 @@ public class HotelService implements IHotelService {
     }
 
     @Override
-    public void cancelHotelBooking(Long bookingId, Long tripId) {
+    public void cancelHotelBooking(final Long bookingId, final Long tripId) {
         logger.info("Cancelling the booked hotel with ID " + bookingId);
 
         HotelBooking hotelBooking;
@@ -114,7 +120,7 @@ public class HotelService implements IHotelService {
     }
 
     @Override
-    public void confirmHotelBooking(Long bookingId, Long tripId) {
+    public void confirmHotelBooking(final Long bookingId, final Long tripId) {
         logger.info("Confirming the booked hotel with ID " + bookingId);
 
         HotelBooking hotelBooking;
@@ -133,12 +139,28 @@ public class HotelService implements IHotelService {
     }
 
     // only mocking the general function of this method
-    private HotelBooking findAvailableHotel(final HotelBookingInformation hotelBookingInformation) throws HotelException {
+    private HotelBooking findAvailableHotel(final String travellerName, final HotelBookingInformation hotelBookingInformation) throws HotelException {
         if (hotelBookingInformation.getDestination().getCountry().equalsIgnoreCase("Provoke hotel failure")) {
             logger.info("Provoked hotel exception: no available hotel for trip: " + hotelBookingInformation.getTripId());
             throw new HotelException(ErrorType.NO_AVAILABLE_HOTEL, "No available flight found.");
         }
 
-        return new HotelBooking("Example_Hotel", hotelBookingInformation);
+        return new HotelBooking("Example_Hotel", travellerName, hotelBookingInformation);
+    }
+
+    //ensure idempotence of hotel bookings
+    private HotelBooking checkIfBookingAlreadyExists(final HotelBooking hotelBooking) {
+        List<HotelBooking> customerTrips =
+                hotelBookingRepository.findByTravellerName(hotelBooking.getTravellerName());
+
+        Optional<HotelBooking> savedHotelBooking =
+                customerTrips.stream().filter(hotelInfo -> hotelInfo.equals(hotelBooking)).findFirst();
+
+        if (!savedHotelBooking.isPresent()) {
+            return null;
+        }
+
+        logger.info("Hotel has already been booked: " + savedHotelBooking.toString());
+        return savedHotelBooking.get();
     }
 }

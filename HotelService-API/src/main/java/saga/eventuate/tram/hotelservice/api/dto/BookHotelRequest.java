@@ -12,22 +12,27 @@ public class BookHotelRequest implements Command {
 
     private String boardType;
 
+    private String travellerName;
+
     private BookHotelRequest() {
         this.tripId = -1; // no trip assigned to this booking
     }
 
-    public BookHotelRequest(final DestinationDTO destination, final StayDurationDTO duration, final String boardType) {
+    public BookHotelRequest(final DestinationDTO destination, final StayDurationDTO duration, final String boardType,
+                            final String travellerName) {
         this.tripId = -1; // no trip assigned to this booking
         this.destination = destination;
         this.duration = duration;
         this.boardType = boardType;
+        this.travellerName = travellerName;
     }
 
     public BookHotelRequest(final long tripId, final DestinationDTO destination, final StayDurationDTO duration,
-                            final String boardType) {
+                            final String boardType, final String travellerName) {
         this.destination = destination;
         this.duration = duration;
         this.boardType = boardType;
+        this.travellerName = travellerName;
         this.tripId = tripId;
     }
 
@@ -59,13 +64,22 @@ public class BookHotelRequest implements Command {
         return boardType;
     }
 
+    public void setTravellerName(final String travellerName) {
+        this.travellerName = travellerName;
+    }
+
+    public String getTravellerName() {
+        return travellerName;
+    }
+
     @Override
     public String toString() {
         return "BookHotelRequest{" +
                 "tripId=" + tripId +
                 ", destination=" + destination +
                 ", duration=" + duration +
-                ", boardType=" + boardType +
+                ", boardType='" + boardType + '\'' +
+                ", travellerName='" + travellerName + '\'' +
                 '}';
     }
 }

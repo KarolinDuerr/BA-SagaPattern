@@ -30,7 +30,7 @@ public class HotelResource {
     private DtoConverter dtoConverter;
 
     @GetMapping("/bookings")
-    public ResponseEntity<List<HotelBookingDTO>> getHotelBookings() throws ConverterException {
+    public ResponseEntity<List<HotelBookingDTO>> getHotelBookings() throws HotelServiceException {
         logger.info("Get hotels.");
 
         List<HotelBooking> hotelBookings = hotelService.getHotelBookings();
@@ -44,7 +44,7 @@ public class HotelResource {
     }
 
     @GetMapping("/bookings/{bookingId}")
-    public ResponseEntity<HotelBookingDTO> getHotelBooking(@PathVariable(value = "bookingId") final Long bookingId) throws HotelException, ConverterException {
+    public ResponseEntity<HotelBookingDTO> getHotelBooking(@PathVariable(value = "bookingId") final Long bookingId) throws HotelServiceException {
         logger.info("Get hotel with ID: " + bookingId);
 
         HotelBooking hotelBooking = hotelService.getHotelBooking(bookingId);
@@ -58,7 +58,7 @@ public class HotelResource {
     }
 
     @PostMapping
-    public ResponseEntity<BookHotelResponse> bookHotel(@RequestBody final BookHotelRequest bookHotelRequest) throws ConverterException, HotelException {
+    public ResponseEntity<BookHotelResponse> bookHotel(@RequestBody final BookHotelRequest bookHotelRequest) throws HotelServiceException {
         logger.info("Book hotel: " + bookHotelRequest);
 
         if (bookHotelRequest == null) {
@@ -67,7 +67,7 @@ public class HotelResource {
         }
 
         HotelBookingInformation requestedHotelBooking = dtoConverter.convertToHotelBookingInformation(bookHotelRequest);
-        HotelBooking receivedHotelBooking = hotelService.bookHotel(requestedHotelBooking);
+        HotelBooking receivedHotelBooking = hotelService.bookHotel(bookHotelRequest.getTravellerName(), requestedHotelBooking);
 
         if (receivedHotelBooking == null) {
             logger.info("Something went wrong during booking.");
@@ -79,7 +79,7 @@ public class HotelResource {
     }
 
     @DeleteMapping("/bookings/{bookingId}")
-    public ResponseEntity cancelHotel(@PathVariable(value = "bookingId") final Long bookingId) throws HotelException {
+    public ResponseEntity cancelHotel(@PathVariable(value = "bookingId") final Long bookingId) throws HotelServiceException {
         logger.info("Cancel hotel booking with ID " + bookingId);
 
         boolean hotelCancelled = hotelService.cancelHotelBooking(bookingId);

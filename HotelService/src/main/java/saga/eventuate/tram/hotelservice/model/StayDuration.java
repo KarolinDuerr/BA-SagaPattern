@@ -31,6 +31,7 @@ public class StayDuration {
     public void setArrival(final Date arrival) throws HotelException {
         validateDates(arrival, departure);
         this.arrival = arrival;
+        this.numberOfNights = calculateNumberOfNights();
     }
 
     public Date getArrival() {
@@ -40,14 +41,11 @@ public class StayDuration {
     public void setDeparture(final Date departure) throws HotelException {
         validateDates(arrival, departure);
         this.departure = departure;
+        this.numberOfNights = calculateNumberOfNights();
     }
 
     public Date getDeparture() {
         return departure;
-    }
-
-    public void setNumberOfNights(final long numberOfNights) {
-        this.numberOfNights = numberOfNights;
     }
 
     public long getNumberOfNights() {
@@ -76,5 +74,28 @@ public class StayDuration {
                 ", endDate=" + departure +
                 ", numberOfNights=" + numberOfNights +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (! (o instanceof StayDuration)) {
+            return false;
+        }
+
+        StayDuration stayDuration = (StayDuration) o;
+
+        if (stayDuration.getDeparture().compareTo(this.getDeparture()) != 0 && stayDuration.getDeparture().getTime() != this.getDeparture().getTime()) {
+            return false;
+        }
+
+        if (stayDuration.getArrival().compareTo(this.getArrival()) != 0 && stayDuration.getArrival().getTime() != this.getArrival().getTime()) {
+            return false;
+        }
+
+        return stayDuration.getNumberOfNights() == this.getNumberOfNights();
     }
 }

@@ -18,6 +18,8 @@ public class HotelBooking {
 
     private String hotelName;
 
+    private String travellerName;
+
     @Embedded
     private HotelBookingInformation bookingInformation;
 
@@ -28,8 +30,9 @@ public class HotelBooking {
 
     }
 
-    public HotelBooking(final String hotelName, final HotelBookingInformation bookingInformation) {
+    public HotelBooking(final String hotelName, final String travellerName, final HotelBookingInformation bookingInformation) {
         this.hotelName = hotelName;
+        this.travellerName = travellerName;
         this.bookingInformation = bookingInformation;
         this.bookingStatus = BookingStatus.PENDING;
     }
@@ -48,6 +51,14 @@ public class HotelBooking {
 
     public void setHotelName(final String hotelName) {
         this.hotelName = hotelName;
+    }
+
+    public String getTravellerName() {
+        return travellerName;
+    }
+
+    public void setTravellerName(final String travellerName) {
+        this.travellerName = travellerName;
     }
 
     public HotelBookingInformation getBookingInformation() {
@@ -90,8 +101,32 @@ public class HotelBooking {
                 "id=" + id +
                 ", version=" + version +
                 ", hotelName='" + hotelName + '\'' +
+                ", travellerName='" + travellerName + '\'' +
                 ", bookingInformation=" + bookingInformation +
                 ", bookingStatus=" + bookingStatus +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof HotelBooking)) {
+            return false;
+        }
+
+        HotelBooking hotelBooking = (HotelBooking) o;
+
+        if (hotelBooking.getId() == this.getId()) {
+            return true;
+        }
+
+        if (!hotelBooking.getBookingInformation().equals(this.getBookingInformation())) {
+            return false;
+        }
+
+        return hotelBooking.getHotelName().equalsIgnoreCase(this.getHotelName());
     }
 }

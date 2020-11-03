@@ -72,4 +72,31 @@ public class HotelBookingInformation {
                 ", tripId=" + tripId +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (! (o instanceof HotelBookingInformation)) {
+            return false;
+        }
+
+        HotelBookingInformation hotelInfo = (HotelBookingInformation) o;
+
+        if (!hotelInfo.getDuration().equals(this.getDuration())) {
+            return false;
+        }
+
+        if (!hotelInfo.getBoardType().equalsIgnoreCase(this.getBoardType())) {
+            return false;
+        }
+
+        if (!hotelInfo.getDestination().equals(this.getDestination())) {
+            return false;
+        }
+
+        return true;
+    }
 }

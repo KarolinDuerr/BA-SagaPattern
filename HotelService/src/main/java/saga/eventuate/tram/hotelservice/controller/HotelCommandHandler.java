@@ -50,7 +50,7 @@ public class HotelCommandHandler {
         try {
             HotelBookingInformation bookingInformation =
                     dtoConverter.convertToHotelBookingInformation(bookHotelRequest);
-            HotelBooking hotelBooking = hotelService.bookHotel(bookingInformation);
+            HotelBooking hotelBooking = hotelService.bookHotel(bookHotelRequest.getTravellerName(), bookingInformation);
 
             BookHotelResponse bookingResponse = new BookHotelResponse(hotelBooking.getId(),
                     hotelBooking.getHotelName(), hotelBooking.getBookingStatus().toString());
