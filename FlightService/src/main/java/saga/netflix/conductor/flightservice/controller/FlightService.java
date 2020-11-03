@@ -41,7 +41,7 @@ public class FlightService implements IFlightService {
     }
 
     @Override
-    public FlightInformation getFlightInformation(Long flightBookingId) throws FlightException {
+    public FlightInformation getFlightInformation(final Long flightBookingId) throws FlightException {
         logger.info(String.format("Get flight information (ID: %d) from Repository.", flightBookingId));
 
         Optional<FlightInformation> flightInformation = flightInformationRepository.findById(flightBookingId);
@@ -56,7 +56,7 @@ public class FlightService implements IFlightService {
     }
 
     @Override
-    public FlightInformation bookFlight(FlightInformation flightInformation) {
+    public FlightInformation bookFlight(final FlightInformation flightInformation) {
         logger.info("Saving the flight information: " + flightInformation);
 
         //ensure idempotence of flight bookings

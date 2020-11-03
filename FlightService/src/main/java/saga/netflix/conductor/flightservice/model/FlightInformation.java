@@ -104,11 +104,11 @@ public class FlightInformation {
         return tripId;
     }
 
-    public void setTripId(long tripId) {
+    public void setTripId(final long tripId) {
         this.tripId = tripId;
     }
 
-    private void validateFlightDates(Flight outboundFlight, Flight returnFlight) throws FlightException {
+    private void validateFlightDates(final Flight outboundFlight, final Flight returnFlight) throws FlightException {
         if (outboundFlight == null || returnFlight == null) {
             return;
         }

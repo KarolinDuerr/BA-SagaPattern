@@ -44,7 +44,7 @@ public class FlightResource {
     }
 
     @GetMapping("/bookings/{flightBookingId}")
-    public ResponseEntity<FlightInformationDTO> getFlightInformation(@PathVariable(value = "flightBookingId") Long flightBookingId) throws FlightServiceException {
+    public ResponseEntity<FlightInformationDTO> getFlightInformation(@PathVariable(value = "flightBookingId") final Long flightBookingId) throws FlightServiceException {
         logger.info("Get flight booking with ID: " + flightBookingId);
 
         FlightInformation flightInformation = flightService.getFlightInformation(flightBookingId);

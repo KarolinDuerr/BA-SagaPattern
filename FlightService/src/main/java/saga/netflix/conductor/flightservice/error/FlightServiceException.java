@@ -13,12 +13,12 @@ public class FlightServiceException extends Exception {
      */
     private final ErrorType errorType;
 
-    public FlightServiceException(ErrorType errorType, String message) {
+    public FlightServiceException(final ErrorType errorType, final String message) {
         super(message);
         this.errorType = errorType;
     }
 
-    public FlightServiceException(ErrorType errorType, String message, Throwable cause) {
+    public FlightServiceException(final ErrorType errorType, final String message, final Throwable cause) {
         super(message, cause);
         this.errorType = errorType;
     }
