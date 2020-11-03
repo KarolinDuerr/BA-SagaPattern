@@ -13,5 +13,5 @@ public interface IFlightService {
 
     FlightInformation getFlightInformation(final Long flightBookingId) throws FlightException;
 
-    FlightInformation bookFlight(final FlightInformation flightInformation) throws FlightException;
+    FlightInformation bookFlight(final FlightInformation flightInformation);
 }

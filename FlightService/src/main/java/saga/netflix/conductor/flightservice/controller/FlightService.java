@@ -56,7 +56,7 @@ public class FlightService implements IFlightService {
     }
 
     @Override
-    public FlightInformation bookFlight(FlightInformation flightInformation) throws FlightException {
+    public FlightInformation bookFlight(FlightInformation flightInformation) {
         logger.info("Saving the flight information: " + flightInformation);
 
         FlightInformation alreadyExistingFlightInformation = checkIfBookingAlreadyExists(flightInformation);
@@ -69,7 +69,7 @@ public class FlightService implements IFlightService {
         return flightInformation;
     }
 
-    private FlightInformation checkIfBookingAlreadyExists(final FlightInformation flightInformation) throws FlightException {
+    private FlightInformation checkIfBookingAlreadyExists(final FlightInformation flightInformation) {
         List<FlightInformation> customerTrips =
                 flightInformationRepository.findByTravellerName(flightInformation.getTravellerName());
 
@@ -79,6 +79,7 @@ public class FlightService implements IFlightService {
         if (!savedFlightInformation.isPresent()) {
             return null;
         }
+
         logger.info("Flight has already been booked: " + savedFlightInformation.toString());
         return savedFlightInformation.get();
     }

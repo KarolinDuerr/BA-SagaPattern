@@ -27,13 +27,13 @@ public class FlightServiceExceptionHandler extends ResponseEntityExceptionHandle
         throw exception;
     }
 
-//    @ExceptionHandler(value = Exception.class)
-//    protected ResponseEntity<Object> handle(Exception exception, WebRequest webRequest) {
-//        logger.error("An exception occurred: " + exception.getMessage() + ", of type " + exception.getClass() + " " +
-//                "with the following cause: " + exception.getCause());
-//        return handleExceptionInternal(exception, "There has been an error, please check your input and try again.",
-//                new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, webRequest);
-//    }
+    @ExceptionHandler(value = Exception.class)
+    protected ResponseEntity<Object> handle(Exception exception, WebRequest webRequest) {
+        logger.error("An exception occurred: " + exception.getMessage() + ", of type " + exception.getClass() + " " +
+                "with the following cause: " + exception.getCause());
+        return handleExceptionInternal(exception, "There has been an error, please check your input and try again.",
+                new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, webRequest);
+    }
 
     private HttpStatus mapErrorTypeToResponseStatus(ErrorType errorType) {
         switch (errorType) {
