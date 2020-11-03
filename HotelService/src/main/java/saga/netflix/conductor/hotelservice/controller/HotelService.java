@@ -60,7 +60,7 @@ public class HotelService implements IHotelService {
     public HotelBooking bookHotel(final String travellerName, final HotelBookingInformation hotelBooking) throws HotelException {
         logger.info("Saving the booked Hotel: " + hotelBooking);
 
-        HotelBooking newHotelBooking = findAvailableHotel(travellerName, hotelBooking); //TODO
+        HotelBooking newHotelBooking = findAvailableHotel(travellerName, hotelBooking); // TODO --> unterscheiden zwischen normaler HotelBuchung und TripBuchung? siehe flights
 
         // no trip assigned therefore the booking has already been confirmed
         if (newHotelBooking.getBookingInformation() != null && newHotelBooking.getBookingInformation().getTripId() == -1) {

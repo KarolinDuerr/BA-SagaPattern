@@ -31,6 +31,7 @@ public class StayDuration {
     public void setArrival(final Date arrival) throws HotelException {
         validateDates(arrival, departure);
         this.arrival = arrival;
+        this.numberOfNights = calculateNumberOfNights();
     }
 
     public Date getArrival() {
@@ -40,14 +41,11 @@ public class StayDuration {
     public void setDeparture(final Date departure) throws HotelException {
         validateDates(arrival, departure);
         this.departure = departure;
+        this.numberOfNights = calculateNumberOfNights();
     }
 
     public Date getDeparture() {
         return departure;
-    }
-
-    public void setNumberOfNights(final long numberOfNights) {
-        this.numberOfNights = numberOfNights;
     }
 
     public long getNumberOfNights() {
