@@ -41,4 +41,23 @@ public class Location {
                 ", city='" + city + '\'' +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof Location)) {
+            return false;
+        }
+
+        Location location = (Location) o;
+
+        if (!location.getCountry().equalsIgnoreCase(this.getCountry())) {
+            return false;
+        }
+
+        return location.getCity().equalsIgnoreCase(this.getCity());
+    }
 }

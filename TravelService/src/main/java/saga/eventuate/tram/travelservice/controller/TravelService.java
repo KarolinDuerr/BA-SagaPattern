@@ -75,6 +75,12 @@ public class TravelService implements  ITravelService {
     public TripInformation bookTrip(final TripInformation tripInformation) {
         logger.info("Saving the booked Trip: " + tripInformation);
 
+        //ensure idempotence of trip bookings
+        TripInformation alreadyExistingTripBooking = checkIfBookingAlreadyExists(tripInformation);
+        if (alreadyExistingTripBooking != null) {
+            return alreadyExistingTripBooking;
+        }
+
         tripInformationRepository.save(tripInformation);
 
         // Create the BookTripSaga with the necessary information
@@ -144,5 +150,21 @@ public class TravelService implements  ITravelService {
             default:
                 return BookingStatus.REJECTED_UNKNOWN;
         }
+    }
+
+    //ensure idempotence of trip bookings
+    private TripInformation checkIfBookingAlreadyExists(final TripInformation tripInformation) {
+        List<TripInformation> customerTrips =
+                tripInformationRepository.findByCustomerId(tripInformation.getCustomerId());
+
+        Optional<TripInformation> savedTripBooking =
+                customerTrips.stream().filter(tripInfo -> tripInfo.equals(tripInformation)).findFirst();
+
+        if (!savedTripBooking.isPresent()) {
+            return null;
+        }
+
+        logger.info("Trip has already been booked: " + savedTripBooking.toString());
+        return savedTripBooking.get();
     }
 }

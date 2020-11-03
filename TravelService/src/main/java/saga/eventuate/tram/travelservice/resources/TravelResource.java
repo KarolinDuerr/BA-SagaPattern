@@ -10,8 +10,7 @@ import org.springframework.web.server.ResponseStatusException;
 import saga.eventuate.tram.travelservice.api.dto.BookTripRequest;
 import saga.eventuate.tram.travelservice.api.dto.BookTripResponse;
 import saga.eventuate.tram.travelservice.controller.ITravelService;
-import saga.eventuate.tram.travelservice.error.ConverterException;
-import saga.eventuate.tram.travelservice.error.TravelException;
+import saga.eventuate.tram.travelservice.error.TravelServiceException;
 import saga.eventuate.tram.travelservice.model.TripInformation;
 import saga.eventuate.tram.travelservice.model.dto.TripInformationDTO;
 
@@ -30,7 +29,7 @@ public class TravelResource {
     private DtoConverter dtoConverter;
 
     @GetMapping("/trips")
-    public ResponseEntity<List<TripInformationDTO>> getTrips() throws ConverterException {
+    public ResponseEntity<List<TripInformationDTO>> getTrips() throws TravelServiceException {
         logger.info("Get trips.");
 
         List<TripInformation> trips = travelService.getTripsInformation();
@@ -45,7 +44,7 @@ public class TravelResource {
     }
 
     @GetMapping("trips/{tripId}")
-    public ResponseEntity<TripInformationDTO> getTrip(@PathVariable(value = "tripId") final Long tripId) throws ConverterException, TravelException {
+    public ResponseEntity<TripInformationDTO> getTrip(@PathVariable(value = "tripId") final Long tripId) throws TravelServiceException {
         logger.info("Get trip with ID: " + tripId);
 
         TripInformation tripInformation = travelService.getTripInformation(tripId);
@@ -60,7 +59,7 @@ public class TravelResource {
     }
 
     @PostMapping
-    public ResponseEntity<BookTripResponse> bookTrip(@RequestBody final BookTripRequest bookTripRequest) throws TravelException, ConverterException {
+    public ResponseEntity<BookTripResponse> bookTrip(@RequestBody final BookTripRequest bookTripRequest) throws TravelServiceException {
         logger.info("Book trip: " + bookTripRequest);
 
         if (bookTripRequest == null) {
@@ -81,7 +80,7 @@ public class TravelResource {
     }
 
     @DeleteMapping("trips/{tripId}")
-    public ResponseEntity cancelTrip(@PathVariable(value = "tripId") final Long tripId) throws TravelException {
+    public ResponseEntity cancelTrip(@PathVariable(value = "tripId") final Long tripId) throws TravelServiceException {
         logger.info("Cancel trip booking with ID: " + tripId);
 
         boolean tripCancelled = travelService.cancelTrip(tripId);

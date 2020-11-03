@@ -13,12 +13,12 @@ public class TravelServiceException extends Exception {
      */
     private final ErrorType errorType;
 
-    public TravelServiceException(ErrorType errorType, String message) {
+    public TravelServiceException(final ErrorType errorType, final String message) {
         super(message);
         this.errorType = errorType;
     }
 
-    public TravelServiceException(ErrorType errorType, String message, Throwable cause) {
+    public TravelServiceException(final ErrorType errorType, final String message, final Throwable cause) {
         super(message, cause);
         this.errorType = errorType;
     }

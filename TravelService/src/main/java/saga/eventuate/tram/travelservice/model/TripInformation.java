@@ -188,4 +188,36 @@ public class TripInformation {
                 ", flightId=" + flightId +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof TripInformation)) {
+            return false;
+        }
+
+        TripInformation tripInfo = (TripInformation) o;
+
+        if (tripInfo.getId() == this.getId()) {
+            return true;
+        }
+
+        if (!tripInfo.getDuration().equals(this.getDuration())) {
+            return false;
+        }
+
+        if (!tripInfo.getStart().equals(this.getStart())) {
+            return false;
+        }
+
+        if (!tripInfo.getDestination().equals(this.getDestination())) {
+            return false;
+        }
+
+        return tripInfo.getBoardType().equalsIgnoreCase(this.boardType)
+                && tripInfo.getTravellerName().equalsIgnoreCase(this.getTravellerName());
+    }
 }
