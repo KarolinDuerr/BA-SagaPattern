@@ -1,0 +1,5 @@
+rootProject.name = 'SagaPattern-NetflixConductor'
+include 'TravelService'
+include 'HotelService'
+include 'FlightService'
+
