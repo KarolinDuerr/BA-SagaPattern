@@ -1,0 +1,9 @@
+package saga.netflix.conductor.travelservice.model;
+
+import org.springframework.data.repository.CrudRepository;
+
+import java.util.List;
+
+public interface TripInformationRepository extends CrudRepository<TripInformation, Long> {
+    List<TripInformation> findByCustomerId(long customerId);
+}

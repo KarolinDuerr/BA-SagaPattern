@@ -1,5 +1,7 @@
 plugins {
     id 'java'
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id 'org.springframework.boot' version '2.3.1.RELEASE'
 }
 
 group 'org.example'
@@ -13,5 +15,13 @@ repositories {
 }
 
 dependencies {
+    // Springframework
+    compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
+    compile "org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion"
+    compile "org.springframework.boot:spring-boot-starter-jetty:$springBootVersion"
+
+    // MySQL
+    compile "mysql:mysql-connector-java:$mySQLVersion"
+
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
