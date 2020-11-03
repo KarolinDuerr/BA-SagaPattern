@@ -14,8 +14,7 @@ public class BookFlightRequest {
 
     }
 
-    public BookFlightRequest(final FlightDTO outboundFlight, final FlightDTO returnFlight, final boolean oneWay,
-                             final String travellerName) {
+    public BookFlightRequest(final FlightDTO outboundFlight, final FlightDTO returnFlight, final String travellerName) {
         this.outboundFlight = outboundFlight;
         this.returnFlight = returnFlight;
         this.travellerName = travellerName;
