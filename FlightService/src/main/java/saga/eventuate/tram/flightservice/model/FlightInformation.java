@@ -105,7 +105,7 @@ public class FlightInformation {
         return tripId;
     }
 
-    public void setTripId(long tripId) {
+    public void setTripId(final long tripId) {
         this.tripId = tripId;
     }
 
@@ -155,5 +155,31 @@ public class FlightInformation {
                 ", bookingStatus=" + bookingStatus +
                 ", tripId=" + tripId +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+
+        if (!(o instanceof FlightInformation)) {
+            return false;
+        }
+
+        FlightInformation flightInformation = (FlightInformation) o;
+
+        if (flightInformation.getId() == this.getId()) {
+            return true;
+        }
+
+        if (!flightInformation.getTravellerName().equals(this.getTravellerName())) {
+            return false;
+        }
+
+        if (flightInformation.getOutboundFlight().equals(this.getOutboundFlight()) && flightInformation.getReturnFlight().equals(this.getReturnFlight())) {
+            return true;
+        }
+        return false;
     }
 }

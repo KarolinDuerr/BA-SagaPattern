@@ -85,4 +85,27 @@ public class Flight {
                 ", flightDate=" + flightDate +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof Flight)) {
+            return false;
+        }
+
+        Flight flight = (Flight) o;
+
+        if (flight.getId() == this.getId()) {
+            return true;
+        }
+
+        if (flight.getFlightDate().compareTo(this.getFlightDate()) != 0 && flight.getFlightDate().getTime() != this.getFlightDate().getTime()) {
+            return false;
+        }
+
+        return flight.getFromAirport().equalsIgnoreCase(this.getFromAirport()) && flight.getToAirport().equalsIgnoreCase(this.getToAirport());
+    }
 }

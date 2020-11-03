@@ -10,8 +10,7 @@ import org.springframework.web.server.ResponseStatusException;
 import saga.eventuate.tram.flightservice.api.dto.BookFlightRequest;
 import saga.eventuate.tram.flightservice.api.dto.BookFlightResponse;
 import saga.eventuate.tram.flightservice.controller.IFlightService;
-import saga.eventuate.tram.flightservice.error.ConverterException;
-import saga.eventuate.tram.flightservice.error.FlightException;
+import saga.eventuate.tram.flightservice.error.FlightServiceException;
 import saga.eventuate.tram.flightservice.model.FlightInformation;
 import saga.eventuate.tram.flightservice.model.dto.FlightInformationDTO;
 
@@ -30,7 +29,7 @@ public class FlightResource {
     private DtoConverter dtoConverter;
 
     @GetMapping("/bookings")
-    public ResponseEntity<List<FlightInformationDTO>> getFlightsInformation() throws ConverterException {
+    public ResponseEntity<List<FlightInformationDTO>> getFlightsInformation() throws FlightServiceException {
         logger.info("Get information about all flights.");
 
         List<FlightInformation> flightsInformation = flightService.getFlightsInformation();
@@ -45,7 +44,7 @@ public class FlightResource {
     }
 
     @GetMapping("/bookings/{flightBookingId}")
-    public ResponseEntity<FlightInformationDTO> getFlightInformation(@PathVariable(value = "flightBookingId") Long flightBookingId) throws ConverterException, FlightException {
+    public ResponseEntity<FlightInformationDTO> getFlightInformation(@PathVariable(value = "flightBookingId") final Long flightBookingId) throws FlightServiceException {
         logger.info("Get flight booking with ID: " + flightBookingId);
 
         FlightInformation flightInformation = flightService.getFlightInformation(flightBookingId);
@@ -60,7 +59,7 @@ public class FlightResource {
     }
 
     @PostMapping
-    public ResponseEntity<BookFlightResponse> bookFlight(@RequestBody final BookFlightRequest bookFlightRequest) throws ConverterException, FlightException {
+    public ResponseEntity<BookFlightResponse> bookFlight(@RequestBody final BookFlightRequest bookFlightRequest) throws FlightServiceException {
         logger.info("Book flight: " + bookFlightRequest);
 
         if (bookFlightRequest == null) {
@@ -76,7 +75,7 @@ public class FlightResource {
     }
 
     @DeleteMapping("/bookings/{flightBookingId}")
-    public ResponseEntity cancelFlight(@PathVariable(value = "flightBookingId") Long flightBookingId) throws FlightException {
+    public ResponseEntity cancelFlight(@PathVariable(value = "flightBookingId") final Long flightBookingId) throws FlightServiceException {
         logger.info("Cancel hotel booking with ID " + flightBookingId);
 
         boolean flightCancelled = flightService.cancelFlightBooking(flightBookingId);

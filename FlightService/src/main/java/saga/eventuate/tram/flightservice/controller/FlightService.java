@@ -61,6 +61,12 @@ public class FlightService implements IFlightService {
     public FlightInformation bookFlight(final FlightInformation flightInformation) {
         logger.info("Saving the flight information: " + flightInformation);
 
+        //ensure idempotence of flight bookings
+        FlightInformation alreadyExistingFlightInformation = checkIfBookingAlreadyExists(flightInformation);
+        if (alreadyExistingFlightInformation != null) {
+            return alreadyExistingFlightInformation;
+        }
+
         flightInformationRepository.save(flightInformation);
 
         return flightInformation;
@@ -71,6 +77,13 @@ public class FlightService implements IFlightService {
         logger.info("Finding a flight for the flight information: " + findAndBookFlightInformation);
 
         FlightInformation flightInformation = findAvailableFlight(findAndBookFlightInformation);
+
+        //ensure idempotence of flight bookings
+        FlightInformation alreadyExistingFlightInformation = checkIfBookingAlreadyExists(flightInformation);
+        if (alreadyExistingFlightInformation != null) {
+            return alreadyExistingFlightInformation;
+        }
+
         flightInformationRepository.save(flightInformation);
 
         return flightInformation;
@@ -95,7 +108,7 @@ public class FlightService implements IFlightService {
     }
 
     @Override
-    public void cancelFlightBooking(Long bookingId, Long tripId) {
+    public void cancelFlightBooking(final Long bookingId, final Long tripId) {
         logger.info("Cancelling the booked flight with ID " + bookingId);
 
         FlightInformation flightInformation;
@@ -129,5 +142,21 @@ public class FlightService implements IFlightService {
 
         return new FlightInformation(outboundFlight, returnFlight, flightInformation.getTravellerName(),
                 flightInformation.getTripId());
+    }
+
+    //ensure idempotence of flight bookings
+    private FlightInformation checkIfBookingAlreadyExists(final FlightInformation flightInformation) {
+        List<FlightInformation> customerTrips =
+                flightInformationRepository.findByTravellerName(flightInformation.getTravellerName());
+
+        Optional<FlightInformation> savedFlightInformation =
+                customerTrips.stream().filter(flightInfo -> flightInfo.equals(flightInformation)).findFirst();
+
+        if (!savedFlightInformation.isPresent()) {
+            return null;
+        }
+
+        logger.info("Flight has already been booked: " + savedFlightInformation.toString());
+        return savedFlightInformation.get();
     }
 }

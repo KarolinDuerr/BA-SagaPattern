@@ -23,7 +23,7 @@ public class DtoConverter {
             throw new ConverterException("The information to book the flight is missing.");
         }
 
-        checkIfOneWayTicketOrInformationIsMissing(bookFlightRequest);
+        checkIfInformationIsMissing(bookFlightRequest);
         Flight outboundFlight = convertToFlight(bookFlightRequest.getOutboundFlight());
         Flight returnFlight = convertToFlight(bookFlightRequest.getReturnFlight());
         return new FlightInformation(outboundFlight, returnFlight, bookFlightRequest.getTravellerName());
@@ -34,7 +34,7 @@ public class DtoConverter {
             throw new ConverterException("The information to find and book a flight is missing.");
         }
 
-        checkIfOneWayTicketOrInformationIsMissing(bookFlightCommand);
+        checkIfInformationIsMissing(bookFlightCommand);
         Location home = convertToLocation(bookFlightCommand.getHome());
         Location destination = convertToLocation(bookFlightCommand.getDestination());
         return new FindAndBookFlightInformation(bookFlightCommand.getTripId(), home, destination,
@@ -63,7 +63,7 @@ public class DtoConverter {
                     "booking is missing.");
         }
 
-        checkIfOneWayTicketOrInformationIsMissing(flightInformation);
+        checkIfInformationIsMissing(flightInformation);
         FlightDTO outboundFlight = convertToFlightDTO(flightInformation.getOutboundFlight());
         FlightDTO returnFlight = convertToFlightDTO(flightInformation.getReturnFlight());
         return new FlightInformationDTO(flightInformation.getId(), outboundFlight, returnFlight, flightInformation.getTravellerName(),
@@ -97,19 +97,19 @@ public class DtoConverter {
     }
 
 
-    private void checkIfOneWayTicketOrInformationIsMissing(final BookFlightCommand bookFlightCommand) throws ConverterException {
+    private void checkIfInformationIsMissing(final BookFlightCommand bookFlightCommand) throws ConverterException {
         if (bookFlightCommand.getOutboundFlightDate() == null || bookFlightCommand.getReturnFlightDate() == null) {
             throw new ConverterException("Information about a flight date is missing.");
         }
     }
 
-    private void checkIfOneWayTicketOrInformationIsMissing(final BookFlightRequest bookFlightRequest) throws ConverterException {
+    private void checkIfInformationIsMissing(final BookFlightRequest bookFlightRequest) throws ConverterException {
         if (bookFlightRequest.getOutboundFlight() == null || bookFlightRequest.getReturnFlight() == null) {
             throw new ConverterException("Information about a flight is missing.");
         }
     }
 
-    private void checkIfOneWayTicketOrInformationIsMissing(final FlightInformation flightInformation) throws ConverterException {
+    private void checkIfInformationIsMissing(final FlightInformation flightInformation) throws ConverterException {
         if (flightInformation.getOutboundFlight() == null || flightInformation.getReturnFlight() == null) {
             throw new ConverterException("Information for an included flight is missing.");
         }
