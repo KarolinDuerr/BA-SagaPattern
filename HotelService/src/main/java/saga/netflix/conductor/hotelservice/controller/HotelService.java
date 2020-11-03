@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import saga.netflix.conductor.hotelservice.error.ErrorType;
 import saga.netflix.conductor.hotelservice.error.HotelException;
 import saga.netflix.conductor.hotelservice.model.HotelBooking;
@@ -16,7 +15,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Component("HotelService")
-@Transactional
 public class HotelService implements IHotelService {
 
     private static final Logger logger = LoggerFactory.getLogger(HotelService.class);
