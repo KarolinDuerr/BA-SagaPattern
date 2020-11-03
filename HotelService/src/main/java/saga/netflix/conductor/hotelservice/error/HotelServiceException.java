@@ -13,12 +13,12 @@ public class HotelServiceException extends Exception {
      */
     private final ErrorType errorType;
 
-    public HotelServiceException(ErrorType errorType, String message) {
+    public HotelServiceException(final ErrorType errorType, final String message) {
         super(message);
         this.errorType = errorType;
     }
 
-    public HotelServiceException(ErrorType errorType, String message, Throwable cause) {
+    public HotelServiceException(final ErrorType errorType, final String message, final Throwable cause) {
         super(message, cause);
         this.errorType = errorType;
     }
