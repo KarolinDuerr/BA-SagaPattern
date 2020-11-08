@@ -10,14 +10,16 @@ import saga.netlfix.conductor.flightservice.api.FlightServiceTasks;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BookTripTasksFactory { // TODO: choose option: eigene Worker und WorkerTasks oder SystemTasks (Kafka oder HTTP)
+public class BookTripTasksFactory { // TODO: choose option: eigene Worker und WorkerTasks oder SystemTasks (Kafka
+    // oder HTTP)
 
     @Autowired
     private final MetadataClient metadataClient; // TODO: keep here?
 
     public BookTripTasksFactory(final MetadataClient metadataClient) {
         this.metadataClient = metadataClient;
-        BookTripTasksDefinitionFactory bookTripTasksDefinitionFactory = new BookTripTasksDefinitionFactory(this.metadataClient);
+        BookTripTasksDefinitionFactory bookTripTasksDefinitionFactory =
+                new BookTripTasksDefinitionFactory(this.metadataClient);
         bookTripTasksDefinitionFactory.registerTaskDefinitions();
     }
 
@@ -28,7 +30,8 @@ public class BookTripTasksFactory { // TODO: choose option: eigene Worker und Wo
         bookHotelTask.setWorkflowTaskType(TaskType.SIMPLE); // TODO: choose option
 
         Map<String, Object> input = new HashMap<>();
-        input.put(HotelServiceTasks.TaskInput.BOOK_HOTEL_INPUT, String.format("${workflow.input.%s}", HotelServiceTasks.TaskInput.BOOK_HOTEL_INPUT));
+        input.put(HotelServiceTasks.TaskInput.BOOK_HOTEL_INPUT, String.format("${workflow.input.%s}",
+                HotelServiceTasks.TaskInput.BOOK_HOTEL_INPUT));
         bookHotelTask.setInputParameters(input);
 
         return bookHotelTask;
@@ -41,9 +44,12 @@ public class BookTripTasksFactory { // TODO: choose option: eigene Worker und Wo
         cancelHotelTask.setWorkflowTaskType(TaskType.SIMPLE); // TODO: choose option
 
         Map<String, Object> input = new HashMap<>(); // TODO
-//        input.put(HotelServiceTasks.TaskInput.CANCEL_HOTEL_INPUT, String.format("${%s.output.%s}", TravelServiceTasks.Task.CANCEL_TRIP, HotelServiceTasks.TaskInput.CANCEL_HOTEL_INPUT));
-//        input.put(HotelServiceTasks.TaskInput.CANCEL_HOTEL_INPUT, String.format("${%s.output.%s}", HotelServiceTasks.Task.BOOK_HOTEL, HotelServiceTasks.TaskOutput.BOOK_HOTEL_OUTPUT));
-//        input.put(HotelServiceTasks.TaskInput.CANCEL_HOTEL_INPUT, String.format("${%s.output.%s}", Sagas.BOOK_TRIP_SAGA, HotelServiceTasks.TaskOutput.BOOK_HOTEL_OUTPUT));
+//        input.put(HotelServiceTasks.TaskInput.CANCEL_HOTEL_INPUT, String.format("${%s.output.%s}",
+//        TravelServiceTasks.Task.CANCEL_TRIP, HotelServiceTasks.TaskInput.CANCEL_HOTEL_INPUT));
+//        input.put(HotelServiceTasks.TaskInput.CANCEL_HOTEL_INPUT, String.format("${%s.output.%s}",
+//        HotelServiceTasks.Task.BOOK_HOTEL, HotelServiceTasks.TaskOutput.BOOK_HOTEL_OUTPUT));
+//        input.put(HotelServiceTasks.TaskInput.CANCEL_HOTEL_INPUT, String.format("${%s.output.%s}", Sagas
+//        .BOOK_TRIP_SAGA, HotelServiceTasks.TaskOutput.BOOK_HOTEL_OUTPUT));
         cancelHotelTask.setInputParameters(input);
 
         return cancelHotelTask;
@@ -56,10 +62,25 @@ public class BookTripTasksFactory { // TODO: choose option: eigene Worker und Wo
         bookFlightTask.setWorkflowTaskType(TaskType.SIMPLE); // TODO: choose option
 
         Map<String, Object> input = new HashMap<>();
-        input.put(FlightServiceTasks.TaskInput.BOOK_FLIGHT_INPUT, String.format("${workflow.input.%s}", FlightServiceTasks.TaskInput.BOOK_FLIGHT_INPUT));
+        input.put(FlightServiceTasks.TaskInput.BOOK_FLIGHT_INPUT, String.format("${workflow.input.%s}",
+                FlightServiceTasks.TaskInput.BOOK_FLIGHT_INPUT));
         bookFlightTask.setInputParameters(input);
 
         return bookFlightTask;
+    }
+
+    public WorkflowTask confirmHotelTask() {
+        WorkflowTask confirmHotelTask = new WorkflowTask();
+        confirmHotelTask.setName(HotelServiceTasks.Task.CONFIRM_HOTEL);
+        confirmHotelTask.setTaskReferenceName(HotelServiceTasks.Task.CONFIRM_HOTEL);
+        confirmHotelTask.setWorkflowTaskType(TaskType.SIMPLE); // TODO: choose option
+
+        Map<String, Object> input = new HashMap<>();
+        input.put(HotelServiceTasks.TaskInput.CONFIRM_HOTEL_INPUT, String.format("${%s.output.%s}",
+                HotelServiceTasks.Task.BOOK_HOTEL, HotelServiceTasks.TaskOutput.BOOK_HOTEL_OUTPUT));
+        confirmHotelTask.setInputParameters(input);
+
+        return confirmHotelTask;
     }
 
 
@@ -70,8 +91,10 @@ public class BookTripTasksFactory { // TODO: choose option: eigene Worker und Wo
 //        cancelTripBookingTask.setWorkflowTaskType(TaskType.SIMPLE); // TODO: choose option
 //
 //        Map<String, Object> input = new HashMap<>(); // TODO
-//        input.put(HotelServiceTasks.TaskOutput.BOOK_HOTEL_OUTPUT, String.format("${%s.output.%s}", HotelServiceTasks.Task.BOOK_HOTEL, HotelServiceTasks.TaskOutput.BOOK_HOTEL_OUTPUT));
-////        input.put(TravelServiceTasks.TaskInput.REJECT_TRIP_INPUT, String.format("${%s.output.%s}", HotelServiceTasks.Task.BOOK_HOTEL, HotelServiceTasks.TaskOutput.BOOK_HOTEL_OUTPUT));
+//        input.put(HotelServiceTasks.TaskOutput.BOOK_HOTEL_OUTPUT, String.format("${%s.output.%s}",
+//        HotelServiceTasks.Task.BOOK_HOTEL, HotelServiceTasks.TaskOutput.BOOK_HOTEL_OUTPUT));
+////        input.put(TravelServiceTasks.TaskInput.REJECT_TRIP_INPUT, String.format("${%s.output.%s}",
+// HotelServiceTasks.Task.BOOK_HOTEL, HotelServiceTasks.TaskOutput.BOOK_HOTEL_OUTPUT));
 //        cancelTripBookingTask.setInputParameters(input);
 //
 //        return cancelTripBookingTask;
@@ -84,7 +107,8 @@ public class BookTripTasksFactory { // TODO: choose option: eigene Worker und Wo
 //        rejectTripTask.setWorkflowTaskType(TaskType.SIMPLE); // TODO: choose option
 //
 //        Map<String, Object> input = new HashMap<>();
-//        input.put(TravelServiceTasks.TaskInput.REJECT_TRIP_INPUT, String.format("${workflow.input.%s}", TravelServiceTasks.TaskInput.REJECT_TRIP_INPUT));
+//        input.put(TravelServiceTasks.TaskInput.REJECT_TRIP_INPUT, String.format("${workflow.input.%s}",
+//        TravelServiceTasks.TaskInput.REJECT_TRIP_INPUT));
 //        rejectTripTask.setInputParameters(input);
 //
 //        return rejectTripTask;

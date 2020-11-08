@@ -8,7 +8,8 @@ import com.netflix.conductor.client.worker.Worker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import saga.netflix.conductor.hotelservice.controller.worker.BookHotelWorker;
+import saga.netflix.conductor.hotelservice.controller.worker.ConfirmHotelWorker;
 import saga.netflix.conductor.hotelservice.resources.DtoConverter;
 
 import java.util.LinkedList;
@@ -54,9 +55,11 @@ public class WorkerDispatcher { // TODO ensure stop polling when instance become
 
     public void startTaskPolling() {
         final Worker bookHotelWorker = new BookHotelWorker(objectMapper, hotelService, dtoConverter);
+        final Worker confirmHotelWorker = new ConfirmHotelWorker(objectMapper, hotelService, dtoConverter);
 
         List<Worker> workers = new LinkedList<>();
         workers.add(bookHotelWorker);
+        workers.add(confirmHotelWorker);
 
         final TaskRunnerConfigurer taskRunnerConfigurer =
                 new TaskRunnerConfigurer.Builder(taskClient, workers).withThreadCount(THREAD_COUNT).build();

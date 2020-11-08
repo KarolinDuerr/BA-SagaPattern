@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import saga.netflix.conductor.hotelservice.error.BookingNotFound;
 import saga.netflix.conductor.hotelservice.error.ErrorType;
 import saga.netflix.conductor.hotelservice.error.HotelException;
 import saga.netflix.conductor.hotelservice.model.HotelBooking;
@@ -76,6 +77,25 @@ public class HotelService implements IHotelService {
         hotelBookingRepository.save(newHotelBooking);
 
         return newHotelBooking;
+    }
+
+    @Override
+    public void confirmHotelBooking(final Long bookingId, final Long tripId) {
+        logger.info("Confirming the booked hotel with ID " + bookingId);
+
+        HotelBooking hotelBooking;
+        try {
+            hotelBooking = getHotelBooking(bookingId);
+
+            if (hotelBooking.getBookingInformation() == null || hotelBooking.getBookingInformation().getTripId() != tripId) {
+                throw new BookingNotFound(bookingId);
+            }
+
+            hotelBooking.confirm();
+            hotelBookingRepository.save(hotelBooking);
+        } catch (HotelException e) {
+            throw new BookingNotFound(bookingId);
+        }
     }
 
     // only mocking the general function of this method

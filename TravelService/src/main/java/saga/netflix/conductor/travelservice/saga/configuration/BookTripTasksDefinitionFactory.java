@@ -31,7 +31,7 @@ public class BookTripTasksDefinitionFactory { // TODO: nur wenn eigene Worker un
         taskDefinitions.add(createBookHotelTask());
         taskDefinitions.add(createCancelHotelTask());
         taskDefinitions.add(createBookFlightTask());
-//        taskDefinitions.add(createConfirmHotelTask()); // TODO
+        taskDefinitions.add(createConfirmHotelTask());
 //        taskDefinitions.add(createConfirmTripTask()); // TODO
 //        taskDefinitions.add(createCancelTripBookingTask()); // TODO notwendig?
 //        taskDefinitions.add(createRejectTripTask());
@@ -124,28 +124,26 @@ public class BookTripTasksDefinitionFactory { // TODO: nur wenn eigene Worker un
         return bookFlightDef;
     }
 
-//    private TaskDef createConfirmHotelTask() {
-//        String description = String.format("'%s' task definition: invokes HotelService to confirm the hotel booking.",
-//                Constants.BOOK_FLIGHT);
-//        final TaskDef confirmHotelDef = new TaskDef(Constants.BOOK_FLIGHT, description);
-//        confirmHotelDef.setRetryCount(1);
-//        confirmHotelDef.setRetryLogic(TaskDef.RetryLogic.FIXED);
-//        confirmHotelDef.setRetryDelaySeconds(60);
-//        confirmHotelDef.setTimeoutPolicy(TaskDef.TimeoutPolicy.TIME_OUT_WF);
-//        confirmHotelDef.setResponseTimeoutSeconds(3600);
-//        bookFlightDef.setOwnerEmail("travelService@beispielMail.com");
-//
-//        final List<String> inputKeys = new LinkedList<>();
-//        inputKeys.add("confirmHotelBooking");
-//        confirmHotelDef.setInputKeys(inputKeys);
-//
-//        final List<String> outputKeys = new LinkedList<>();
-//        outputKeys.add("lastTaskId"); // TODO: überhaupt was zurückgeben?
-//        confirmHotelDef.setOutputKeys(outputKeys);
-//
-//        return confirmHotelDef;
-//    }
-//
+    private TaskDef createConfirmHotelTask() {
+        String description = String.format("'%s' task definition: invokes HotelService to confirm the hotel booking.",
+                HotelServiceTasks.Task.CONFIRM_HOTEL);
+        final TaskDef confirmHotelDef = new TaskDef(HotelServiceTasks.Task.CONFIRM_HOTEL, description);
+        confirmHotelDef.setRetryCount(1);
+        confirmHotelDef.setRetryLogic(TaskDef.RetryLogic.FIXED);
+        confirmHotelDef.setRetryDelaySeconds(60);
+        confirmHotelDef.setTimeoutPolicy(TaskDef.TimeoutPolicy.TIME_OUT_WF);
+        confirmHotelDef.setResponseTimeoutSeconds(3600);
+        confirmHotelDef.setOwnerEmail("travelService@beispielMail.com");
+
+        final List<String> inputKeys = new LinkedList<>();
+        inputKeys.add(HotelServiceTasks.TaskInput.CONFIRM_HOTEL_INPUT);
+        confirmHotelDef.setInputKeys(inputKeys);
+
+        // TODO output notwendig?
+
+        return confirmHotelDef;
+    }
+
 //    private TaskDef createConfirmTripTask() {
 //        String description = String.format("'%s' task definition: invokes TripService to confirm the trip.",
 //                Constants.BOOK_FLIGHT);

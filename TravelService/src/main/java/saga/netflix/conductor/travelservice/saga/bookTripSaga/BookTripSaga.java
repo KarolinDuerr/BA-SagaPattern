@@ -74,6 +74,7 @@ public class BookTripSaga {
         List<WorkflowTask> sagaBookTripTasks = new LinkedList<>();
         sagaBookTripTasks.add(taskInstanceFactory.bookHotelTask());
         sagaBookTripTasks.add(taskInstanceFactory.bookFlightTask());
+        sagaBookTripTasks.add(taskInstanceFactory.confirmHotelTask());
         // TODO
         bookTripSaga.setTasks(sagaBookTripTasks);
 
