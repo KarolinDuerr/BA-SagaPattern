@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import saga.netflix.conductor.flightservice.error.ErrorType;
 import saga.netflix.conductor.flightservice.error.FlightException;
+import saga.netflix.conductor.flightservice.model.FindAndBookFlightInformation;
+import saga.netflix.conductor.flightservice.model.Flight;
 import saga.netflix.conductor.flightservice.model.FlightInformation;
 import saga.netflix.conductor.flightservice.model.FlightInformationRepository;
 
@@ -68,6 +70,41 @@ public class FlightService implements IFlightService {
         flightInformationRepository.save(flightInformation);
 
         return flightInformation;
+    }
+
+    @Override
+    public FlightInformation findAndBookFlight(final FindAndBookFlightInformation findAndBookFlightInformation) throws FlightException {
+        logger.info("Finding a flight for the flight information: " + findAndBookFlightInformation);
+
+        FlightInformation flightInformation = findAvailableFlight(findAndBookFlightInformation);
+
+        //ensure idempotence of flight bookings
+        FlightInformation alreadyExistingFlightInformation = checkIfBookingAlreadyExists(flightInformation);
+        if (alreadyExistingFlightInformation != null) {
+            return alreadyExistingFlightInformation;
+        }
+
+        flightInformationRepository.save(flightInformation);
+
+        return flightInformation;
+    }
+
+    // only mocking the general function of this method
+    private FlightInformation findAvailableFlight(final FindAndBookFlightInformation flightInformation) throws FlightException {
+        if (flightInformation.getHome().getCountry().equalsIgnoreCase("Provoke flight failure")) {
+            logger.info("Provoked flight exception: no available flight for trip: " + flightInformation.getTripId());
+            throw new FlightException(ErrorType.NO_FLIGHT_AVAILABLE, "No available flight found.");
+        }
+
+        Flight outboundFlight = new Flight(flightInformation.getHome().getCountry(),
+                flightInformation.getHome().getCity(), flightInformation.getDestination().getCity(),
+                flightInformation.getOutboundFlightDate());
+        Flight returnFlight = new Flight(flightInformation.getDestination().getCountry(),
+                flightInformation.getDestination().getCity(), flightInformation.getHome().getCity(),
+                flightInformation.getReturnFlightDate());
+
+        return new FlightInformation(outboundFlight, returnFlight, flightInformation.getTravellerName(),
+                flightInformation.getTripId());
     }
 
     //ensure idempotence of flight bookings
