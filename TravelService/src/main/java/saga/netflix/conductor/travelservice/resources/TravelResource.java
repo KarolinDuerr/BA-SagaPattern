@@ -10,8 +10,8 @@ import org.springframework.web.server.ResponseStatusException;
 import saga.netflix.conductor.travelservice.controller.ITravelService;
 import saga.netflix.conductor.travelservice.error.TravelServiceException;
 import saga.netflix.conductor.travelservice.model.TripInformation;
-import saga.netflix.conductor.travelservice.model.dto.BookTripRequest;
-import saga.netflix.conductor.travelservice.model.dto.BookTripResponse;
+import saga.netflix.conductor.travelservice.api.dto.BookTripRequest;
+import saga.netflix.conductor.travelservice.api.dto.BookTripResponse;
 import saga.netflix.conductor.travelservice.model.dto.TripInformationDTO;
 
 import java.util.List;

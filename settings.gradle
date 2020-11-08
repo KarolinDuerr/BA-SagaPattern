@@ -2,4 +2,6 @@ rootProject.name = 'SagaPattern-NetflixConductor'
 include 'TravelService'
 include 'HotelService'
 include 'FlightService'
+include 'HotelService-API'
+include 'TravelService-API'
 

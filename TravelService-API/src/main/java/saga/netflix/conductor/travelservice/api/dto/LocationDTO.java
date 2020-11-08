@@ -1,4 +1,4 @@
-package saga.netflix.conductor.travelservice.model.dto;
+package saga.netflix.conductor.travelservice.api.dto;
 
 public class LocationDTO {
 

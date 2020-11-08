@@ -1,4 +1,4 @@
-package saga.netflix.conductor.hotelservice.model.dto;
+package saga.netflix.conductor.hotelservice.api.dto;
 
 public class BookHotelResponse {
 

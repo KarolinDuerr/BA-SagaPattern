@@ -1,5 +1,7 @@
 package saga.netflix.conductor.travelservice.model.dto;
 
+import saga.netflix.conductor.travelservice.api.dto.LocationDTO;
+import saga.netflix.conductor.travelservice.api.dto.TripDurationDTO;
 import saga.netflix.conductor.travelservice.model.BookingStatus;
 
 public class TripInformationDTO {

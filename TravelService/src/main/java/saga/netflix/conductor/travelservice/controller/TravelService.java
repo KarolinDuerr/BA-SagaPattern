@@ -8,6 +8,8 @@ import saga.netflix.conductor.travelservice.error.ErrorType;
 import saga.netflix.conductor.travelservice.error.TravelException;
 import saga.netflix.conductor.travelservice.model.TripInformation;
 import saga.netflix.conductor.travelservice.model.TripInformationRepository;
+import saga.netflix.conductor.travelservice.saga.BookTripSaga.BookTripSagaData;
+import saga.netflix.conductor.travelservice.saga.SagaInstanceFactory;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -21,8 +23,12 @@ public class TravelService implements  ITravelService {
     @Autowired
     private final TripInformationRepository tripInformationRepository;
 
-    public TravelService(final TripInformationRepository tripInformationRepository) {
+    @Autowired
+    private final SagaInstanceFactory sagaInstanceFactory;
+
+    public TravelService(final TripInformationRepository tripInformationRepository, final SagaInstanceFactory sagaInstanceFactory) {
         this.tripInformationRepository = tripInformationRepository;
+        this.sagaInstanceFactory = sagaInstanceFactory;
     }
 
     @Override
@@ -66,6 +72,10 @@ public class TravelService implements  ITravelService {
         }
 
         tripInformationRepository.save(tripInformation);
+
+        // Create and start the BookTripSaga with necessary information
+        BookTripSagaData bookTripSagaData = new BookTripSagaData(tripInformation.getId(), tripInformation);
+        sagaInstanceFactory.startBookTripSaga(bookTripSagaData);
 
         return tripInformation;
     }

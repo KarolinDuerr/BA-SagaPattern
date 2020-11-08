@@ -1,5 +1,8 @@
 package saga.netflix.conductor.hotelservice.resources;
 
+import saga.netflix.conductor.hotelservice.api.dto.BookHotelRequest;
+import saga.netflix.conductor.hotelservice.api.dto.DestinationDTO;
+import saga.netflix.conductor.hotelservice.api.dto.StayDurationDTO;
 import saga.netflix.conductor.hotelservice.error.ConverterException;
 import saga.netflix.conductor.hotelservice.error.ErrorType;
 import saga.netflix.conductor.hotelservice.error.HotelServiceException;

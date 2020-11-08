@@ -6,9 +6,9 @@ import saga.netflix.conductor.travelservice.error.TravelException;
 import saga.netflix.conductor.travelservice.model.Location;
 import saga.netflix.conductor.travelservice.model.TripDuration;
 import saga.netflix.conductor.travelservice.model.TripInformation;
-import saga.netflix.conductor.travelservice.model.dto.BookTripRequest;
-import saga.netflix.conductor.travelservice.model.dto.LocationDTO;
-import saga.netflix.conductor.travelservice.model.dto.TripDurationDTO;
+import saga.netflix.conductor.travelservice.api.dto.BookTripRequest;
+import saga.netflix.conductor.travelservice.api.dto.LocationDTO;
+import saga.netflix.conductor.travelservice.api.dto.TripDurationDTO;
 import saga.netflix.conductor.travelservice.model.dto.TripInformationDTO;
 
 import java.util.LinkedList;

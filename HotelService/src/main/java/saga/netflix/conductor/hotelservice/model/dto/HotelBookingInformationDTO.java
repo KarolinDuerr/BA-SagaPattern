@@ -1,5 +1,8 @@
 package saga.netflix.conductor.hotelservice.model.dto;
 
+import saga.netflix.conductor.hotelservice.api.dto.DestinationDTO;
+import saga.netflix.conductor.hotelservice.api.dto.StayDurationDTO;
+
 public class HotelBookingInformationDTO {
 
     private DestinationDTO destination;

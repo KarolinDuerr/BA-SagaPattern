@@ -11,8 +11,8 @@ import saga.netflix.conductor.hotelservice.controller.IHotelService;
 import saga.netflix.conductor.hotelservice.error.HotelServiceException;
 import saga.netflix.conductor.hotelservice.model.HotelBooking;
 import saga.netflix.conductor.hotelservice.model.HotelBookingInformation;
-import saga.netflix.conductor.hotelservice.model.dto.BookHotelRequest;
-import saga.netflix.conductor.hotelservice.model.dto.BookHotelResponse;
+import saga.netflix.conductor.hotelservice.api.dto.BookHotelRequest;
+import saga.netflix.conductor.hotelservice.api.dto.BookHotelResponse;
 import saga.netflix.conductor.hotelservice.model.dto.HotelBookingDTO;
 
 import java.util.List;
