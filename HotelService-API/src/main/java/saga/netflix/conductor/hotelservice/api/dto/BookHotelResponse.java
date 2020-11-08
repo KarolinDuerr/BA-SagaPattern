@@ -2,6 +2,8 @@ package saga.netflix.conductor.hotelservice.api.dto;
 
 public class BookHotelResponse {
 
+    private long tripId;
+
     private long bookingId;
 
     private String hotelName;
@@ -13,9 +15,21 @@ public class BookHotelResponse {
     }
 
     public BookHotelResponse(final long bookingId, final String hotelName, final String bookingStatus) {
+        this.tripId = -1;
         this.bookingId = bookingId;
         this.hotelName = hotelName;
         this.bookingStatus = bookingStatus;
+    }
+
+    public BookHotelResponse(final long tripId, final long bookingId, final String hotelName, final String bookingStatus) {
+        this.tripId = tripId;
+        this.bookingId = bookingId;
+        this.hotelName = hotelName;
+        this.bookingStatus = bookingStatus;
+    }
+
+    public long getTripId() {
+        return tripId;
     }
 
     public long getBookingId() {
@@ -33,7 +47,8 @@ public class BookHotelResponse {
     @Override
     public String toString() {
         return "BookHotelResponse{" +
-                "bookingId=" + bookingId +
+                "tripId=" + tripId +
+                ", bookingId=" + bookingId +
                 ", hotelName='" + hotelName + '\'' +
                 ", bookingStatus='" + bookingStatus + '\'' +
                 '}';

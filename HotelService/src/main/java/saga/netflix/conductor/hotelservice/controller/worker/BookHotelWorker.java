@@ -1,4 +1,4 @@
-package saga.netflix.conductor.hotelservice.controller;
+package saga.netflix.conductor.hotelservice.controller.worker;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netflix.conductor.client.worker.Worker;
@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import saga.netflix.conductor.hotelservice.api.HotelServiceTasks;
 import saga.netflix.conductor.hotelservice.api.dto.BookHotelRequest;
 import saga.netflix.conductor.hotelservice.api.dto.BookHotelResponse;
+import saga.netflix.conductor.hotelservice.controller.IHotelService;
 import saga.netflix.conductor.hotelservice.error.HotelServiceException;
 import saga.netflix.conductor.hotelservice.model.HotelBooking;
 import saga.netflix.conductor.hotelservice.model.HotelBookingInformation;
@@ -42,7 +43,7 @@ public class BookHotelWorker implements Worker {
     }
 
     @Override
-    public TaskResult execute(final Task task) {
+    public TaskResult execute(final Task task) { // TODO refactoring
         logger.info("Start execution of " + getTaskDefName());
 
         final TaskResult taskResult = new TaskResult(task);
@@ -52,25 +53,29 @@ public class BookHotelWorker implements Worker {
             logger.info(String.format("%s: misses the necessary input data (%s)", getTaskDefName(),
                     HotelServiceTasks.TaskInput.BOOK_HOTEL_INPUT));
             taskResult.setStatus(TaskResult.Status.FAILED);
+            return taskResult;
         }
 
         logger.info("TaskInput: " + taskInput.get(HotelServiceTasks.TaskInput.BOOK_HOTEL_INPUT));
         final BookHotelRequest bookHotelRequest =
                 objectMapper.convertValue(taskInput.get(HotelServiceTasks.TaskInput.BOOK_HOTEL_INPUT),
                         BookHotelRequest.class);
+
         try {
             HotelBookingInformation bookingInformation =
                     dtoConverter.convertToHotelBookingInformation(bookHotelRequest);
 
             HotelBooking hotelBooking = hotelService.bookHotel(bookHotelRequest.getTravellerName(), bookingInformation);
 
-            BookHotelResponse bookingResponse = new BookHotelResponse(hotelBooking.getId(),
+            BookHotelResponse bookingResponse = new BookHotelResponse(bookHotelRequest.getTripId(), hotelBooking.getId(),
                     hotelBooking.getHotelName(), hotelBooking.getBookingStatus().toString());
 
             taskResult.getOutputData().put(HotelServiceTasks.TaskOutput.BOOK_HOTEL_OUTPUT, bookingResponse);
             taskResult.setStatus(TaskResult.Status.COMPLETED);
+            logger.info("Hotel successfully booked: " + bookingResponse);
         } catch (HotelServiceException exception) {
             logger.error(exception.toString());
+            taskResult.setReasonForIncompletion(exception.toString());
             taskResult.setStatus(TaskResult.Status.FAILED);
         }
 
