@@ -1,4 +1,7 @@
-package saga.netflix.conductor.flightservice.model.dto;
+package saga.netlfix.conductor.flightservice.api.dto;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
 
@@ -10,6 +13,7 @@ public class FlightDTO {
 
     private String toAirport;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private Date flightDate;
 
     private FlightDTO() {
@@ -23,6 +27,7 @@ public class FlightDTO {
         this.flightDate = flightDate;
     }
 
+    @JsonProperty("country")
     public String getCountry() {
         return country;
     }
@@ -31,6 +36,7 @@ public class FlightDTO {
         this.country = country;
     }
 
+    @JsonProperty("fromAirport")
     public String getFromAirport() {
         return fromAirport;
     }
@@ -39,6 +45,7 @@ public class FlightDTO {
         this.fromAirport = fromAirport;
     }
 
+    @JsonProperty("toAirport")
     public String getToAirport() {
         return toAirport;
     }
@@ -47,6 +54,7 @@ public class FlightDTO {
         this.toAirport = toAirport;
     }
 
+    @JsonProperty("flightDate")
     public Date getFlightDate() {
         return flightDate;
     }

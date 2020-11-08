@@ -3,11 +3,15 @@ package saga.netflix.conductor.flightservice.resources;
 import saga.netflix.conductor.flightservice.error.ConverterException;
 import saga.netflix.conductor.flightservice.error.ErrorType;
 import saga.netflix.conductor.flightservice.error.FlightException;
+import saga.netflix.conductor.flightservice.model.FindAndBookFlightInformation;
 import saga.netflix.conductor.flightservice.model.Flight;
 import saga.netflix.conductor.flightservice.model.FlightInformation;
-import saga.netflix.conductor.flightservice.model.dto.BookFlightRequest;
-import saga.netflix.conductor.flightservice.model.dto.FlightDTO;
+import saga.netflix.conductor.flightservice.model.Location;
+import saga.netlfix.conductor.flightservice.api.dto.BookFlightRequest;
+import saga.netlfix.conductor.flightservice.api.dto.BookFlightTask;
+import saga.netlfix.conductor.flightservice.api.dto.FlightDTO;
 import saga.netflix.conductor.flightservice.model.dto.FlightInformationDTO;
+import saga.netlfix.conductor.flightservice.api.dto.LocationDTO;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -23,6 +27,19 @@ public class DtoConverter {
         Flight outboundFlight = convertToFlight(bookFlightRequest.getOutboundFlight());
         Flight returnFlight = convertToFlight(bookFlightRequest.getReturnFlight());
         return new FlightInformation(outboundFlight, returnFlight, bookFlightRequest.getTravellerName());
+    }
+
+    public FindAndBookFlightInformation convertToFindAndBookFlightInformation(final BookFlightTask bookFlightTask) throws ConverterException, FlightException {
+        if (bookFlightTask == null) {
+            throw new ConverterException("The information to find and book a flight is missing.");
+        }
+
+        checkIfInformationIsMissing(bookFlightTask);
+        Location home = convertToLocation(bookFlightTask.getHome());
+        Location destination = convertToLocation(bookFlightTask.getDestination());
+        return new FindAndBookFlightInformation(bookFlightTask.getTripId(), home, destination,
+                bookFlightTask.getOutboundFlightDate(), bookFlightTask.getReturnFlightDate(),
+                bookFlightTask.getTravellerName());
     }
 
     public List<FlightInformationDTO> convertToFlightInformationDTOList(final List<FlightInformation> flightsInformation) throws ConverterException {
@@ -62,6 +79,14 @@ public class DtoConverter {
                 flightDTO.getFlightDate());
     }
 
+    private Location convertToLocation(final LocationDTO locationDTO) throws ConverterException {
+        if (locationDTO == null) {
+            throw new ConverterException("Information about a location is missing.");
+        }
+
+        return new Location(locationDTO.getCountry(), locationDTO.getCity());
+    }
+
     private FlightDTO convertToFlightDTO(final Flight flight) {
         if (flight == null) {
             return null;
@@ -69,6 +94,16 @@ public class DtoConverter {
 
         return new FlightDTO(flight.getCountry(), flight.getFromAirport(), flight.getToAirport(),
                 flight.getFlightDate());
+    }
+
+    private void checkIfInformationIsMissing(final BookFlightTask bookFlightTask) throws ConverterException {
+        if (bookFlightTask.getOutboundFlightDate() == null || bookFlightTask.getReturnFlightDate() == null) {
+            throw new ConverterException("Information about a flight date is missing.");
+        }
+
+        if (bookFlightTask.getTravellerName() == null || bookFlightTask.getTravellerName().isEmpty()) {
+            throw new ConverterException("Information about a flight is missing.");
+        }
     }
 
     private void checkIfInformationIsMissing(final BookFlightRequest bookFlightRequest) throws ConverterException {

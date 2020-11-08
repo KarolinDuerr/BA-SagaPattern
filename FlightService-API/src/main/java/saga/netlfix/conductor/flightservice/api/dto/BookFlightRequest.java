@@ -1,4 +1,6 @@
-package saga.netflix.conductor.flightservice.model.dto;
+package saga.netlfix.conductor.flightservice.api.dto;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class BookFlightRequest {
 
@@ -18,6 +20,7 @@ public class BookFlightRequest {
         this.travellerName = travellerName;
     }
 
+    @JsonProperty("outboundFlight")
     public FlightDTO getOutboundFlight() {
         return outboundFlight;
     }
@@ -26,6 +29,7 @@ public class BookFlightRequest {
         this.outboundFlight = outboundFlight;
     }
 
+    @JsonProperty("returnFlight")
     public FlightDTO getReturnFlight() {
         return returnFlight;
     }
@@ -34,6 +38,7 @@ public class BookFlightRequest {
         this.returnFlight = returnFlight;
     }
 
+    @JsonProperty("travellerName")
     public String getTravellerName() {
         return travellerName;
     }

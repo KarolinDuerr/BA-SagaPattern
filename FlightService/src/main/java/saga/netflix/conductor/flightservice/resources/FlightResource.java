@@ -10,8 +10,8 @@ import org.springframework.web.server.ResponseStatusException;
 import saga.netflix.conductor.flightservice.controller.IFlightService;
 import saga.netflix.conductor.flightservice.error.FlightServiceException;
 import saga.netflix.conductor.flightservice.model.FlightInformation;
-import saga.netflix.conductor.flightservice.model.dto.BookFlightRequest;
-import saga.netflix.conductor.flightservice.model.dto.BookFlightResponse;
+import saga.netlfix.conductor.flightservice.api.dto.BookFlightRequest;
+import saga.netlfix.conductor.flightservice.api.dto.BookFlightResponse;
 import saga.netflix.conductor.flightservice.model.dto.FlightInformationDTO;
 
 import java.util.List;
