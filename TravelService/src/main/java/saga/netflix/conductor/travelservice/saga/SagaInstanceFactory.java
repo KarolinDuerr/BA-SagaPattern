@@ -6,8 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import saga.netflix.conductor.hotelservice.api.HotelServiceTasks;
-import saga.netflix.conductor.travelservice.api.TravelServiceTasks;
 import saga.netflix.conductor.travelservice.saga.bookTripSaga.BookTripSagaData;
+import saga.netlfix.conductor.flightservice.api.FlightServiceTasks;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,8 +37,7 @@ public class SagaInstanceFactory {
         // input that's necessary for the individual tasks
         final Map<String, Object> inputParameters = new HashMap<>();
         inputParameters.put(HotelServiceTasks.TaskInput.BOOK_HOTEL_INPUT, bookTripSagaData.makeBookHotelRequest());
-        inputParameters.put(HotelServiceTasks.TaskInput.CANCEL_HOTEL_INPUT, bookTripSagaData.makeCancelHotelBooking());
-        inputParameters.put(TravelServiceTasks.TaskInput.REJECT_TRIP_INPUT, bookTripSagaData.makeRejectTripBooking());
+        inputParameters.put(FlightServiceTasks.TaskInput.BOOK_FLIGHT_INPUT, bookTripSagaData.makeBookFlightTask());
 
         bookTripSagaRequest.setInput(inputParameters);
 

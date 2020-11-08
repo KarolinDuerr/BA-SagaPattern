@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import saga.netflix.conductor.hotelservice.api.HotelServiceTasks;
 import saga.netflix.conductor.travelservice.saga.Sagas;
 import saga.netflix.conductor.travelservice.saga.configuration.BookTripTasksFactory;
+import saga.netlfix.conductor.flightservice.api.FlightServiceTasks;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -52,12 +53,11 @@ public class BookTripSaga {
 
         List<WorkflowTask> compensateSagaBookTripTasks = new LinkedList<>();
         compensateSagaBookTripTasks.add(taskInstanceFactory.cancelHotelTask());
-        compensateSagaBookTripTasks.add(taskInstanceFactory.rejectTripTask());
         //TODO
         compensateBookTripSaga.setTasks(compensateSagaBookTripTasks);
 
-//        List<String> inputParameters = new LinkedList<>(); // TODO: notwendig? --> Output notwendig?
-//        bookTripSaga.setInputParameters();
+//        List<String> inputParameters = new LinkedList<>(); // TODO: notwendig/wie? --> Output notwendig?
+//        compensateBookTripSaga.setInputParameters(inputParameters);
 
         compensateBookTripSaga.setSchemaVersion(2);
         compensateBookTripSaga.setRestartable(true); // has to be --> was bei failure?
@@ -73,11 +73,13 @@ public class BookTripSaga {
 
         List<WorkflowTask> sagaBookTripTasks = new LinkedList<>();
         sagaBookTripTasks.add(taskInstanceFactory.bookHotelTask());
+        sagaBookTripTasks.add(taskInstanceFactory.bookFlightTask());
         // TODO
         bookTripSaga.setTasks(sagaBookTripTasks);
 
         List<String> inputParameters = new LinkedList<>(); // TODO: Output notwendig?
         inputParameters.add(HotelServiceTasks.TaskInput.BOOK_HOTEL_INPUT);
+        inputParameters.add(FlightServiceTasks.TaskInput.BOOK_FLIGHT_INPUT);
         // TODO
         bookTripSaga.setInputParameters(inputParameters);
 

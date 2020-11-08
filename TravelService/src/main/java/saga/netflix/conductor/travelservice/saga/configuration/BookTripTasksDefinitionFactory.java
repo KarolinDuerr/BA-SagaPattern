@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import saga.netflix.conductor.hotelservice.api.HotelServiceTasks;
-import saga.netflix.conductor.travelservice.api.TravelServiceTasks;
+import saga.netlfix.conductor.flightservice.api.FlightServiceTasks;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -30,10 +30,11 @@ public class BookTripTasksDefinitionFactory { // TODO: nur wenn eigene Worker un
         taskDefinitions = new LinkedList<>();
         taskDefinitions.add(createBookHotelTask());
         taskDefinitions.add(createCancelHotelTask());
-//        taskDefinitions.add(createBookFlightTask()); // TODO
+        taskDefinitions.add(createBookFlightTask());
 //        taskDefinitions.add(createConfirmHotelTask()); // TODO
 //        taskDefinitions.add(createConfirmTripTask()); // TODO
-        taskDefinitions.add(createRejectTripTask());
+//        taskDefinitions.add(createCancelTripBookingTask()); // TODO notwendig?
+//        taskDefinitions.add(createRejectTripTask());
     }
 
     public void registerTaskDefinitions() {
@@ -74,7 +75,7 @@ public class BookTripTasksDefinitionFactory { // TODO: nur wenn eigene Worker un
 
         final List<String> outputKeys = new LinkedList<>();
         outputKeys.add(HotelServiceTasks.TaskOutput.BOOK_HOTEL_OUTPUT);
-        bookHotelDef.setInputKeys(outputKeys);
+        bookHotelDef.setOutputKeys(outputKeys);
 
         return bookHotelDef;
     }
@@ -96,33 +97,33 @@ public class BookTripTasksDefinitionFactory { // TODO: nur wenn eigene Worker un
 
         final List<String> outputKeys = new LinkedList<>();
         outputKeys.add("lastTaskId"); // TODO
-        cancelHotelDef.setInputKeys(outputKeys);
+        cancelHotelDef.setOutputKeys(outputKeys);
 
         return cancelHotelDef;
     }
 
-//    private TaskDef createBookFlightTask() {
-//        String description = String.format("'%s' task definition: invokes FlightService to book a flight.",
-//                Constants.BOOK_FLIGHT);
-//        final TaskDef bookFlightDef = new TaskDef(Constants.BOOK_FLIGHT, description);
-//        bookFlightDef.setRetryCount(1);
-//        bookFlightDef.setRetryLogic(TaskDef.RetryLogic.FIXED);
-//        bookFlightDef.setRetryDelaySeconds(60);
-//        bookFlightDef.setTimeoutPolicy(TaskDef.TimeoutPolicy.TIME_OUT_WF);
-//        bookFlightDef.setResponseTimeoutSeconds(3600);
-//        bookFlightDef.setOwnerEmail("travelService@beispielMail.com");
-//
-//        final List<String> inputKeys = new LinkedList<>();
-//        inputKeys.add("bookFlightRequest");
-//        bookFlightDef.setInputKeys(inputKeys);
-//
-//        final List<String> outputKeys = new LinkedList<>();
-//        outputKeys.add("lastTaskId"); //TODO
-//        bookFlightDef.setInputKeys(outputKeys);
-//
-//        return bookFlightDef;
-//    }
-//
+    private TaskDef createBookFlightTask() {
+        String description = String.format("'%s' task definition: invokes FlightService to book a flight.",
+                FlightServiceTasks.Task.BOOK_FLIGHT);
+        final TaskDef bookFlightDef = new TaskDef(FlightServiceTasks.Task.BOOK_FLIGHT, description);
+        bookFlightDef.setRetryCount(1);
+        bookFlightDef.setRetryLogic(TaskDef.RetryLogic.FIXED);
+        bookFlightDef.setRetryDelaySeconds(60);
+        bookFlightDef.setTimeoutPolicy(TaskDef.TimeoutPolicy.TIME_OUT_WF);
+        bookFlightDef.setResponseTimeoutSeconds(3600);
+        bookFlightDef.setOwnerEmail("travelService@beispielMail.com");
+
+        final List<String> inputKeys = new LinkedList<>();
+        inputKeys.add(FlightServiceTasks.TaskInput.BOOK_FLIGHT_INPUT);
+        bookFlightDef.setInputKeys(inputKeys);
+
+        final List<String> outputKeys = new LinkedList<>();
+        outputKeys.add(FlightServiceTasks.TaskOutput.BOOK_FLIGHT_OUTPUT);
+        bookFlightDef.setOutputKeys(outputKeys);
+
+        return bookFlightDef;
+    }
+
 //    private TaskDef createConfirmHotelTask() {
 //        String description = String.format("'%s' task definition: invokes HotelService to confirm the hotel booking.",
 //                Constants.BOOK_FLIGHT);
@@ -140,7 +141,7 @@ public class BookTripTasksDefinitionFactory { // TODO: nur wenn eigene Worker un
 //
 //        final List<String> outputKeys = new LinkedList<>();
 //        outputKeys.add("lastTaskId"); // TODO: überhaupt was zurückgeben?
-//        confirmHotelDef.setInputKeys(outputKeys);
+//        confirmHotelDef.setOutputKeys(outputKeys);
 //
 //        return confirmHotelDef;
 //    }
@@ -162,30 +163,55 @@ public class BookTripTasksDefinitionFactory { // TODO: nur wenn eigene Worker un
 //
 //        final List<String> outputKeys = new LinkedList<>();
 //        outputKeys.add("lastTaskId"); // TODO: überhaupt was zurückgeben?
-//        confirmTripDef.setInputKeys(outputKeys);
+//        confirmTripDef.setOutputKeys(outputKeys);
 //
 //        return confirmTripDef;
 //    }
 //
-    private TaskDef createRejectTripTask() {
-        String description = String.format("'%s' task definition: invokes TripService to reject the trip.",
-                TravelServiceTasks.Task.REJECT_TRIP);
-        final TaskDef confirmTripDef = new TaskDef(TravelServiceTasks.Task.REJECT_TRIP, description);
-        confirmTripDef.setRetryCount(1);
-        confirmTripDef.setRetryLogic(TaskDef.RetryLogic.FIXED);
-        confirmTripDef.setRetryDelaySeconds(60);
-        confirmTripDef.setTimeoutPolicy(TaskDef.TimeoutPolicy.TIME_OUT_WF);
-        confirmTripDef.setResponseTimeoutSeconds(3600);
-        confirmTripDef.setOwnerEmail("travelService@beispielMail.com");
+//    private TaskDef createCancelTripBookingTask() {
+//        String description = String.format("'%s' task definition: prepares the necessary information for compensating the BookTripSaga.",
+//                TravelServiceTasks.Task.CANCEL_TRIP);
+//        final TaskDef cancelTripBookingDef = new TaskDef(TravelServiceTasks.Task.CANCEL_TRIP, description);
+//        cancelTripBookingDef.setRetryCount(1);
+//        cancelTripBookingDef.setRetryLogic(TaskDef.RetryLogic.FIXED);
+//        cancelTripBookingDef.setRetryDelaySeconds(60);
+//        cancelTripBookingDef.setTimeoutPolicy(TaskDef.TimeoutPolicy.TIME_OUT_WF);
+//        cancelTripBookingDef.setResponseTimeoutSeconds(3600);
+//        cancelTripBookingDef.setOwnerEmail("travelService@beispielMail.com");
+//
+//        final List<String> inputKeys = new LinkedList<>();
+//        inputKeys.add(HotelServiceTasks.TaskOutput.BOOK_HOTEL_OUTPUT); // convert input to CancelHotelRequest
+////        inputKeys.add(TravelServiceTasks.TaskInput.COMPENSATING_TRIP_BOOKING);
+//        cancelTripBookingDef.setInputKeys(inputKeys);
+//
+//        final List<String> outputKeys = new LinkedList<>();
+//        outputKeys.add(HotelServiceTasks.TaskInput.CANCEL_HOTEL_INPUT); // converted input for CancelHotelTask
+//        // TODO
+////        outputKeys.add(TravelServiceTasks.TaskInput.REJECT_TRIP_INPUT);
+//        cancelTripBookingDef.setOutputKeys(outputKeys);
+//
+//        return cancelTripBookingDef;
+//    }
 
-        final List<String> inputKeys = new LinkedList<>();
-        inputKeys.add(TravelServiceTasks.TaskInput.REJECT_TRIP_INPUT);
-        confirmTripDef.setInputKeys(inputKeys);
-
-        final List<String> outputKeys = new LinkedList<>();
-        outputKeys.add("lastTaskId"); //TODO: überhaupt was zurückgeben?
-        confirmTripDef.setInputKeys(outputKeys);
-
-        return confirmTripDef;
-    }
+//    private TaskDef createRejectTripTask() {
+//        String description = String.format("'%s' task definition: invokes TripService to reject the trip.",
+//                TravelServiceTasks.Task.REJECT_TRIP);
+//        final TaskDef confirmTripDef = new TaskDef(TravelServiceTasks.Task.REJECT_TRIP, description);
+//        confirmTripDef.setRetryCount(1);
+//        confirmTripDef.setRetryLogic(TaskDef.RetryLogic.FIXED);
+//        confirmTripDef.setRetryDelaySeconds(60);
+//        confirmTripDef.setTimeoutPolicy(TaskDef.TimeoutPolicy.TIME_OUT_WF);
+//        confirmTripDef.setResponseTimeoutSeconds(3600);
+//        confirmTripDef.setOwnerEmail("travelService@beispielMail.com");
+//
+//        final List<String> inputKeys = new LinkedList<>();
+//        inputKeys.add(TravelServiceTasks.TaskInput.REJECT_TRIP_INPUT);
+//        confirmTripDef.setInputKeys(inputKeys);
+//
+//        final List<String> outputKeys = new LinkedList<>();
+//        outputKeys.add("lastTaskId"); //TODO: überhaupt was zurückgeben?
+//        confirmTripDef.setOutputKeys(outputKeys);
+//
+//        return confirmTripDef;
+//    }
 }
