@@ -15,4 +15,5 @@ public interface ITravelService {
 
     TripInformation bookTrip(final TripInformation tripInformation);
 
+    void confirmTripBooking(final Long tripId, final long hotelId, final long flightId);
 }

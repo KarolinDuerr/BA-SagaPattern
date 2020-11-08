@@ -75,6 +75,7 @@ public class BookTripSaga {
         sagaBookTripTasks.add(taskInstanceFactory.bookHotelTask());
         sagaBookTripTasks.add(taskInstanceFactory.bookFlightTask());
         sagaBookTripTasks.add(taskInstanceFactory.confirmHotelTask());
+        sagaBookTripTasks.add(taskInstanceFactory.confirmTripTask());
         // TODO
         bookTripSaga.setTasks(sagaBookTripTasks);
 
@@ -87,6 +88,7 @@ public class BookTripSaga {
         bookTripSaga.setFailureWorkflow(Sagas.COMP_BOOK_TRIP_SAGA);
         bookTripSaga.setSchemaVersion(2);
         bookTripSaga.setRestartable(true);
+        bookTripSaga.setOwnerApp("Travel Application");
         bookTripSaga.setOwnerEmail("travelService@beispielMail.com");
         return bookTripSaga;
     }

@@ -5,6 +5,7 @@ import com.netflix.conductor.common.metadata.workflow.TaskType;
 import com.netflix.conductor.common.metadata.workflow.WorkflowTask;
 import org.springframework.beans.factory.annotation.Autowired;
 import saga.netflix.conductor.hotelservice.api.HotelServiceTasks;
+import saga.netflix.conductor.travelservice.api.TravelServiceTasks;
 import saga.netlfix.conductor.flightservice.api.FlightServiceTasks;
 
 import java.util.HashMap;
@@ -81,6 +82,22 @@ public class BookTripTasksFactory { // TODO: choose option: eigene Worker und Wo
         confirmHotelTask.setInputParameters(input);
 
         return confirmHotelTask;
+    }
+
+    public WorkflowTask confirmTripTask() {
+        WorkflowTask confirmTripTask = new WorkflowTask();
+        confirmTripTask.setName(TravelServiceTasks.Task.CONFIRM_TRIP);
+        confirmTripTask.setTaskReferenceName(TravelServiceTasks.Task.CONFIRM_TRIP);
+        confirmTripTask.setWorkflowTaskType(TaskType.SIMPLE); // TODO: choose option
+
+        Map<String, Object> input = new HashMap<>();
+        input.put(TravelServiceTasks.TaskInput.CONFIRM_TRIP_HOTEL_INPUT, String.format("${%s.output.%s}",
+                HotelServiceTasks.Task.BOOK_HOTEL, HotelServiceTasks.TaskOutput.BOOK_HOTEL_OUTPUT));
+        input.put(TravelServiceTasks.TaskInput.CONFIRM_TRIP_FLIGHT_INPUT, String.format("${%s.output.%s}",
+                FlightServiceTasks.Task.BOOK_FLIGHT, FlightServiceTasks.TaskOutput.BOOK_FLIGHT_OUTPUT));
+        confirmTripTask.setInputParameters(input);
+
+        return confirmTripTask;
     }
 
 

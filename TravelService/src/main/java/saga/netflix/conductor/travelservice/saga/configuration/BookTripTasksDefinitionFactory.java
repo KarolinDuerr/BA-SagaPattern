@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import saga.netflix.conductor.hotelservice.api.HotelServiceTasks;
+import saga.netflix.conductor.travelservice.api.TravelServiceTasks;
 import saga.netlfix.conductor.flightservice.api.FlightServiceTasks;
 
 import java.util.LinkedList;
@@ -32,7 +33,7 @@ public class BookTripTasksDefinitionFactory { // TODO: nur wenn eigene Worker un
         taskDefinitions.add(createCancelHotelTask());
         taskDefinitions.add(createBookFlightTask());
         taskDefinitions.add(createConfirmHotelTask());
-//        taskDefinitions.add(createConfirmTripTask()); // TODO
+        taskDefinitions.add(createConfirmTripTask());
 //        taskDefinitions.add(createCancelTripBookingTask()); // TODO notwendig?
 //        taskDefinitions.add(createRejectTripTask());
     }
@@ -144,27 +145,24 @@ public class BookTripTasksDefinitionFactory { // TODO: nur wenn eigene Worker un
         return confirmHotelDef;
     }
 
-//    private TaskDef createConfirmTripTask() {
-//        String description = String.format("'%s' task definition: invokes TripService to confirm the trip.",
-//                Constants.BOOK_FLIGHT);
-//        final TaskDef confirmTripDef = new TaskDef(Constants.BOOK_FLIGHT, description);
-//        confirmTripDef.setRetryCount(1);
-//        confirmTripDef.setRetryLogic(TaskDef.RetryLogic.FIXED);
-//        confirmTripDef.setRetryDelaySeconds(60);
-//        confirmTripDef.setTimeoutPolicy(TaskDef.TimeoutPolicy.TIME_OUT_WF);
-//        confirmTripDef.setResponseTimeoutSeconds(3600);
-//        bookFlightDef.setOwnerEmail("travelService@beispielMail.com");
-//
-//        final List<String> inputKeys = new LinkedList<>();
-//        inputKeys.add("confirmTripBooking");
-//        confirmTripDef.setInputKeys(inputKeys);
-//
-//        final List<String> outputKeys = new LinkedList<>();
-//        outputKeys.add("lastTaskId"); // TODO: überhaupt was zurückgeben?
-//        confirmTripDef.setOutputKeys(outputKeys);
-//
-//        return confirmTripDef;
-//    }
+    private TaskDef createConfirmTripTask() {
+        String description = String.format("'%s' task definition: invokes TripService to confirm the trip.",
+                TravelServiceTasks.Task.CONFIRM_TRIP);
+        final TaskDef confirmTripDef = new TaskDef(TravelServiceTasks.Task.CONFIRM_TRIP, description);
+        confirmTripDef.setRetryCount(1);
+        confirmTripDef.setRetryLogic(TaskDef.RetryLogic.FIXED);
+        confirmTripDef.setRetryDelaySeconds(60);
+        confirmTripDef.setTimeoutPolicy(TaskDef.TimeoutPolicy.TIME_OUT_WF);
+        confirmTripDef.setResponseTimeoutSeconds(3600);
+        confirmTripDef.setOwnerEmail("travelService@beispielMail.com");
+
+        final List<String> inputKeys = new LinkedList<>();
+        inputKeys.add(TravelServiceTasks.TaskInput.CONFIRM_TRIP_HOTEL_INPUT);
+        inputKeys.add(TravelServiceTasks.TaskInput.CONFIRM_TRIP_FLIGHT_INPUT);
+        confirmTripDef.setInputKeys(inputKeys);
+
+        return confirmTripDef;
+    }
 //
 //    private TaskDef createCancelTripBookingTask() {
 //        String description = String.format("'%s' task definition: prepares the necessary information for compensating the BookTripSaga.",

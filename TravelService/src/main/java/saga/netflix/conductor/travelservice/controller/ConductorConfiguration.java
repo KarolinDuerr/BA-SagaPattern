@@ -1,12 +1,15 @@
 package saga.netflix.conductor.travelservice.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netflix.conductor.client.http.MetadataClient;
 import com.netflix.conductor.client.http.TaskClient;
 import com.netflix.conductor.client.http.WorkflowClient;
+import com.netflix.conductor.common.utils.JsonMapperProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.annotation.EnableRetry;
+import saga.netflix.conductor.travelservice.resources.DtoConverter;
 import saga.netflix.conductor.travelservice.saga.bookTripSaga.BookTripSaga;
 import saga.netflix.conductor.travelservice.saga.SagaInstanceFactory;
 
@@ -44,6 +47,12 @@ public class ConductorConfiguration {
     }
 
     @Bean
+    public ObjectMapper objectMapper() {
+        ObjectMapper objectMapper = new JsonMapperProvider().get();
+        return objectMapper;
+    }
+
+    @Bean
 //    @Retryable(value = {SocketException.class, RuntimeException.class, ConductorClientException.class}, maxAttempts = 10, backoff = @Backoff(delay = 20000))
     public BookTripSaga bookTripSaga(MetadataClient metadataClient) {
         try {
@@ -53,5 +62,15 @@ public class ConductorConfiguration {
         }
         BookTripSaga bookTripSaga = new BookTripSaga(metadataClient);
         return bookTripSaga;
+    }
+
+    @Bean
+    public WorkerDispatcher workerDispatcher(TaskClient taskClient, MetadataClient metadataClient,
+                                             ObjectMapper objectMapper, ITravelService travelService,
+                                             DtoConverter dtoConverter) {
+        WorkerDispatcher createdWorkerDispatcher = new WorkerDispatcher(taskClient, metadataClient, objectMapper,
+                travelService, dtoConverter);
+        createdWorkerDispatcher.startTaskPolling();
+        return createdWorkerDispatcher;
     }
 }

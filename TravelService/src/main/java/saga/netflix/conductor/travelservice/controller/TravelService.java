@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import saga.netflix.conductor.travelservice.error.BookingNotFound;
 import saga.netflix.conductor.travelservice.error.ErrorType;
 import saga.netflix.conductor.travelservice.error.TravelException;
 import saga.netflix.conductor.travelservice.model.TripInformation;
@@ -78,6 +79,23 @@ public class TravelService implements  ITravelService {
         sagaInstanceFactory.startBookTripSaga(bookTripSagaData);
 
         return tripInformation;
+    }
+
+    @Override
+    public void confirmTripBooking(final Long tripId, final long hotelId, final long flightId) {
+        logger.info("Confirming the booked trip with ID " + tripId);
+
+        TripInformation tripInformation = null;
+        try {
+            tripInformation = getTripInformation(tripId);
+
+            tripInformation.setHotelId(hotelId);
+            tripInformation.setFlightId(flightId);
+            tripInformation.confirm();
+            tripInformationRepository.save(tripInformation);
+        } catch (TravelException exception) {
+            throw new BookingNotFound(tripId);
+        }
     }
 
     //ensure idempotence of trip bookings
