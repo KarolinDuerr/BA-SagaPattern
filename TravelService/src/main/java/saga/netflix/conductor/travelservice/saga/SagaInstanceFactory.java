@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import saga.netflix.conductor.hotelservice.api.HotelServiceTasks;
 import saga.netflix.conductor.travelservice.api.TravelServiceTasks;
-import saga.netflix.conductor.travelservice.saga.BookTripSaga.BookTripSagaData;
+import saga.netflix.conductor.travelservice.saga.bookTripSaga.BookTripSagaData;
 
 import java.util.HashMap;
 import java.util.Map;

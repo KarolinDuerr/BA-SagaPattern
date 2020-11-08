@@ -1,4 +1,4 @@
-package saga.netflix.conductor.travelservice.saga.BookTripSaga;
+package saga.netflix.conductor.travelservice.saga.bookTripSaga;
 
 import com.netflix.conductor.client.exceptions.ConductorClientException;
 import com.netflix.conductor.client.http.MetadataClient;

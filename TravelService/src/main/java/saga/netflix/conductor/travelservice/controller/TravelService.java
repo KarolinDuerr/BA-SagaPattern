@@ -8,7 +8,7 @@ import saga.netflix.conductor.travelservice.error.ErrorType;
 import saga.netflix.conductor.travelservice.error.TravelException;
 import saga.netflix.conductor.travelservice.model.TripInformation;
 import saga.netflix.conductor.travelservice.model.TripInformationRepository;
-import saga.netflix.conductor.travelservice.saga.BookTripSaga.BookTripSagaData;
+import saga.netflix.conductor.travelservice.saga.bookTripSaga.BookTripSagaData;
 import saga.netflix.conductor.travelservice.saga.SagaInstanceFactory;
 
 import java.util.LinkedList;

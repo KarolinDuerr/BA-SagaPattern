@@ -1,4 +1,4 @@
-package saga.netflix.conductor.travelservice.saga.BookTripSaga;
+package saga.netflix.conductor.travelservice.saga.bookTripSaga;
 
 import saga.netflix.conductor.hotelservice.api.dto.BookHotelRequest;
 import saga.netflix.conductor.hotelservice.api.dto.CancelHotelBooking;
