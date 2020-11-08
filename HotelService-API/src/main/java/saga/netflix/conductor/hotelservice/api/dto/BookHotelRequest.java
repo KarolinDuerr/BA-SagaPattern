@@ -1,5 +1,7 @@
 package saga.netflix.conductor.hotelservice.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class BookHotelRequest {
 
     private final long tripId;
@@ -42,6 +44,7 @@ public class BookHotelRequest {
         this.destination = destination;
     }
 
+    @JsonProperty("destination")
     public DestinationDTO getDestination() {
         return destination;
     }
@@ -50,6 +53,7 @@ public class BookHotelRequest {
         this.duration = duration;
     }
 
+    @JsonProperty("duration")
     public StayDurationDTO getDuration() {
         return duration;
     }
@@ -58,6 +62,7 @@ public class BookHotelRequest {
         this.boardType = boardType;
     }
 
+    @JsonProperty("boardType")
     public String getBoardType() {
         return boardType;
     }
@@ -66,6 +71,7 @@ public class BookHotelRequest {
         this.travellerName = travellerName;
     }
 
+    @JsonProperty("travellerName")
     public String getTravellerName() {
         return travellerName;
     }

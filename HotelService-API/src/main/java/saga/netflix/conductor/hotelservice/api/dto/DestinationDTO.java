@@ -1,5 +1,7 @@
 package saga.netflix.conductor.hotelservice.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class DestinationDTO {
 
     private String country;
@@ -15,6 +17,7 @@ public class DestinationDTO {
         this.city = city;
     }
 
+    @JsonProperty("country")
     public String getCountry() {
         return country;
     }
@@ -23,6 +26,7 @@ public class DestinationDTO {
         this.country = country;
     }
 
+    @JsonProperty("city")
     public String getCity() {
         return city;
     }
