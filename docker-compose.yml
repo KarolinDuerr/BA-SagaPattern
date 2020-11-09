@@ -7,11 +7,11 @@ services:
     networks:
       - travel_application
     ports:
-#      - 8081:8080
       - 8090:8090
     depends_on:
       - mysql
-      - conductor-server
+#      - conductor-server
+      - conductor-server-ui
       - elasticsearch
       - dynomite
     environment:
@@ -19,7 +19,8 @@ services:
       SPRING_DATASOURCE_USERNAME: mysqluser
       SPRING_DATASOURCE_PASSWORD: mysqlpw
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
-      CONDUCTOR_SERVER_URI: http://conductor-server:8080/api/
+#      CONDUCTOR_SERVER_URI: http://conductor-server:8080/api/
+      CONDUCTOR_SERVER_URI: http://conductor-server-ui:8080/api/
 #      SPRING_SLEUTH_ENABLED: "true"
 #      SPRING_SLEUTH_SAMPLER_PROBABILITY: 1
 #      SPRING_ZIPKIN_BASE_URL: http://zipkin:9411/
@@ -35,7 +36,8 @@ services:
       - 8082:8082
     depends_on:
       - mysql
-      - conductor-server
+#      - conductor-server
+      - conductor-server-ui
       - elasticsearch
       - dynomite
     environment:
@@ -43,7 +45,8 @@ services:
       SPRING_DATASOURCE_USERNAME: mysqluser
       SPRING_DATASOURCE_PASSWORD: mysqlpw
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
-      CONDUCTOR_SERVER_URI: http://conductor-server:8080/api/
+#      CONDUCTOR_SERVER_URI: http://conductor-server:8080/api/
+      CONDUCTOR_SERVER_URI: http://conductor-server-ui:8080/api/
 #      SPRING_SLEUTH_ENABLED: "true"
 #      SPRING_SLEUTH_SAMPLER_PROBABILITY: 1
 #      SPRING_ZIPKIN_BASE_URL: http://zipkin:9411/
@@ -58,7 +61,8 @@ services:
       - 8083:8083
     depends_on:
       - mysql
-      - conductor-server
+#      - conductor-server
+      - conductor-server-ui
       - elasticsearch
       - dynomite
     environment:
@@ -66,32 +70,33 @@ services:
       SPRING_DATASOURCE_USERNAME: mysqluser
       SPRING_DATASOURCE_PASSWORD: mysqlpw
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
-      CONDUCTOR_SERVER_URI: http://conductor-server:8080/api/
+#      CONDUCTOR_SERVER_URI: http://conductor-server:8080/api/
+      CONDUCTOR_SERVER_URI: http://conductor-server-ui:8080/api/
 #      SPRING_SLEUTH_ENABLED: "true"
 #      SPRING_SLEUTH_SAMPLER_PROBABILITY: 1
 #      SPRING_ZIPKIN_BASE_URL: http://zipkin:9411/
 
-  conductor-server: #--> conductor Projekt
-    build: ./Conductor/
-    container_name: conductor-server
-    networks:
-      - travel_application
-    ports:
-      - 8080:8080
-    expose:
-      - '8080'
-    links:
-      - elasticsearch:es
-      - dynomite:dyno1
-    depends_on:
-      - elasticsearch
-      - dynomite
-    environment:
-      - CONFIG_PROP=config.properties
+#  conductor-server: #--> conductor Projekt
+#    build: ./Conductor/
+#    container_name: conductor-server
+#    networks:
+#      - travel_application
+#    ports:
+#      - 8080:8080
+#    expose:
+#      - '8080'
+#    links:
+#      - elasticsearch:es
+#      - dynomite:dyno1
+#    depends_on:
+#      - elasticsearch
+#      - dynomite
+#    environment:
+#      - CONFIG_PROP=config.properties
 
-#  conductor-server: --> aktuell mit exception //TODO soll verwendet werden
+#  conductor-server: #--> aktuell mit exception
 #    build:
-#      context: ./conductorServer/conductorServer/
+#      context: ./conductor/conductorServer/
 #      dockerfile: Dockerfile
 #    image: conductor-server
 #    container_name: conductor-server
@@ -109,28 +114,57 @@ services:
 #      - dynomite
 #    environment:
 #      - CONFIG_PROP=config.properties
-#    logging:
-#      driver: "json-file"
-#      options:
-#        max-size: "1k"
-#        max-file: "3"
+##    logging:
+##      driver: "json-file"
+##      options:
+##        max-size: "1k"
+##        max-file: "3"
+#
+#  conductor-ui: # funktioniert aber eigentlich soll server-UI image verwendet werden
+#    build:
+#      context: ./conductor/conductorUi/
+#      dockerfile: Dockerfile
+#    image: conductor-ui
+#    container_name: conductor-ui
+#    networks:
+#      - travel_application
+#    ports:
+#      - 5000:5000
+#    links:
+#      - conductor-server
+#    depends_on:
+#      - conductor-server
+#    environment:
+#      - WF_SERVER=http://conductor-server:8080/api/
 
-  conductor-ui:
+  conductor-server-ui: #--> aktuell mit exception wenn nicht inmemory //TODO soll verwendet werden
     build:
-      context: ./conductorServer/conductorUi/
+      context: conductor/serverAndUi/
       dockerfile: Dockerfile
-    image: conductor-ui
-    container_name: conductor-ui
+    image: conductor-server-ui
+    container_name: conductor-server-ui
     networks:
       - travel_application
     ports:
+      - 8080:8080
       - 5000:5000
+    expose:
+      - '8080'
+      - '5000'
     links:
-      - conductor-server
+      - elasticsearch:es
+      - dynomite:dyno1
     depends_on:
-      - conductor-server
+      - elasticsearch
+      - dynomite
     environment:
-      - WF_SERVER=http://conductor-server:8080/api/
+#      - CONFIG_PROP=config.properties #// TODO --> oder doch inMemory ausreichend?
+      - WF_SERVER=http://localhost:8080/api/
+  #    logging:
+  #      driver: "json-file"
+  #      options:
+  #        max-size: "1k"
+  #        max-file: "3"
 
   dynomite:
     image: v1r3n/dynomite
@@ -175,7 +209,6 @@ services:
           max-file: "3"
 
   mysql:
-#    image: library/mysql:8.0.22
     image: library/mysql:5.6
     container_name: mysql
     restart: always
