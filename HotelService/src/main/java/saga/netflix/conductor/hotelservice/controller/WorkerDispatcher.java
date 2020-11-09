@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import saga.netflix.conductor.hotelservice.controller.worker.BookHotelWorker;
+import saga.netflix.conductor.hotelservice.controller.worker.CancelHotelWorker;
 import saga.netflix.conductor.hotelservice.controller.worker.ConfirmHotelWorker;
 import saga.netflix.conductor.hotelservice.resources.DtoConverter;
 
@@ -55,11 +56,13 @@ public class WorkerDispatcher { // TODO ensure stop polling when instance become
 
     public void startTaskPolling() {
         final Worker bookHotelWorker = new BookHotelWorker(objectMapper, hotelService, dtoConverter);
-        final Worker confirmHotelWorker = new ConfirmHotelWorker(objectMapper, hotelService, dtoConverter);
+        final Worker confirmHotelWorker = new ConfirmHotelWorker(objectMapper, hotelService);
+        final Worker cancelHotelWorker = new CancelHotelWorker(objectMapper, hotelService);
 
         List<Worker> workers = new LinkedList<>();
         workers.add(bookHotelWorker);
         workers.add(confirmHotelWorker);
+        workers.add(cancelHotelWorker);
 
         final TaskRunnerConfigurer taskRunnerConfigurer =
                 new TaskRunnerConfigurer.Builder(taskClient, workers).withThreadCount(THREAD_COUNT).build();

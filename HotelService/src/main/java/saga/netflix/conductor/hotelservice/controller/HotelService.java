@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import saga.netflix.conductor.hotelservice.error.BookingNotFound;
 import saga.netflix.conductor.hotelservice.error.ErrorType;
 import saga.netflix.conductor.hotelservice.error.HotelException;
+import saga.netflix.conductor.hotelservice.model.BookingStatus;
 import saga.netflix.conductor.hotelservice.model.HotelBooking;
 import saga.netflix.conductor.hotelservice.model.HotelBookingInformation;
 import saga.netflix.conductor.hotelservice.model.HotelBookingRepository;
@@ -61,7 +62,8 @@ public class HotelService implements IHotelService {
     public HotelBooking bookHotel(final String travellerName, final HotelBookingInformation hotelBooking) throws HotelException {
         logger.info("Saving the booked Hotel: " + hotelBooking);
 
-        HotelBooking newHotelBooking = findAvailableHotel(travellerName, hotelBooking); // TODO --> unterscheiden zwischen normaler HotelBuchung und TripBuchung? siehe flights
+        HotelBooking newHotelBooking = findAvailableHotel(travellerName, hotelBooking); // TODO --> unterscheiden
+        // zwischen normaler HotelBuchung und TripBuchung? siehe flights
 
         // no trip assigned therefore the booking has already been confirmed
         if (newHotelBooking.getBookingInformation() != null && newHotelBooking.getBookingInformation().getTripId() == -1) {
@@ -77,6 +79,23 @@ public class HotelService implements IHotelService {
         hotelBookingRepository.save(newHotelBooking);
 
         return newHotelBooking;
+    }
+
+    @Override
+    public void cancelHotelBooking(final long tripId, final String travellerName) {
+        logger.info("Cancelling the booked hotel associated with trip ID " + tripId);
+
+        HotelBooking hotelBooking;
+        hotelBooking = getHotelBookingByInformation(travellerName, tripId);
+
+        if (hotelBooking == null) {
+            logger.info(String.format("No hotel has been booked for this trip (ID: %s) yet, therefore no need to cancel ", tripId));
+            // no hotel has been booked for this trip yet, therefore no need to cancel
+            return;
+        }
+
+        hotelBooking.cancel(BookingStatus.CANCELLED);
+        hotelBookingRepository.save(hotelBooking);
     }
 
     @Override
@@ -99,7 +118,8 @@ public class HotelService implements IHotelService {
     }
 
     // only mocking the general function of this method
-    private HotelBooking findAvailableHotel(final String travellerName, final HotelBookingInformation hotelBookingInformation) throws HotelException {
+    private HotelBooking findAvailableHotel(final String travellerName,
+                                            final HotelBookingInformation hotelBookingInformation) throws HotelException {
         if (hotelBookingInformation.getDestination().getCountry().equalsIgnoreCase("Provoke hotel failure")) {
             logger.info("Provoked hotel exception: no available hotel for trip: " + hotelBookingInformation.getTripId());
             throw new HotelException(ErrorType.NO_AVAILABLE_HOTEL, "No available flight found.");
@@ -122,5 +142,20 @@ public class HotelService implements IHotelService {
 
         logger.info("Hotel has already been booked: " + savedHotelBooking.toString());
         return savedHotelBooking.get();
+    }
+
+    private HotelBooking getHotelBookingByInformation(final String travellerName, final long tripId) {
+        List<HotelBooking> customerTrips =
+                hotelBookingRepository.findByTravellerName(travellerName);
+
+        Optional<HotelBooking> existingHotelBooking =
+                customerTrips.stream().filter(hotelInfo -> hotelInfo.getBookingInformation().getTripId() == tripId).findFirst();
+
+        if (!existingHotelBooking.isPresent()) {
+            // no hotel has been booked for this trip yet, therefore no need to cancel
+            return null;
+        }
+
+        return existingHotelBooking.get();
     }
 }

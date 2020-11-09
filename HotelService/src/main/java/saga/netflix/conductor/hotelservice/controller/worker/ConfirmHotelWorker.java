@@ -24,13 +24,9 @@ public class ConfirmHotelWorker implements Worker {
     @Autowired
     private final IHotelService hotelService;
 
-    @Autowired
-    private final DtoConverter dtoConverter;
-
-    public ConfirmHotelWorker(final ObjectMapper objectMapper, final IHotelService hotelService, final DtoConverter dtoConverter) {
+    public ConfirmHotelWorker(final ObjectMapper objectMapper, final IHotelService hotelService) {
         this.objectMapper = objectMapper;
         this.hotelService = hotelService;
-        this.dtoConverter = dtoConverter;
     }
 
     @Override

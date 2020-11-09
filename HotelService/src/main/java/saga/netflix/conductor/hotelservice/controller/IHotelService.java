@@ -16,5 +16,7 @@ public interface IHotelService {
 
     HotelBooking bookHotel(final String travellerName, final HotelBookingInformation hotelBooking) throws HotelException;
 
+    void cancelHotelBooking(final long tripId, final String travellerName) ;
+
     void confirmHotelBooking(final Long bookingId, final Long tripId);
 }

@@ -44,13 +44,8 @@ public class BookTripTasksFactory { // TODO: choose option: eigene Worker und Wo
         cancelHotelTask.setTaskReferenceName(HotelServiceTasks.Task.CANCEL_HOTEL);
         cancelHotelTask.setWorkflowTaskType(TaskType.SIMPLE); // TODO: choose option
 
-        Map<String, Object> input = new HashMap<>(); // TODO
-//        input.put(HotelServiceTasks.TaskInput.CANCEL_HOTEL_INPUT, String.format("${%s.output.%s}",
-//        TravelServiceTasks.Task.CANCEL_TRIP, HotelServiceTasks.TaskInput.CANCEL_HOTEL_INPUT));
-//        input.put(HotelServiceTasks.TaskInput.CANCEL_HOTEL_INPUT, String.format("${%s.output.%s}",
-//        HotelServiceTasks.Task.BOOK_HOTEL, HotelServiceTasks.TaskOutput.BOOK_HOTEL_OUTPUT));
-//        input.put(HotelServiceTasks.TaskInput.CANCEL_HOTEL_INPUT, String.format("${%s.output.%s}", Sagas
-//        .BOOK_TRIP_SAGA, HotelServiceTasks.TaskOutput.BOOK_HOTEL_OUTPUT));
+        Map<String, Object> input = new HashMap<>();
+        input.put(HotelServiceTasks.TaskInput.CANCEL_HOTEL_INPUT, String.format("${workflow.input.%s}", HotelServiceTasks.TaskInput.BOOK_HOTEL_INPUT));
         cancelHotelTask.setInputParameters(input);
 
         return cancelHotelTask;

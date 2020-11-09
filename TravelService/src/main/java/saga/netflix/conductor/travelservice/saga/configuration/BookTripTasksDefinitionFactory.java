@@ -96,10 +96,6 @@ public class BookTripTasksDefinitionFactory { // TODO: nur wenn eigene Worker un
         inputKeys.add(HotelServiceTasks.TaskInput.CANCEL_HOTEL_INPUT);
         cancelHotelDef.setInputKeys(inputKeys);
 
-        final List<String> outputKeys = new LinkedList<>();
-        outputKeys.add("lastTaskId"); // TODO
-        cancelHotelDef.setOutputKeys(outputKeys);
-
         return cancelHotelDef;
     }
 
