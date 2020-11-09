@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import saga.netflix.conductor.hotelservice.api.HotelServiceTasks;
 import saga.netflix.conductor.hotelservice.api.dto.BookHotelResponse;
 import saga.netflix.conductor.hotelservice.controller.IHotelService;
+import saga.netflix.conductor.hotelservice.error.ErrorMessage;
+import saga.netflix.conductor.hotelservice.error.ErrorType;
 
 import java.util.Map;
 
@@ -43,7 +45,10 @@ public class ConfirmHotelWorker implements Worker {
 
         Map<String, Object> taskInput = task.getInputData();
         if (taskInput == null || !taskInput.containsKey(inputConfirmHotel)) {
-            logger.info(String.format("%s: misses the necessary input data (%s)", getTaskDefName(), inputConfirmHotel));
+            String errorMessage = String.format("%s: misses the necessary input data (%s)", getTaskDefName(),
+                    inputConfirmHotel);
+            logger.info(errorMessage);
+            taskResult.setReasonForIncompletion(new ErrorMessage(ErrorType.INTERNAL_ERROR, errorMessage).toString());
             taskResult.setStatus(TaskResult.Status.FAILED);
             return taskResult;
         }

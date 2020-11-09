@@ -75,7 +75,7 @@ public class BookHotelWorker implements Worker {
         return taskResult;
     }
 
-    private void bookHotel(Map<String, Object> taskInput, TaskResult taskResult) throws HotelServiceException {
+    private void bookHotel(final Map<String, Object> taskInput, final TaskResult taskResult) throws HotelServiceException {
         logger.info("TaskInput: " + taskInput.get(inputBookHotel));
         final BookHotelRequest bookHotelRequest = objectMapper.convertValue(taskInput.get(inputBookHotel),
                 BookHotelRequest.class);
