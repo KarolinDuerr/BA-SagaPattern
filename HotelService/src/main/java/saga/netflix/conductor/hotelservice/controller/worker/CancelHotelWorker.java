@@ -25,6 +25,7 @@ public class CancelHotelWorker implements Worker {
     @Autowired
     private final IHotelService hotelService;
 
+    private final String inputCancelHotel = HotelServiceTasks.TaskInput.CANCEL_HOTEL_INPUT;
 
     public CancelHotelWorker(final ObjectMapper objectMapper, final IHotelService hotelService) {
         this.objectMapper = objectMapper;
@@ -43,23 +44,22 @@ public class CancelHotelWorker implements Worker {
         final TaskResult taskResult = new TaskResult(task);
 
         Map<String, Object> taskInput = task.getInputData();
-        if (taskInput == null || !taskInput.containsKey(HotelServiceTasks.TaskInput.CANCEL_HOTEL_INPUT)) {
+        if (taskInput == null || !taskInput.containsKey(inputCancelHotel)) {
             String errorMessage = String.format("%s: misses the necessary input data (%s)", getTaskDefName(),
-                    HotelServiceTasks.TaskInput.CANCEL_HOTEL_INPUT);
+                    inputCancelHotel);
             logger.info(errorMessage);
             taskResult.setReasonForIncompletion(new ErrorMessage(ErrorType.INTERNAL_ERROR, errorMessage).toString());
             taskResult.setStatus(TaskResult.Status.FAILED);
             return taskResult;
         }
 
-        logger.info("TaskInput: " + taskInput.get(HotelServiceTasks.TaskInput.CANCEL_HOTEL_INPUT));
-        final BookHotelRequest bookHotelRequest =
-                objectMapper.convertValue(taskInput.get(HotelServiceTasks.TaskInput.CANCEL_HOTEL_INPUT),
-                        BookHotelRequest.class);
-
+        logger.info("TaskInput: " + taskInput.get(inputCancelHotel));
+        final BookHotelRequest bookHotelRequest = objectMapper.convertValue(taskInput.get(inputCancelHotel),
+                BookHotelRequest.class);
 
         hotelService.cancelHotelBooking(bookHotelRequest.getTripId(), bookHotelRequest.getTravellerName());
         taskResult.setStatus(TaskResult.Status.COMPLETED);
+        logger.info("Hotel successfully cancelled: " + bookHotelRequest.getTripId()); // TODO exception berücksichtigen?
 
         return taskResult;
     }

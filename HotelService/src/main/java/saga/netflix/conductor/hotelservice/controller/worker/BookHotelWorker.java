@@ -11,6 +11,8 @@ import saga.netflix.conductor.hotelservice.api.HotelServiceTasks;
 import saga.netflix.conductor.hotelservice.api.dto.BookHotelRequest;
 import saga.netflix.conductor.hotelservice.api.dto.BookHotelResponse;
 import saga.netflix.conductor.hotelservice.controller.IHotelService;
+import saga.netflix.conductor.hotelservice.error.ErrorMessage;
+import saga.netflix.conductor.hotelservice.error.ErrorType;
 import saga.netflix.conductor.hotelservice.error.HotelServiceException;
 import saga.netflix.conductor.hotelservice.model.HotelBooking;
 import saga.netflix.conductor.hotelservice.model.HotelBookingInformation;
@@ -31,7 +33,10 @@ public class BookHotelWorker implements Worker {
     @Autowired
     private final DtoConverter dtoConverter;
 
-    public BookHotelWorker(final ObjectMapper objectMapper, final IHotelService hotelService, final DtoConverter dtoConverter) {
+    private final String inputBookHotel = HotelServiceTasks.TaskInput.BOOK_HOTEL_INPUT;
+
+    public BookHotelWorker(final ObjectMapper objectMapper, final IHotelService hotelService,
+                           final DtoConverter dtoConverter) {
         this.objectMapper = objectMapper;
         this.hotelService = hotelService;
         this.dtoConverter = dtoConverter;
@@ -43,36 +48,24 @@ public class BookHotelWorker implements Worker {
     }
 
     @Override
-    public TaskResult execute(final Task task) { // TODO refactoring
+    public TaskResult execute(final Task task) {
         logger.info("Start execution of " + getTaskDefName());
 
         final TaskResult taskResult = new TaskResult(task);
 
         Map<String, Object> taskInput = task.getInputData();
-        if (taskInput == null || !taskInput.containsKey(HotelServiceTasks.TaskInput.BOOK_HOTEL_INPUT)) {
-            logger.info(String.format("%s: misses the necessary input data (%s)", getTaskDefName(),
-                    HotelServiceTasks.TaskInput.BOOK_HOTEL_INPUT));
+        if (taskInput == null || !taskInput.containsKey(inputBookHotel)) {
+            String errorMessage = String.format("%s: misses the necessary input data (%s)", getTaskDefName(),
+                    inputBookHotel);
+            logger.info(errorMessage);
+            taskResult.setReasonForIncompletion(new ErrorMessage(ErrorType.INTERNAL_ERROR, errorMessage).toString());
             taskResult.setStatus(TaskResult.Status.FAILED);
             return taskResult;
         }
 
-        logger.info("TaskInput: " + taskInput.get(HotelServiceTasks.TaskInput.BOOK_HOTEL_INPUT));
-        final BookHotelRequest bookHotelRequest =
-                objectMapper.convertValue(taskInput.get(HotelServiceTasks.TaskInput.BOOK_HOTEL_INPUT),
-                        BookHotelRequest.class);
-
         try {
-            HotelBookingInformation bookingInformation =
-                    dtoConverter.convertToHotelBookingInformation(bookHotelRequest);
-
-            HotelBooking hotelBooking = hotelService.bookHotel(bookHotelRequest.getTravellerName(), bookingInformation);
-
-            BookHotelResponse bookingResponse = new BookHotelResponse(bookHotelRequest.getTripId(), hotelBooking.getId(),
-                    hotelBooking.getHotelName(), hotelBooking.getBookingStatus().toString());
-
-            taskResult.getOutputData().put(HotelServiceTasks.TaskOutput.BOOK_HOTEL_OUTPUT, bookingResponse);
+            bookHotel(taskInput, taskResult);
             taskResult.setStatus(TaskResult.Status.COMPLETED);
-            logger.info("Hotel successfully booked: " + bookingResponse);
         } catch (HotelServiceException exception) {
             logger.error(exception.toString());
             taskResult.setReasonForIncompletion(exception.toString());
@@ -80,6 +73,23 @@ public class BookHotelWorker implements Worker {
         }
 
         return taskResult;
+    }
+
+    private void bookHotel(Map<String, Object> taskInput, TaskResult taskResult) throws HotelServiceException {
+        logger.info("TaskInput: " + taskInput.get(inputBookHotel));
+        final BookHotelRequest bookHotelRequest = objectMapper.convertValue(taskInput.get(inputBookHotel),
+                BookHotelRequest.class);
+
+        HotelBookingInformation bookingInformation =
+                dtoConverter.convertToHotelBookingInformation(bookHotelRequest);
+
+        HotelBooking hotelBooking = hotelService.bookHotel(bookHotelRequest.getTravellerName(), bookingInformation);
+
+        BookHotelResponse bookingResponse = new BookHotelResponse(bookHotelRequest.getTripId(), hotelBooking.getId(),
+                hotelBooking.getHotelName(), hotelBooking.getBookingStatus().toString());
+
+        taskResult.getOutputData().put(HotelServiceTasks.TaskOutput.BOOK_HOTEL_OUTPUT, bookingResponse);
+        logger.info("Hotel successfully booked: " + bookingResponse);
     }
 
 }

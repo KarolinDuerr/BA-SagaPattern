@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import saga.netflix.conductor.hotelservice.api.HotelServiceTasks;
 import saga.netflix.conductor.hotelservice.api.dto.BookHotelResponse;
 import saga.netflix.conductor.hotelservice.controller.IHotelService;
-import saga.netflix.conductor.hotelservice.resources.DtoConverter;
 
 import java.util.Map;
 
@@ -24,6 +23,8 @@ public class ConfirmHotelWorker implements Worker {
     @Autowired
     private final IHotelService hotelService;
 
+    private final String inputConfirmHotel = HotelServiceTasks.TaskInput.CONFIRM_HOTEL_INPUT;
+
     public ConfirmHotelWorker(final ObjectMapper objectMapper, final IHotelService hotelService) {
         this.objectMapper = objectMapper;
         this.hotelService = hotelService;
@@ -35,22 +36,21 @@ public class ConfirmHotelWorker implements Worker {
     }
 
     @Override
-    public TaskResult execute(final Task task) { // TODO refactoring?
+    public TaskResult execute(final Task task) {
         logger.info("Start execution of " + getTaskDefName());
 
         final TaskResult taskResult = new TaskResult(task);
 
         Map<String, Object> taskInput = task.getInputData();
-        if (taskInput == null || !taskInput.containsKey(HotelServiceTasks.TaskInput.CONFIRM_HOTEL_INPUT)) {
-            logger.info(String.format("%s: misses the necessary input data (%s)", getTaskDefName(),
-                    HotelServiceTasks.TaskInput.CONFIRM_HOTEL_INPUT));
+        if (taskInput == null || !taskInput.containsKey(inputConfirmHotel)) {
+            logger.info(String.format("%s: misses the necessary input data (%s)", getTaskDefName(), inputConfirmHotel));
             taskResult.setStatus(TaskResult.Status.FAILED);
             return taskResult;
         }
 
-        logger.info("TaskInput: " + taskInput.get(HotelServiceTasks.TaskInput.CONFIRM_HOTEL_INPUT));
+        logger.info("TaskInput: " + taskInput.get(inputConfirmHotel));
         final BookHotelResponse bookHotelResponse =
-                objectMapper.convertValue(taskInput.get(HotelServiceTasks.TaskInput.CONFIRM_HOTEL_INPUT),
+                objectMapper.convertValue(taskInput.get(inputConfirmHotel),
                         BookHotelResponse.class);
 
         hotelService.confirmHotelBooking(bookHotelResponse.getBookingId(), bookHotelResponse.getTripId());
