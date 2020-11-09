@@ -154,8 +154,6 @@ public class BookTripTasksDefinitionFactory { // TODO: nur wenn eigene Worker un
         inputKeys.add(HotelServiceTasks.TaskInput.CONFIRM_HOTEL_INPUT);
         confirmHotelDef.setInputKeys(inputKeys);
 
-        // TODO output notwendig?
-
         return confirmHotelDef;
     }
 
