@@ -41,7 +41,7 @@ public class ConfirmTripWorker implements Worker {
     }
 
     @Override
-    public TaskResult execute(final Task task) { // TODO refactoring
+    public TaskResult execute(final Task task) {
         logger.info("Start execution of " + getTaskDefName());
 
         final TaskResult taskResult = new TaskResult(task);
