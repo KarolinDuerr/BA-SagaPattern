@@ -60,6 +60,7 @@ public class CancelFlightWorker implements Worker {
 
         flightService.cancelFlightBooking(bookFlightTask.getTripId(), bookFlightTask.getTravellerName());
         taskResult.setStatus(TaskResult.Status.COMPLETED);
+        logger.info("Flight successfully cancelled which is associated with Trip: " + bookFlightTask.getTripId());
 
         return taskResult;
     }
