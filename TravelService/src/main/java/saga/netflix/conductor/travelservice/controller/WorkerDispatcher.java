@@ -10,14 +10,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import saga.netflix.conductor.travelservice.controller.worker.ConfirmTripWorker;
 import saga.netflix.conductor.travelservice.controller.worker.RejectTripWorker;
-import saga.netflix.conductor.travelservice.resources.DtoConverter;
 
 import java.util.LinkedList;
 import java.util.List;
 
-//@Component
-public class WorkerDispatcher { // TODO ensure stop polling when instance becomes unhealty --> shutdown() hook in a
-    // PreDestroy block
+public class WorkerDispatcher { // TODO ensure stop polling when instance becomes unhealty --> shutdown() hook in a PreDestroy block
 
     private static final Logger logger = LoggerFactory.getLogger(WorkerDispatcher.class);
 
@@ -36,25 +33,20 @@ public class WorkerDispatcher { // TODO ensure stop polling when instance become
     @Autowired
     private /*final*/ ITravelService travelService;
 
-    @Autowired
-    private /*final*/ DtoConverter dtoConverter;
-
     public WorkerDispatcher() {
 
     }
 
     public WorkerDispatcher(final TaskClient taskClient, final MetadataClient metadataClient,
-                            final ObjectMapper objectMapper, final ITravelService travelService,
-                            final DtoConverter dtoConverter) {
+                            final ObjectMapper objectMapper, final ITravelService travelService) {
         this.taskClient = taskClient;
         this.metadataClient = metadataClient;
         this.objectMapper = objectMapper;
         this.travelService = travelService;
-        this.dtoConverter = dtoConverter;
     }
 
     public void startTaskPolling() {
-        final Worker confirmTripWorker = new ConfirmTripWorker(objectMapper, travelService, dtoConverter);
+        final Worker confirmTripWorker = new ConfirmTripWorker(objectMapper, travelService);
         final Worker rejectTripWorker = new RejectTripWorker(objectMapper, travelService);
 
         List<Worker> workers = new LinkedList<>();

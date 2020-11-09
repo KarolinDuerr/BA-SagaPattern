@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.annotation.EnableRetry;
-import saga.netflix.conductor.travelservice.resources.DtoConverter;
 import saga.netflix.conductor.travelservice.saga.bookTripSaga.BookTripSaga;
 import saga.netflix.conductor.travelservice.saga.SagaInstanceFactory;
 
@@ -66,10 +65,9 @@ public class ConductorConfiguration {
 
     @Bean
     public WorkerDispatcher workerDispatcher(TaskClient taskClient, MetadataClient metadataClient,
-                                             ObjectMapper objectMapper, ITravelService travelService,
-                                             DtoConverter dtoConverter) {
+                                             ObjectMapper objectMapper, ITravelService travelService) {
         WorkerDispatcher createdWorkerDispatcher = new WorkerDispatcher(taskClient, metadataClient, objectMapper,
-                travelService, dtoConverter);
+                travelService);
         createdWorkerDispatcher.startTaskPolling();
         return createdWorkerDispatcher;
     }
