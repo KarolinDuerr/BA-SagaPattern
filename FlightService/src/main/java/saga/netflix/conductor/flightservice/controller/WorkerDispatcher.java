@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import saga.netflix.conductor.flightservice.controller.worker.BookFlightWorker;
+import saga.netflix.conductor.flightservice.controller.worker.CancelFlightWorker;
 import saga.netflix.conductor.flightservice.resources.DtoConverter;
 
 import java.util.LinkedList;
@@ -54,9 +55,11 @@ public class WorkerDispatcher { // TODO ensure stop polling when instance become
 
     public void startTaskPolling() {
         final Worker bookFlightWorker = new BookFlightWorker(objectMapper, flightService, dtoConverter);
+        final Worker cancelFlightWorker = new CancelFlightWorker(objectMapper, flightService);
 
         List<Worker> workers = new LinkedList<>();
         workers.add(bookFlightWorker);
+        workers.add(cancelFlightWorker);
 
         final TaskRunnerConfigurer taskRunnerConfigurer =
                 new TaskRunnerConfigurer.Builder(taskClient, workers).withThreadCount(THREAD_COUNT).build();

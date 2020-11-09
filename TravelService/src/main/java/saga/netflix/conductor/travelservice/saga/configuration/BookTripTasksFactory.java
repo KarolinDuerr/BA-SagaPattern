@@ -65,6 +65,19 @@ public class BookTripTasksFactory { // TODO: choose option: eigene Worker und Wo
         return bookFlightTask;
     }
 
+    public WorkflowTask cancelFlightTask() {
+        WorkflowTask cancelHotelTask = new WorkflowTask();
+        cancelHotelTask.setName(FlightServiceTasks.Task.CANCEL_FLIGHT);
+        cancelHotelTask.setTaskReferenceName(FlightServiceTasks.Task.CANCEL_FLIGHT);
+        cancelHotelTask.setWorkflowTaskType(TaskType.SIMPLE); // TODO: choose option
+
+        Map<String, Object> input = new HashMap<>();
+        input.put(FlightServiceTasks.TaskInput.CANCEL_FLIGHT_INPUT, String.format("${workflow.input.%s}", FlightServiceTasks.TaskInput.BOOK_FLIGHT_INPUT));
+        cancelHotelTask.setInputParameters(input);
+
+        return cancelHotelTask;
+    }
+
     public WorkflowTask confirmHotelTask() {
         WorkflowTask confirmHotelTask = new WorkflowTask();
         confirmHotelTask.setName(HotelServiceTasks.Task.CONFIRM_HOTEL);

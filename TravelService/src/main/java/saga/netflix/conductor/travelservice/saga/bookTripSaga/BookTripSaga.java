@@ -52,15 +52,16 @@ public class BookTripSaga {
         compensateBookTripSaga.setVersion(1);
 
         List<WorkflowTask> compensateSagaBookTripTasks = new LinkedList<>();
+        compensateSagaBookTripTasks.add(taskInstanceFactory.cancelFlightTask());
         compensateSagaBookTripTasks.add(taskInstanceFactory.cancelHotelTask());
         //TODO
         compensateBookTripSaga.setTasks(compensateSagaBookTripTasks);
 
-//        List<String> inputParameters = new LinkedList<>(); // TODO: notwendig/wie? --> Output notwendig?
-//        compensateBookTripSaga.setInputParameters(inputParameters);
+        // no input since this failure workflow gets its input from the BookTripSaga Workflow input and output
 
         compensateBookTripSaga.setSchemaVersion(2);
         compensateBookTripSaga.setRestartable(true); // has to be --> was bei failure?
+        compensateBookTripSaga.setOwnerApp("Travel Application");
         compensateBookTripSaga.setOwnerEmail("travelService@beispielMail.com");
         return compensateBookTripSaga;
     }
@@ -76,13 +77,11 @@ public class BookTripSaga {
         sagaBookTripTasks.add(taskInstanceFactory.bookFlightTask());
         sagaBookTripTasks.add(taskInstanceFactory.confirmHotelTask());
         sagaBookTripTasks.add(taskInstanceFactory.confirmTripTask());
-        // TODO
         bookTripSaga.setTasks(sagaBookTripTasks);
 
-        List<String> inputParameters = new LinkedList<>(); // TODO: Output notwendig?
+        List<String> inputParameters = new LinkedList<>();
         inputParameters.add(HotelServiceTasks.TaskInput.BOOK_HOTEL_INPUT);
         inputParameters.add(FlightServiceTasks.TaskInput.BOOK_FLIGHT_INPUT);
-        // TODO
         bookTripSaga.setInputParameters(inputParameters);
 
         bookTripSaga.setFailureWorkflow(Sagas.COMP_BOOK_TRIP_SAGA);

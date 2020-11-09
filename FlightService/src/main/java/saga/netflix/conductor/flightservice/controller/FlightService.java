@@ -6,10 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import saga.netflix.conductor.flightservice.error.ErrorType;
 import saga.netflix.conductor.flightservice.error.FlightException;
-import saga.netflix.conductor.flightservice.model.FindAndBookFlightInformation;
-import saga.netflix.conductor.flightservice.model.Flight;
-import saga.netflix.conductor.flightservice.model.FlightInformation;
-import saga.netflix.conductor.flightservice.model.FlightInformationRepository;
+import saga.netflix.conductor.flightservice.model.*;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -89,6 +86,24 @@ public class FlightService implements IFlightService {
         return flightInformation;
     }
 
+    @Override
+    public void cancelFlightBooking(final Long tripId, final String travellerName) {
+        logger.info("Cancelling the booked flight associated with trip ID " + tripId);
+
+        FlightInformation flightInformation;
+        flightInformation = getTripFlightInformationByName(travellerName, tripId);
+
+        if (flightInformation == null) {
+            logger.info(String.format("No flight has been booked for this trip (ID: %s) yet, therefore no need to " +
+                    "cancel.", tripId));
+            // no flight has been booked for this trip yet, therefore no need to cancel
+            return;
+        }
+
+        flightInformation.cancel(BookingStatus.CANCELLED);
+        flightInformationRepository.save(flightInformation);
+    }
+
     // only mocking the general function of this method
     private FlightInformation findAvailableFlight(final FindAndBookFlightInformation flightInformation) throws FlightException {
         if (flightInformation.getHome().getCountry().equalsIgnoreCase("Provoke flight failure")) {
@@ -121,5 +136,20 @@ public class FlightService implements IFlightService {
 
         logger.info("Flight has already been booked: " + savedFlightInformation.toString());
         return savedFlightInformation.get();
+    }
+
+    private FlightInformation getTripFlightInformationByName(final String travellerName, final long tripId) {
+        List<FlightInformation> customerTrips =
+                flightInformationRepository.findByTravellerName(travellerName);
+
+        Optional<FlightInformation> existingFlightInformation =
+                customerTrips.stream().filter(flightInfo -> flightInfo.getTripId() == tripId).findFirst();
+
+        if (!existingFlightInformation.isPresent()) {
+            // no flight has been booked for this trip yet, therefore no need to cancel
+            return null;
+        }
+
+        return existingFlightInformation.get();
     }
 }
