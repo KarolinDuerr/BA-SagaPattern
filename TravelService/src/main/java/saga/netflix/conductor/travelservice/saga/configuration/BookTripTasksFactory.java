@@ -108,36 +108,17 @@ public class BookTripTasksFactory { // TODO: choose option: eigene Worker und Wo
         return confirmTripTask;
     }
 
+    public WorkflowTask rejectTripTask() {
+        WorkflowTask cancelHotelTask = new WorkflowTask();
+        cancelHotelTask.setName(TravelServiceTasks.Task.REJECT_TRIP);
+        cancelHotelTask.setTaskReferenceName(TravelServiceTasks.Task.REJECT_TRIP);
+        cancelHotelTask.setWorkflowTaskType(TaskType.SIMPLE); // TODO: choose option
 
-//    public WorkflowTask cancelTripBookingTask() {
-//        WorkflowTask cancelTripBookingTask = new WorkflowTask();
-//        cancelTripBookingTask.setName(TravelServiceTasks.Task.CANCEL_TRIP);
-//        cancelTripBookingTask.setTaskReferenceName(TravelServiceTasks.Task.CANCEL_TRIP);
-//        cancelTripBookingTask.setWorkflowTaskType(TaskType.SIMPLE); // TODO: choose option
-//
-//        Map<String, Object> input = new HashMap<>(); // TODO
-//        input.put(HotelServiceTasks.TaskOutput.BOOK_HOTEL_OUTPUT, String.format("${%s.output.%s}",
-//        HotelServiceTasks.Task.BOOK_HOTEL, HotelServiceTasks.TaskOutput.BOOK_HOTEL_OUTPUT));
-////        input.put(TravelServiceTasks.TaskInput.REJECT_TRIP_INPUT, String.format("${%s.output.%s}",
-// HotelServiceTasks.Task.BOOK_HOTEL, HotelServiceTasks.TaskOutput.BOOK_HOTEL_OUTPUT));
-//        cancelTripBookingTask.setInputParameters(input);
-//
-//        return cancelTripBookingTask;
-//    }
+        Map<String, Object> input = new HashMap<>();
+        input.put(TravelServiceTasks.TaskInput.REJECT_TRIP_INPUT, String.format("${workflow.input.%s}", TravelServiceTasks.TaskInput.REJECT_TRIP_INPUT));
+        input.put(TravelServiceTasks.TaskInput.REJECT_TRIP_ID_INPUT, String.format("${workflow.input.%s}", HotelServiceTasks.TaskInput.BOOK_HOTEL_INPUT));
+        cancelHotelTask.setInputParameters(input);
 
-//    public WorkflowTask rejectTripTask() {
-//        WorkflowTask rejectTripTask = new WorkflowTask();
-//        rejectTripTask.setName(TravelServiceTasks.Task.REJECT_TRIP);
-//        rejectTripTask.setTaskReferenceName(TravelServiceTasks.Task.REJECT_TRIP);
-//        rejectTripTask.setWorkflowTaskType(TaskType.SIMPLE); // TODO: choose option
-//
-//        Map<String, Object> input = new HashMap<>();
-//        input.put(TravelServiceTasks.TaskInput.REJECT_TRIP_INPUT, String.format("${workflow.input.%s}",
-//        TravelServiceTasks.TaskInput.REJECT_TRIP_INPUT));
-//        rejectTripTask.setInputParameters(input);
-//
-//        return rejectTripTask;
-//    }
-
-    //TODO
+        return cancelHotelTask;
+    }
 }

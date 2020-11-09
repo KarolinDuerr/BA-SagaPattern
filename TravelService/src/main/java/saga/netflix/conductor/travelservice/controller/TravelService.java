@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 import saga.netflix.conductor.travelservice.error.BookingNotFound;
 import saga.netflix.conductor.travelservice.error.ErrorType;
 import saga.netflix.conductor.travelservice.error.TravelException;
+import saga.netflix.conductor.travelservice.model.BookingStatus;
+import saga.netflix.conductor.travelservice.model.RejectionReason;
 import saga.netflix.conductor.travelservice.model.TripInformation;
 import saga.netflix.conductor.travelservice.model.TripInformationRepository;
 import saga.netflix.conductor.travelservice.saga.bookTripSaga.BookTripSagaData;
@@ -82,6 +84,22 @@ public class TravelService implements  ITravelService {
     }
 
     @Override
+    public void rejectTrip(final Long tripId, final RejectionReason rejectionReason) {
+        logger.info("Rejecting the booked trip with ID " + tripId);
+
+        TripInformation tripInformation = null;
+        try {
+            tripInformation = getTripInformation(tripId);
+
+            BookingStatus newBookingStatus = convertToBookingStatus(rejectionReason);
+            tripInformation.reject(newBookingStatus);
+            tripInformationRepository.save(tripInformation);
+        } catch (TravelException exception) {
+            throw new BookingNotFound(tripId);
+        }
+    }
+
+    @Override
     public void confirmTripBooking(final Long tripId, final long hotelId, final long flightId) {
         logger.info("Confirming the booked trip with ID " + tripId);
 
@@ -112,5 +130,16 @@ public class TravelService implements  ITravelService {
 
         logger.info("Trip has already been booked: " + savedTripBooking.toString());
         return savedTripBooking.get();
+    }
+
+    private BookingStatus convertToBookingStatus(final RejectionReason rejectionReason) {
+        switch(rejectionReason) {
+            case NO_HOTEL_AVAILABLE:
+                return BookingStatus.REJECTED_NO_HOTEL_AVAILABLE;
+            case NO_FLIGHT_AVAILABLE:
+                return BookingStatus.REJECTED_NO_FLIGHT_AVAILABLE;
+            default:
+                return BookingStatus.REJECTED_UNKNOWN;
+        }
     }
 }

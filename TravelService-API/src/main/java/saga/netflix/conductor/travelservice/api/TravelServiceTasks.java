@@ -6,8 +6,6 @@ public class TravelServiceTasks {
 
         public static final String CONFIRM_TRIP = "confirmTrip";
 
-        public static final String CANCEL_TRIP = "cancelTrip";
-
         public static final String REJECT_TRIP = "rejectTrip";
 
     }
@@ -18,8 +16,8 @@ public class TravelServiceTasks {
 
         public static final String CONFIRM_TRIP_FLIGHT_INPUT = "confirmFlightInTripBooking";
 
-        public static final String REJECT_TRIP_INPUT = "rejectTripBooking";
+        public static final String REJECT_TRIP_INPUT = "reason";
 
-        public static final String COMPENSATING_TRIP_BOOKING = "cancelTripBooking";
+        public static final String REJECT_TRIP_ID_INPUT = "tripIdInHotelBookingRequest";
     }
 }

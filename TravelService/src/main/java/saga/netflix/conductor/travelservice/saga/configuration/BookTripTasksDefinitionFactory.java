@@ -35,7 +35,7 @@ public class BookTripTasksDefinitionFactory { // TODO: nur wenn eigene Worker un
         taskDefinitions.add(createCancelFlightTask());
         taskDefinitions.add(createConfirmHotelTask());
         taskDefinitions.add(createConfirmTripTask());
-//        taskDefinitions.add(createRejectTripTask());
+        taskDefinitions.add(createRejectTripTask());
     }
 
     public void registerTaskDefinitions() {
@@ -178,25 +178,22 @@ public class BookTripTasksDefinitionFactory { // TODO: nur wenn eigene Worker un
         return confirmTripDef;
     }
 
-//    private TaskDef createRejectTripTask() {
-//        String description = String.format("'%s' task definition: invokes TripService to reject the trip.",
-//                TravelServiceTasks.Task.REJECT_TRIP);
-//        final TaskDef confirmTripDef = new TaskDef(TravelServiceTasks.Task.REJECT_TRIP, description);
-//        confirmTripDef.setRetryCount(1);
-//        confirmTripDef.setRetryLogic(TaskDef.RetryLogic.FIXED);
-//        confirmTripDef.setRetryDelaySeconds(60);
-//        confirmTripDef.setTimeoutPolicy(TaskDef.TimeoutPolicy.TIME_OUT_WF);
-//        confirmTripDef.setResponseTimeoutSeconds(3600);
-//        confirmTripDef.setOwnerEmail("travelService@beispielMail.com");
-//
-//        final List<String> inputKeys = new LinkedList<>();
-//        inputKeys.add(TravelServiceTasks.TaskInput.REJECT_TRIP_INPUT);
-//        confirmTripDef.setInputKeys(inputKeys);
-//
-//        final List<String> outputKeys = new LinkedList<>();
-//        outputKeys.add("lastTaskId"); //TODO: überhaupt was zurückgeben?
-//        confirmTripDef.setOutputKeys(outputKeys);
-//
-//        return confirmTripDef;
-//    }
+   private TaskDef createRejectTripTask() {
+        String description = String.format("'%s' task definition: invokes TravelService to reject the trip.",
+                TravelServiceTasks.Task.REJECT_TRIP);
+        final TaskDef rejectTripDef = new TaskDef(TravelServiceTasks.Task.REJECT_TRIP, description);
+        rejectTripDef.setRetryCount(1);
+        rejectTripDef.setRetryLogic(TaskDef.RetryLogic.FIXED);
+        rejectTripDef.setRetryDelaySeconds(60);
+        rejectTripDef.setTimeoutPolicy(TaskDef.TimeoutPolicy.TIME_OUT_WF);
+        rejectTripDef.setResponseTimeoutSeconds(3600);
+        rejectTripDef.setOwnerEmail("travelService@beispielMail.com");
+
+        final List<String> inputKeys = new LinkedList<>();
+        inputKeys.add(TravelServiceTasks.TaskInput.REJECT_TRIP_INPUT);
+        inputKeys.add(TravelServiceTasks.TaskInput.REJECT_TRIP_ID_INPUT);
+        rejectTripDef.setInputKeys(inputKeys);
+
+        return rejectTripDef;
+    }
 }

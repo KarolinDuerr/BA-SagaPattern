@@ -54,7 +54,7 @@ public class BookTripSaga {
         List<WorkflowTask> compensateSagaBookTripTasks = new LinkedList<>();
         compensateSagaBookTripTasks.add(taskInstanceFactory.cancelFlightTask());
         compensateSagaBookTripTasks.add(taskInstanceFactory.cancelHotelTask());
-        //TODO
+        compensateSagaBookTripTasks.add(taskInstanceFactory.rejectTripTask());
         compensateBookTripSaga.setTasks(compensateSagaBookTripTasks);
 
         // no input since this failure workflow gets its input from the BookTripSaga Workflow input and output
