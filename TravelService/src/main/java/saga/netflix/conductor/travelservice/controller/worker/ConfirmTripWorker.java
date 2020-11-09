@@ -28,7 +28,7 @@ public class ConfirmTripWorker implements Worker {
 
     private final String inputHotelConfirmation = TravelServiceTasks.TaskInput.CONFIRM_TRIP_HOTEL_INPUT;
 
-    private final String inputFlightConfirmation = TravelServiceTasks.TaskInput.CONFIRM_TRIP_HOTEL_INPUT;
+    private final String inputFlightConfirmation = TravelServiceTasks.TaskInput.CONFIRM_TRIP_FLIGHT_INPUT;
 
     public ConfirmTripWorker(final ObjectMapper objectMapper, final ITravelService travelService) {
         this.objectMapper = objectMapper;
