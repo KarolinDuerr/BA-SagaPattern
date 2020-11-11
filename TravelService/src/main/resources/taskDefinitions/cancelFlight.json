@@ -1,0 +1,14 @@
+{
+  "name": "cancelFlight",
+  "description": "Invokes the FlightService to cancel the booked flight with the corresponding tripId.",
+  "retryCount": 1,
+  "inputKeys": [
+    "cancelFlightTask"
+  ],
+  "outputKeys": [],
+  "timeoutPolicy": "TIME_OUT_WF",
+  "retryLogic": "FIXED",
+  "retryDelaySeconds": 30,
+  "responseTimeoutSeconds": 3600,
+  "ownerEmail": "travelService@beispiel.com"
+}

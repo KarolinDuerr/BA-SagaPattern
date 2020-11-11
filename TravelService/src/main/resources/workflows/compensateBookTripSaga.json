@@ -1,0 +1,47 @@
+{
+  "ownerApp": "Travel Application",
+  "name": "compensateBookTripSaga",
+  "description": "Workflow for compensating the Saga of booking a trip",
+  "version": 1,
+  "tasks": [
+    {
+      "name": "cancelFlight",
+      "taskReferenceName": "cancelFlight",
+      "inputParameters": {
+        "cancelFlightTask": "${workflow.input.bookFlightTask}"
+      },
+      "type": "SIMPLE",
+      "optional": false,
+      "asyncComplete": false
+    },
+    {
+      "name": "cancelHotel",
+      "taskReferenceName": "cancelHotel",
+      "inputParameters": {
+        "cancelHotelBooking": "${workflow.input.bookHotelRequest}"
+      },
+      "type": "SIMPLE",
+      "optional": false,
+      "asyncComplete": false
+    },
+    {
+      "name": "rejectTrip",
+      "taskReferenceName": "rejectTrip",
+      "inputParameters": {
+        "reason": "${workflow.input.reason}",
+        "tripIdInHotelBookingRequest": "${workflow.input.bookHotelRequest}"
+      },
+      "type": "SIMPLE",
+      "optional": false,
+      "asyncComplete": false
+    }
+  ],
+  "inputParameters": [],
+  "outputParameters": {},
+  "schemaVersion": 2,
+  "restartable": true,
+  "workflowStatusListenerEnabled": false,
+  "ownerEmail": "travelService@beispielMail.com",
+  "timeoutPolicy": "ALERT_ONLY",
+  "variables": {}
+}
