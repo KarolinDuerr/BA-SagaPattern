@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import saga.eventuate.tram.travelservice.error.BookingNotFound;
 import saga.eventuate.tram.travelservice.error.ErrorType;
 import saga.eventuate.tram.travelservice.error.TravelException;
@@ -15,7 +16,6 @@ import saga.eventuate.tram.travelservice.model.TripInformationRepository;
 import saga.eventuate.tram.travelservice.saga.BookTripSaga;
 import saga.eventuate.tram.travelservice.saga.BookTripSagaData;
 
-import javax.transaction.Transactional;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
