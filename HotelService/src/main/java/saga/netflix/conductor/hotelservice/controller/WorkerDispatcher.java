@@ -2,7 +2,6 @@ package saga.netflix.conductor.hotelservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netflix.conductor.client.automator.TaskRunnerConfigurer;
-import com.netflix.conductor.client.http.MetadataClient;
 import com.netflix.conductor.client.http.TaskClient;
 import com.netflix.conductor.client.worker.Worker;
 import org.slf4j.Logger;
@@ -16,7 +15,6 @@ import saga.netflix.conductor.hotelservice.resources.DtoConverter;
 import java.util.LinkedList;
 import java.util.List;
 
-//@Component
 public class WorkerDispatcher { // TODO ensure stop polling when instance becomes unhealty --> shutdown() hook in a
     // PreDestroy block
 
@@ -26,29 +24,19 @@ public class WorkerDispatcher { // TODO ensure stop polling when instance become
     private static final int THREAD_COUNT = 3;
 
     @Autowired
-    private /*final*/ TaskClient taskClient;
+    private final TaskClient taskClient;
+    @Autowired
+    private final ObjectMapper objectMapper;
 
     @Autowired
-    private /*final*/ MetadataClient metadataClient;
+    private final IHotelService hotelService;
 
     @Autowired
-    private /*final*/ ObjectMapper objectMapper;
+    private final DtoConverter dtoConverter;
 
-    @Autowired
-    private /*final*/ IHotelService hotelService;
-
-    @Autowired
-    private /*final*/ DtoConverter dtoConverter;
-
-    public WorkerDispatcher() {
-
-    }
-
-    public WorkerDispatcher(final TaskClient taskClient, final MetadataClient metadataClient,
-                            final ObjectMapper objectMapper, final IHotelService hotelService,
-                            final DtoConverter dtoConverter) {
+    public WorkerDispatcher(final TaskClient taskClient, final ObjectMapper objectMapper,
+                            final IHotelService hotelService, final DtoConverter dtoConverter) {
         this.taskClient = taskClient;
-        this.metadataClient = metadataClient;
         this.objectMapper = objectMapper;
         this.hotelService = hotelService;
         this.dtoConverter = dtoConverter;
