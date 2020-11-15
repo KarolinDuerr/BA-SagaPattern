@@ -18,8 +18,7 @@ public class ConductorConfiguration {
 
     @Bean
     public ObjectMapper objectMapper() {
-        ObjectMapper objectMapper = new JsonMapperProvider().get();
-        return objectMapper;
+        return new JsonMapperProvider().get();
     }
 
     @Bean
