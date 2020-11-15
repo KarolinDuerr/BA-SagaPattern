@@ -10,9 +10,7 @@
       "inputParameters": {
         "cancelFlightTask": "${workflow.input.bookFlightTask}"
       },
-      "type": "SIMPLE",
-      "optional": false,
-      "asyncComplete": false
+      "type": "SIMPLE"
     },
     {
       "name": "cancelHotel",
@@ -20,9 +18,7 @@
       "inputParameters": {
         "cancelHotelBooking": "${workflow.input.bookHotelRequest}"
       },
-      "type": "SIMPLE",
-      "optional": false,
-      "asyncComplete": false
+      "type": "SIMPLE"
     },
     {
       "name": "rejectTrip",
@@ -31,16 +27,13 @@
         "reason": "${workflow.input.reason}",
         "tripIdInHotelBookingRequest": "${workflow.input.bookHotelRequest}"
       },
-      "type": "SIMPLE",
-      "optional": false,
-      "asyncComplete": false
+      "type": "SIMPLE"
     }
   ],
   "inputParameters": [],
   "outputParameters": {},
   "schemaVersion": 2,
   "restartable": true,
-  "workflowStatusListenerEnabled": false,
   "ownerEmail": "travelService@beispielMail.com",
   "timeoutPolicy": "ALERT_ONLY",
   "variables": {}

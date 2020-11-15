@@ -1,7 +1,6 @@
 package saga.netflix.conductor.travelservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.netflix.conductor.client.http.MetadataClient;
 import com.netflix.conductor.client.http.TaskClient;
 import com.netflix.conductor.client.http.WorkflowClient;
 import com.netflix.conductor.common.utils.JsonMapperProvider;
@@ -9,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.annotation.EnableRetry;
+import org.springframework.web.client.RestTemplate;
 import saga.netflix.conductor.travelservice.saga.bookTripSaga.BookTripSaga;
 import saga.netflix.conductor.travelservice.saga.SagaInstanceFactory;
 
@@ -20,10 +20,8 @@ public class ConductorConfiguration {
     String conductorServerUri;
 
     @Bean
-    public MetadataClient metaDataClient() {
-        MetadataClient metadataClient = new MetadataClient();
-        metadataClient.setRootURI(conductorServerUri);
-        return metadataClient;
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 
     @Bean
@@ -52,22 +50,23 @@ public class ConductorConfiguration {
     }
 
     @Bean
-//    @Retryable(value = {SocketException.class, RuntimeException.class, ConductorClientException.class}, maxAttempts = 10, backoff = @Backoff(delay = 20000))
-    public BookTripSaga bookTripSaga(MetadataClient metadataClient) {
+//    @Retryable(value = {SocketException.class, RuntimeException.class, ConductorClientException.class}, maxAttempts
+//    = 10, backoff = @Backoff(delay = 20000))
+    public BookTripSaga bookTripSaga(RestTemplate restTemplate, ObjectMapper objectMapper) {
         try {
-            Thread.sleep(60000); // TODO
+            Thread.sleep(50000); // TODO
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        BookTripSaga bookTripSaga = new BookTripSaga(metadataClient);
+        BookTripSaga bookTripSaga = new BookTripSaga(conductorServerUri, restTemplate, objectMapper);
+        bookTripSaga.registerWorkflowAndTasks();
         return bookTripSaga;
     }
 
     @Bean
-    public WorkerDispatcher workerDispatcher(TaskClient taskClient, MetadataClient metadataClient,
-                                             ObjectMapper objectMapper, ITravelService travelService) {
-        WorkerDispatcher createdWorkerDispatcher = new WorkerDispatcher(taskClient, metadataClient, objectMapper,
-                travelService);
+    public WorkerDispatcher workerDispatcher(TaskClient taskClient, ObjectMapper objectMapper,
+                                             ITravelService travelService) {
+        WorkerDispatcher createdWorkerDispatcher = new WorkerDispatcher(taskClient, objectMapper, travelService);
         createdWorkerDispatcher.startTaskPolling();
         return createdWorkerDispatcher;
     }

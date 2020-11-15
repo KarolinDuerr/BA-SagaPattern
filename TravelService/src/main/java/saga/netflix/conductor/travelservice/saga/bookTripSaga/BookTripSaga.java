@@ -1,95 +1,113 @@
 package saga.netflix.conductor.travelservice.saga.bookTripSaga;
 
-import com.netflix.conductor.client.exceptions.ConductorClientException;
-import com.netflix.conductor.client.http.MetadataClient;
-import com.netflix.conductor.common.metadata.workflow.WorkflowDef;
-import com.netflix.conductor.common.metadata.workflow.WorkflowTask;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import saga.netflix.conductor.hotelservice.api.HotelServiceTasks;
-import saga.netflix.conductor.travelservice.saga.Sagas;
-import saga.netflix.conductor.travelservice.saga.configuration.BookTripTasksFactory;
-import saga.netlfix.conductor.flightservice.api.FlightServiceTasks;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 /**
- * Create and register the workflow definition for the BookTripSaga and its compensating workflow.
+ * Create and register the task and workflow definitions for the BookTripSaga and its compensating workflow.
  */
 public class BookTripSaga {
 
     private static final Logger logger = LoggerFactory.getLogger(BookTripSaga.class);
 
     @Autowired
-    private final MetadataClient metadataClient;
+    private final RestTemplate restTemplate;
 
-    private final BookTripTasksFactory taskInstanceFactory;
+    @Autowired
+    private final ObjectMapper objectMapper;
 
-    public BookTripSaga(final MetadataClient metadataClient) {
-        this.metadataClient = metadataClient;
-        this.taskInstanceFactory = new BookTripTasksFactory(this.metadataClient);
+    private final String conductorServerUri;
 
-        final List<WorkflowDef> workflowDefinitions = new LinkedList<>();
-        workflowDefinitions.add(createCompensateBookTripSagaWorkflowDef());
-        workflowDefinitions.add(createSagaBookTripWorkflowDef());
-        logger.info("Registering Workflow definition");
+    private final HttpHeaders requestHeader;
 
-        // TODO FIX just for testing
+    private final List<JsonNode> taskDefinitions;
+
+    private final static String TASK_DEFINITION_ENDPOINT = "metadata/taskdefs";
+    private final static String WORKFLOW_DEFINITION_ENDPOINT = "metadata/workflow";
+
+    public BookTripSaga(final String conductorServerUri, final RestTemplate restTemplate,
+                        final ObjectMapper objectMapper) {
+        this.restTemplate = restTemplate;
+        this.objectMapper = objectMapper;
+
+        this.conductorServerUri = conductorServerUri;
+        requestHeader = new HttpHeaders();
+        requestHeader.setContentType(MediaType.APPLICATION_JSON);
+        this.taskDefinitions = new LinkedList<>();
+    }
+
+    public void registerWorkflowAndTasks() {
+        getTaskDefinitions();
+        registerTasks();
+        registerWorkflows();
+    }
+
+    private void getTaskDefinitions() {
         try {
-            metadataClient.updateWorkflowDefs(workflowDefinitions);
-        } catch(ConductorClientException conductorClientException) {
-            logger.error("Exception occurred while registering workflow definitions: %s", conductorClientException.getMessage());
-            logger.error(conductorClientException.getStackTrace().toString());
+            final JsonNode bookHotelTask =
+                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/bookHotel.json")));
+            final JsonNode cancelHotelTask =
+                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/cancelHotel.json")));
+            final JsonNode bookFlightTask =
+                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/bookFlight.json")));
+            final JsonNode cancelFlightTask =
+                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/cancelFlight.json")));
+            final JsonNode confirmHotelTask =
+                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/confirmHotel.json")));
+            final JsonNode confirmTripTask =
+                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/confirmTrip.json")));
+            final JsonNode rejectTripTask =
+                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/rejectTrip.json")));
+
+            taskDefinitions.add(bookHotelTask);
+            taskDefinitions.add(cancelHotelTask);
+            taskDefinitions.add(bookFlightTask);
+            taskDefinitions.add(cancelFlightTask);
+            taskDefinitions.add(confirmHotelTask);
+            taskDefinitions.add(confirmTripTask);
+            taskDefinitions.add(rejectTripTask);
+        } catch (IOException e) {
+            logger.error("exception " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-    private WorkflowDef createCompensateBookTripSagaWorkflowDef() {
-        final WorkflowDef compensateBookTripSaga = new WorkflowDef();
-        compensateBookTripSaga.setName(Sagas.COMP_BOOK_TRIP_SAGA);
-        compensateBookTripSaga.setDescription("Workflow for compensating the Saga of booking a trip");
-        compensateBookTripSaga.setVersion(1);
-
-        List<WorkflowTask> compensateSagaBookTripTasks = new LinkedList<>();
-        compensateSagaBookTripTasks.add(taskInstanceFactory.cancelFlightTask());
-        compensateSagaBookTripTasks.add(taskInstanceFactory.cancelHotelTask());
-        compensateSagaBookTripTasks.add(taskInstanceFactory.rejectTripTask());
-        compensateBookTripSaga.setTasks(compensateSagaBookTripTasks);
-
-        // no input since this failure workflow gets its input from the BookTripSaga Workflow input and output
-
-        compensateBookTripSaga.setSchemaVersion(2);
-        compensateBookTripSaga.setRestartable(true); // has to be --> was bei failure?
-        compensateBookTripSaga.setOwnerApp("Travel Application");
-        compensateBookTripSaga.setOwnerEmail("travelService@beispielMail.com");
-        return compensateBookTripSaga;
+    private void registerTasks() {
+        HttpEntity<List<JsonNode>> request = new HttpEntity<>(taskDefinitions, requestHeader);
+        restTemplate.postForObject(conductorServerUri + TASK_DEFINITION_ENDPOINT, request, Void.class);
+        logger.info("Registered task definitions of the BookTripSaga");
     }
 
-    private WorkflowDef createSagaBookTripWorkflowDef() {
-        final WorkflowDef bookTripSaga = new WorkflowDef();
-        bookTripSaga.setName(Sagas.BOOK_TRIP_SAGA);
-        bookTripSaga.setDescription("Workflow for Saga of booking a trip");
-        bookTripSaga.setVersion(1);
+    private void registerWorkflows() {
+        try {
+            final JsonNode bookTripDefinition =
+                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/workflows/bookTripSaga.json")));
+            final JsonNode cancelTripDefinition =
+                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/workflows/compensateBookTripSaga.json")));
 
-        List<WorkflowTask> sagaBookTripTasks = new LinkedList<>();
-        sagaBookTripTasks.add(taskInstanceFactory.bookHotelTask());
-        sagaBookTripTasks.add(taskInstanceFactory.bookFlightTask());
-        sagaBookTripTasks.add(taskInstanceFactory.confirmHotelTask());
-        sagaBookTripTasks.add(taskInstanceFactory.confirmTripTask());
-        bookTripSaga.setTasks(sagaBookTripTasks);
-
-        List<String> inputParameters = new LinkedList<>();
-        inputParameters.add(HotelServiceTasks.TaskInput.BOOK_HOTEL_INPUT);
-        inputParameters.add(FlightServiceTasks.TaskInput.BOOK_FLIGHT_INPUT);
-        bookTripSaga.setInputParameters(inputParameters);
-
-        bookTripSaga.setFailureWorkflow(Sagas.COMP_BOOK_TRIP_SAGA);
-        bookTripSaga.setSchemaVersion(2);
-        bookTripSaga.setRestartable(true);
-        bookTripSaga.setOwnerApp("Travel Application");
-        bookTripSaga.setOwnerEmail("travelService@beispielMail.com");
-        return bookTripSaga;
+            registerWorkflow(bookTripDefinition);
+            registerWorkflow(cancelTripDefinition);
+        } catch (IOException e) {
+            logger.error("exception " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
+    private void registerWorkflow(JsonNode workflowToRegister) {
+        HttpEntity<JsonNode> request = new HttpEntity<>(workflowToRegister, requestHeader);
+        restTemplate.postForObject(conductorServerUri + WORKFLOW_DEFINITION_ENDPOINT, request, Void.class);
+        logger.info(String.format("Workflow definition (%s) successful registered.", workflowToRegister.get("name")));
+    }
 }

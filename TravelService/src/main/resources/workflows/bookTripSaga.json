@@ -10,9 +10,7 @@
       "inputParameters": {
         "bookHotelRequest": "${workflow.input.bookHotelRequest}"
       },
-      "type": "SIMPLE",
-      "optional": false,
-      "asyncComplete": false
+      "type": "SIMPLE"
     },
     {
       "name": "bookFlight",
@@ -20,9 +18,7 @@
       "inputParameters": {
         "bookFlightTask": "${workflow.input.bookFlightTask}"
       },
-      "type": "SIMPLE",
-      "optional": false,
-      "asyncComplete": false
+      "type": "SIMPLE"
     },
     {
       "name": "confirmHotel",
@@ -30,9 +26,7 @@
       "inputParameters": {
         "confirmHotelBooking": "${bookHotel.output.bookHotelResponse}"
       },
-      "type": "SIMPLE",
-      "optional": false,
-      "asyncComplete": false
+      "type": "SIMPLE"
     },
     {
       "name": "confirmTrip",
@@ -41,9 +35,7 @@
         "confirmHotelInTripBooking": "${bookHotel.output.bookHotelResponse}",
         "confirmFlightInTripBooking": "${bookFlight.output.bookFlightResponse}"
       },
-      "type": "SIMPLE",
-      "optional": false,
-      "asyncComplete": false
+      "type": "SIMPLE"
     }
   ],
   "inputParameters": [
@@ -54,7 +46,6 @@
   "failureWorkflow": "compensateBookTripSaga",
   "schemaVersion": 2,
   "restartable": true,
-  "workflowStatusListenerEnabled": false,
   "ownerEmail": "travelService@beispielMail.com",
   "timeoutPolicy": "ALERT_ONLY",
   "variables": {}
