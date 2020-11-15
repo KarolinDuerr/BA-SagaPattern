@@ -3,7 +3,7 @@ package saga.netflix.conductor.flightservice.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import saga.netflix.conductor.flightservice.error.ErrorType;
 import saga.netflix.conductor.flightservice.error.FlightException;
 import saga.netflix.conductor.flightservice.model.*;
@@ -12,7 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-@Component("FlightService")
+@Service("FlightService")
 public class FlightService implements IFlightService {
 
     private static final Logger logger = LoggerFactory.getLogger(FlightService.class);

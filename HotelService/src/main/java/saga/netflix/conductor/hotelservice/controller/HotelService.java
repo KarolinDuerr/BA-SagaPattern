@@ -3,7 +3,7 @@ package saga.netflix.conductor.hotelservice.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import saga.netflix.conductor.hotelservice.error.BookingNotFound;
 import saga.netflix.conductor.hotelservice.error.ErrorType;
 import saga.netflix.conductor.hotelservice.error.HotelException;
@@ -16,7 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-@Component("HotelService")
+@Service("HotelService")
 public class HotelService implements IHotelService {
 
     private static final Logger logger = LoggerFactory.getLogger(HotelService.class);
