@@ -10,11 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import saga.netflix.conductor.travelservice.controller.worker.ConfirmTripWorker;
 import saga.netflix.conductor.travelservice.controller.worker.RejectTripWorker;
 
+import javax.annotation.PreDestroy;
 import java.util.LinkedList;
 import java.util.List;
 
-public class WorkerDispatcher { // TODO ensure stop polling when instance becomes unhealty --> shutdown() hook in a
-    // PreDestroy block
+public class WorkerDispatcher {
 
     private static final Logger logger = LoggerFactory.getLogger(WorkerDispatcher.class);
 
@@ -29,6 +29,8 @@ public class WorkerDispatcher { // TODO ensure stop polling when instance become
 
     @Autowired
     private final ITravelService travelService;
+
+    private TaskRunnerConfigurer taskRunnerConfigurer;
 
     public WorkerDispatcher(final TaskClient taskClient, final ObjectMapper objectMapper,
                             final ITravelService travelService) {
@@ -45,11 +47,19 @@ public class WorkerDispatcher { // TODO ensure stop polling when instance become
         workers.add(confirmTripWorker);
         workers.add(rejectTripWorker);
 
-        final TaskRunnerConfigurer taskRunnerConfigurer =
+        taskRunnerConfigurer =
                 new TaskRunnerConfigurer.Builder(taskClient, workers).withThreadCount(THREAD_COUNT).build();
 
         // Start polling for tasks;
         logger.info("Initiated polling for TravelService tasks");
         taskRunnerConfigurer.init();
+    }
+
+    @PreDestroy
+    private void shutdownWorkers() {
+        logger.info("Shutdown --> stop polling");
+        if (taskRunnerConfigurer != null) {
+            this.taskRunnerConfigurer.shutdown();
+        }
     }
 }

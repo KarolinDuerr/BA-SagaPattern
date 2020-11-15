@@ -12,16 +12,16 @@ import saga.netflix.conductor.hotelservice.controller.worker.CancelHotelWorker;
 import saga.netflix.conductor.hotelservice.controller.worker.ConfirmHotelWorker;
 import saga.netflix.conductor.hotelservice.resources.DtoConverter;
 
+import javax.annotation.PreDestroy;
 import java.util.LinkedList;
 import java.util.List;
 
-public class WorkerDispatcher { // TODO ensure stop polling when instance becomes unhealty --> shutdown() hook in a
-    // PreDestroy block
+public class WorkerDispatcher {
 
     private static final Logger logger = LoggerFactory.getLogger(WorkerDispatcher.class);
 
     // At least as many as the number of workers to avoid starvation
-    private static final int THREAD_COUNT = 3;
+    private static final int THREAD_COUNT = 4;
 
     @Autowired
     private final TaskClient taskClient;
@@ -33,6 +33,8 @@ public class WorkerDispatcher { // TODO ensure stop polling when instance become
 
     @Autowired
     private final DtoConverter dtoConverter;
+
+    private TaskRunnerConfigurer taskRunnerConfigurer;
 
     public WorkerDispatcher(final TaskClient taskClient, final ObjectMapper objectMapper,
                             final IHotelService hotelService, final DtoConverter dtoConverter) {
@@ -52,11 +54,19 @@ public class WorkerDispatcher { // TODO ensure stop polling when instance become
         workers.add(confirmHotelWorker);
         workers.add(cancelHotelWorker);
 
-        final TaskRunnerConfigurer taskRunnerConfigurer =
+        taskRunnerConfigurer =
                 new TaskRunnerConfigurer.Builder(taskClient, workers).withThreadCount(THREAD_COUNT).build();
 
         // Start polling for tasks;
         logger.info("Initiated polling for HotelService tasks");
         taskRunnerConfigurer.init();
+    }
+
+    @PreDestroy
+    private void shutdownWorkers() {
+        logger.info("Shutdown --> stop polling");
+        if (taskRunnerConfigurer != null) {
+            this.taskRunnerConfigurer.shutdown();
+        }
     }
 }
