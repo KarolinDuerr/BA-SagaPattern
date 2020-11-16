@@ -30,18 +30,22 @@ public class SagaInstanceFactory {
         logger.info("Start BookTripSaga with " + bookTripSagaData.toString());
 
         StartWorkflowRequest bookTripSagaRequest = new StartWorkflowRequest();
+        // specify which workflow version should be started
         bookTripSagaRequest.setVersion(1);
         bookTripSagaRequest.setCorrelationId(Long.toString(bookTripSagaData.getTripId()));
+        // the name of the workflow that should be started
         bookTripSagaRequest.setName(Sagas.BOOK_TRIP_SAGA);
 
-        // input that's necessary for the individual tasks
         final Map<String, Object> inputParameters = new HashMap<>();
+        // the input for the bookHotel task: "bookHotelRequest"
         inputParameters.put(HotelServiceTasks.TaskInput.BOOK_HOTEL_INPUT, bookTripSagaData.makeBookHotelRequest());
+        // the input for the bookFlight task: "bookFlightRequest"
         inputParameters.put(FlightServiceTasks.TaskInput.BOOK_FLIGHT_INPUT, bookTripSagaData.makeBookFlightTask());
 
         bookTripSagaRequest.setInput(inputParameters);
 
         logger.info("Start BookTripSaga workflow");
+        // POST request to Conductor's "/workflow" endpoint
         workflowClient.startWorkflow(bookTripSagaRequest);
     }
 }
