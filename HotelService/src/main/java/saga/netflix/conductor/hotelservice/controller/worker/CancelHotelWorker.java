@@ -49,7 +49,8 @@ public class CancelHotelWorker implements Worker {
                     inputCancelHotel);
             logger.info(errorMessage);
             taskResult.setReasonForIncompletion(new ErrorMessage(ErrorType.INTERNAL_ERROR, errorMessage).toString());
-            taskResult.setStatus(TaskResult.Status.FAILED);
+            // prevent retry --> input would still be missing, so no reason to retry
+            taskResult.setStatus(TaskResult.Status.FAILED_WITH_TERMINAL_ERROR);
             return taskResult;
         }
 
