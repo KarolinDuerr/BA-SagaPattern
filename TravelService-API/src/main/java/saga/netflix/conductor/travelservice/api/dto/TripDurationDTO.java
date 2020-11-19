@@ -1,11 +1,15 @@
 package saga.netflix.conductor.travelservice.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 public class TripDurationDTO {
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private Date start;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private Date end;
 
     private TripDurationDTO() {
@@ -21,6 +25,7 @@ public class TripDurationDTO {
         this.start = start;
     }
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     public Date getStart() {
         return start;
     }
@@ -29,6 +34,7 @@ public class TripDurationDTO {
         this.end = end;
     }
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     public Date getEnd() {
         return end;
     }
