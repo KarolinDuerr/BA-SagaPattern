@@ -1,13 +1,12 @@
 package saga.netflix.conductor.travelservice.saga.bookTripSaga;
 
 import saga.netflix.conductor.hotelservice.api.dto.BookHotelRequest;
-import saga.netflix.conductor.hotelservice.api.dto.CancelHotelBooking;
 import saga.netflix.conductor.hotelservice.api.dto.DestinationDTO;
 import saga.netflix.conductor.hotelservice.api.dto.StayDurationDTO;
 import saga.netflix.conductor.travelservice.model.RejectionReason;
 import saga.netflix.conductor.travelservice.model.TripInformation;
 import saga.netflix.conductor.travelservice.model.dto.RejectTripBooking;
-import saga.netlfix.conductor.flightservice.api.dto.BookFlightTask;
+import saga.netlfix.conductor.flightservice.api.dto.BookFlightRequest;
 import saga.netlfix.conductor.flightservice.api.dto.LocationDTO;
 
 public class BookTripSagaData {
@@ -81,12 +80,12 @@ public class BookTripSagaData {
                 tripInformation.getTravellerName());
     }
 
-    public BookFlightTask makeBookFlightTask() {
+    public BookFlightRequest makeBookFlightRequest() {
         LocationDTO home = new LocationDTO(tripInformation.getStart().getCountry(),
                 tripInformation.getStart().getCity());
         LocationDTO destination = new LocationDTO(tripInformation.getDestination().getCountry(),
                 tripInformation.getDestination().getCity());
-        return new BookFlightTask(getTripId(), home, destination, tripInformation.getDuration().getStart(),
+        return new BookFlightRequest(getTripId(), home, destination, tripInformation.getDuration().getStart(),
                 tripInformation.getDuration().getEnd(), tripInformation.getTravellerName());
     }
 

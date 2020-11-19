@@ -11,7 +11,7 @@ import saga.netflix.conductor.flightservice.controller.IFlightService;
 import saga.netflix.conductor.flightservice.error.ErrorMessage;
 import saga.netflix.conductor.flightservice.error.ErrorType;
 import saga.netlfix.conductor.flightservice.api.FlightServiceTasks;
-import saga.netlfix.conductor.flightservice.api.dto.BookFlightTask;
+import saga.netlfix.conductor.flightservice.api.dto.BookFlightRequest;
 
 import java.util.Map;
 
@@ -54,14 +54,14 @@ public class CancelFlightWorker implements Worker {
         }
 
         logger.info("TaskInput: " + taskInput.get(FlightServiceTasks.TaskInput.CANCEL_FLIGHT_INPUT));
-        final BookFlightTask bookFlightTask =
+        final BookFlightRequest bookFlightRequest =
                 objectMapper.convertValue(taskInput.get(FlightServiceTasks.TaskInput.CANCEL_FLIGHT_INPUT),
-                        BookFlightTask.class);
+                        BookFlightRequest.class);
 
 
-        flightService.cancelFlightBooking(bookFlightTask.getTripId(), bookFlightTask.getTravellerName());
+        flightService.cancelFlightBooking(bookFlightRequest.getTripId(), bookFlightRequest.getTravellerName());
         taskResult.setStatus(TaskResult.Status.COMPLETED);
-        logger.info("Flight successfully cancelled which is associated with Trip: " + bookFlightTask.getTripId());
+        logger.info("Flight successfully cancelled which is associated with Trip: " + bookFlightRequest.getTripId());
 
         return taskResult;
     }

@@ -16,7 +16,7 @@ import saga.netflix.conductor.flightservice.model.FlightInformation;
 import saga.netflix.conductor.flightservice.resources.DtoConverter;
 import saga.netlfix.conductor.flightservice.api.FlightServiceTasks;
 import saga.netlfix.conductor.flightservice.api.dto.BookFlightResponse;
-import saga.netlfix.conductor.flightservice.api.dto.BookFlightTask;
+import saga.netlfix.conductor.flightservice.api.dto.BookFlightRequest;
 
 import java.util.Map;
 
@@ -78,14 +78,14 @@ public class BookFlightWorker implements Worker {
 
     private void bookFlight(final Map<String, Object> taskInput, final TaskResult taskResult) throws FlightServiceException {
         logger.info("TaskInput: " + taskInput.get(inputBookFlight));
-        final BookFlightTask bookFlightTask = objectMapper.convertValue(taskInput.get(inputBookFlight),
-                BookFlightTask.class);
+        final BookFlightRequest bookFlightRequest = objectMapper.convertValue(taskInput.get(inputBookFlight),
+                BookFlightRequest.class);
 
         FindAndBookFlightInformation flightInformation =
-                dtoConverter.convertToFindAndBookFlightInformation(bookFlightTask);
+                dtoConverter.convertToFindAndBookFlightInformation(bookFlightRequest);
         FlightInformation receivedFlightInformation = flightService.findAndBookFlight(flightInformation);
 
-        BookFlightResponse bookFlightResponse = new BookFlightResponse(bookFlightTask.getTripId(),
+        BookFlightResponse bookFlightResponse = new BookFlightResponse(bookFlightRequest.getTripId(),
                 receivedFlightInformation.getId(),
                 receivedFlightInformation.getBookingStatus().toString());
 

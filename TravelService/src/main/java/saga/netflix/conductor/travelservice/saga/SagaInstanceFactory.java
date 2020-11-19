@@ -40,7 +40,7 @@ public class SagaInstanceFactory {
         // the input for the bookHotel task: "bookHotelRequest"
         inputParameters.put(HotelServiceTasks.TaskInput.BOOK_HOTEL_INPUT, bookTripSagaData.makeBookHotelRequest());
         // the input for the bookFlight task: "bookFlightRequest"
-        inputParameters.put(FlightServiceTasks.TaskInput.BOOK_FLIGHT_INPUT, bookTripSagaData.makeBookFlightTask());
+        inputParameters.put(FlightServiceTasks.TaskInput.BOOK_FLIGHT_INPUT, bookTripSagaData.makeBookFlightRequest());
 
         bookTripSagaRequest.setInput(inputParameters);
 

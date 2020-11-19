@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
 
-public class BookFlightTask {
+public class BookFlightRequest {
 
     private final long tripId;
 
@@ -21,12 +21,12 @@ public class BookFlightTask {
 
     private String travellerName;
 
-    private BookFlightTask() {
+    private BookFlightRequest() {
         this.tripId = -1; // no trip assigned to this booking
     }
 
-    public BookFlightTask(final LocationDTO home, final LocationDTO destination, final Date outboundFlightDate,
-                          final Date returnFlightDate, final String travellerName) {
+    public BookFlightRequest(final LocationDTO home, final LocationDTO destination, final Date outboundFlightDate,
+                             final Date returnFlightDate, final String travellerName) {
         this.tripId = -1; // no trip assigned to this booking
         this.home = home;
         this.destination = destination;
@@ -35,8 +35,8 @@ public class BookFlightTask {
         this.travellerName = travellerName;
     }
 
-    public BookFlightTask(final long tripId, final LocationDTO home, final LocationDTO destination, final Date outboundFlightDate,
-                          final Date returnFlightDate, final String travellerName) {
+    public BookFlightRequest(final long tripId, final LocationDTO home, final LocationDTO destination, final Date outboundFlightDate,
+                             final Date returnFlightDate, final String travellerName) {
         this.tripId = tripId;
         this.home = home;
         this.destination = destination;
@@ -97,7 +97,7 @@ public class BookFlightTask {
 
     @Override
     public String toString() {
-        return "BookFlightTask{" +
+        return "BookFlightRequest{" +
                 "tripId=" + tripId +
                 ", home=" + home +
                 ", destination=" + destination +
