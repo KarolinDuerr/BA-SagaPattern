@@ -58,21 +58,6 @@ public class FlightService implements IFlightService {
     }
 
     @Override
-    public FlightInformation bookFlight(final FlightInformation flightInformation) {
-        logger.info("Saving the flight information: " + flightInformation);
-
-        // ensure idempotence of flight bookings
-        FlightInformation alreadyExistingFlightInformation = checkIfBookingAlreadyExists(flightInformation);
-        if (alreadyExistingFlightInformation != null) {
-            return alreadyExistingFlightInformation;
-        }
-
-        flightInformationRepository.save(flightInformation);
-
-        return flightInformation;
-    }
-
-    @Override
     public FlightInformation findAndBookFlight(final FindAndBookFlightInformation findAndBookFlightInformation) throws FlightException {
         logger.info("Finding a flight for the flight information: " + findAndBookFlightInformation);
 
@@ -87,24 +72,6 @@ public class FlightService implements IFlightService {
         flightInformationRepository.save(flightInformation);
 
         return flightInformation;
-    }
-
-    @Override
-    public boolean cancelFlightBooking(final Long flightBookingId) throws FlightException {
-        logger.info("Cancelling the booked flight with ID " + flightBookingId);
-
-        FlightInformation flightInformation = getFlightInformation(flightBookingId);
-
-        if (flightInformation == null) {
-            String message = String.format("The flight booking (ID: %d) could not be updated.", flightBookingId);
-            logger.info(message);
-            throw new FlightException(ErrorType.INTERNAL_ERROR, message);
-        }
-
-        flightInformation.setBookingStatus(BookingStatus.CANCELLED);
-        flightInformationRepository.save(flightInformation);
-
-        return true;
     }
 
     @Override

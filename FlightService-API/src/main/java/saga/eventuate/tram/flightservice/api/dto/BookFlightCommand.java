@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.eventuate.tram.commands.common.Command;
 
 import java.util.Date;
-import java.util.List;
 
 public class BookFlightCommand implements Command {
 

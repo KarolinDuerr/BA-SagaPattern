@@ -1,7 +1,6 @@
 package saga.eventuate.tram.flightservice.resources;
 
 import saga.eventuate.tram.flightservice.api.dto.BookFlightCommand;
-import saga.eventuate.tram.flightservice.api.dto.BookFlightRequest;
 import saga.eventuate.tram.flightservice.api.dto.FlightDTO;
 import saga.eventuate.tram.flightservice.api.dto.LocationDTO;
 import saga.eventuate.tram.flightservice.error.ConverterException;
@@ -17,17 +16,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class DtoConverter {
-
-    public FlightInformation convertToFlightInformation(final BookFlightRequest bookFlightRequest) throws ConverterException, FlightException {
-        if (bookFlightRequest == null) {
-            throw new ConverterException("The information to book the flight is missing.");
-        }
-
-        checkIfInformationIsMissing(bookFlightRequest);
-        Flight outboundFlight = convertToFlight(bookFlightRequest.getOutboundFlight());
-        Flight returnFlight = convertToFlight(bookFlightRequest.getReturnFlight());
-        return new FlightInformation(outboundFlight, returnFlight, bookFlightRequest.getTravellerName());
-    }
 
     public FindAndBookFlightInformation convertToFindAndBookFlightInformation(final BookFlightCommand bookFlightCommand) throws ConverterException, FlightException {
         if (bookFlightCommand == null) {
@@ -70,15 +58,6 @@ public class DtoConverter {
                 flightInformation.getBookingStatus(), flightInformation.getTripId());
     }
 
-    private Flight convertToFlight(final FlightDTO flightDTO) {
-        if (flightDTO == null) {
-            return null;
-        }
-
-        return new Flight(flightDTO.getCountry(), flightDTO.getFromAirport(), flightDTO.getToAirport(),
-                flightDTO.getFlightDate());
-    }
-
     private Location convertToLocation(final LocationDTO locationDTO) throws ConverterException {
         if (locationDTO == null) {
             throw new ConverterException("Information about a location is missing.");
@@ -100,12 +79,6 @@ public class DtoConverter {
     private void checkIfInformationIsMissing(final BookFlightCommand bookFlightCommand) throws ConverterException {
         if (bookFlightCommand.getOutboundFlightDate() == null || bookFlightCommand.getReturnFlightDate() == null) {
             throw new ConverterException("Information about a flight date is missing.");
-        }
-    }
-
-    private void checkIfInformationIsMissing(final BookFlightRequest bookFlightRequest) throws ConverterException {
-        if (bookFlightRequest.getOutboundFlight() == null || bookFlightRequest.getReturnFlight() == null) {
-            throw new ConverterException("Information about a flight is missing.");
         }
     }
 
