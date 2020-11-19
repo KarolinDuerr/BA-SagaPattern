@@ -3,6 +3,7 @@ package saga.eventuate.tram.flightservice.api.dto;
 import io.eventuate.tram.commands.common.Command;
 
 public class CancelFlightBooking implements Command {
+
     private final long tripId;
 
     private final long bookingId;

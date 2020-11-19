@@ -1,7 +1,5 @@
 package saga.eventuate.tram.flightservice.api.dto;
 
-import java.util.List;
-
 public class BookFlightRequest {
 
     private FlightDTO outboundFlight;

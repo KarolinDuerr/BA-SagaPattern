@@ -1,5 +1,7 @@
 package saga.eventuate.tram.flightservice.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 public class FlightDTO {
@@ -10,6 +12,7 @@ public class FlightDTO {
 
     private String toAirport;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private Date flightDate;
 
     private FlightDTO() {

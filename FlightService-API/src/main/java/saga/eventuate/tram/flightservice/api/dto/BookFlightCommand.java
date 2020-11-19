@@ -1,5 +1,6 @@
 package saga.eventuate.tram.flightservice.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.eventuate.tram.commands.common.Command;
 
 import java.util.Date;
@@ -13,8 +14,10 @@ public class BookFlightCommand implements Command {
 
     private LocationDTO destination;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private Date outboundFlightDate;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private Date returnFlightDate;
 
     private String travellerName;
