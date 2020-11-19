@@ -1,7 +1,7 @@
 {
   "ownerApp": "Travel Application",
   "name": "bookTripSaga",
-  "description": "Workflow for Saga of booking a trip",
+  "description": "Workflow for the Saga of booking a trip",
   "version": 1,
   "tasks": [
     {
@@ -16,7 +16,7 @@
       "name": "bookFlight",
       "taskReferenceName": "bookFlight",
       "inputParameters": {
-        "bookFlightTask": "${workflow.input.bookFlightTask}"
+        "bookFlightRequest": "${workflow.input.bookFlightRequest}"
       },
       "type": "SIMPLE"
     },
@@ -40,7 +40,7 @@
   ],
   "inputParameters": [
     "bookHotelRequest",
-    "bookFlightTask"
+    "bookFlightRequest"
   ],
   "outputParameters": {},
   "failureWorkflow": "compensateBookTripSaga",

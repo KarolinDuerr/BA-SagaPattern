@@ -3,7 +3,7 @@
   "description": "Invokes the FlightService to book an available flight.",
   "retryCount": 1,
   "inputKeys": [
-    "bookFlightTask"
+    "bookFlightRequest"
   ],
   "outputKeys": [
     "bookFlightResponse"

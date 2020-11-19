@@ -11,9 +11,9 @@ public class FlightServiceTasks {
 
     public static class TaskInput {
 
-        public static final String BOOK_FLIGHT_INPUT = "bookFlightTask";
+        public static final String BOOK_FLIGHT_INPUT = "bookFlightRequest";
 
-        public static final String CANCEL_FLIGHT_INPUT = "cancelFlightTask";
+        public static final String CANCEL_FLIGHT_INPUT = "cancelFlightBooking";
 
     }
 

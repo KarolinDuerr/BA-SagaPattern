@@ -3,7 +3,7 @@
   "description": "Invokes the FlightService to cancel the booked flight with the corresponding tripId.",
   "retryCount": 1,
   "inputKeys": [
-    "cancelFlightTask"
+    "cancelFlightBooking"
   ],
   "outputKeys": [],
   "timeoutPolicy": "TIME_OUT_WF",
