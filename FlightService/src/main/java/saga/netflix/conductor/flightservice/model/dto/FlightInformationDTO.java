@@ -1,7 +1,6 @@
 package saga.netflix.conductor.flightservice.model.dto;
 
 import saga.netflix.conductor.flightservice.model.BookingStatus;
-import saga.netlfix.conductor.flightservice.api.dto.FlightDTO;
 
 public class FlightInformationDTO {
 

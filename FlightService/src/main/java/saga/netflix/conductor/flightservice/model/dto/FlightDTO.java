@@ -1,4 +1,4 @@
-package saga.netlfix.conductor.flightservice.api.dto;
+package saga.netflix.conductor.flightservice.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;

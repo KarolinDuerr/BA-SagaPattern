@@ -55,21 +55,6 @@ public class FlightService implements IFlightService {
     }
 
     @Override
-    public FlightInformation bookFlight(final FlightInformation flightInformation) {
-        logger.info("Saving the flight information: " + flightInformation);
-
-        //ensure idempotence of flight bookings
-        FlightInformation alreadyExistingFlightInformation = checkIfBookingAlreadyExists(flightInformation);
-        if (alreadyExistingFlightInformation != null) {
-            return alreadyExistingFlightInformation;
-        }
-
-        flightInformationRepository.save(flightInformation);
-
-        return flightInformation;
-    }
-
-    @Override
     public FlightInformation findAndBookFlight(final FindAndBookFlightInformation findAndBookFlightInformation) throws FlightException {
         logger.info("Finding a flight for the flight information: " + findAndBookFlightInformation);
 

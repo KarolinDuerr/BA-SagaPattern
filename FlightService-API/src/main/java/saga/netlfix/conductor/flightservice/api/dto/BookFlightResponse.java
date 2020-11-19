@@ -13,7 +13,7 @@ public class BookFlightResponse {
     }
 
     public BookFlightResponse(final long flightBookingId, final String bookingStatus) {
-//        this.tripId = -1; // TODO
+        this.tripId = -1;
         this.flightBookingId = flightBookingId;
         this.bookingStatus = bookingStatus;
     }

@@ -10,8 +10,6 @@ import org.springframework.web.server.ResponseStatusException;
 import saga.netflix.conductor.flightservice.controller.IFlightService;
 import saga.netflix.conductor.flightservice.error.FlightServiceException;
 import saga.netflix.conductor.flightservice.model.FlightInformation;
-import saga.netlfix.conductor.flightservice.api.dto.BookFlightRequest;
-import saga.netlfix.conductor.flightservice.api.dto.BookFlightResponse;
 import saga.netflix.conductor.flightservice.model.dto.FlightInformationDTO;
 
 import java.util.List;
@@ -57,21 +55,4 @@ public class FlightResource {
 
         return ResponseEntity.ok(dtoConverter.convertToFlightInformationDTO(flightInformation));
     }
-
-    @PostMapping
-    public ResponseEntity<BookFlightResponse> bookFlight(@RequestBody final BookFlightRequest bookFlightRequest) throws FlightServiceException {
-        logger.info("Book flight: " + bookFlightRequest);
-
-        if (bookFlightRequest == null) {
-            logger.info("BookFlightRequest is missing, therefore no hotel can be booked.");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The information to book the flight is missing.");
-        }
-
-        FlightInformation flightInformation =
-                flightService.bookFlight(dtoConverter.convertToFlightInformation(bookFlightRequest));
-
-        return ResponseEntity.ok(new BookFlightResponse(flightInformation.getId(),
-                flightInformation.getBookingStatus().toString()));
-    }
-
 }
