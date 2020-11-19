@@ -2,6 +2,7 @@ package saga.netflix.conductor.hotelservice.model;
 
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
+import java.util.Objects;
 
 @Embeddable
 public class HotelBookingInformation {
@@ -86,18 +87,18 @@ public class HotelBookingInformation {
 
         HotelBookingInformation hotelInfo = (HotelBookingInformation) o;
 
-        if (!hotelInfo.getDuration().equals(this.getDuration())) {
+        if (!Objects.equals(hotelInfo.getDuration(), this.getDuration())) {
             return false;
         }
 
-        if (!hotelInfo.getBoardType().equalsIgnoreCase(this.getBoardType())) {
+        if (hotelInfo.getBoardType() == null || !hotelInfo.getBoardType().equalsIgnoreCase(this.getBoardType())) {
             return false;
         }
 
-        if (!hotelInfo.getDestination().equals(this.getDestination())) {
+        if (!Objects.equals(hotelInfo.getDestination(), this.getDestination())) {
             return false;
         }
 
-        return true;
+        return Objects.equals(hotelInfo.getTripId(), this.getTripId());
     }
 }

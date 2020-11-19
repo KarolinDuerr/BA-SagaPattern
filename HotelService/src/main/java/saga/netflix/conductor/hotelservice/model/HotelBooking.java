@@ -3,6 +3,7 @@ package saga.netflix.conductor.hotelservice.model;
 import saga.netflix.conductor.hotelservice.error.UnsupportedStateTransition;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "hotelBookings")
@@ -122,14 +123,14 @@ public class HotelBooking {
 
         HotelBooking hotelBooking = (HotelBooking) o;
 
-        if (hotelBooking.getId() == this.getId()) {
+        if (Objects.equals(hotelBooking.getId(), this.getId())) {
             return true;
         }
 
-        if (!hotelBooking.getBookingInformation().equals(this.getBookingInformation())) {
+        if (!Objects.equals(hotelBooking.getBookingInformation(), this.getBookingInformation())) {
             return false;
         }
 
-        return hotelBooking.getHotelName().equalsIgnoreCase(this.getHotelName());
+        return hotelBooking.getHotelName() == null || hotelBooking.getHotelName().equalsIgnoreCase(this.getHotelName());
     }
 }
