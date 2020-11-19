@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface TripInformationRepository extends CrudRepository<TripInformation, Long> {
 
-    List<TripInformation> findByCustomerId(long customerId);
+    List<TripInformation> findByTravellerName(String travellerName);
 }

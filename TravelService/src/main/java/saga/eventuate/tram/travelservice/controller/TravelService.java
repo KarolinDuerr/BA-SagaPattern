@@ -75,7 +75,7 @@ public class TravelService implements  ITravelService {
     public TripInformation bookTrip(final TripInformation tripInformation) {
         logger.info("Saving the booked Trip: " + tripInformation);
 
-        //ensure idempotence of trip bookings
+        // ensure idempotence of trip bookings
         TripInformation alreadyExistingTripBooking = checkIfBookingAlreadyExists(tripInformation);
         if (alreadyExistingTripBooking != null) {
             return alreadyExistingTripBooking;
@@ -83,7 +83,7 @@ public class TravelService implements  ITravelService {
 
         tripInformationRepository.save(tripInformation);
 
-        // Create the BookTripSaga with the necessary information
+        // create the BookTripSaga with the necessary information
         BookTripSagaData sagaData = new BookTripSagaData(tripInformation.getId(), tripInformation);
         sagaInstanceFactory.create(bookTripSaga, sagaData);
 
@@ -112,9 +112,8 @@ public class TravelService implements  ITravelService {
     public void rejectTrip(final Long tripId, final RejectionReason rejectionReason) {
         logger.info("Rejecting the booked trip with ID " + tripId);
 
-        TripInformation tripInformation = null;
         try {
-            tripInformation = getTripInformation(tripId);
+            TripInformation tripInformation = getTripInformation(tripId);
 
             BookingStatus newBookingStatus = convertToBookingStatus(rejectionReason);
             tripInformation.reject(newBookingStatus);
@@ -128,9 +127,8 @@ public class TravelService implements  ITravelService {
     public void confirmTripBooking(final Long tripId, final long hotelId, final long flightId) {
         logger.info("Confirming the booked trip with ID " + tripId);
 
-        TripInformation tripInformation = null;
         try {
-            tripInformation = getTripInformation(tripId);
+            TripInformation tripInformation = getTripInformation(tripId);
 
             tripInformation.setHotelId(hotelId);
             tripInformation.setFlightId(flightId);
@@ -139,6 +137,22 @@ public class TravelService implements  ITravelService {
         } catch (TravelException exception) {
             throw new BookingNotFound(tripId);
         }
+    }
+
+    // ensure idempotence of trip bookings
+    private TripInformation checkIfBookingAlreadyExists(final TripInformation tripInformation) {
+        List<TripInformation> customerTrips =
+                tripInformationRepository.findByTravellerName(tripInformation.getTravellerName());
+
+        Optional<TripInformation> savedTripBooking =
+                customerTrips.stream().filter(tripInfo -> tripInfo.equals(tripInformation)).findFirst();
+
+        if (!savedTripBooking.isPresent()) {
+            return null;
+        }
+
+        logger.info("Trip has already been booked: " + savedTripBooking.toString());
+        return savedTripBooking.get();
     }
 
     private BookingStatus convertToBookingStatus(final RejectionReason rejectionReason) {
@@ -150,21 +164,5 @@ public class TravelService implements  ITravelService {
             default:
                 return BookingStatus.REJECTED_UNKNOWN;
         }
-    }
-
-    //ensure idempotence of trip bookings
-    private TripInformation checkIfBookingAlreadyExists(final TripInformation tripInformation) {
-        List<TripInformation> customerTrips =
-                tripInformationRepository.findByCustomerId(tripInformation.getCustomerId());
-
-        Optional<TripInformation> savedTripBooking =
-                customerTrips.stream().filter(tripInfo -> tripInfo.equals(tripInformation)).findFirst();
-
-        if (!savedTripBooking.isPresent()) {
-            return null;
-        }
-
-        logger.info("Trip has already been booked: " + savedTripBooking.toString());
-        return savedTripBooking.get();
     }
 }
