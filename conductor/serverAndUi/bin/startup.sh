@@ -1,5 +1,6 @@
 #!/bin/bash
 # taken from https://github.com/Netflix/conductor/tree/master/docker/serverAndUI
+# and from https://github.com/Netflix/conductor/tree/master/docker/server
 
 echo "Starting Conductor server and UI"
 
@@ -29,4 +30,16 @@ if [ -z "$CONFIG_PROP" ];
     export config_file=/app/config/$CONFIG_PROP
 fi
 
-nohup java -jar conductor-server-*-all.jar $config_file 1>&2 > /app/logs/server.log
+echo "Log4j file: $LOG4J_PROP"
+echo $LOG4J_PROP
+export log4j_file=
+
+if [ -z "$LOG4J_PROP" ];
+  then
+    export log4j_file=/app/config/log4j.properties
+  else
+    echo "Using '$LOG4J_PROP'";
+    export log4j_file=/app/config/$LOG4J_PROP
+fi
+
+nohup java -jar conductor-server-*-all.jar $config_file $log4j_file #1>&2 > /app/logs/server.log // TODO

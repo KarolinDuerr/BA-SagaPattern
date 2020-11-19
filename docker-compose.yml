@@ -21,7 +21,6 @@ services:
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
       CONDUCTOR_SERVER_URI: http://conductor-server-ui:8080/api/
 
-
   hotelservice:
     build: ./HotelService/
     image: hotelservice:conductor
@@ -62,7 +61,7 @@ services:
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
       CONDUCTOR_SERVER_URI: http://conductor-server-ui:8080/api/
 
-  conductor-server-ui: #--> aktuell mit exception wenn nicht inmemory
+  conductor-server-ui:
     build:
       context: conductor/serverAndUi/
       dockerfile: Dockerfile
@@ -76,14 +75,11 @@ services:
     expose:
       - '8080'
       - '5000'
-    links: # vlt stattdessen external_links
-      - elasticsearch:es
-      - dynomite:dyno1
     depends_on:
       - elasticsearch
       - dynomite
     environment:
-#      - CONFIG_PROP=config.properties #// TODO --> oder doch inMemory ausreichend?
+      - CONFIG_PROP=config.properties # dann zuerst dynomite und elasticsearch starten
       - WF_SERVER=http://localhost:8080/api/
     logging:
       driver: "json-file"

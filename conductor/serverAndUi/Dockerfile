@@ -1,6 +1,6 @@
+# taken from https://github.com/Netflix/conductor/blob/master/docker/serverAndUI/Dockerfile
 #
 # conductor:serverAndUI - Netflix conductor server and UI
-# taken from https://github.com/Netflix/conductor/tree/master/docker/serverAndUI
 #
 FROM openjdk:8-jdk
 
