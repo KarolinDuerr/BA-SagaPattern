@@ -62,15 +62,14 @@ public class HotelService implements IHotelService {
     public HotelBooking bookHotel(final String travellerName, final HotelBookingInformation hotelBooking) throws HotelException {
         logger.info("Saving the booked Hotel: " + hotelBooking);
 
-        HotelBooking newHotelBooking = findAvailableHotel(travellerName, hotelBooking); // TODO --> unterscheiden
-        // zwischen normaler HotelBuchung und TripBuchung? siehe flights
+        HotelBooking newHotelBooking = findAvailableHotel(travellerName, hotelBooking);
 
         // no trip assigned therefore the booking has already been confirmed
         if (newHotelBooking.getBookingInformation() != null && newHotelBooking.getBookingInformation().getTripId() == -1) {
             newHotelBooking.confirm();
         }
 
-        //ensure idempotence of hotel bookings
+        // ensure idempotence of hotel bookings
         HotelBooking alreadyExistingHotelBooking = checkIfBookingAlreadyExists(newHotelBooking);
         if (alreadyExistingHotelBooking != null) {
             return alreadyExistingHotelBooking;
@@ -85,8 +84,7 @@ public class HotelService implements IHotelService {
     public void cancelHotelBooking(final long tripId, final String travellerName) {
         logger.info("Cancelling the booked hotel associated with trip ID " + tripId);
 
-        HotelBooking hotelBooking;
-        hotelBooking = geTripHotelBookingByName(travellerName, tripId);
+        HotelBooking hotelBooking = geTripHotelBookingByName(travellerName, tripId);
 
         if (hotelBooking == null) {
             logger.info(String.format("No hotel has been booked for this trip (ID: %s) yet, therefore no need to " +
@@ -103,9 +101,8 @@ public class HotelService implements IHotelService {
     public void confirmHotelBooking(final Long bookingId, final Long tripId) {
         logger.info("Confirming the booked hotel with ID " + bookingId);
 
-        HotelBooking hotelBooking;
         try {
-            hotelBooking = getHotelBooking(bookingId);
+            HotelBooking hotelBooking = getHotelBooking(bookingId);
 
             if (hotelBooking.getBookingInformation() == null || hotelBooking.getBookingInformation().getTripId() != tripId) {
                 throw new BookingNotFound(bookingId);
@@ -129,7 +126,7 @@ public class HotelService implements IHotelService {
         return new HotelBooking("Example_Hotel", travellerName, hotelBookingInformation);
     }
 
-    //ensure idempotence of hotel bookings
+    // ensure idempotence of hotel bookings
     private HotelBooking checkIfBookingAlreadyExists(final HotelBooking hotelBooking) {
         List<HotelBooking> customerTrips =
                 hotelBookingRepository.findByTravellerName(hotelBooking.getTravellerName());

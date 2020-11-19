@@ -75,8 +75,7 @@ public class FlightService implements IFlightService {
     public void cancelFlightBooking(final Long tripId, final String travellerName) {
         logger.info("Cancelling the booked flight associated with trip ID " + tripId);
 
-        FlightInformation flightInformation;
-        flightInformation = getTripFlightInformationByName(travellerName, tripId);
+        FlightInformation flightInformation = getTripFlightInformationByName(travellerName, tripId);
 
         if (flightInformation == null) {
             logger.info(String.format("No flight has been booked for this trip (ID: %s) yet, therefore no need to " +
@@ -132,6 +131,5 @@ public class FlightService implements IFlightService {
 
         // if no hotel booking can be found than no hotel has been booked for this trip yet, therefore no need to cancel
         return existingFlightInformation.orElse(null);
-
     }
 }

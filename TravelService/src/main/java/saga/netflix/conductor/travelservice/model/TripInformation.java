@@ -207,7 +207,7 @@ public class TripInformation {
 
         TripInformation tripInfo = (TripInformation) o;
 
-        if (tripInfo.getId() == this.getId()) {
+        if (Objects.equals(tripInfo.getId(), this.getId())) {
             return true;
         }
 
