@@ -127,7 +127,7 @@ public class FlightService implements IFlightService {
 
     // only mocking the general function of this method
     private FlightInformation findAvailableFlight(final FindAndBookFlightInformation flightInformation) throws FlightException {
-        if (flightInformation.getHome().getCountry().equalsIgnoreCase("Provoke flight failure")) {
+        if (flightInformation.getDestination().getCountry().equalsIgnoreCase("Provoke flight failure")) {
             logger.info("Provoked flight exception: no available flight for trip: " + flightInformation.getTripId());
             throw new FlightException(ErrorType.NO_FLIGHT_AVAILABLE, "No available flight found.");
         }
