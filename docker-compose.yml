@@ -29,7 +29,7 @@ services:
     image: hotelservice:eventuate
     container_name: hotelservice_eventuate
     ports:
-      - 8081:8080
+      - 8081:8081
     depends_on:
       - mysql
       - kafka
@@ -52,7 +52,7 @@ services:
     image: flightservice:eventuate
     container_name: flightservice_eventuate
     ports:
-      - 8082:8080
+      - 8082:8082
     depends_on:
       - mysql
       - kafka
@@ -132,3 +132,4 @@ services:
       - "9411:9411"
     environment:
       JAVA_OPTS: -Xmx64m
+      STORAGE_TYPE: mem
