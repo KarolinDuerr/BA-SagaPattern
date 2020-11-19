@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service("TravelService")
-public class TravelService implements  ITravelService {
+public class TravelService implements ITravelService {
 
     private static final Logger logger = LoggerFactory.getLogger(TravelService.class);
 
@@ -29,7 +29,8 @@ public class TravelService implements  ITravelService {
     @Autowired
     private final SagaInstanceFactory sagaInstanceFactory;
 
-    public TravelService(final TripInformationRepository tripInformationRepository, final SagaInstanceFactory sagaInstanceFactory) {
+    public TravelService(final TripInformationRepository tripInformationRepository,
+                         final SagaInstanceFactory sagaInstanceFactory) {
         this.tripInformationRepository = tripInformationRepository;
         this.sagaInstanceFactory = sagaInstanceFactory;
     }
@@ -119,7 +120,7 @@ public class TravelService implements  ITravelService {
     //ensure idempotence of trip bookings
     private TripInformation checkIfBookingAlreadyExists(final TripInformation tripInformation) {
         List<TripInformation> customerTrips =
-                tripInformationRepository.findByCustomerId(tripInformation.getCustomerId());
+                tripInformationRepository.findByTravellerName(tripInformation.getTravellerName());
 
         Optional<TripInformation> savedTripBooking =
                 customerTrips.stream().filter(tripInfo -> tripInfo.equals(tripInformation)).findFirst();
@@ -133,7 +134,7 @@ public class TravelService implements  ITravelService {
     }
 
     private BookingStatus convertToBookingStatus(final RejectionReason rejectionReason) {
-        switch(rejectionReason) {
+        switch (rejectionReason) {
             case NO_HOTEL_AVAILABLE:
                 return BookingStatus.REJECTED_NO_HOTEL_AVAILABLE;
             case NO_FLIGHT_AVAILABLE:
