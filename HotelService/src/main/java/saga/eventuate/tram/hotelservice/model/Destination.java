@@ -43,7 +43,7 @@ public class Destination {
     }
 
     @Override
-    public boolean equals(Object o){
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -54,10 +54,10 @@ public class Destination {
 
         Destination destination = (Destination) o;
 
-        if (!destination.getCountry().equalsIgnoreCase(this.getCountry())) {
+        if (destination.getCountry() == null || !destination.getCountry().equalsIgnoreCase(this.getCountry())) {
             return false;
         }
 
-        return  destination.getCity().equalsIgnoreCase(this.getCity());
+        return destination.getCity() != null && destination.getCity().equalsIgnoreCase(this.getCity());
     }
 }
