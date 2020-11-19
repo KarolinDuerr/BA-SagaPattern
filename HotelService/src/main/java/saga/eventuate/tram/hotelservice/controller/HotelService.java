@@ -83,24 +83,6 @@ public class HotelService implements IHotelService {
     }
 
     @Override
-    public boolean cancelHotelBooking(final Long bookingId) throws HotelException {
-        logger.info("Cancelling the booked hotel with ID " + bookingId);
-
-        HotelBooking hotelBooking = getHotelBooking(bookingId);
-
-        if (hotelBooking == null) {
-            String message = String.format("The hotel booking (ID: %d) could not be updated.", bookingId);
-            logger.info(message);
-            throw new HotelException(ErrorType.INTERNAL_ERROR, message);
-        }
-
-        hotelBooking.cancel(BookingStatus.CANCELLED);
-        hotelBookingRepository.save(hotelBooking);
-
-        return true;
-    }
-
-    @Override
     public void cancelHotelBooking(final Long bookingId, final Long tripId) {
         logger.info("Cancelling the booked hotel with ID " + bookingId);
 

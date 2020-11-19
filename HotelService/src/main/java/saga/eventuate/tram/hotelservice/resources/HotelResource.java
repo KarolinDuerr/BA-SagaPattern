@@ -7,12 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import saga.eventuate.tram.hotelservice.api.dto.BookHotelRequest;
-import saga.eventuate.tram.hotelservice.api.dto.BookHotelResponse;
 import saga.eventuate.tram.hotelservice.controller.IHotelService;
 import saga.eventuate.tram.hotelservice.error.*;
 import saga.eventuate.tram.hotelservice.model.HotelBooking;
-import saga.eventuate.tram.hotelservice.model.HotelBookingInformation;
 import saga.eventuate.tram.hotelservice.model.dto.HotelBookingDTO;
 
 import java.util.List;
@@ -55,41 +52,5 @@ public class HotelResource {
         }
 
         return ResponseEntity.ok(dtoConverter.convertToHotelBookingDTO(hotelBooking));
-    }
-
-    @PostMapping
-    public ResponseEntity<BookHotelResponse> bookHotel(@RequestBody final BookHotelRequest bookHotelRequest) throws HotelServiceException {
-        logger.info("Book hotel: " + bookHotelRequest);
-
-        if (bookHotelRequest == null) {
-            logger.info("BookHotelRequest is missing, therefore no hotel can be booked.");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The information to book the hotel is missing.");
-        }
-
-        HotelBookingInformation requestedHotelBooking = dtoConverter.convertToHotelBookingInformation(bookHotelRequest);
-        HotelBooking receivedHotelBooking = hotelService.bookHotel(bookHotelRequest.getTravellerName(), requestedHotelBooking);
-
-        if (receivedHotelBooking == null) {
-            logger.info("Something went wrong during booking.");
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong during booking.");
-        }
-
-        return ResponseEntity.ok(new BookHotelResponse(receivedHotelBooking.getId(),
-                receivedHotelBooking.getHotelName(), receivedHotelBooking.getBookingStatus().toString()));
-    }
-
-    @DeleteMapping("/bookings/{bookingId}")
-    public ResponseEntity cancelHotel(@PathVariable(value = "bookingId") final Long bookingId) throws HotelServiceException {
-        logger.info("Cancel hotel booking with ID " + bookingId);
-
-        boolean hotelCancelled = hotelService.cancelHotelBooking(bookingId);
-
-        if (!hotelCancelled) {
-            logger.info("Something went wrong during cancellation.");
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong during " +
-                    "cancellation, hotel could not be cancelled.");
-        }
-
-        return ResponseEntity.ok().build();
     }
 }
