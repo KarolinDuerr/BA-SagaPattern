@@ -78,19 +78,4 @@ public class TravelResource {
         return ResponseEntity.ok(new BookTripResponse(tripInformation.getId(),
                 tripInformation.getBookingStatus().toString()));
     }
-
-    @DeleteMapping("trips/{tripId}")
-    public ResponseEntity cancelTrip(@PathVariable(value = "tripId") final Long tripId) throws TravelServiceException {
-        logger.info("Cancel trip booking with ID: " + tripId);
-
-        boolean tripCancelled = travelService.cancelTrip(tripId);
-
-        if (!tripCancelled) {
-            logger.info("Something went wrong during cancellation.");
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong during " +
-                    "cancellation, trip could not be cancelled.");
-        }
-
-        return ResponseEntity.ok().build();
-    }
 }

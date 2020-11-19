@@ -91,24 +91,6 @@ public class TravelService implements  ITravelService {
     }
 
     @Override
-    public boolean cancelTrip(final Long tripId) throws TravelException {
-        logger.info("Cancelling the booked trip with ID " + tripId);
-
-        TripInformation tripInformation = getTripInformation(tripId);
-
-        if (tripInformation == null) {
-            String message = String.format("The trip booking (ID: %d) could not be updated.", tripId);
-            logger.info(message);
-            throw new TravelException(ErrorType.INTERNAL_ERROR, message);
-        }
-
-        tripInformation.cancel();
-        tripInformationRepository.save(tripInformation);
-
-        return true;
-    }
-
-    @Override
     public void rejectTrip(final Long tripId, final RejectionReason rejectionReason) {
         logger.info("Rejecting the booked trip with ID " + tripId);
 

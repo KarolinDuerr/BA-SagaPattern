@@ -21,9 +21,6 @@ public interface ITravelService {
     TripInformation bookTrip(final TripInformation tripInformation);
 
     @Transactional
-    boolean cancelTrip(final Long tripId) throws TravelException;
-
-    @Transactional
     void rejectTrip(final Long tripId, final RejectionReason rejectionReason);
 
     @Transactional
