@@ -131,6 +131,6 @@ public class HotelBooking {
             return false;
         }
 
-        return hotelBooking.getHotelName() == null || hotelBooking.getHotelName().equalsIgnoreCase(this.getHotelName());
+        return hotelBooking.getHotelName() != null && hotelBooking.getHotelName().equalsIgnoreCase(this.getHotelName());
     }
 }

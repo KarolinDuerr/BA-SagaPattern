@@ -58,6 +58,6 @@ public class Destination {
             return false;
         }
 
-        return destination.getCity() == null || destination.getCity().equalsIgnoreCase(this.getCity());
+        return destination.getCity() != null && destination.getCity().equalsIgnoreCase(this.getCity());
     }
 }

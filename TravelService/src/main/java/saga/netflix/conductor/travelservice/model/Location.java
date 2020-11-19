@@ -54,10 +54,10 @@ public class Location {
 
         Location location = (Location) o;
 
-        if (!location.getCountry().equalsIgnoreCase(this.getCountry())) {
+        if (location.getCountry() == null || !location.getCountry().equalsIgnoreCase(this.getCountry())) {
             return false;
         }
 
-        return location.getCity().equalsIgnoreCase(this.getCity());
+        return location.getCity() != null && location.getCity().equalsIgnoreCase(this.getCity());
     }
 }

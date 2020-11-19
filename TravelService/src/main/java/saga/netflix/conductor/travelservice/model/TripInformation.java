@@ -3,6 +3,7 @@ package saga.netflix.conductor.travelservice.model;
 import saga.netflix.conductor.travelservice.error.UnsupportedStateTransition;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "tripsInformation")
@@ -145,7 +146,8 @@ public class TripInformation {
                 this.bookingStatus = BookingStatus.CANCELLED;
                 break;
             default:
-                throw new UnsupportedStateTransition("The trip can only be rejected if its still PENDING or CONFIRMED, but the " +
+                throw new UnsupportedStateTransition("The trip can only be rejected if its still PENDING or " +
+                        "CONFIRMED, but the " +
                         "current status is: " + getBookingStatus());
         }
     }
@@ -209,19 +211,22 @@ public class TripInformation {
             return true;
         }
 
-        if (!tripInfo.getDuration().equals(this.getDuration())) {
+        if (!Objects.equals(tripInfo.getDuration(), this.getDuration())) {
             return false;
         }
 
-        if (!tripInfo.getStart().equals(this.getStart())) {
+        if (!Objects.equals(tripInfo.getStart(), this.getStart())) {
             return false;
         }
 
-        if (!tripInfo.getDestination().equals(this.getDestination())) {
+        if (!Objects.equals(tripInfo.getDestination(), this.getDestination())) {
             return false;
         }
 
-        return tripInfo.getBoardType().equalsIgnoreCase(this.boardType)
-                && tripInfo.getTravellerName().equalsIgnoreCase(this.getTravellerName());
+        if (tripInfo.getBoardType() == null || !tripInfo.getBoardType().equalsIgnoreCase(this.boardType)) {
+            return false;
+        }
+
+        return tripInfo.getTravellerName() != null && tripInfo.getTravellerName().equalsIgnoreCase(this.getTravellerName());
     }
 }
