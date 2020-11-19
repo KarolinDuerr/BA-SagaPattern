@@ -10,9 +10,6 @@ import org.springframework.web.server.ResponseStatusException;
 import saga.netflix.conductor.hotelservice.controller.IHotelService;
 import saga.netflix.conductor.hotelservice.error.HotelServiceException;
 import saga.netflix.conductor.hotelservice.model.HotelBooking;
-import saga.netflix.conductor.hotelservice.model.HotelBookingInformation;
-import saga.netflix.conductor.hotelservice.api.dto.BookHotelRequest;
-import saga.netflix.conductor.hotelservice.api.dto.BookHotelResponse;
 import saga.netflix.conductor.hotelservice.model.dto.HotelBookingDTO;
 
 import java.util.List;
@@ -55,26 +52,5 @@ public class HotelResource {
         }
 
         return ResponseEntity.ok(dtoConverter.convertToHotelBookingDTO(hotelBooking));
-    }
-
-    @PostMapping
-    public ResponseEntity<BookHotelResponse> bookHotel(@RequestBody final BookHotelRequest bookHotelRequest) throws HotelServiceException {
-        logger.info("Book hotel: " + bookHotelRequest);
-
-        if (bookHotelRequest == null || bookHotelRequest.getTravellerName() == null || bookHotelRequest.getTravellerName().isEmpty()) {
-            logger.info("BookHotelRequest is missing or incomplete, therefore no hotel can be booked.");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The information to book the hotel is missing or incomplete.");
-        }
-
-        HotelBookingInformation requestedHotelBooking = dtoConverter.convertToHotelBookingInformation(bookHotelRequest);
-        HotelBooking receivedHotelBooking = hotelService.bookHotel(bookHotelRequest.getTravellerName(), requestedHotelBooking);
-
-        if (receivedHotelBooking == null) {
-            logger.info("Something went wrong during booking.");
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong during booking.");
-        }
-
-        return ResponseEntity.ok(new BookHotelResponse(receivedHotelBooking.getId(),
-                receivedHotelBooking.getHotelName(), receivedHotelBooking.getBookingStatus().toString()));
     }
 }
