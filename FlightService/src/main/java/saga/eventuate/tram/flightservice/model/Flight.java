@@ -2,6 +2,7 @@ package saga.eventuate.tram.flightservice.model;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "flights")
@@ -98,7 +99,7 @@ public class Flight {
 
         Flight flight = (Flight) o;
 
-        if (flight.getId() == this.getId()) {
+        if (Objects.equals(flight.getId(), this.getId())) {
             return true;
         }
 
