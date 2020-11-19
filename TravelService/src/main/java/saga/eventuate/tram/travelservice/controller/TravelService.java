@@ -4,7 +4,7 @@ import io.eventuate.tram.sagas.orchestration.SagaInstanceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import saga.eventuate.tram.travelservice.error.BookingNotFound;
 import saga.eventuate.tram.travelservice.error.ErrorType;
@@ -20,7 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-@Component("TravelService")
+@Service("TravelService")
 @Transactional
 public class TravelService implements  ITravelService {
 

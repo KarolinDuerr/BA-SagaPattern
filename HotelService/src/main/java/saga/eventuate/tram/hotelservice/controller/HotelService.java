@@ -3,7 +3,7 @@ package saga.eventuate.tram.hotelservice.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import saga.eventuate.tram.hotelservice.error.BookingNotFound;
 import saga.eventuate.tram.hotelservice.error.ErrorType;
@@ -17,7 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-@Component("HotelService")
+@Service("HotelService")
 @Transactional
 public class HotelService implements IHotelService {
 
@@ -64,14 +64,14 @@ public class HotelService implements IHotelService {
     public HotelBooking bookHotel(final String travellerName, final HotelBookingInformation hotelBooking) throws HotelException {
         logger.info("Saving the booked Hotel: " + hotelBooking);
 
-        HotelBooking newHotelBooking = findAvailableHotel(travellerName, hotelBooking); // TODO --> unterscheiden zwischen normaler HotelBuchung und TripBuchung? siehe flights
+        HotelBooking newHotelBooking = findAvailableHotel(travellerName, hotelBooking);
 
         // no trip assigned therefore the booking has already been confirmed
         if (newHotelBooking.getBookingInformation() != null && newHotelBooking.getBookingInformation().getTripId() == -1) {
             newHotelBooking.confirm();
         }
 
-        //ensure idempotence of hotel bookings
+        // ensure idempotence of hotel bookings
         HotelBooking alreadyExistingHotelBooking = checkIfBookingAlreadyExists(newHotelBooking);
         if (alreadyExistingHotelBooking != null) {
             return alreadyExistingHotelBooking;
@@ -104,9 +104,8 @@ public class HotelService implements IHotelService {
     public void cancelHotelBooking(final Long bookingId, final Long tripId) {
         logger.info("Cancelling the booked hotel with ID " + bookingId);
 
-        HotelBooking hotelBooking;
         try {
-            hotelBooking = getHotelBooking(bookingId);
+            HotelBooking hotelBooking = getHotelBooking(bookingId);
 
             if (hotelBooking.getBookingInformation() == null || hotelBooking.getBookingInformation().getTripId() != tripId) {
                 throw new BookingNotFound(bookingId);
@@ -123,9 +122,8 @@ public class HotelService implements IHotelService {
     public void confirmHotelBooking(final Long bookingId, final Long tripId) {
         logger.info("Confirming the booked hotel with ID " + bookingId);
 
-        HotelBooking hotelBooking;
         try {
-            hotelBooking = getHotelBooking(bookingId);
+            HotelBooking hotelBooking = getHotelBooking(bookingId);
 
             if (hotelBooking.getBookingInformation() == null || hotelBooking.getBookingInformation().getTripId() != tripId) {
                 throw new BookingNotFound(bookingId);
@@ -148,7 +146,7 @@ public class HotelService implements IHotelService {
         return new HotelBooking("Example_Hotel", travellerName, hotelBookingInformation);
     }
 
-    //ensure idempotence of hotel bookings
+    // ensure idempotence of hotel bookings
     private HotelBooking checkIfBookingAlreadyExists(final HotelBooking hotelBooking) {
         List<HotelBooking> customerTrips =
                 hotelBookingRepository.findByTravellerName(hotelBooking.getTravellerName());

@@ -3,7 +3,7 @@ package saga.eventuate.tram.flightservice.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import saga.eventuate.tram.flightservice.error.BookingNotFound;
 import saga.eventuate.tram.flightservice.error.ErrorType;
@@ -14,7 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-@Component("FlightService")
+@Service("FlightService")
 @Transactional
 public class FlightService implements IFlightService {
 
@@ -61,7 +61,7 @@ public class FlightService implements IFlightService {
     public FlightInformation bookFlight(final FlightInformation flightInformation) {
         logger.info("Saving the flight information: " + flightInformation);
 
-        //ensure idempotence of flight bookings
+        // ensure idempotence of flight bookings
         FlightInformation alreadyExistingFlightInformation = checkIfBookingAlreadyExists(flightInformation);
         if (alreadyExistingFlightInformation != null) {
             return alreadyExistingFlightInformation;
@@ -78,7 +78,7 @@ public class FlightService implements IFlightService {
 
         FlightInformation flightInformation = findAvailableFlight(findAndBookFlightInformation);
 
-        //ensure idempotence of flight bookings
+        // ensure idempotence of flight bookings
         FlightInformation alreadyExistingFlightInformation = checkIfBookingAlreadyExists(flightInformation);
         if (alreadyExistingFlightInformation != null) {
             return alreadyExistingFlightInformation;
@@ -111,9 +111,8 @@ public class FlightService implements IFlightService {
     public void cancelFlightBooking(final Long bookingId, final Long tripId) {
         logger.info("Cancelling the booked flight with ID " + bookingId);
 
-        FlightInformation flightInformation;
         try {
-            flightInformation = getFlightInformation(bookingId);
+            FlightInformation flightInformation = getFlightInformation(bookingId);
 
             if (flightInformation.getTripId() != tripId) {
                 throw new BookingNotFound(bookingId);
@@ -144,7 +143,7 @@ public class FlightService implements IFlightService {
                 flightInformation.getTripId());
     }
 
-    //ensure idempotence of flight bookings
+    // ensure idempotence of flight bookings
     private FlightInformation checkIfBookingAlreadyExists(final FlightInformation flightInformation) {
         List<FlightInformation> customerTrips =
                 flightInformationRepository.findByTravellerName(flightInformation.getTravellerName());
