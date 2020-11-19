@@ -176,12 +176,12 @@ public class FlightInformation {
             return true;
         }
 
-        if (Objects.equals(flightInformation.getTravellerName(), this.getTravellerName())) {
-            return true;
+        if (!Objects.equals(flightInformation.getTravellerName(), this.getTravellerName())) {
+            return false;
         }
 
-        if (Objects.equals(flightInformation.getOutboundFlight(), this.getOutboundFlight()) && Objects.equals(flightInformation.getReturnFlight(), this.getReturnFlight())) {
-            return true;
+        if (!Objects.equals(flightInformation.getOutboundFlight(), this.getOutboundFlight()) || !Objects.equals(flightInformation.getReturnFlight(), this.getReturnFlight())) {
+            return false;
         }
 
         return Objects.equals(flightInformation.getTripId(), this.getTripId());
