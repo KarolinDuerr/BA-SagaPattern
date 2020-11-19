@@ -29,7 +29,7 @@ services:
     networks:
       - travel_application_conductor
     ports:
-      - 8082:8082
+      - 8081:8081
     depends_on:
       - mysql
       - conductor-server-ui
@@ -50,7 +50,7 @@ services:
     networks:
       - travel_application_conductor
     ports:
-      - 8083:8083
+      - 8082:8082
     depends_on:
       - mysql
       - conductor-server-ui
