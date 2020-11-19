@@ -89,7 +89,8 @@ public class HotelService implements IHotelService {
         hotelBooking = geTripHotelBookingByName(travellerName, tripId);
 
         if (hotelBooking == null) {
-            logger.info(String.format("No hotel has been booked for this trip (ID: %s) yet, therefore no need to cancel.", tripId));
+            logger.info(String.format("No hotel has been booked for this trip (ID: %s) yet, therefore no need to " +
+                    "cancel.", tripId));
             // no hotel has been booked for this trip yet, therefore no need to cancel
             return;
         }
@@ -151,11 +152,7 @@ public class HotelService implements IHotelService {
         Optional<HotelBooking> existingHotelBooking =
                 customerTrips.stream().filter(hotelInfo -> hotelInfo.getBookingInformation().getTripId() == tripId).findFirst();
 
-        if (!existingHotelBooking.isPresent()) {
-            // no hotel has been booked for this trip yet, therefore no need to cancel
-            return null;
-        }
-
-        return existingHotelBooking.get();
+        // if no hotel booking can be found than no hotel has been booked for this trip yet, therefore no need to cancel
+        return existingHotelBooking.orElse(null);
     }
 }

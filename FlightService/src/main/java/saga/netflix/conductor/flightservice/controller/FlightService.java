@@ -145,11 +145,8 @@ public class FlightService implements IFlightService {
         Optional<FlightInformation> existingFlightInformation =
                 customerTrips.stream().filter(flightInfo -> flightInfo.getTripId() == tripId).findFirst();
 
-        if (!existingFlightInformation.isPresent()) {
-            // no flight has been booked for this trip yet, therefore no need to cancel
-            return null;
-        }
+        // if no hotel booking can be found than no hotel has been booked for this trip yet, therefore no need to cancel
+        return existingFlightInformation.orElse(null);
 
-        return existingFlightInformation.get();
     }
 }
