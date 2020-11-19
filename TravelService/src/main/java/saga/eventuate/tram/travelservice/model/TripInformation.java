@@ -3,7 +3,6 @@ package saga.eventuate.tram.travelservice.model;
 import saga.eventuate.tram.travelservice.error.UnsupportedStateTransition;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "tripsInformation")
@@ -142,6 +141,7 @@ public class TripInformation {
         switch (this.bookingStatus) {
             case PENDING:
             case CONFIRMED:
+            case CANCELLED:
                 this.bookingStatus = BookingStatus.CANCELLED;
                 break;
             default:
@@ -153,6 +153,9 @@ public class TripInformation {
     public void reject(final BookingStatus bookingStatus) {
         switch (this.bookingStatus) {
             case PENDING:
+            case REJECTED_NO_FLIGHT_AVAILABLE:
+            case REJECTED_NO_HOTEL_AVAILABLE:
+            case REJECTED_UNKNOWN:
                 this.bookingStatus = bookingStatus;
                 break;
             default:
@@ -164,6 +167,7 @@ public class TripInformation {
     public void confirm() {
         switch (this.bookingStatus) {
             case PENDING:
+            case CONFIRMED:
                 this.bookingStatus = BookingStatus.CONFIRMED;
                 break;
             default:

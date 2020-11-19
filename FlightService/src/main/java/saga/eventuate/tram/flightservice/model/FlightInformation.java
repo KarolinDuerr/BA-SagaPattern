@@ -124,6 +124,8 @@ public class FlightInformation {
     public void cancel(final BookingStatus bookingStatus) {
         switch (this.bookingStatus) {
             case PENDING:
+            case CONFIRMED:
+            case CANCELLED:
                 this.bookingStatus = bookingStatus;
                 break;
             default:
@@ -135,6 +137,7 @@ public class FlightInformation {
     public void confirm() {
         switch (this.bookingStatus) {
             case PENDING:
+            case CONFIRMED:
                 this.bookingStatus = BookingStatus.CONFIRMED;
                 break;
             default:
