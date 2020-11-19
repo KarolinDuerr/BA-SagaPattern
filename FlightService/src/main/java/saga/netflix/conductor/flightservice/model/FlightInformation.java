@@ -5,6 +5,7 @@ import saga.netflix.conductor.flightservice.error.FlightException;
 import saga.netflix.conductor.flightservice.error.UnsupportedStateTransition;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "flightsInformation")
@@ -171,17 +172,18 @@ public class FlightInformation {
 
         FlightInformation flightInformation = (FlightInformation) o;
 
-        if (flightInformation.getId() == this.getId()) {
+        if (Objects.equals(flightInformation.getId(), this.getId())) {
             return true;
         }
 
-        if (!flightInformation.getTravellerName().equals(this.getTravellerName())) {
-            return false;
-        }
-
-        if (flightInformation.getOutboundFlight().equals(this.getOutboundFlight()) && flightInformation.getReturnFlight().equals(this.getReturnFlight())) {
+        if (Objects.equals(flightInformation.getTravellerName(), this.getTravellerName())) {
             return true;
         }
-        return false;
+
+        if (Objects.equals(flightInformation.getOutboundFlight(), this.getOutboundFlight()) && Objects.equals(flightInformation.getReturnFlight(), this.getReturnFlight())) {
+            return true;
+        }
+
+        return Objects.equals(flightInformation.getTripId(), this.getTripId());
     }
 }
