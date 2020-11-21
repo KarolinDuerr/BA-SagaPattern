@@ -107,6 +107,10 @@ public class Flight {
             return false;
         }
 
-        return flight.getFromAirport().equalsIgnoreCase(this.getFromAirport()) && flight.getToAirport().equalsIgnoreCase(this.getToAirport());
+        if (flight.getFromAirport() == null || !flight.getFromAirport().equalsIgnoreCase(this.getFromAirport())) {
+            return false;
+        }
+
+        return flight.getToAirport() != null && flight.getToAirport().equalsIgnoreCase(this.getToAirport());
     }
 }

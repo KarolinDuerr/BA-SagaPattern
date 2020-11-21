@@ -1,4 +1,4 @@
-package saga.eventuate.tram.flightservice.api.dto;
+package saga.eventuate.tram.flightservice.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 

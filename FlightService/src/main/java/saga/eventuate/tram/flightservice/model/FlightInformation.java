@@ -116,8 +116,7 @@ public class FlightInformation {
 
         if (returnFlight.getFlightDate().before(outboundFlight.getFlightDate())) {
             throw new FlightException(ErrorType.INVALID_PARAMETER, "The date of the return flight is before the " +
-                    "actual " +
-                    "outbound flight.");
+                    "actual outbound flight.");
         }
     }
 
@@ -142,8 +141,7 @@ public class FlightInformation {
                 break;
             default:
                 throw new UnsupportedStateTransition("The flight booking  can only be confirmed if its still PENDING," +
-                        " " +
-                        "but the current status is: " + getBookingStatus());
+                        " but the current status is: " + getBookingStatus());
         }
     }
 

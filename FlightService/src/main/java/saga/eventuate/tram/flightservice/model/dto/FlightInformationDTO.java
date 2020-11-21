@@ -1,6 +1,5 @@
 package saga.eventuate.tram.flightservice.model.dto;
 
-import saga.eventuate.tram.flightservice.api.dto.FlightDTO;
 import saga.eventuate.tram.flightservice.model.BookingStatus;
 
 public class FlightInformationDTO {

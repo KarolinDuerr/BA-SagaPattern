@@ -1,7 +1,7 @@
 package saga.eventuate.tram.flightservice.resources;
 
 import saga.eventuate.tram.flightservice.api.dto.BookFlightCommand;
-import saga.eventuate.tram.flightservice.api.dto.FlightDTO;
+import saga.eventuate.tram.flightservice.model.dto.FlightDTO;
 import saga.eventuate.tram.flightservice.api.dto.LocationDTO;
 import saga.eventuate.tram.flightservice.error.ConverterException;
 import saga.eventuate.tram.flightservice.error.ErrorType;
@@ -54,7 +54,8 @@ public class DtoConverter {
         checkIfInformationIsMissing(flightInformation);
         FlightDTO outboundFlight = convertToFlightDTO(flightInformation.getOutboundFlight());
         FlightDTO returnFlight = convertToFlightDTO(flightInformation.getReturnFlight());
-        return new FlightInformationDTO(flightInformation.getId(), outboundFlight, returnFlight, flightInformation.getTravellerName(),
+        return new FlightInformationDTO(flightInformation.getId(), outboundFlight, returnFlight,
+                flightInformation.getTravellerName(),
                 flightInformation.getBookingStatus(), flightInformation.getTripId());
     }
 
@@ -66,19 +67,22 @@ public class DtoConverter {
         return new Location(locationDTO.getCountry(), locationDTO.getCity());
     }
 
-    private FlightDTO convertToFlightDTO(final Flight flight) {
+    private FlightDTO convertToFlightDTO(final Flight flight) throws ConverterException {
         if (flight == null) {
-            return null;
+            throw new ConverterException("Information about a flight is missing.");
         }
 
         return new FlightDTO(flight.getCountry(), flight.getFromAirport(), flight.getToAirport(),
                 flight.getFlightDate());
     }
 
-
     private void checkIfInformationIsMissing(final BookFlightCommand bookFlightCommand) throws ConverterException {
         if (bookFlightCommand.getOutboundFlightDate() == null || bookFlightCommand.getReturnFlightDate() == null) {
             throw new ConverterException("Information about a flight date is missing.");
+        }
+
+        if (bookFlightCommand.getTravellerName() == null || bookFlightCommand.getTravellerName().isEmpty()) {
+            throw new ConverterException("Traveller name information about a flight is missing.");
         }
     }
 
@@ -87,5 +91,4 @@ public class DtoConverter {
             throw new ConverterException("Information for an included flight is missing.");
         }
     }
-
 }

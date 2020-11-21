@@ -4,7 +4,6 @@ import saga.eventuate.tram.flightservice.error.ErrorType;
 import saga.eventuate.tram.flightservice.error.FlightException;
 
 import java.util.Date;
-import java.util.List;
 
 public class FindAndBookFlightInformation {
 
@@ -102,8 +101,7 @@ public class FindAndBookFlightInformation {
 
         if (returnFlightDate.before(outboundFlightDate)) {
             throw new FlightException(ErrorType.INVALID_PARAMETER, "The date of the return flight is before the " +
-                    "actual " +
-                    "outbound flight.");
+                    "actual outbound flight.");
         }
     }
 
