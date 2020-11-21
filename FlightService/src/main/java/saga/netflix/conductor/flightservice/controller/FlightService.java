@@ -60,7 +60,7 @@ public class FlightService implements IFlightService {
 
         FlightInformation flightInformation = findAvailableFlight(findAndBookFlightInformation);
 
-        //ensure idempotence of flight bookings
+        // ensure idempotence of flight bookings
         FlightInformation alreadyExistingFlightInformation = checkIfBookingAlreadyExists(flightInformation);
         if (alreadyExistingFlightInformation != null) {
             return alreadyExistingFlightInformation;
@@ -106,7 +106,7 @@ public class FlightService implements IFlightService {
                 flightInformation.getTripId());
     }
 
-    //ensure idempotence of flight bookings
+    // ensure idempotence of flight bookings
     private FlightInformation checkIfBookingAlreadyExists(final FlightInformation flightInformation) {
         List<FlightInformation> customerTrips =
                 flightInformationRepository.findByTravellerName(flightInformation.getTravellerName());

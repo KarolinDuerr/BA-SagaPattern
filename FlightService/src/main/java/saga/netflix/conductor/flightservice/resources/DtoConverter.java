@@ -54,7 +54,8 @@ public class DtoConverter {
         checkIfInformationIsMissing(flightInformation);
         FlightDTO outboundFlight = convertToFlightDTO(flightInformation.getOutboundFlight());
         FlightDTO returnFlight = convertToFlightDTO(flightInformation.getReturnFlight());
-        return new FlightInformationDTO(flightInformation.getId(), outboundFlight, returnFlight, flightInformation.getTravellerName(),
+        return new FlightInformationDTO(flightInformation.getId(), outboundFlight, returnFlight,
+                flightInformation.getTravellerName(),
                 flightInformation.getBookingStatus(), flightInformation.getTripId());
     }
 
@@ -66,9 +67,9 @@ public class DtoConverter {
         return new Location(locationDTO.getCountry(), locationDTO.getCity());
     }
 
-    private FlightDTO convertToFlightDTO(final Flight flight) {
+    private FlightDTO convertToFlightDTO(final Flight flight) throws ConverterException {
         if (flight == null) {
-            return null;
+            throw new ConverterException("Information about a flight is missing.");
         }
 
         return new FlightDTO(flight.getCountry(), flight.getFromAirport(), flight.getToAirport(),
@@ -81,7 +82,7 @@ public class DtoConverter {
         }
 
         if (bookFlightRequest.getTravellerName() == null || bookFlightRequest.getTravellerName().isEmpty()) {
-            throw new ConverterException("Information about a flight is missing.");
+            throw new ConverterException("Traveller name information about a flight is missing.");
         }
     }
 

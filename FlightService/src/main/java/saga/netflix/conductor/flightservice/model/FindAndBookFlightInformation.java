@@ -101,8 +101,7 @@ public class FindAndBookFlightInformation {
 
         if (returnFlightDate.before(outboundFlightDate)) {
             throw new FlightException(ErrorType.INVALID_PARAMETER, "The date of the return flight is before the " +
-                    "actual " +
-                    "outbound flight.");
+                    "actual outbound flight.");
         }
     }
 
