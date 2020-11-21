@@ -60,8 +60,8 @@ public class DtoConverter {
         }
 
         return new HotelBookingInformationDTO(convertToDestinationDTO(hotelBookingInformation.getDestination()),
-                convertToStayDurationDTO(hotelBookingInformation.getDuration()),
-                hotelBookingInformation.getBoardType(), hotelBookingInformation.getTripId());
+                convertToStayDurationDTO(hotelBookingInformation.getDuration()), hotelBookingInformation.getBoardType(),
+                hotelBookingInformation.getTripId());
     }
 
     private Destination convertToDestination(final DestinationDTO destinationDTO) throws ConverterException {

@@ -13,7 +13,7 @@ import java.util.Objects;
 public class FlightInformation {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Version

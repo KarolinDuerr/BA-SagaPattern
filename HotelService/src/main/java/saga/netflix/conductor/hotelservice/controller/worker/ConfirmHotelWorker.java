@@ -61,7 +61,7 @@ public class ConfirmHotelWorker implements Worker {
 
         hotelService.confirmHotelBooking(bookHotelResponse.getBookingId(), bookHotelResponse.getTripId());
         taskResult.setStatus(TaskResult.Status.COMPLETED);
-        logger.info("Hotel confirmed: " + bookHotelResponse.getBookingId()); // TODO exception berücksichtigen?
+        logger.info("Hotel confirmed: " + bookHotelResponse.getBookingId());
 
         return taskResult;
     }

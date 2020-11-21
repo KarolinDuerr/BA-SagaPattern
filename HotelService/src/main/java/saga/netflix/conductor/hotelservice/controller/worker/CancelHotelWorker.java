@@ -60,7 +60,7 @@ public class CancelHotelWorker implements Worker {
 
         hotelService.cancelHotelBooking(bookHotelRequest.getTripId(), bookHotelRequest.getTravellerName());
         taskResult.setStatus(TaskResult.Status.COMPLETED);
-        logger.info("Hotel successfully cancelled which is associated with Trip: " + bookHotelRequest.getTripId()); // TODO exception berücksichtigen?
+        logger.info("Hotel successfully cancelled which is associated with Trip: " + bookHotelRequest.getTripId());
 
         return taskResult;
     }
