@@ -54,9 +54,8 @@ public class DtoConverter {
         LocationDTO start = convertToLocationDTO(tripInformation.getStart());
         LocationDTO destination = convertToLocationDTO(tripInformation.getDestination());
         return new TripInformationDTO(tripInformation.getId(), tripDuration, start, destination,
-                tripInformation.getTravellerName(), tripInformation.getBoardType(),
-                tripInformation.getCustomerId(), tripInformation.getBookingStatus(), tripInformation.getHotelId(),
-                tripInformation.getFlightId());
+                tripInformation.getTravellerName(), tripInformation.getBoardType(), tripInformation.getCustomerId(),
+                tripInformation.getBookingStatus(), tripInformation.getHotelId(), tripInformation.getFlightId());
     }
 
     private TripDuration convertToTripDuration(final TripDurationDTO tripDurationDTO) throws ConverterException,

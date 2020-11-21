@@ -7,12 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-//import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
-//import org.springframework.web.reactive.function.client.ClientResponse;
-//import org.springframework.web.reactive.function.client.WebClient;
-//import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -28,9 +24,6 @@ public class BookTripSaga {
 
     @Autowired
     private final RestTemplate restTemplate;
-
-    // Alternative zu RestTemplate
-//    private final WebClient webClient;
 
     @Autowired
     private final ObjectMapper objectMapper;
@@ -53,12 +46,6 @@ public class BookTripSaga {
         requestHeader = new HttpHeaders();
         requestHeader.setContentType(MediaType.APPLICATION_JSON);
         this.taskDefinitions = new LinkedList<>();
-
-        // Alternative zu RestTemplate
-//        webClient = WebClient.builder()
-//                .baseUrl(conductorServerUri)
-//                .defaultHeader(HttpHeaders.CONTENT_TYPE, String.valueOf(MediaType.APPLICATION_JSON))
-//                .build();
     }
 
     public void registerWorkflowAndTasks() {
@@ -122,16 +109,5 @@ public class BookTripSaga {
         HttpEntity<JsonNode> request = new HttpEntity<>(workflowToRegister, requestHeader);
         restTemplate.postForObject(conductorServerUri + WORKFLOW_DEFINITION_ENDPOINT, request, Void.class);
         logger.info(String.format("Workflow definition (%s) trying to register.", workflowToRegister.get("name")));
-
-        // Alternative: // TODO entscheiden
-//        String response = webClient
-//                .method(HttpMethod.POST)
-//                .uri(WORKFLOW_DEFINITION_ENDPOINT)
-//                .bodyValue(workflowToRegister)
-//                .retrieve()
-//                .bodyToMono(String.class)
-//                .block();
-//
-//        logger.info(String.format("Workflow definition (%s) successful registered.", workflowToRegister.get("name")));
     }
 }

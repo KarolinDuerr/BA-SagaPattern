@@ -85,7 +85,7 @@ public class ConfirmTripWorker implements Worker {
 
         travelService.confirmTripBooking(bookHotelResponse.getTripId(), bookHotelResponse.getBookingId(),
                 bookFlightResponse.getFlightBookingId());
-        logger.info("Trip successfully confirmed: " + bookHotelResponse.getTripId()); // TODO exception berücksichtigen?
+        logger.info("Trip successfully confirmed: " + bookHotelResponse.getTripId());
     }
 
 }

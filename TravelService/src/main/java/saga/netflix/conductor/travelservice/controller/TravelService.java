@@ -69,7 +69,7 @@ public class TravelService implements ITravelService {
     public TripInformation bookTrip(final TripInformation tripInformation) {
         logger.info("Saving the booked Trip: " + tripInformation);
 
-        //ensure idempotence of trip bookings
+        // ensure idempotence of trip bookings
         TripInformation alreadyExistingTripBooking = checkIfBookingAlreadyExists(tripInformation);
         if (alreadyExistingTripBooking != null) {
             return alreadyExistingTripBooking;
@@ -77,7 +77,7 @@ public class TravelService implements ITravelService {
 
         tripInformationRepository.save(tripInformation);
 
-        // Create and start the BookTripSaga with necessary information
+        // create and start the BookTripSaga with necessary information
         BookTripSagaData bookTripSagaData = new BookTripSagaData(tripInformation.getId(), tripInformation);
         sagaInstanceFactory.startBookTripSaga(bookTripSagaData);
 
@@ -88,9 +88,8 @@ public class TravelService implements ITravelService {
     public void rejectTrip(final Long tripId, final RejectionReason rejectionReason) {
         logger.info("Rejecting the booked trip with ID " + tripId);
 
-        TripInformation tripInformation = null;
         try {
-            tripInformation = getTripInformation(tripId);
+            TripInformation tripInformation = getTripInformation(tripId);
 
             BookingStatus newBookingStatus = convertToBookingStatus(rejectionReason);
             tripInformation.reject(newBookingStatus);
@@ -104,9 +103,8 @@ public class TravelService implements ITravelService {
     public void confirmTripBooking(final Long tripId, final long hotelId, final long flightId) {
         logger.info("Confirming the booked trip with ID " + tripId);
 
-        TripInformation tripInformation = null;
         try {
-            tripInformation = getTripInformation(tripId);
+            TripInformation tripInformation = getTripInformation(tripId);
 
             tripInformation.setHotelId(hotelId);
             tripInformation.setFlightId(flightId);
@@ -117,7 +115,7 @@ public class TravelService implements ITravelService {
         }
     }
 
-    //ensure idempotence of trip bookings
+    // ensure idempotence of trip bookings
     private TripInformation checkIfBookingAlreadyExists(final TripInformation tripInformation) {
         List<TripInformation> customerTrips =
                 tripInformationRepository.findByTravellerName(tripInformation.getTravellerName());
