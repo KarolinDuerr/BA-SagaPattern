@@ -6,6 +6,11 @@ public class NoFlightAvailable implements Command {
 
     private final long tripId;
 
+    // default constructor necessary for Eventuate Framework
+    private NoFlightAvailable() {
+        tripId = -1;
+    }
+
     public NoFlightAvailable(final long tripId) {
         this.tripId = tripId;
     }

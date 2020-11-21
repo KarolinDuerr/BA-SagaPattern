@@ -8,6 +8,7 @@ public class CancelHotelBooking implements Command {
 
     private final long bookingId;
 
+    // default constructor necessary for Eventuate Framework
     private CancelHotelBooking() {
         bookingId = -1;
         tripId = -1;

@@ -8,9 +8,10 @@ public class ConfirmHotelBooking implements Command {
 
     private final long bookingId;
 
-    private ConfirmHotelBooking(final long bookingId) {
-        tripId = -1; // no trip assigned to the confirmed booking
-        this.bookingId = bookingId;
+    // default constructor necessary for Eventuate Framework
+    private ConfirmHotelBooking() {
+        tripId = -1;
+        bookingId = -1;
     }
 
     public ConfirmHotelBooking(final long bookingId, final long tripId) {

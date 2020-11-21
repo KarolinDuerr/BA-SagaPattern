@@ -8,9 +8,10 @@ public class CancelFlightBooking implements Command {
 
     private final long bookingId;
 
-    private CancelFlightBooking(final long bookingId) {
-        tripId = -1; // no trip assigned to the confirmed booking
-        this.bookingId = bookingId;
+    // default constructor necessary for Eventuate Framework
+    private CancelFlightBooking() {
+        tripId = -1;
+        bookingId = -1;
     }
 
     public CancelFlightBooking(final long bookingId, final long tripId) {
