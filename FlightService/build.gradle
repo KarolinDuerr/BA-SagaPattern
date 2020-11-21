@@ -21,6 +21,8 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
     compile "org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion"
     compile "org.springframework.boot:spring-boot-starter-jetty:$springBootVersion"
+    // enable health and info endpoint
+    compile "org.springframework.boot:spring-boot-starter-actuator"
 
     // MySQL
     compile "mysql:mysql-connector-java:$mySQLVersion"
