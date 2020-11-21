@@ -11,7 +11,7 @@ import java.util.Objects;
 public class HotelBooking {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Version

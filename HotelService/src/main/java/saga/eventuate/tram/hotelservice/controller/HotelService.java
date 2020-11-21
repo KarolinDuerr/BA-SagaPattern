@@ -119,7 +119,8 @@ public class HotelService implements IHotelService {
     }
 
     // only mocking the general function of this method
-    private HotelBooking findAvailableHotel(final String travellerName, final HotelBookingInformation hotelBookingInformation) throws HotelException {
+    private HotelBooking findAvailableHotel(final String travellerName,
+                                            final HotelBookingInformation hotelBookingInformation) throws HotelException {
         if (hotelBookingInformation.getDestination().getCountry().equalsIgnoreCase("Provoke hotel failure")) {
             logger.info("Provoked hotel exception: no available hotel for trip: " + hotelBookingInformation.getTripId());
             throw new HotelException(ErrorType.NO_AVAILABLE_HOTEL, "No available flight found.");
