@@ -8,9 +8,9 @@ public class ConfirmHotelBooking implements Command {
 
     private final long bookingId;
 
-    private ConfirmHotelBooking() {
-        bookingId = -1;
-        tripId = -1;
+    private ConfirmHotelBooking(final long bookingId) {
+        tripId = -1; // no trip assigned to the confirmed booking
+        this.bookingId = bookingId;
     }
 
     public ConfirmHotelBooking(final long bookingId, final long tripId) {

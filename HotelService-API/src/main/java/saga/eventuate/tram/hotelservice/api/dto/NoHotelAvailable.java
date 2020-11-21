@@ -6,10 +6,6 @@ public class NoHotelAvailable implements Command {
 
     private final long tripId;
 
-    private NoHotelAvailable() {
-        tripId = -1;
-    }
-
     public NoHotelAvailable(final long tripId) {
         this.tripId = tripId;
     }

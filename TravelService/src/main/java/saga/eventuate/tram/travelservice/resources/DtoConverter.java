@@ -29,7 +29,7 @@ public class DtoConverter {
                 bookTripRequest.getBoardType(), bookTripRequest.getCustomerId());
     }
 
-   public List<TripInformationDTO> convertToTripInformationDTOList(final List<TripInformation> tripsInformation) throws ConverterException {
+    public List<TripInformationDTO> convertToTripInformationDTOList(final List<TripInformation> tripsInformation) throws ConverterException {
         if (tripsInformation == null) {
             throw new ConverterException(ErrorType.INTERNAL_ERROR, "The generated trips information could not be " +
                     "received.");
@@ -54,9 +54,8 @@ public class DtoConverter {
         LocationDTO start = convertToLocationDTO(tripInformation.getStart());
         LocationDTO destination = convertToLocationDTO(tripInformation.getDestination());
         return new TripInformationDTO(tripInformation.getId(), tripDuration, start, destination,
-                tripInformation.getTravellerName(), tripInformation.getBoardType(),
-                tripInformation.getCustomerId(), tripInformation.getBookingStatus(), tripInformation.getHotelId(),
-                tripInformation.getFlightId());
+                tripInformation.getTravellerName(), tripInformation.getBoardType(), tripInformation.getCustomerId(),
+                tripInformation.getBookingStatus(), tripInformation.getHotelId(), tripInformation.getFlightId());
     }
 
     private TripDuration convertToTripDuration(final TripDurationDTO tripDurationDTO) throws ConverterException,

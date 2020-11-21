@@ -8,9 +8,9 @@ public class CancelFlightBooking implements Command {
 
     private final long bookingId;
 
-    private CancelFlightBooking() {
-        bookingId = -1;
-        tripId = -1;
+    private CancelFlightBooking(final long bookingId) {
+        tripId = -1; // no trip assigned to the confirmed booking
+        this.bookingId = bookingId;
     }
 
     public CancelFlightBooking(final long bookingId, final long tripId) {
