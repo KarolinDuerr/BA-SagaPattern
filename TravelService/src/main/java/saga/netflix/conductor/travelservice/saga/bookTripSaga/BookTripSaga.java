@@ -7,7 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
@@ -107,7 +109,14 @@ public class BookTripSaga {
 
     private void registerWorkflow(JsonNode workflowToRegister) {
         HttpEntity<JsonNode> request = new HttpEntity<>(workflowToRegister, requestHeader);
-        restTemplate.postForObject(conductorServerUri + WORKFLOW_DEFINITION_ENDPOINT, request, Void.class);
+        try {
+            restTemplate.postForObject(conductorServerUri + WORKFLOW_DEFINITION_ENDPOINT, request, Void.class);
+        } catch (HttpClientErrorException exception) {
+            if (exception.getStatusCode() == HttpStatus.CONFLICT && exception.getMessage().contains("already exists!")) {
+                // same workflow has already been registered
+                return;
+            }
+        }
         logger.info(String.format("Workflow definition (%s) trying to register.", workflowToRegister.get("name")));
     }
 }
