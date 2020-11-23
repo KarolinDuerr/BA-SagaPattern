@@ -66,6 +66,7 @@ public class CustomerService implements ICustomerService{
             logger.info(message);
             throw new CustomerException(ErrorType.NON_EXISTING_CUSTOMER, message);
         }
+        logger.info("Validation of customer successfull, customerID: " + customerId);
     }
 
     @Override
