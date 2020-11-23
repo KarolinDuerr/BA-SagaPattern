@@ -26,8 +26,8 @@ RUN apt-get update -y \
   && curl -sL https://deb.nodesource.com/setup_10.x |  bash - \
   && apt-get install -y nodejs build-essential
 
-# Get and install conductor
-RUN git clone https://github.com/Netflix/conductor.git \
+# Get and install conductor release version v2.30.3
+RUN git clone -b v2.30.3 https://github.com/Netflix/conductor.git \
   && cd conductor \
   && ./gradlew build -x test \
 
