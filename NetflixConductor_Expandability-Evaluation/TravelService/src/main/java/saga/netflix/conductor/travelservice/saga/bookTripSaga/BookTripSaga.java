@@ -59,6 +59,8 @@ public class BookTripSaga {
 
     private void getTaskDefinitions() {
         try {
+            final JsonNode validateCustomerTask =
+                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/validateCustomer.json")));
             final JsonNode bookHotelTask =
                     objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/bookHotel.json")));
             final JsonNode cancelHotelTask =
@@ -74,6 +76,7 @@ public class BookTripSaga {
             final JsonNode rejectTripTask =
                     objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/rejectTrip.json")));
 
+            taskDefinitions.add(validateCustomerTask);
             taskDefinitions.add(bookHotelTask);
             taskDefinitions.add(cancelHotelTask);
             taskDefinitions.add(bookFlightTask);

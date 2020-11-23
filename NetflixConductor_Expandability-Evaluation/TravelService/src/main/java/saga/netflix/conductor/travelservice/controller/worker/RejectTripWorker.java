@@ -86,6 +86,8 @@ public class RejectTripWorker implements Worker {
             return RejectionReason.NO_HOTEL_AVAILABLE;
         } else if (reason.contains(RejectionReason.NO_FLIGHT_AVAILABLE.toString())) {
             return RejectionReason.NO_FLIGHT_AVAILABLE;
+        } else if (reason.contains(RejectionReason.CUSTOMER_VALIDATION_FAILED.toString())) {
+            return RejectionReason.CUSTOMER_VALIDATION_FAILED;
         }
         return RejectionReason.REASON_UNKNOWN;
     }

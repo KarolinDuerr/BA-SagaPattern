@@ -5,6 +5,14 @@
   "version": 1,
   "tasks": [
     {
+      "name": "validateCustomer",
+      "taskReferenceName": "validateCustomer",
+      "inputParameters": {
+        "validateCustomerRequest": "${workflow.input.validateCustomerRequest}"
+      },
+      "type": "SIMPLE"
+    },
+    {
       "name": "bookHotel",
       "taskReferenceName": "bookHotel",
       "inputParameters": {
@@ -39,6 +47,7 @@
     }
   ],
   "inputParameters": [
+    "validateCustomerRequest",
     "bookHotelRequest",
     "bookFlightRequest"
   ],

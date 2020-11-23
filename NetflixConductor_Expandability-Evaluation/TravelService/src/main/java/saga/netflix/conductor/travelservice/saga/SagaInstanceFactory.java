@@ -5,6 +5,7 @@ import com.netflix.conductor.common.metadata.workflow.StartWorkflowRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import saga.netflix.conductor.customerservice.api.CustomerServiceTasks;
 import saga.netflix.conductor.hotelservice.api.HotelServiceTasks;
 import saga.netflix.conductor.travelservice.saga.bookTripSaga.BookTripSagaData;
 import saga.netlfix.conductor.flightservice.api.FlightServiceTasks;
@@ -37,6 +38,8 @@ public class SagaInstanceFactory {
         bookTripSagaRequest.setName(Sagas.BOOK_TRIP_SAGA);
 
         final Map<String, Object> inputParameters = new HashMap<>();
+        inputParameters.put(CustomerServiceTasks.TaskInput.VALIDATE_CUSTOMER_INPUT,
+                bookTripSagaData.getTripInformation().getCustomerId());
         // the input for the bookHotel task: "bookHotelRequest"
         inputParameters.put(HotelServiceTasks.TaskInput.BOOK_HOTEL_INPUT, bookTripSagaData.makeBookHotelRequest());
         // the input for the bookFlight task: "bookFlightRequest"

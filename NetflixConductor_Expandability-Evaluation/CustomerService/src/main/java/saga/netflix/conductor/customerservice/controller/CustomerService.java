@@ -64,9 +64,9 @@ public class CustomerService implements ICustomerService{
         if (customerId < 1) {
             String message = String.format("The customer (ID: %d) does not exist.", customerId);
             logger.info(message);
-            throw new CustomerException(ErrorType.NON_EXISTING_CUSTOMER, message);
+            throw new CustomerException(ErrorType.CUSTOMER_VALIDATION_FAILED, message);
         }
-        logger.info("Validation of customer successfull, customerID: " + customerId);
+        logger.info("Validation of customer successful, customerID: " + customerId);
     }
 
     @Override
