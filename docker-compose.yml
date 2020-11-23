@@ -83,6 +83,7 @@ services:
       - dynomite
     environment:
       - CONFIG_PROP=config.properties # dann zuerst dynomite und elasticsearch starten
+#      - LOG4J_PROP=log4j-file-appender.properties
       - WF_SERVER=http://localhost:8080/api/
     logging:
       driver: "json-file"
