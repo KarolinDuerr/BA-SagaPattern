@@ -138,7 +138,7 @@ services:
 
   mysql:
     image: library/mysql:5.6
-    container_name: mysql
+    container_name: mysql_conductor
     restart: always
     volumes:
       - travel_db_conductor:/var/lib/mysql
