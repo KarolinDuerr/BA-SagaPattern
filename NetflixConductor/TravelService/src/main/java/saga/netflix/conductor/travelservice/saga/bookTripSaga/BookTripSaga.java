@@ -5,11 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
@@ -51,6 +49,9 @@ public class BookTripSaga {
     }
 
     public void registerWorkflowAndTasks() {
+        // Server tasks a bit till its up and running --> wait so that registering is possible
+        waitForServerToBeAvailable();
+
         getTaskDefinitions();
         registerTasks();
         registerWorkflows();
@@ -118,5 +119,27 @@ public class BookTripSaga {
             }
         }
         logger.info(String.format("Workflow definition (%s) trying to register.", workflowToRegister.get("name")));
+    }
+
+    // TODO use springs Retryable instead?
+    private void waitForServerToBeAvailable() {
+        boolean serverUp = false;
+        while(!serverUp) {
+            try {
+                ResponseEntity<JsonNode> responseEntity = restTemplate.getForEntity(conductorServerUri + "/health", JsonNode.class);
+                serverUp = true;
+                String message = responseEntity == null ? "null" : responseEntity.getStatusCode() + " " + responseEntity.getBody();
+                logger.info("Response: " + message);
+            } catch (ResourceAccessException exception) {
+                // server not yet reachable
+                logger.info("Server not available yet. Retrying in 50s");
+                exception.printStackTrace();
+                try {
+                    Thread.sleep(50000);
+                } catch (InterruptedException e) {
+                    // ignore
+                }
+            }
+        }
     }
 }

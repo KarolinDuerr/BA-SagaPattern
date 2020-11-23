@@ -7,13 +7,11 @@ import com.netflix.conductor.common.utils.JsonMapperProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.web.client.RestTemplate;
 import saga.netflix.conductor.travelservice.saga.bookTripSaga.BookTripSaga;
 import saga.netflix.conductor.travelservice.saga.SagaInstanceFactory;
 
 @Configuration
-@EnableRetry
 public class ConductorConfiguration {
 
     @Value("${CONDUCTOR_SERVER_URI:conductor.server.uri}")
@@ -49,14 +47,7 @@ public class ConductorConfiguration {
     }
 
     @Bean
-//    @Retryable(value = {SocketException.class, RuntimeException.class, ConductorClientException.class}, maxAttempts
-//    = 10, backoff = @Backoff(delay = 20000))
     public BookTripSaga bookTripSaga(RestTemplate restTemplate, ObjectMapper objectMapper) {
-        try {
-            Thread.sleep(50000); // TODO
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         BookTripSaga bookTripSaga = new BookTripSaga(conductorServerUri, restTemplate, objectMapper);
         bookTripSaga.registerWorkflowAndTasks();
         return bookTripSaga;
