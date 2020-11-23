@@ -123,7 +123,7 @@ public class HotelService implements IHotelService {
                                             final HotelBookingInformation hotelBookingInformation) throws HotelException {
         if (hotelBookingInformation.getDestination().getCountry().equalsIgnoreCase("Provoke hotel failure")) {
             logger.info("Provoked hotel exception: no available hotel for trip: " + hotelBookingInformation.getTripId());
-            throw new HotelException(ErrorType.NO_AVAILABLE_HOTEL, "No available flight found.");
+            throw new HotelException(ErrorType.NO_AVAILABLE_HOTEL, "No available hotel found.");
         }
 
         return new HotelBooking("Example_Hotel", travellerName, hotelBookingInformation);
