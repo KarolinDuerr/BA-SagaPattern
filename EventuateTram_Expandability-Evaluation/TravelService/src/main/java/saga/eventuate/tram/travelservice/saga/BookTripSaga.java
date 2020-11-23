@@ -6,6 +6,9 @@ import io.eventuate.tram.sagas.orchestration.SagaDefinition;
 import io.eventuate.tram.sagas.simpledsl.SimpleSaga;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import saga.eventuate.tram.customerservice.api.CustomerServiceChannels;
+import saga.eventuate.tram.customerservice.api.dto.CustomerNotFound;
+import saga.eventuate.tram.customerservice.api.dto.ValidateCustomerCommand;
 import saga.eventuate.tram.flightservice.api.FlightServiceChannels;
 import saga.eventuate.tram.flightservice.api.dto.BookFlightResponse;
 import saga.eventuate.tram.flightservice.api.dto.CancelFlightBooking;
@@ -33,6 +36,10 @@ public class BookTripSaga implements SimpleSaga<BookTripSagaData> {
         this.sagaDefinition =
                 step()
                         .withCompensation(this::rejectBooking)
+                        .step()
+                        .invokeParticipant(this::validateCustomer)
+                        .onReply(CustomerNotFound.class, this::handleCustomerNotFoundReply)
+                        // no compensation necessary as a validation does not change anything 
                         .step()
                         .invokeParticipant(this::bookHotel)
                         .onReply(BookHotelResponse.class, this::handleBookHotelReply)
@@ -62,6 +69,19 @@ public class BookTripSaga implements SimpleSaga<BookTripSagaData> {
                 bookTripSagaData.getRejectionReason()))
                 .to(TravelServiceChannels.travelServiceChannel)
                 .build();
+    }
+
+    private CommandWithDestination validateCustomer(BookTripSagaData bookTripSagaData) {
+        logger.info("Validating the customer.");
+
+        return CommandWithDestinationBuilder.send(new ValidateCustomerCommand(bookTripSagaData.getTripInformation().getCustomerId()))
+                .to(CustomerServiceChannels.customerServiceChannel)
+                .build();
+    }
+
+    private void handleCustomerNotFoundReply(BookTripSagaData bookTripSagaData, CustomerNotFound customerNotFound) {
+        logger.debug("Received provoked customer validation failed response for trip " + bookTripSagaData.getTripId());
+        bookTripSagaData.setRejectionReason(RejectionReason.CUSTOMER_VALIDATION_FAILED);
     }
 
     private CommandWithDestination bookHotel(BookTripSagaData bookTripSagaData) {
