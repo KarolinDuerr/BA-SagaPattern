@@ -64,6 +64,27 @@ services:
       CONDUCTOR_SERVER_URI: http://conductor-server-ui:8080/api/
 
 
+  customerservice:
+    build: ./CustomerService/
+    image: customerservice:conductor
+    container_name: customerservice_conductor
+    networks:
+      - travel_application_conductor
+    ports:
+      - 8083:8083
+    depends_on:
+      - mysql
+      - conductor-server-ui
+      - elasticsearch
+      - dynomite
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql/conductor
+      SPRING_DATASOURCE_USERNAME: mysqluser
+      SPRING_DATASOURCE_PASSWORD: mysqlpw
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
+      CONDUCTOR_SERVER_URI: http://conductor-server-ui:8080/api/
+
+
   conductor-server-ui:
     build:
       context: conductor/serverAndUi/
