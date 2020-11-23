@@ -59,6 +59,16 @@ public class CustomerService implements ICustomerService{
     }
 
     @Override
+    // only mocking the task of this method
+    public void validateCustomer(long customerId) throws CustomerException {
+        if (customerId < 1) {
+            String message = String.format("The customer (ID: %d) does not exist.", customerId);
+            logger.info(message);
+            throw new CustomerException(ErrorType.NON_EXISTING_CUSTOMER, message);
+        }
+    }
+
+    @Override
     // to provide information which can be shown as no customers can be registered in the example application
     public void provideExampleEntries() {
         Address maxAddress = new Address("Germany", "Bamberg", "Kapellenstraße", 13);

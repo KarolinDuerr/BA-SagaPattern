@@ -10,5 +10,9 @@ repositories {
 }
 
 dependencies {
+
+    // Eventuate Tram Sagas
+    compile "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-participant:$eventuateTramSagasVersion"
+
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }

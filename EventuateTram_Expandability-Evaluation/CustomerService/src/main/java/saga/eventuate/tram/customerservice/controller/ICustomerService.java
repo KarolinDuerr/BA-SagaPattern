@@ -11,6 +11,8 @@ public interface ICustomerService {
 
     Customer getCustomerById(final long customerId) throws CustomerException;
 
+    void validateCustomer(final long customerId) throws CustomerException;
+
     // to have example entries in the database
     void provideExampleEntries();
 }
