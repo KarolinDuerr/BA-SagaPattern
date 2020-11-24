@@ -7,7 +7,7 @@ import io.eventuate.tram.sagas.simpledsl.SimpleSaga;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import saga.eventuate.tram.customerservice.api.CustomerServiceChannels;
-import saga.eventuate.tram.customerservice.api.dto.CustomerNotFound;
+import saga.eventuate.tram.customerservice.api.dto.CustomerValidationFailed;
 import saga.eventuate.tram.customerservice.api.dto.ValidateCustomerCommand;
 import saga.eventuate.tram.flightservice.api.FlightServiceChannels;
 import saga.eventuate.tram.flightservice.api.dto.BookFlightResponse;
@@ -38,7 +38,7 @@ public class BookTripSaga implements SimpleSaga<BookTripSagaData> {
                         .withCompensation(this::rejectBooking)
                         .step()
                         .invokeParticipant(this::validateCustomer)
-                        .onReply(CustomerNotFound.class, this::handleCustomerNotFoundReply)
+                        .onReply(CustomerValidationFailed.class, this::handleCustomerNotFoundReply)
                         // no compensation necessary as a validation does not change anything 
                         .step()
                         .invokeParticipant(this::bookHotel)
@@ -79,7 +79,7 @@ public class BookTripSaga implements SimpleSaga<BookTripSagaData> {
                 .build();
     }
 
-    private void handleCustomerNotFoundReply(BookTripSagaData bookTripSagaData, CustomerNotFound customerNotFound) {
+    private void handleCustomerNotFoundReply(BookTripSagaData bookTripSagaData, CustomerValidationFailed customerValidationFailed) {
         logger.debug("Received provoked customer validation failed response for trip " + bookTripSagaData.getTripId());
         bookTripSagaData.setRejectionReason(RejectionReason.CUSTOMER_VALIDATION_FAILED);
     }

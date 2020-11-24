@@ -31,8 +31,8 @@ public class CustomerServiceConfiguration {
     }
 
     @Bean
-    public CustomerCommandHandler flightCommandHandler(CustomerService customerService, DtoConverter dtoConverter) {
-        return new CustomerCommandHandler(customerService, dtoConverter);
+    public CustomerCommandHandler flightCommandHandler(CustomerService customerService) {
+        return new CustomerCommandHandler(customerService);
     }
 
     @Bean

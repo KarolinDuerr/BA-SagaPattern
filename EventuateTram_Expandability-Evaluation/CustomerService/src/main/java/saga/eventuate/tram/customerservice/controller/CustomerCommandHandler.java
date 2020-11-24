@@ -9,11 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import saga.eventuate.tram.customerservice.api.CustomerServiceChannels;
-import saga.eventuate.tram.customerservice.api.dto.CustomerNotFound;
+import saga.eventuate.tram.customerservice.api.dto.CustomerValidationFailed;
 import saga.eventuate.tram.customerservice.api.dto.ValidateCustomerCommand;
 import saga.eventuate.tram.customerservice.error.CustomerServiceException;
 import saga.eventuate.tram.customerservice.error.ErrorType;
-import saga.eventuate.tram.customerservice.resources.DtoConverter;
 
 public class CustomerCommandHandler {
 
@@ -22,12 +21,8 @@ public class CustomerCommandHandler {
     @Autowired
     private final ICustomerService customerService;
 
-    @Autowired
-    private final DtoConverter dtoConverter;
-
-    public CustomerCommandHandler(final ICustomerService customerService, final DtoConverter dtoConverter) {
+    public CustomerCommandHandler(final ICustomerService customerService) {
         this.customerService = customerService;
-        this.dtoConverter = dtoConverter;
     }
 
     public CommandHandlers commandHandlers() {
@@ -47,8 +42,8 @@ public class CustomerCommandHandler {
         } catch (CustomerServiceException exception) {
             logger.error(exception.toString());
 
-            if (exception.getErrorType() == ErrorType.NON_EXISTING_CUSTOMER) {
-                return CommandHandlerReplyBuilder.withFailure(new CustomerNotFound());
+            if (exception.getErrorType() == ErrorType.CUSTOMER_VALIDATION_FAILED) {
+                return CommandHandlerReplyBuilder.withFailure(new CustomerValidationFailed());
             }
 
             return CommandHandlerReplyBuilder.withFailure(exception.toString());
