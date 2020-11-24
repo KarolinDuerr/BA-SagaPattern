@@ -2,7 +2,7 @@
   "ownerApp": "Travel Application",
   "name": "bookTripSaga",
   "description": "Workflow for the Saga of booking a trip",
-  "version": 1,
+  "version": 2,
   "tasks": [
     {
       "name": "bookHotel",
@@ -39,6 +39,7 @@
     }
   ],
   "inputParameters": [
+    "validateCustomerRequest",
     "bookHotelRequest",
     "bookFlightRequest"
   ],

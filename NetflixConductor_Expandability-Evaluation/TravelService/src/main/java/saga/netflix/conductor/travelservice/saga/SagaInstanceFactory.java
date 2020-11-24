@@ -32,7 +32,7 @@ public class SagaInstanceFactory {
 
         StartWorkflowRequest bookTripSagaRequest = new StartWorkflowRequest();
         // specify which workflow version should be started
-        bookTripSagaRequest.setVersion(1);
+        bookTripSagaRequest.setVersion(2);
         bookTripSagaRequest.setCorrelationId(Long.toString(bookTripSagaData.getTripId()));
         // the name of the workflow that should be started
         bookTripSagaRequest.setName(Sagas.BOOK_TRIP_SAGA);

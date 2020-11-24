@@ -99,11 +99,14 @@ public class BookTripSaga {
     private void registerWorkflows() {
         try {
             final JsonNode bookTripDefinition =
-                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/workflows/bookTripSaga.json")));
+                objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/workflows/bookTripSaga.json")));
+            final JsonNode bookTripDefinitionVers2 =
+                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/workflows/bookTripSaga_version2.json")));
             final JsonNode cancelTripDefinition =
                     objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/workflows/compensateBookTripSaga.json")));
 
             registerWorkflow(bookTripDefinition);
+            registerWorkflow(bookTripDefinitionVers2);
             registerWorkflow(cancelTripDefinition);
         } catch (IOException e) {
             logger.error("exception " + e.getMessage());
