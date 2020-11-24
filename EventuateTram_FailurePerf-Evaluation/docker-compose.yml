@@ -1,0 +1,178 @@
+version: '3'
+
+services:
+  travelservice:
+    build: ./TravelService/
+    image: travelservice:eventuate
+    container_name: travelservice_eventuate
+    ports:
+      - 8090:8090
+    networks:
+      - travel_application_eventuate
+    depends_on:
+      - mysql
+      - kafka
+      - zookeeper
+      - cdcservice
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql/eventuate
+      SPRING_DATASOURCE_USERNAME: mysqluser
+      SPRING_DATASOURCE_PASSWORD: mysqlpw
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
+      EVENTUATELOCAL_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      EVENTUATELOCAL_ZOOKEEPER_CONNECTION_STRING: zookeeper:2181
+      SPRING_SLEUTH_ENABLED: "true"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: 1
+      SPRING_ZIPKIN_BASE_URL: http://zipkin:9411/
+
+
+  hotelservice:
+    build: ./HotelService/
+    image: hotelservice:eventuate
+    container_name: hotelservice_eventuate
+    ports:
+      - 8081:8081
+    networks:
+      - travel_application_eventuate
+    depends_on:
+      - mysql
+      - kafka
+      - zookeeper
+      - cdcservice
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql/eventuate
+      SPRING_DATASOURCE_USERNAME: mysqluser
+      SPRING_DATASOURCE_PASSWORD: mysqlpw
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
+      EVENTUATELOCAL_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      EVENTUATELOCAL_ZOOKEEPER_CONNECTION_STRING: zookeeper:2181
+      SPRING_SLEUTH_ENABLED: "true"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: 1
+      SPRING_ZIPKIN_BASE_URL: http://zipkin:9411/
+
+
+  flightservice:
+    build: ./FlightService/
+    image: flightservice:eventuate
+    container_name: flightservice_eventuate
+    ports:
+      - 8082:8082
+    networks:
+      - travel_application_eventuate
+    depends_on:
+      - mysql
+      - kafka
+      - zookeeper
+      - cdcservice
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql/eventuate
+      SPRING_DATASOURCE_USERNAME: mysqluser
+      SPRING_DATASOURCE_PASSWORD: mysqlpw
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
+      EVENTUATELOCAL_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      EVENTUATELOCAL_ZOOKEEPER_CONNECTION_STRING: zookeeper:2181
+      SPRING_SLEUTH_ENABLED: "true"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: 1
+      SPRING_ZIPKIN_BASE_URL: http://zipkin:9411/
+
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:5.2.4
+    container_name: zookeeper
+    ports:
+      - 2181:2181
+    networks:
+      - travel_application_eventuate
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      KAFKA_HEAP_OPTS: -Xmx64m
+
+
+  kafka:
+    image: confluentinc/cp-kafka:5.2.4
+    container_name: kafka
+    ports:
+      - 9092:9092
+    networks:
+      - travel_application_eventuate
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_LISTENERS: LC://kafka:29092,LX://kafka:9092
+      KAFKA_ADVERTISED_LISTENERS: LC://kafka:29092,LX://${DOCKER_HOST_IP:-localhost}:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LC:PLAINTEXT,LX:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: LC
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_ZOOKEEPER_CONNECTION_TIMEOUT_MS: 60000
+      KAFKA_HEAP_OPTS: -Xmx192m
+
+
+  mysql:
+    image: eventuateio/eventuate-tram-sagas-mysql:0.14.0.RELEASE
+    container_name: mysql_eventuate
+    ports:
+      - 3306:3306
+    networks:
+      - travel_application_eventuate
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_USER=mysqluser
+      - MYSQL_PASSWORD=mysqlpw
+
+
+  cdcservice:
+    image: eventuateio/eventuate-cdc-service:0.9.0.RELEASE
+    container_name: cdcservice
+    ports:
+      - 8099:8080
+    networks:
+      - travel_application_eventuate
+    depends_on:
+      - mysql
+      - kafka
+      - zookeeper
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql/eventuate
+      SPRING_DATASOURCE_USERNAME: mysqluser
+      SPRING_DATASOURCE_PASSWORD: mysqlpw
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.jdbc.Driver
+      EVENTUATELOCAL_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      EVENTUATELOCAL_ZOOKEEPER_CONNECTION_STRING: zookeeper:2181
+      EVENTUATELOCAL_CDC_DB_USER_NAME: root
+      EVENTUATELOCAL_CDC_DB_PASSWORD: rootpassword
+      EVENTUATELOCAL_CDC_READER_NAME: MySqlReader
+      EVENTUATELOCAL_CDC_OFFSET_STORE_KEY: MySqlBinlog
+      EVENTUATELOCAL_CDC_MYSQL_BINLOG_CLIENT_UNIQUE_ID: 1234567890
+      EVENTUATELOCAL_CDC_READ_OLD_DEBEZIUM_DB_OFFSET_STORAGE_TOPIC: "false"
+      JAVA_OPTS: -Xmx64m
+
+
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+    networks:
+      - travel_application_eventuate
+    environment:
+      JAVA_OPTS: -Xmx64m
+      STORAGE_TYPE: mem
+
+  # Temporarily to show Kafka in a UI --> http://localhost:9000/ #TODO remove
+  kafdrop:
+    image: obsidiandynamics/kafdrop
+    container_name: kafrop
+    depends_on:
+      - kafka
+    ports:
+      - 9000:9000
+    networks:
+      - travel_application_eventuate
+    environment:
+      - KAFKA_BROKERCONNECT=kafka:29092,kafka:29092
+      - "JVM_OPTS=-Xms32M -Xmx64M"
+
+
+networks:
+  travel_application_eventuate:

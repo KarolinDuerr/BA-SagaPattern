@@ -1,0 +1,50 @@
+plugins {
+    id 'java'
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id 'org.springframework.boot' version '2.3.1.RELEASE'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-sleuth:${springCloudSleuthVersion}"
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile project(":FlightService-API")
+
+    // Springframework
+    compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
+    compile "org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion"
+    compile "org.springframework.boot:spring-boot-starter-jetty:$springBootVersion"
+    // enable health and info endpoint
+    compile "org.springframework.boot:spring-boot-starter-actuator"
+
+    // MySQL
+    compile "mysql:mysql-connector-java:$mySQLVersion"
+
+    // Eventuate Tram Sagas
+    compile "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-participant:$eventuateTramSagasVersion"
+
+    // Eventuate Tram Core for JDB and Kafka
+    compile "io.eventuate.tram.core:eventuate-tram-spring-producer-jdbc:$eventuateTramVersion"
+    compile "io.eventuate.tram.core:eventuate-tram-spring-consumer-jdbc:$eventuateTramVersion"
+    compile "io.eventuate.tram.core:eventuate-tram-spring-consumer-kafka:$eventuateTramVersion"
+
+    // Sleuth and Zipkin for tracing logs
+    compile 'org.springframework.cloud:spring-cloud-starter-sleuth'
+    compile "org.springframework.cloud:spring-cloud-starter-zipkin"
+    compile "io.eventuate.tram.core:eventuate-tram-spring-cloud-sleuth-integration:${eventuateTramVersion}"
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
