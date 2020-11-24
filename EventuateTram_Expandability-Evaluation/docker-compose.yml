@@ -7,6 +7,8 @@ services:
     container_name: travelservice_eventuate
     ports:
       - 8090:8090
+    networks:
+      - travel_application_eventuate
     depends_on:
       - mysql
       - kafka
@@ -30,6 +32,8 @@ services:
     container_name: hotelservice_eventuate
     ports:
       - 8081:8081
+    networks:
+      - travel_application_eventuate
     depends_on:
       - mysql
       - kafka
@@ -53,6 +57,8 @@ services:
     container_name: flightservice_eventuate
     ports:
       - 8082:8082
+    networks:
+      - travel_application_eventuate
     depends_on:
       - mysql
       - kafka
@@ -76,6 +82,8 @@ services:
     container_name: customerservice_eventuate
     ports:
       - 8083:8083
+    networks:
+      - travel_application_eventuate
     depends_on:
       - mysql
       - kafka
@@ -98,6 +106,8 @@ services:
     container_name: zookeeper
     ports:
       - 2181:2181
+    networks:
+      - travel_application_eventuate
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       KAFKA_HEAP_OPTS: -Xmx64m
@@ -108,6 +118,8 @@ services:
     container_name: kafka
     ports:
       - 9092:9092
+    networks:
+      - travel_application_eventuate
     depends_on:
       - zookeeper
     environment:
@@ -126,6 +138,8 @@ services:
     container_name: mysql_eventuate
     ports:
       - 3306:3306
+    networks:
+      - travel_application_eventuate
     environment:
       - MYSQL_ROOT_PASSWORD=rootpassword
       - MYSQL_USER=mysqluser
@@ -137,6 +151,8 @@ services:
     container_name: cdcservice
     ports:
       - 8099:8080
+    networks:
+      - travel_application_eventuate
     depends_on:
       - mysql
       - kafka
@@ -162,6 +178,8 @@ services:
     container_name: zipkin
     ports:
       - "9411:9411"
+    networks:
+      - travel_application_eventuate
     environment:
       JAVA_OPTS: -Xmx64m
       STORAGE_TYPE: mem
@@ -174,6 +192,12 @@ services:
       - kafka
     ports:
       - 9000:9000
+    networks:
+      - travel_application_eventuate
     environment:
       - KAFKA_BROKERCONNECT=kafka:29092,kafka:29092
       - "JVM_OPTS=-Xms32M -Xmx64M"
+
+
+networks:
+  travel_application_eventuate:
