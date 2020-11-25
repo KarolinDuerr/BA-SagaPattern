@@ -36,7 +36,8 @@ public class FlightCommandHandler {
     private final String travelServiceServer;
     private final String travelServiceActuatorUri;
 
-    public FlightCommandHandler(final IFlightService flightService, final DtoConverter dtoConverter, String travelServiceServer, String travelServiceActuatorUri) {
+    public FlightCommandHandler(final IFlightService flightService, final DtoConverter dtoConverter,
+                                String travelServiceServer, String travelServiceActuatorUri) {
         this.flightService = flightService;
         this.dtoConverter = dtoConverter;
         this.travelServiceServer = travelServiceServer;
@@ -87,7 +88,7 @@ public class FlightCommandHandler {
     }
 
     private void provokeOrchestratorFailure(String failureInput) {
-        if (!failureInput.equalsIgnoreCase("Provoke orchestrator failure while executing")){
+        if (!failureInput.equalsIgnoreCase("Provoke orchestrator failure while executing")) {
             return;
         }
 

@@ -8,6 +8,10 @@ import io.eventuate.tram.sagas.participant.SagaCommandHandlersBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.web.client.RestTemplate;
 import saga.eventuate.tram.hotelservice.api.HotelServiceChannels;
 import saga.eventuate.tram.hotelservice.api.dto.*;
 import saga.eventuate.tram.hotelservice.error.ErrorType;
@@ -29,9 +33,15 @@ public class HotelCommandHandler {
     @Autowired
     private final DtoConverter dtoConverter;
 
-    public HotelCommandHandler(final IHotelService hotelService, final DtoConverter dtoConverter) {
+    private final String flightServiceServer;
+    private final String flightServiceActuatorUri;
+
+    public HotelCommandHandler(final IHotelService hotelService, final DtoConverter dtoConverter,
+                               final String flightServiceServer, final String flightServiceActuatorUri) {
         this.hotelService = hotelService;
         this.dtoConverter = dtoConverter;
+        this.flightServiceServer = flightServiceServer;
+        this.flightServiceActuatorUri = flightServiceActuatorUri;
     }
 
     public CommandHandlers commandHandlers() {
@@ -54,6 +64,10 @@ public class HotelCommandHandler {
 
             BookHotelResponse bookingResponse = new BookHotelResponse(hotelBooking.getId(),
                     hotelBooking.getHotelName(), hotelBooking.getBookingStatus().toString());
+
+            // provoke Participant failure (FlightService)
+            provokeParticipantFailure(bookingInformation.getDestination().getCountry());
+
             return CommandHandlerReplyBuilder.withSuccess(bookingResponse);
         } catch (HotelServiceException exception) {
             logger.error(exception.toString());
@@ -78,5 +92,26 @@ public class HotelCommandHandler {
 
         hotelService.confirmHotelBooking(confirmHotelBooking.getBookingId(), confirmHotelBooking.getTripId());
         return CommandHandlerReplyBuilder.withSuccess();
+    }
+
+    private void provokeParticipantFailure(String failureInput) {
+        if (!failureInput.equalsIgnoreCase("Provoke participant failure before receiving task")) {
+            return;
+        }
+
+        logger.info("Shutting down FlightService due to corresponding input.");
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> terminateRequest = new HttpEntity<>(null, headers);
+        String response = restTemplate.postForObject(flightServiceServer + flightServiceActuatorUri,
+                terminateRequest, String.class);
+        logger.info("FlightService response" + response);
+        try {
+            // wait to make sure no unintended behaviour is created due to the provoked shutdown
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            // ignore
+        }
     }
 }
