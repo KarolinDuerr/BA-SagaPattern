@@ -67,6 +67,10 @@ public class FlightCommandHandler {
             // provoke Orchestrator failure
             provokeOrchestratorFailure(flightInformation.getDestination().getCountry());
 
+            // provoke own failure if it has not already been done before for this flight booking
+            provokeOwnFailure(flightInformation.getDestination().getCountry(),
+                    receivedFlightInformation.getProvokedFailure());
+
             return CommandHandlerReplyBuilder.withSuccess(bookFlightResponse);
         } catch (FlightServiceException exception) {
             logger.error(exception.toString());
@@ -106,5 +110,14 @@ public class FlightCommandHandler {
         } catch (InterruptedException e) {
             // ignore
         }
+    }
+
+    private void provokeOwnFailure(String failureInput, boolean alreadyBeenProvoked) {
+        if (!failureInput.equalsIgnoreCase("Provoke participant failure while executing") || alreadyBeenProvoked) {
+            return;
+        }
+
+        logger.info("Shutting down FlightService due to corresponding input.");
+        System.exit(1);
     }
 }

@@ -63,9 +63,13 @@ public class FlightService implements IFlightService {
 
         FlightInformation flightInformation = findAvailableFlight(findAndBookFlightInformation);
 
-        // ensure idempotence of flight bookings
+        // ensure idempotence of flight bookings and check if failure has already been provoked for this flight
         FlightInformation alreadyExistingFlightInformation = checkIfBookingAlreadyExists(flightInformation);
         if (alreadyExistingFlightInformation != null) {
+            String provokeFailure = "Provoke participant failure while executing";
+            if (alreadyExistingFlightInformation.getReturnFlight().getCountry().equalsIgnoreCase(provokeFailure)) {
+                alreadyExistingFlightInformation.setProvokedFailure(true);
+            }
             return alreadyExistingFlightInformation;
         }
 
