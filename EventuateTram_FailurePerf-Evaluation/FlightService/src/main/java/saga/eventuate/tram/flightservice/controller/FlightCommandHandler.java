@@ -8,6 +8,10 @@ import io.eventuate.tram.sagas.participant.SagaCommandHandlersBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.web.client.RestTemplate;
 import saga.eventuate.tram.flightservice.api.FlightServiceChannels;
 import saga.eventuate.tram.flightservice.api.dto.BookFlightCommand;
 import saga.eventuate.tram.flightservice.api.dto.BookFlightResponse;
@@ -29,9 +33,14 @@ public class FlightCommandHandler {
     @Autowired
     private final DtoConverter dtoConverter;
 
-    public FlightCommandHandler(final IFlightService flightService, final DtoConverter dtoConverter) {
+    private final String travelServiceServer;
+    private final String travelServiceActuatorUri;
+
+    public FlightCommandHandler(final IFlightService flightService, final DtoConverter dtoConverter, String travelServiceServer, String travelServiceActuatorUri) {
         this.flightService = flightService;
         this.dtoConverter = dtoConverter;
+        this.travelServiceServer = travelServiceServer;
+        this.travelServiceActuatorUri = travelServiceActuatorUri;
     }
 
     public CommandHandlers commandHandlers() {
@@ -53,6 +62,10 @@ public class FlightCommandHandler {
 
             BookFlightResponse bookFlightResponse = new BookFlightResponse(receivedFlightInformation.getId(),
                     receivedFlightInformation.getBookingStatus().toString());
+
+            // provoke Orchestrator failure
+            provokeOrchestratorFailure(flightInformation.getDestination().getCountry());
+
             return CommandHandlerReplyBuilder.withSuccess(bookFlightResponse);
         } catch (FlightServiceException exception) {
             logger.error(exception.toString());
@@ -71,5 +84,26 @@ public class FlightCommandHandler {
 
         flightService.cancelFlightBooking(cancelFlightBooking.getBookingId(), cancelFlightBooking.getTripId());
         return CommandHandlerReplyBuilder.withSuccess();
+    }
+
+    private void provokeOrchestratorFailure(String failureInput) {
+        if (!failureInput.equalsIgnoreCase("Provoke orchestrator failure while executing")){
+            return;
+        }
+
+        logger.info("Shutting down TravelService due to corresponding input.");
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> terminateRequest = new HttpEntity<>(null, headers);
+        String response = restTemplate.postForObject(travelServiceServer + travelServiceActuatorUri,
+                terminateRequest, String.class);
+        logger.info("TravelService response" + response);
+        try {
+            // wait to make sure no unintended behaviour is created due to the provoked shutdown
+            Thread.sleep(15000);
+        } catch (InterruptedException e) {
+            // ignore
+        }
     }
 }
