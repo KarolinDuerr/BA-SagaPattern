@@ -118,6 +118,7 @@ public class FlightCommandHandler {
         }
 
         logger.info("Shutting down FlightService due to corresponding input.");
-        System.exit(1);
+        // Force the JVM to terminate to simulate sudden failure
+        Runtime.getRuntime().halt(1);
     }
 }
