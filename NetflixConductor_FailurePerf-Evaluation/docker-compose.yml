@@ -35,6 +35,8 @@ services:
       - conductor-server-ui
       - elasticsearch
       - dynomite
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql/conductor
       SPRING_DATASOURCE_USERNAME: mysqluser

@@ -1,6 +1,11 @@
 package saga.netflix.conductor.hotelservice.controller.worker;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.core.DefaultDockerClientConfig;
+import com.github.dockerjava.core.DockerClientImpl;
+import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
+import com.github.dockerjava.transport.DockerHttpClient;
 import com.netflix.conductor.client.worker.Worker;
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
@@ -18,6 +23,7 @@ import saga.netflix.conductor.hotelservice.model.HotelBooking;
 import saga.netflix.conductor.hotelservice.model.HotelBookingInformation;
 import saga.netflix.conductor.hotelservice.resources.DtoConverter;
 
+import java.io.IOException;
 import java.util.Map;
 
 public class BookHotelWorker implements Worker {
@@ -91,6 +97,34 @@ public class BookHotelWorker implements Worker {
 
         taskResult.getOutputData().put(HotelServiceTasks.TaskOutput.BOOK_HOTEL_OUTPUT, bookingResponse);
         logger.info("Hotel successfully booked: " + bookingResponse);
+
+        // provoke Participant failure (FlightService)
+        provokeParticipantFailure(bookingInformation.getDestination().getCountry());
+    }
+
+    private void provokeParticipantFailure(String failureInput) {
+        if (!failureInput.equalsIgnoreCase("Provoke participant failure before receiving task")) {
+            return;
+        }
+
+        logger.info("Shutting down FlightService due to corresponding input.");
+        DefaultDockerClientConfig config = DefaultDockerClientConfig.createDefaultConfigBuilder()
+                .withDockerHost("unix:///var/run/docker.sock")
+                .withDockerTlsVerify(false)
+                .withDockerCertPath("/home/user/.docker/certs")
+                .withDockerConfig("/home/user/.docker")
+                .build();
+        DockerHttpClient httpClient = new ApacheDockerHttpClient.Builder()
+                .dockerHost(config.getDockerHost())
+                .sslConfig(config.getSSLConfig())
+                .build();
+        DockerClient dockerClient = DockerClientImpl.getInstance(config, httpClient);
+        dockerClient.stopContainerCmd("flightservice_conductor").exec();
+        try {
+            dockerClient.close();
+        } catch (IOException e) {
+            logger.warn("Docker client could not be closed", e);
+        }
     }
 
 }
