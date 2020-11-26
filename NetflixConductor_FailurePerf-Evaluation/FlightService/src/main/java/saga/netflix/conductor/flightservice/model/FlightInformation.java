@@ -34,8 +34,12 @@ public class FlightInformation {
 
     private long tripId;
 
+    // check if failure has already been provoked
+    private boolean provokedFailure;
+
     private FlightInformation() {
         this.tripId = -1; // no trip assigned to this booking
+        this.provokedFailure = false;
     }
 
     public FlightInformation(final Flight outboundFlight, final Flight returnFlight, final String travellerName) throws FlightException {
@@ -46,6 +50,7 @@ public class FlightInformation {
         this.travellerName = travellerName;
         this.tripId = -1; // no trip assigned to this booking
         this.bookingStatus = BookingStatus.CONFIRMED;
+        this.provokedFailure = false;
     }
 
     public FlightInformation(final Flight outboundFlight, final Flight returnFlight, final String travellerName,
@@ -57,6 +62,7 @@ public class FlightInformation {
         this.travellerName = travellerName;
         this.tripId = tripId;
         this.bookingStatus = BookingStatus.CONFIRMED;
+        this.provokedFailure = false;
     }
 
     public Long getId() {
@@ -118,6 +124,14 @@ public class FlightInformation {
             throw new FlightException(ErrorType.INVALID_PARAMETER, "The date of the return flight is before the " +
                     "actual outbound flight.");
         }
+    }
+
+    public boolean getProvokedFailure() {
+        return provokedFailure;
+    }
+
+    public void setProvokedFailure(boolean provokedFailure) {
+        this.provokedFailure = provokedFailure;
     }
 
     public void cancel(final BookingStatus bookingStatus) {

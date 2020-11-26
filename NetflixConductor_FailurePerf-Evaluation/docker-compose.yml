@@ -56,6 +56,8 @@ services:
       - conductor-server-ui
       - elasticsearch
       - dynomite
+    volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql/conductor
       SPRING_DATASOURCE_USERNAME: mysqluser
@@ -81,6 +83,7 @@ services:
     depends_on:
       - elasticsearch
       - dynomite
+#      command: ["./bin/wait-for-elasticsearch.sh", "elasticsearch:9300", "python", "app.py"] // TODO idee for start
     environment:
       - CONFIG_PROP=config.properties # dann zuerst dynomite und elasticsearch starten
 #      - LOG4J_PROP=log4j-file-appender.properties

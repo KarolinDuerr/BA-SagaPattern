@@ -1,6 +1,11 @@
 package saga.netflix.conductor.flightservice.controller.worker;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.core.DefaultDockerClientConfig;
+import com.github.dockerjava.core.DockerClientImpl;
+import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
+import com.github.dockerjava.transport.DockerHttpClient;
 import com.netflix.conductor.client.worker.Worker;
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.TaskResult;
@@ -18,6 +23,7 @@ import saga.netlfix.conductor.flightservice.api.FlightServiceTasks;
 import saga.netlfix.conductor.flightservice.api.dto.BookFlightResponse;
 import saga.netlfix.conductor.flightservice.api.dto.BookFlightRequest;
 
+import java.io.IOException;
 import java.util.Map;
 
 public class BookFlightWorker implements Worker {
@@ -91,6 +97,49 @@ public class BookFlightWorker implements Worker {
 
         taskResult.getOutputData().put(FlightServiceTasks.TaskOutput.BOOK_FLIGHT_OUTPUT, bookFlightResponse);
         logger.info("Flight successfully booked: " + bookFlightResponse);
+
+        // provoke Orchestrator failure (Conductor Server)
+        provokeOrchestratorFailure(flightInformation.getDestination().getCountry(),
+                receivedFlightInformation.getProvokedFailure());
+
+        // provoke own failure if it has not already been done before for this flight booking
+        provokeOwnFailure(flightInformation.getDestination().getCountry(),
+                receivedFlightInformation.getProvokedFailure());
+    }
+
+    private void provokeOrchestratorFailure(String failureInput, boolean alreadyBeenProvoked) {
+        if (!failureInput.equalsIgnoreCase("Provoke orchestrator failure while executing") || alreadyBeenProvoked) {
+            return;
+        }
+
+        logger.info("Shutting down ConductorServer due to corresponding input.");
+        DefaultDockerClientConfig config = DefaultDockerClientConfig.createDefaultConfigBuilder()
+                .withDockerHost("unix:///var/run/docker.sock")
+                .withDockerTlsVerify(false)
+                .withDockerCertPath("/home/user/.docker/certs")
+                .withDockerConfig("/home/user/.docker")
+                .build();
+        DockerHttpClient httpClient = new ApacheDockerHttpClient.Builder()
+                .dockerHost(config.getDockerHost())
+                .sslConfig(config.getSSLConfig())
+                .build();
+        DockerClient dockerClient = DockerClientImpl.getInstance(config, httpClient);
+        dockerClient.stopContainerCmd("conductor-server-ui").exec();
+        try {
+            dockerClient.close();
+        } catch (IOException e) {
+            logger.warn("Docker client could not be closed", e);
+        }
+    }
+
+    private void provokeOwnFailure(String failureInput, boolean alreadyBeenProvoked) {
+        if (!failureInput.equalsIgnoreCase("Provoke participant failure while executing") || alreadyBeenProvoked) {
+            return;
+        }
+
+        logger.info("Shutting down FlightService due to corresponding input.");
+        // Force the JVM to terminate to simulate sudden failure
+        Runtime.getRuntime().halt(1);
     }
 
 }
