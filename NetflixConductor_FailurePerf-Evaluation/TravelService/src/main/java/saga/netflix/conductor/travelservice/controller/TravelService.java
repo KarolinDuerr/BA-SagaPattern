@@ -1,5 +1,11 @@
 package saga.netflix.conductor.travelservice.controller;
 
+import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.core.DefaultDockerClientConfig;
+import com.github.dockerjava.core.DockerClientImpl;
+import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
+import com.github.dockerjava.transport.DockerHttpClient;
+import com.netflix.conductor.client.exceptions.ConductorClientException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +20,7 @@ import saga.netflix.conductor.travelservice.model.TripInformationRepository;
 import saga.netflix.conductor.travelservice.saga.bookTripSaga.BookTripSagaData;
 import saga.netflix.conductor.travelservice.saga.SagaInstanceFactory;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -66,7 +73,7 @@ public class TravelService implements ITravelService {
     }
 
     @Override
-    public TripInformation bookTrip(final TripInformation tripInformation) {
+    public TripInformation bookTrip(final TripInformation tripInformation) throws TravelException {
         logger.info("Saving the booked Trip: " + tripInformation);
 
         // ensure idempotence of trip bookings
@@ -77,9 +84,19 @@ public class TravelService implements ITravelService {
 
         tripInformationRepository.save(tripInformation);
 
+        // provoke Orchestrator failure before the Saga is being started if the appropriate input is given
+        provokeOrchestratorFailure(tripInformation.getDestination().getCountry());
+
         // create and start the BookTripSaga with necessary information
         BookTripSagaData bookTripSagaData = new BookTripSagaData(tripInformation.getId(), tripInformation);
-        sagaInstanceFactory.startBookTripSaga(bookTripSagaData);
+        try {
+            sagaInstanceFactory.startBookTripSaga(bookTripSagaData);
+        }  catch (ConductorClientException networkException) {
+            tripInformationRepository.deleteById(tripInformation.getId());
+            logger.error("Saga could not be started: " + networkException.getMessage());
+            throw new TravelException(ErrorType.INTERNAL_ERROR, "Connection to server was not possible. Please try " +
+                    "again later.");
+        }
 
         return tripInformation;
     }
@@ -139,6 +156,31 @@ public class TravelService implements ITravelService {
                 return BookingStatus.REJECTED_NO_FLIGHT_AVAILABLE;
             default:
                 return BookingStatus.REJECTED_UNKNOWN;
+        }
+    }
+
+    private void provokeOrchestratorFailure(String failureInput) {
+        if (!failureInput.equalsIgnoreCase("Provoke orchestrator failure while starting trip booking")) {
+            return;
+        }
+
+        logger.info("Shutting down ConductorServer due to corresponding input.");
+        DefaultDockerClientConfig config = DefaultDockerClientConfig.createDefaultConfigBuilder()
+                .withDockerHost("unix:///var/run/docker.sock")
+                .withDockerTlsVerify(false)
+                .withDockerCertPath("/home/user/.docker/certs")
+                .withDockerConfig("/home/user/.docker")
+                .build();
+        DockerHttpClient httpClient = new ApacheDockerHttpClient.Builder()
+                .dockerHost(config.getDockerHost())
+                .sslConfig(config.getSSLConfig())
+                .build();
+        DockerClient dockerClient = DockerClientImpl.getInstance(config, httpClient);
+        dockerClient.stopContainerCmd("conductor-server-ui").exec();
+        try {
+            dockerClient.close();
+        } catch (IOException e) {
+            logger.warn("Docker client could not be closed", e);
         }
     }
 }

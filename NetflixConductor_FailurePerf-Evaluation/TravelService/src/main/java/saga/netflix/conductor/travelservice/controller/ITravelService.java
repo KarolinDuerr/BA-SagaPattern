@@ -14,7 +14,7 @@ public interface ITravelService {
 
     TripInformation getTripInformation(final Long tripId) throws TravelException;
 
-    TripInformation bookTrip(final TripInformation tripInformation);
+    TripInformation bookTrip(final TripInformation tripInformation) throws TravelException;
 
     void rejectTrip(final Long tripId, final RejectionReason rejectionReason);
 
