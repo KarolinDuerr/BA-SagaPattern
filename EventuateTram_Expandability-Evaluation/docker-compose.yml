@@ -3,12 +3,12 @@ version: '3'
 services:
   travelservice:
     build: ./TravelService/
-    image: travelservice:eventuate
-    container_name: travelservice_eventuate
+    image: travelservice:eventuateExpandability
+    container_name: travelservice_eventuateExpandability
     ports:
       - 8090:8090
     networks:
-      - travel_application_eventuate
+      - travel_application
     depends_on:
       - mysql
       - kafka
@@ -28,12 +28,12 @@ services:
 
   hotelservice:
     build: ./HotelService/
-    image: hotelservice:eventuate
-    container_name: hotelservice_eventuate
+    image: hotelservice:eventuateExpandability
+    container_name: hotelservice_eventuateExpandability
     ports:
       - 8081:8081
     networks:
-      - travel_application_eventuate
+      - travel_application
     depends_on:
       - mysql
       - kafka
@@ -53,12 +53,12 @@ services:
 
   flightservice:
     build: ./FlightService/
-    image: flightservice:eventuate
-    container_name: flightservice_eventuate
+    image: flightservice:eventuateExpandability
+    container_name: flightservice_eventuateExpandability
     ports:
       - 8082:8082
     networks:
-      - travel_application_eventuate
+      - travel_application
     depends_on:
       - mysql
       - kafka
@@ -78,12 +78,12 @@ services:
 
   customerservice:
     build: ./CustomerService/
-    image: customerservice:eventuate
-    container_name: customerservice_eventuate
+    image: customerservice:eventuateExpandability
+    container_name: customerservice_eventuateExpandability
     ports:
       - 8083:8083
     networks:
-      - travel_application_eventuate
+      - travel_application
     depends_on:
       - mysql
       - kafka
@@ -107,7 +107,7 @@ services:
     ports:
       - 2181:2181
     networks:
-      - travel_application_eventuate
+      - travel_application
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       KAFKA_HEAP_OPTS: -Xmx64m
@@ -119,7 +119,7 @@ services:
     ports:
       - 9092:9092
     networks:
-      - travel_application_eventuate
+      - travel_application
     depends_on:
       - zookeeper
     environment:
@@ -139,7 +139,7 @@ services:
     ports:
       - 3306:3306
     networks:
-      - travel_application_eventuate
+      - travel_application
     environment:
       - MYSQL_ROOT_PASSWORD=rootpassword
       - MYSQL_USER=mysqluser
@@ -152,7 +152,7 @@ services:
     ports:
       - 8099:8080
     networks:
-      - travel_application_eventuate
+      - travel_application
     depends_on:
       - mysql
       - kafka
@@ -179,7 +179,7 @@ services:
     ports:
       - "9411:9411"
     networks:
-      - travel_application_eventuate
+      - travel_application
     environment:
       JAVA_OPTS: -Xmx64m
       STORAGE_TYPE: mem
@@ -193,11 +193,11 @@ services:
     ports:
       - 9000:9000
     networks:
-      - travel_application_eventuate
+      - travel_application
     environment:
       - KAFKA_BROKERCONNECT=kafka:29092,kafka:29092
       - "JVM_OPTS=-Xms32M -Xmx64M"
 
 
 networks:
-  travel_application_eventuate:
+  travel_application:

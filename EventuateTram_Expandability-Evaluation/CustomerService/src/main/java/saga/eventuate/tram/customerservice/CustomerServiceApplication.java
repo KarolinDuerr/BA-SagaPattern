@@ -7,11 +7,12 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import saga.eventuate.tram.customerservice.controller.CustomerServiceConfiguration;
+import saga.eventuate.tram.customerservice.controller.OpenApiConfiguration;
 
 @EnableAutoConfiguration
 @EnableJpaRepositories
 @SpringBootApplication
-@Import(CustomerServiceConfiguration.class)
+@Import({CustomerServiceConfiguration.class, OpenApiConfiguration.class})
 @ComponentScan
 public class CustomerServiceApplication {
 
