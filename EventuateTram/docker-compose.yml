@@ -8,7 +8,7 @@ services:
     ports:
       - 8090:8090
     networks:
-      - travel_application_eventuate
+      - travel_application
     depends_on:
       - mysql
       - kafka
@@ -33,7 +33,7 @@ services:
     ports:
       - 8081:8081
     networks:
-      - travel_application_eventuate
+      - travel_application
     depends_on:
       - mysql
       - kafka
@@ -58,7 +58,7 @@ services:
     ports:
       - 8082:8082
     networks:
-      - travel_application_eventuate
+      - travel_application
     depends_on:
       - mysql
       - kafka
@@ -82,7 +82,7 @@ services:
     ports:
       - 2181:2181
     networks:
-      - travel_application_eventuate
+      - travel_application
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       KAFKA_HEAP_OPTS: -Xmx64m
@@ -94,7 +94,7 @@ services:
     ports:
       - 9092:9092
     networks:
-      - travel_application_eventuate
+      - travel_application
     depends_on:
       - zookeeper
     environment:
@@ -114,7 +114,7 @@ services:
     ports:
       - 3306:3306
     networks:
-      - travel_application_eventuate
+      - travel_application
     environment:
       - MYSQL_ROOT_PASSWORD=rootpassword
       - MYSQL_USER=mysqluser
@@ -127,7 +127,7 @@ services:
     ports:
       - 8099:8080
     networks:
-      - travel_application_eventuate
+      - travel_application
     depends_on:
       - mysql
       - kafka
@@ -154,25 +154,11 @@ services:
     ports:
       - "9411:9411"
     networks:
-      - travel_application_eventuate
+      - travel_application
     environment:
       JAVA_OPTS: -Xmx64m
       STORAGE_TYPE: mem
 
-  # Temporarily to show Kafka in a UI --> http://localhost:9000/ #TODO remove
-  kafdrop:
-    image: obsidiandynamics/kafdrop
-    container_name: kafrop
-    depends_on:
-      - kafka
-    ports:
-      - 9000:9000
-    networks:
-      - travel_application_eventuate
-    environment:
-      - KAFKA_BROKERCONNECT=kafka:29092,kafka:29092
-      - "JVM_OPTS=-Xms32M -Xmx64M"
-
 
 networks:
-  travel_application_eventuate:
+  travel_application:
