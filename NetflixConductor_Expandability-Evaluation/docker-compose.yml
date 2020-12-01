@@ -3,10 +3,10 @@ version: '3'
 services:
   travelservice:
     build: ./TravelService/
-    image: travelservice:conductor
-    container_name: travelservice_conductor
+    image: travelservice:conductorExpandability
+    container_name: travelservice_conductorExpandability
     networks:
-      - travel_application_conductor
+      - travel_application
     ports:
       - 8090:8090
     depends_on:
@@ -24,10 +24,10 @@ services:
 
   hotelservice:
     build: ./HotelService/
-    image: hotelservice:conductor
-    container_name: hotelservice_conductor
+    image: hotelservice:conductorExpandability
+    container_name: hotelservice_conductorExpandability
     networks:
-      - travel_application_conductor
+      - travel_application
     ports:
       - 8081:8081
     depends_on:
@@ -45,10 +45,10 @@ services:
 
   flightservice:
     build: ./FlightService/
-    image: flightservice:conductor
-    container_name: flightservice_conductor
+    image: flightservice:conductorExpandability
+    container_name: flightservice_conductorExpandability
     networks:
-      - travel_application_conductor
+      - travel_application
     ports:
       - 8082:8082
     depends_on:
@@ -66,10 +66,10 @@ services:
 
   customerservice:
     build: ./CustomerService/
-    image: customerservice:conductor
-    container_name: customerservice_conductor
+    image: customerservice:conductorExpandability
+    container_name: customerservice_conductorExpandability
     networks:
-      - travel_application_conductor
+      - travel_application
     ports:
       - 8083:8083
     depends_on:
@@ -92,7 +92,7 @@ services:
     image: conductor-server-ui
     container_name: conductor-server-ui
     networks:
-      - travel_application_conductor
+      - travel_application
     ports:
       - 8080:8080
       - 5000:5000
@@ -117,7 +117,7 @@ services:
     image: v1r3n/dynomite
     container_name: dynomite
     networks:
-      - travel_application_conductor
+      - travel_application
     ports:
       - 8102:8102
     healthcheck:
@@ -140,8 +140,8 @@ services:
         - transport.host=0.0.0.0
         - discovery.type=single-node
         - xpack.security.enabled=false
-      networks: # try alias: -es?
-        - travel_application_conductor
+      networks:
+        - travel_application
       ports:
         - 9200:9200
         - 9300:9300
@@ -166,7 +166,7 @@ services:
     ports:
       - 3306:3306
     networks:
-      - travel_application_conductor
+      - travel_application
     expose:
       - '3306'
     environment:
@@ -177,7 +177,7 @@ services:
 
 
 networks:
-  travel_application_conductor:
+  travel_application:
 
 volumes:
   travel_db_conductor:
