@@ -7,11 +7,12 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import saga.netflix.conductor.hotelservice.controller.HotelServiceConfiguration;
+import saga.netflix.conductor.hotelservice.controller.OpenApiConfiguration;
 
 @EnableAutoConfiguration
 @EnableJpaRepositories
 @SpringBootApplication
-@Import(HotelServiceConfiguration.class)
+@Import({HotelServiceConfiguration.class, OpenApiConfiguration.class})
 @ComponentScan
 public class HotelServiceApplication {
 
