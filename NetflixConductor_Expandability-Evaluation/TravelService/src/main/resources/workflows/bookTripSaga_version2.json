@@ -5,6 +5,14 @@
   "version": 2,
   "tasks": [
     {
+      "name": "validateCustomer",
+      "taskReferenceName": "validateCustomer",
+      "inputParameters": {
+        "validateCustomerRequest": "${workflow.input.validateCustomerRequest}"
+      },
+      "type": "SIMPLE"
+    },
+    {
       "name": "bookHotel",
       "taskReferenceName": "bookHotel",
       "inputParameters": {
@@ -48,6 +56,5 @@
   "schemaVersion": 2,
   "restartable": true,
   "ownerEmail": "travelService@beispielMail.com",
-  "timeoutPolicy": "ALERT_ONLY",
-  "variables": {}
+  "timeoutPolicy": "ALERT_ONLY"
 }
