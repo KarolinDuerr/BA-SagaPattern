@@ -6,7 +6,7 @@
     "cancelHotelBooking"
   ],
   "outputKeys": [],
-  "timeoutPolicy": "TIME_OUT_WF",
+  "timeoutPolicy": "RETRY",
   "retryLogic": "FIXED",
   "retryDelaySeconds": 30,
   "responseTimeoutSeconds": 3600,

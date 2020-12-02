@@ -8,9 +8,9 @@
   "outputKeys": [
     "bookFlightResponse"
   ],
-  "timeoutPolicy": "TIME_OUT_WF",
+  "timeoutPolicy": "RETRY",
   "retryLogic": "FIXED",
   "retryDelaySeconds": 30,
-  "responseTimeoutSeconds": 3600,
+  "responseTimeoutSeconds": 300,
   "ownerEmail": "travelService@beispiel.com"
 }
