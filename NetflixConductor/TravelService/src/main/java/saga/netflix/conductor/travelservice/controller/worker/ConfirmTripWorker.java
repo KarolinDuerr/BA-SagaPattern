@@ -79,7 +79,8 @@ public class ConfirmTripWorker implements Worker {
             logger.error("The booking responses include different trip IDs.");
             taskResult.setReasonForIncompletion(new ErrorMessage(ErrorType.INTERNAL_ERROR, "The booking responses " +
                     "include different trip IDs").toString());
-            taskResult.setStatus(TaskResult.Status.FAILED);
+            // prevent retry --> ID's would stay different, so no reason to retry
+            taskResult.setStatus(TaskResult.Status.FAILED_WITH_TERMINAL_ERROR);
             return;
         }
 
