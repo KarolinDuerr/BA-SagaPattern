@@ -70,7 +70,8 @@ public class BookHotelWorker implements Worker {
         } catch (HotelServiceException exception) {
             logger.error(exception.toString());
             taskResult.setReasonForIncompletion(exception.toString());
-            taskResult.setStatus(TaskResult.Status.FAILED);
+            // prevent retry --> hotels will still be fully booked
+            taskResult.setStatus(TaskResult.Status.FAILED_WITH_TERMINAL_ERROR);
         }
 
         return taskResult;

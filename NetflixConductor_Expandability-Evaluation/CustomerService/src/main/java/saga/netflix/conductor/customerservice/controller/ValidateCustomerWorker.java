@@ -62,7 +62,8 @@ public class ValidateCustomerWorker implements Worker {
         } catch (CustomerServiceException exception) {
             logger.error(exception.toString());
             taskResult.setReasonForIncompletion(exception.toString());
-            taskResult.setStatus(TaskResult.Status.FAILED);
+            // prevent retry --> validation will still fail
+            taskResult.setStatus(TaskResult.Status.FAILED_WITH_TERMINAL_ERROR);
         }
 
         return taskResult;
