@@ -92,14 +92,24 @@ public class BookTripSaga {
 
     private void registerTasks() {
         HttpEntity<List<JsonNode>> request = new HttpEntity<>(taskDefinitions, requestHeader);
-        restTemplate.postForObject(conductorServerUri + TASK_DEFINITION_ENDPOINT, request, Void.class);
+        try {
+            restTemplate.postForObject(conductorServerUri + TASK_DEFINITION_ENDPOINT, request, Void.class);
+        } catch (HttpClientErrorException exception) {
+            if (exception.getStatusCode() == HttpStatus.CONFLICT && exception.getMessage().contains("already exists!")) {
+                // same task has already been registered
+                return;
+            }
+            String errorMessage = String.format("Exception occurred while registering task definitions: %s, with " +
+                    "cause %s", exception.getMessage(), exception.getCause());
+            logger.error(errorMessage);
+        }
         logger.info("Registered task definitions of the BookTripSaga");
     }
 
     private void registerWorkflows() {
         try {
             final JsonNode bookTripDefinition =
-                objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/workflows/bookTripSaga.json")));
+                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/workflows/bookTripSaga.json")));
             final JsonNode bookTripDefinitionVers2 =
                     objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/workflows/bookTripSaga_version2.json")));
             final JsonNode cancelTripDefinition =
@@ -123,6 +133,9 @@ public class BookTripSaga {
                 // same workflow has already been registered
                 return;
             }
+            String errorMessage = String.format("Exception occurred while registering workflow definition '%s': %s, " +
+                    "with cause %s", workflowToRegister.get("name"), exception.getMessage(), exception.getCause());
+            logger.error(errorMessage);
         }
         logger.info(String.format("Workflow definition (%s) trying to register.", workflowToRegister.get("name")));
     }
@@ -130,11 +143,13 @@ public class BookTripSaga {
     // TODO use springs Retryable instead?
     private void waitForServerToBeAvailable() {
         boolean serverUp = false;
-        while(!serverUp) {
+        while (!serverUp) {
             try {
-                ResponseEntity<JsonNode> responseEntity = restTemplate.getForEntity(conductorServerUri + "/health", JsonNode.class);
+                ResponseEntity<JsonNode> responseEntity = restTemplate.getForEntity(conductorServerUri + "/health",
+                        JsonNode.class);
                 serverUp = true;
-                String message = responseEntity == null ? "null" : responseEntity.getStatusCode() + " " + responseEntity.getBody();
+                String message = responseEntity == null ? "null" :
+                        responseEntity.getStatusCode() + " " + responseEntity.getBody();
                 logger.info("Response: " + message);
             } catch (ResourceAccessException exception) {
                 // server not yet reachable
