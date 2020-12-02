@@ -133,13 +133,20 @@ public class BookFlightWorker implements Worker {
     }
 
     private void provokeOwnFailure(String failureInput, boolean alreadyBeenProvoked) {
-        if (!failureInput.equalsIgnoreCase("Provoke participant failure while executing") || alreadyBeenProvoked) {
+        if (alreadyBeenProvoked) {
             return;
         }
 
-        logger.info("Shutting down FlightService due to corresponding input.");
-        // Force the JVM to terminate to simulate sudden failure
-        Runtime.getRuntime().halt(1);
+        if (failureInput.equalsIgnoreCase("Provoke exception while executing")) {
+            logger.info("Throwing runtime exception due to corresponding input.");
+            throw new RuntimeException("Test participant behaviour when provoking exception while executing");
+        }
+
+        if (failureInput.equalsIgnoreCase("Provoke participant failure while executing")) {
+            logger.info("Shutting down FlightService due to corresponding input.");
+            // Force the JVM to terminate to simulate sudden failure
+            Runtime.getRuntime().halt(1);
+        }
     }
 
 }
