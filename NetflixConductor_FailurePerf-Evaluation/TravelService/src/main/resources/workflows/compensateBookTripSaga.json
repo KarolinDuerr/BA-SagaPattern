@@ -35,6 +35,5 @@
   "schemaVersion": 2,
   "restartable": true,
   "ownerEmail": "travelService@beispielMail.com",
-  "timeoutPolicy": "ALERT_ONLY",
-  "variables": {}
+  "timeoutPolicy": "ALERT_ONLY"
 }
