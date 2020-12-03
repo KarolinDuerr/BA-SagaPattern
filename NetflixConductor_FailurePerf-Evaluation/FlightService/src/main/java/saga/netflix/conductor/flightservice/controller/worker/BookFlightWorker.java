@@ -76,7 +76,8 @@ public class BookFlightWorker implements Worker {
         } catch (FlightServiceException exception) {
             logger.error(exception.toString());
             taskResult.setReasonForIncompletion(exception.toString());
-            taskResult.setStatus(TaskResult.Status.FAILED);
+            // prevent retry --> flights will still be fully booked
+            taskResult.setStatus(TaskResult.Status.FAILED_WITH_TERMINAL_ERROR);
         }
 
         return taskResult;
