@@ -1,9 +1,13 @@
 package saga.eventuate.tram.travelservice.api.dto;
 
+import javax.validation.constraints.NotBlank;
+
 public class LocationDTO {
 
+    @NotBlank(message = "Country cannot be missing")
     private String country;
 
+    @NotBlank(message = "City cannot be missing")
     private String city;
 
     private LocationDTO() {
