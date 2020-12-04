@@ -1,5 +1,10 @@
 package saga.eventuate.tram.hotelservice.controller;
 
+import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.core.DefaultDockerClientConfig;
+import com.github.dockerjava.core.DockerClientImpl;
+import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
+import com.github.dockerjava.transport.DockerHttpClient;
 import io.eventuate.tram.commands.consumer.CommandHandlerReplyBuilder;
 import io.eventuate.tram.commands.consumer.CommandHandlers;
 import io.eventuate.tram.commands.consumer.CommandMessage;
@@ -8,10 +13,6 @@ import io.eventuate.tram.sagas.participant.SagaCommandHandlersBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.web.client.RestTemplate;
 import saga.eventuate.tram.hotelservice.api.HotelServiceChannels;
 import saga.eventuate.tram.hotelservice.api.dto.*;
 import saga.eventuate.tram.hotelservice.error.ErrorType;
@@ -19,6 +20,8 @@ import saga.eventuate.tram.hotelservice.error.HotelServiceException;
 import saga.eventuate.tram.hotelservice.model.HotelBooking;
 import saga.eventuate.tram.hotelservice.model.HotelBookingInformation;
 import saga.eventuate.tram.hotelservice.resources.DtoConverter;
+
+import java.io.IOException;
 
 /**
  * The hotel service Saga Participant for handling the commands created by the BookTripSaga.
@@ -33,15 +36,9 @@ public class HotelCommandHandler {
     @Autowired
     private final DtoConverter dtoConverter;
 
-    private final String flightServiceServer;
-    private final String flightServiceActuatorUri;
-
-    public HotelCommandHandler(final IHotelService hotelService, final DtoConverter dtoConverter,
-                               final String flightServiceServer, final String flightServiceActuatorUri) {
+    public HotelCommandHandler(final IHotelService hotelService, final DtoConverter dtoConverter) {
         this.hotelService = hotelService;
         this.dtoConverter = dtoConverter;
-        this.flightServiceServer = flightServiceServer;
-        this.flightServiceActuatorUri = flightServiceActuatorUri;
     }
 
     public CommandHandlers commandHandlers() {
@@ -100,18 +97,22 @@ public class HotelCommandHandler {
         }
 
         logger.info("Shutting down FlightService due to corresponding input.");
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> terminateRequest = new HttpEntity<>(null, headers);
-        String response = restTemplate.postForObject(flightServiceServer + flightServiceActuatorUri,
-                terminateRequest, String.class);
-        logger.info("FlightService response" + response);
+        DefaultDockerClientConfig config = DefaultDockerClientConfig.createDefaultConfigBuilder()
+                .withDockerHost("unix:///var/run/docker.sock")
+                .withDockerTlsVerify(false)
+                .withDockerCertPath("/home/user/.docker/certs")
+                .withDockerConfig("/home/user/.docker")
+                .build();
+        DockerHttpClient httpClient = new ApacheDockerHttpClient.Builder()
+                .dockerHost(config.getDockerHost())
+                .sslConfig(config.getSSLConfig())
+                .build();
+        DockerClient dockerClient = DockerClientImpl.getInstance(config, httpClient);
+        dockerClient.stopContainerCmd("flightservice_eventuateFailurePerf").exec();
         try {
-            // wait to make sure no unintended behaviour is created due to the provoked shutdown
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            // ignore
+            dockerClient.close();
+        } catch (IOException e) {
+            logger.warn("Docker client could not be closed", e);
         }
     }
 }

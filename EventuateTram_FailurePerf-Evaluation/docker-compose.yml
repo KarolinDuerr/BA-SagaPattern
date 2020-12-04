@@ -14,6 +14,8 @@ services:
       - kafka
       - zookeeper
       - cdcservice
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql/eventuate
       SPRING_DATASOURCE_USERNAME: mysqluser
@@ -39,6 +41,8 @@ services:
       - kafka
       - zookeeper
       - cdcservice
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql/eventuate
       SPRING_DATASOURCE_USERNAME: mysqluser
@@ -49,8 +53,6 @@ services:
       SPRING_SLEUTH_ENABLED: "true"
       SPRING_SLEUTH_SAMPLER_PROBABILITY: 1
       SPRING_ZIPKIN_BASE_URL: http://zipkin:9411/
-      FLIGHT_SERVICE_SERVER: http://flightservice:8082/
-      FLIGHT_SERVICE_ACTUATOR_URI: /api/flights/monitor/shutdown
 
 
   flightservice:
@@ -66,6 +68,8 @@ services:
       - kafka
       - zookeeper
       - cdcservice
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql/eventuate
       SPRING_DATASOURCE_USERNAME: mysqluser
@@ -76,8 +80,6 @@ services:
       SPRING_SLEUTH_ENABLED: "true"
       SPRING_SLEUTH_SAMPLER_PROBABILITY: 1
       SPRING_ZIPKIN_BASE_URL: http://zipkin:9411/
-      TRAVEL_SERVICE_SERVER: http://travelservice:8090/
-      TRAVEL_SERVICE_ACTUATOR_URI: /api/travel/monitor/shutdown
 
 
   zookeeper:

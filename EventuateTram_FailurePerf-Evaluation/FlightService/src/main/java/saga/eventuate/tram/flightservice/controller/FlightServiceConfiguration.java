@@ -5,7 +5,6 @@ import io.eventuate.tram.sagas.participant.SagaCommandDispatcherFactory;
 import io.eventuate.tram.sagas.spring.participant.SagaParticipantConfiguration;
 import io.eventuate.tram.spring.consumer.kafka.EventuateTramKafkaMessageConsumerConfiguration;
 import io.eventuate.tram.spring.messaging.producer.jdbc.TramMessageProducerJdbcConfiguration;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,12 +18,6 @@ import saga.eventuate.tram.flightservice.resources.DtoConverter;
         EventuateTramKafkaMessageConsumerConfiguration.class})
 public class FlightServiceConfiguration {
 
-    @Value("${TRAVEL_SERVICE_SERVER:travelService.server}")
-    String travelServiceServer;
-
-    @Value("${TRAVEL_SERVICE_ACTUATOR_URI:travelService.actuator.uri}")
-    String travelServiceActuatorUri;
-
     @Bean
     public IFlightService flightService(FlightInformationRepository flightInformationRepository) {
         return new FlightService(flightInformationRepository);
@@ -37,7 +30,7 @@ public class FlightServiceConfiguration {
 
     @Bean
     public FlightCommandHandler flightCommandHandler(IFlightService flightService, DtoConverter dtoConverter) {
-        return new FlightCommandHandler(flightService, dtoConverter, travelServiceServer, travelServiceActuatorUri);
+        return new FlightCommandHandler(flightService, dtoConverter);
     }
 
     @Bean

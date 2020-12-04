@@ -1,5 +1,10 @@
 package saga.eventuate.tram.flightservice.controller;
 
+import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.core.DefaultDockerClientConfig;
+import com.github.dockerjava.core.DockerClientImpl;
+import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
+import com.github.dockerjava.transport.DockerHttpClient;
 import io.eventuate.tram.commands.consumer.CommandHandlerReplyBuilder;
 import io.eventuate.tram.commands.consumer.CommandHandlers;
 import io.eventuate.tram.commands.consumer.CommandMessage;
@@ -8,10 +13,6 @@ import io.eventuate.tram.sagas.participant.SagaCommandHandlersBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.web.client.RestTemplate;
 import saga.eventuate.tram.flightservice.api.FlightServiceChannels;
 import saga.eventuate.tram.flightservice.api.dto.BookFlightCommand;
 import saga.eventuate.tram.flightservice.api.dto.BookFlightResponse;
@@ -23,6 +24,8 @@ import saga.eventuate.tram.flightservice.model.FindAndBookFlightInformation;
 import saga.eventuate.tram.flightservice.model.FlightInformation;
 import saga.eventuate.tram.flightservice.resources.DtoConverter;
 
+import java.io.IOException;
+
 public class FlightCommandHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(FlightCommandHandler.class);
@@ -33,15 +36,9 @@ public class FlightCommandHandler {
     @Autowired
     private final DtoConverter dtoConverter;
 
-    private final String travelServiceServer;
-    private final String travelServiceActuatorUri;
-
-    public FlightCommandHandler(final IFlightService flightService, final DtoConverter dtoConverter,
-                                String travelServiceServer, String travelServiceActuatorUri) {
+    public FlightCommandHandler(final IFlightService flightService, final DtoConverter dtoConverter) {
         this.flightService = flightService;
         this.dtoConverter = dtoConverter;
-        this.travelServiceServer = travelServiceServer;
-        this.travelServiceActuatorUri = travelServiceActuatorUri;
     }
 
     public CommandHandlers commandHandlers() {
@@ -64,8 +61,8 @@ public class FlightCommandHandler {
             BookFlightResponse bookFlightResponse = new BookFlightResponse(receivedFlightInformation.getId(),
                     receivedFlightInformation.getBookingStatus().toString());
 
-            // provoke Orchestrator failure
-            provokeOrchestratorFailure(flightInformation.getDestination().getCountry());
+            // provoke Orchestrator failure --> CDC service or TravelService
+            provokeOrchestratorFailure(flightInformation.getDestination().getCountry(), receivedFlightInformation.getProvokedFailure());
 
             // provoke own failure if it has not already been done before for this flight booking
             provokeOwnFailure(flightInformation.getDestination().getCountry(),
@@ -91,34 +88,58 @@ public class FlightCommandHandler {
         return CommandHandlerReplyBuilder.withSuccess();
     }
 
-    private void provokeOrchestratorFailure(String failureInput) {
-        if (!failureInput.equalsIgnoreCase("Provoke orchestrator failure while executing")) {
+    private void provokeOrchestratorFailure(String failureInput, boolean alreadyBeenProvoked) {
+        if (alreadyBeenProvoked) {
             return;
         }
 
-        logger.info("Shutting down TravelService due to corresponding input.");
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> terminateRequest = new HttpEntity<>(null, headers);
-        String response = restTemplate.postForObject(travelServiceServer + travelServiceActuatorUri,
-                terminateRequest, String.class);
-        logger.info("TravelService response" + response);
-        try {
-            // wait to make sure no unintended behaviour is created due to the provoked shutdown
-            Thread.sleep(15000);
-        } catch (InterruptedException e) {
-            // ignore
+        if (failureInput.equalsIgnoreCase("Provoke orchestrator failure while executing")) {
+            logger.info("Shutting down TravelService due to corresponding input.");
+            provokeServiceFailure("travelservice_eventuateFailurePerf");
+            return;
+        }
+
+        if (failureInput.equalsIgnoreCase("Provoke CDC failure while executing")) {
+            logger.info("Shutting down CDC service due to corresponding input.");
+            provokeServiceFailure("cdcservice");
         }
     }
 
     private void provokeOwnFailure(String failureInput, boolean alreadyBeenProvoked) {
-        if (!failureInput.equalsIgnoreCase("Provoke participant failure while executing") || alreadyBeenProvoked) {
+        if (alreadyBeenProvoked) {
             return;
         }
 
-        logger.info("Shutting down FlightService due to corresponding input.");
-        // Force the JVM to terminate to simulate sudden failure
-        Runtime.getRuntime().halt(1);
+        if (failureInput.equalsIgnoreCase("Provoke participant failure while executing")) {
+            logger.info("Shutting down FlightService due to corresponding input.");
+            // Force the JVM to terminate to simulate sudden failure
+            Runtime.getRuntime().halt(1);
+            return;
+        }
+
+        if (failureInput.equalsIgnoreCase("Provoke exception while executing")) {
+            logger.info("Throwing runtime exception due to corresponding input.");
+            throw new RuntimeException("Test participant behaviour when provoking exception while executing");
+        }
+    }
+
+    private void provokeServiceFailure(String containerName) {
+        DefaultDockerClientConfig config = DefaultDockerClientConfig.createDefaultConfigBuilder()
+                .withDockerHost("unix:///var/run/docker.sock")
+                .withDockerTlsVerify(false)
+                .withDockerCertPath("/home/user/.docker/certs")
+                .withDockerConfig("/home/user/.docker")
+                .build();
+        DockerHttpClient httpClient = new ApacheDockerHttpClient.Builder()
+                .dockerHost(config.getDockerHost())
+                .sslConfig(config.getSSLConfig())
+                .build();
+        DockerClient dockerClient = DockerClientImpl.getInstance(config, httpClient);
+        dockerClient.stopContainerCmd(containerName).exec();
+        try {
+            dockerClient.close();
+        } catch (IOException e) {
+            logger.warn("Docker client could not be closed", e);
+        }
     }
 }

@@ -1,5 +1,10 @@
 package saga.eventuate.tram.travelservice.controller;
 
+import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.core.DefaultDockerClientConfig;
+import com.github.dockerjava.core.DockerClientImpl;
+import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
+import com.github.dockerjava.transport.DockerHttpClient;
 import io.eventuate.tram.sagas.orchestration.SagaInstanceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +21,7 @@ import saga.eventuate.tram.travelservice.model.TripInformationRepository;
 import saga.eventuate.tram.travelservice.saga.BookTripSaga;
 import saga.eventuate.tram.travelservice.saga.BookTripSagaData;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -83,6 +89,9 @@ public class TravelService implements  ITravelService {
 
         tripInformationRepository.save(tripInformation);
 
+        // provoke Orchestrator failure (CDC Service) before the Saga is being started
+        provokeOrchestratorFailure(tripInformation);
+
         // create the BookTripSaga with the necessary information
         BookTripSagaData sagaData = new BookTripSagaData(tripInformation.getId(), tripInformation);
         sagaInstanceFactory.create(bookTripSaga, sagaData);
@@ -145,6 +154,34 @@ public class TravelService implements  ITravelService {
                 return BookingStatus.REJECTED_NO_FLIGHT_AVAILABLE;
             default:
                 return BookingStatus.REJECTED_UNKNOWN;
+        }
+    }
+
+    private void provokeOrchestratorFailure(TripInformation tripInformation) {
+        // provoke Orchestrator failure (CDC Service) before the Saga is being started
+        if (tripInformation.getDestination().getCountry().equalsIgnoreCase("Provoke orchestrator failure while starting trip booking")) {
+            logger.info("Shutting down CDC service due to corresponding input.");
+            provokeServiceFailure("cdcservice");
+        }
+    }
+
+    private void provokeServiceFailure(String containerName) {
+        DefaultDockerClientConfig config = DefaultDockerClientConfig.createDefaultConfigBuilder()
+                .withDockerHost("unix:///var/run/docker.sock")
+                .withDockerTlsVerify(false)
+                .withDockerCertPath("/home/user/.docker/certs")
+                .withDockerConfig("/home/user/.docker")
+                .build();
+        DockerHttpClient httpClient = new ApacheDockerHttpClient.Builder()
+                .dockerHost(config.getDockerHost())
+                .sslConfig(config.getSSLConfig())
+                .build();
+        DockerClient dockerClient = DockerClientImpl.getInstance(config, httpClient);
+        dockerClient.stopContainerCmd(containerName).exec();
+        try {
+            dockerClient.close();
+        } catch (IOException e) {
+            logger.warn("Docker client could not be closed", e);
         }
     }
 }
