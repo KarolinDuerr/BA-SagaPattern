@@ -2,14 +2,20 @@ package saga.eventuate.tram.travelservice.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
 public class TripDurationDTO {
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @NotBlank(message = "Start date cannot be missing")
+    @FutureOrPresent(message = "Date has to be in the present or the future.")
     private Date start;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @NotBlank(message = "End date cannot be missing")
+    @FutureOrPresent(message = "Date has to be in the present or the future.")
     private Date end;
 
     private TripDurationDTO() {
