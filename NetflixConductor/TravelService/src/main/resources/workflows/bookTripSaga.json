@@ -46,5 +46,5 @@
   "failureWorkflow": "compensateBookTripSaga",
   "schemaVersion": 2,
   "restartable": true,
-  "ownerEmail": "travelService@beispielMail.com"
+  "ownerEmail": "travelService@exampleMail.com"
 }
