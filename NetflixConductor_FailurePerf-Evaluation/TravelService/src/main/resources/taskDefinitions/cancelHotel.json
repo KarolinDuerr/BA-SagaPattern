@@ -1,14 +1,15 @@
 {
   "name": "cancelHotel",
   "description": "Invokes the HotelService to cancel the booked hotel with the corresponding tripId.",
-  "retryCount": 1,
   "inputKeys": [
     "cancelHotelBooking"
   ],
-  "outputKeys": [],
+  "timeoutSeconds": 10800,
   "timeoutPolicy": "RETRY",
+  "retryCount": 1,
   "retryLogic": "FIXED",
   "retryDelaySeconds": 30,
   "responseTimeoutSeconds": 3600,
-  "ownerEmail": "travelService@beispiel.com"
+  "pollTimeoutSeconds": 14400,
+  "ownerEmail": "travelService@exampleMail.com"
 }
