@@ -1,16 +1,18 @@
 {
   "name": "bookFlight",
   "description": "Invokes the FlightService to book an available flight.",
-  "retryCount": 1,
   "inputKeys": [
     "bookFlightRequest"
   ],
   "outputKeys": [
     "bookFlightResponse"
   ],
+  "timeoutSeconds": 10800,
   "timeoutPolicy": "RETRY",
+  "retryCount": 1,
   "retryLogic": "FIXED",
   "retryDelaySeconds": 30,
   "responseTimeoutSeconds": 3600,
-  "ownerEmail": "travelService@beispiel.com"
+  "pollTimeoutSeconds": 14400,
+  "ownerEmail": "travelService@exampleMail.com"
 }
