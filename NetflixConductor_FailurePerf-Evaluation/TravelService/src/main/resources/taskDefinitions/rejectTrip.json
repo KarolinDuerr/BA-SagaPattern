@@ -5,6 +5,7 @@
     "reason",
     "tripIdInHotelBookingRequest"
   ],
+  "outputKeys": [],
   "timeoutSeconds": 10800,
   "timeoutPolicy": "RETRY",
   "retryCount": 1,
