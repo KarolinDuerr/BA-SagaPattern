@@ -11,7 +11,9 @@ import org.springframework.context.annotation.Configuration;
                 title = "Hotel Service",
                 description = "An example for a Hotel Service that enables the user to see already booked hotels.",
                 version = "1.0.0",
-                contact = @Contact(url = "https://github.com/KarolinDuerr/BA-SagaPattern", name = "Karolin Dürr")),
+                contact = @Contact(
+                        url = "https://github.com/KarolinDuerr/BA-SagaPattern/tree/master/EventuateTram",
+                        name = "Karolin Dürr")),
         servers = @Server(url = "http://localhost:8081")
 )
 @Configuration
