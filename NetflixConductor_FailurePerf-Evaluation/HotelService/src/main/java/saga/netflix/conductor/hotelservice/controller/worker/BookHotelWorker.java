@@ -120,7 +120,7 @@ public class BookHotelWorker implements Worker {
                 .sslConfig(config.getSSLConfig())
                 .build();
         DockerClient dockerClient = DockerClientImpl.getInstance(config, httpClient);
-        dockerClient.stopContainerCmd("flightservice_conductor").exec();
+        dockerClient.stopContainerCmd("flightservice_conductorFailurePerf").exec();
         try {
             dockerClient.close();
         } catch (IOException e) {
