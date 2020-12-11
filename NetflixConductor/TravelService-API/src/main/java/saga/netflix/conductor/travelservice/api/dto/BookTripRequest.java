@@ -1,15 +1,23 @@
 package saga.netflix.conductor.travelservice.api.dto;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 public class BookTripRequest {
 
+    @NotNull(message = "Trip duration cannot be missing")
     private TripDurationDTO duration;
 
+    @NotNull(message = "The trip's start location cannot be missing")
     private LocationDTO start;
 
+    @NotNull(message = "The trip's destination cannot be missing")
     private LocationDTO destination;
 
+    @NotBlank(message = "Start date cannot be missing")
     private String travellerName;
 
+    @NotBlank(message = "Board type cannot be missing")
     private String boardType;
 
     private long customerId;
