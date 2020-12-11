@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
                 description = "An example for a Flight Service that enables the user to see already booked flights.",
                 version = "1.0.0",
                 contact = @Contact(
-                        url = "https://github.com/KarolinDuerr/BA-SagaPattern/tree/master/EventuateTram_Expandability-Evaluation",
+                        url = "https://github.com/KarolinDuerr/BA-SagaPattern/tree/master/NetflixConductor_FailurePerf-Evaluation",
                         name = "Karolin Dürr")),
         servers = @Server(url = "http://localhost:8082")
 )
