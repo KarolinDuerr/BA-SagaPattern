@@ -81,9 +81,8 @@ public class BookTripSaga {
             taskDefinitions.add(confirmHotelTask);
             taskDefinitions.add(confirmTripTask);
             taskDefinitions.add(rejectTripTask);
-        } catch (IOException e) {
-            logger.error("exception " + e.getMessage());
-            e.printStackTrace();
+        } catch (IOException exception) {
+            logger.error("Exception while reading task blueprints: " + exception.getMessage() + ", with cause: " + exception.getCause());
         }
     }
 
@@ -112,9 +111,8 @@ public class BookTripSaga {
 
             registerWorkflow(bookTripDefinition);
             registerWorkflow(cancelTripDefinition);
-        } catch (IOException e) {
-            logger.error("exception " + e.getMessage());
-            e.printStackTrace();
+        } catch (IOException exception) {
+            logger.error("Exception while reading workflow blueprints: " + exception.getMessage() + ", with cause: " + exception.getCause());
         }
     }
 
@@ -147,8 +145,8 @@ public class BookTripSaga {
                 logger.info("Response: " + message);
             } catch (ResourceAccessException exception) {
                 // server not yet reachable
+                logger.info("Occurred exception: " + exception.getMessage() + ", with cause: " + exception.getCause());
                 logger.info("Server not available yet. Retrying in 50s");
-                exception.printStackTrace();
                 try {
                     Thread.sleep(50000);
                 } catch (InterruptedException e) {
