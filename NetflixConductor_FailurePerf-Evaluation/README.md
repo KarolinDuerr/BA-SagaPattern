@@ -1,5 +1,5 @@
 # Netflix Conductor Failure Performance Evaluation
-This project is part of the evaluation of a Saga pattern implementation using Netflix Conductor.
+This project is part of the evaluation of a Saga pattern implementation using [Netflix Conductor](https://github.com/Netflix/conductor).
 Additional sections to the original [Saga Pattern Realization With Netflix Conductor](https://github.com/KarolinDuerr/BA-SagaPattern/tree/master/NetflixConductor)
 have been included that simulate different failure scenarios given a particular input.
 
