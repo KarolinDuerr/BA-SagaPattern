@@ -55,10 +55,11 @@ The services also provide a *health* and an *info* endpoint that show some infor
 that the DB is up and running. These endpoints can be accessed via:
 
 | __Service__ | __URL__ |
-|:-------|:-------------------|
-|TravelService| http://localhost:8090/api/travel/monitor/health  http://localhost:8090/api/travel/monitor/info
-|HotelService| http://localhost:8081/api/hotels/monitor/health http://localhost:8081/api/hotels/monitor/info
-|FlightService| http://localhost:8082/api/flights/monitor/health http://localhost:8082/api/flights/monitor/info
+|:-------:|-------------------|
+|TravelService| http://localhost:8090/api/travel/monitor/health &nbsp; http://localhost:8090/api/travel/monitor/info
+|HotelService| http://localhost:8081/api/hotels/monitor/health &nbsp; http://localhost:8081/api/hotels/monitor/info
+|FlightService| http://localhost:8082/api/flights/monitor/health &nbsp; http://localhost:8082/api/flights/monitor/info
+
 
 If you are on Windows or Mac, you sometimes have to replace _localhost_ with the default IP of your docker machine (use `docker-machine ip default` to get this default IP).
 
