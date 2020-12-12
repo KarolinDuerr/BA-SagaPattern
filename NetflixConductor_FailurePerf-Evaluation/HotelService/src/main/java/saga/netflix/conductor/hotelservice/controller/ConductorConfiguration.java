@@ -6,11 +6,9 @@ import com.netflix.conductor.common.utils.JsonMapperProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.retry.annotation.EnableRetry;
 import saga.netflix.conductor.hotelservice.resources.DtoConverter;
 
 @Configuration
-//@EnableRetry
 public class ConductorConfiguration {
 
     @Value("${conductor.server.uri}")
@@ -29,15 +27,8 @@ public class ConductorConfiguration {
     }
 
     @Bean
-//    @Retryable(value = {SocketException.class, RuntimeException.class, ConductorClientException.class}, maxAttempts
-//    = 10, backoff = @Backoff(delay = 20000))
     public WorkerDispatcher workerDispatcher(TaskClient taskClient, ObjectMapper objectMapper,
                                              IHotelService hotelService, DtoConverter dtoConverter) {
-        try {
-            Thread.sleep(50000); // TODO
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         WorkerDispatcher createdWorkerDispatcher = new WorkerDispatcher(taskClient, objectMapper, hotelService,
                 dtoConverter);
         createdWorkerDispatcher.startTaskPolling();
