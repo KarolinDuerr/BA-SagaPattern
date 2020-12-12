@@ -25,7 +25,7 @@ HotelService and FlightService. For simplicity reasons, only the workflow for bo
    or access the [Swagger UI](https://swagger.io/tools/swagger-ui/) of the different services:
 
    | __Service__ | __URL to Swagger UI__ |
-      |:-------|:-------------------:| 
+   |:-------|:-------------------:| 
    |TravelService| http://localhost:8090/swagger-ui.html
    |HotelService| http://localhost:8081/swagger-ui.html
    |FlightService| http://localhost:8082/swagger-ui.html
@@ -61,6 +61,9 @@ as `destination country` in the trip booking request:
 
 "Provoke flight failure"
 ```
+
+Additionally, the [Swagger UI](https://swagger.io/tools/swagger-ui/) of the __Conductor server__ can be accessed via
+http://localhost:8080/.
 
 The services also provide a *health* and an *info* endpoint that show some information about the system like
 that the DB is up and running. These endpoints can be accessed via:
