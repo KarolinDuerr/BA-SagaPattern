@@ -184,20 +184,6 @@ services:
       JAVA_OPTS: -Xmx64m
       STORAGE_TYPE: mem
 
-  # Temporarily to show Kafka in a UI --> http://localhost:9000/ #TODO remove
-  kafdrop:
-    image: obsidiandynamics/kafdrop
-    container_name: kafrop
-    depends_on:
-      - kafka
-    ports:
-      - 9000:9000
-    networks:
-      - travel_application
-    environment:
-      - KAFKA_BROKERCONNECT=kafka:29092,kafka:29092
-      - "JVM_OPTS=-Xms32M -Xmx64M"
-
 
 networks:
   travel_application:
