@@ -54,11 +54,11 @@ as `destination country` in the trip booking request:
 The services also provide a *health* and an *info* endpoint that show some information about the system like
 that the DB is up and running. These endpoints can be accessed via:
 
-| __Service__ | __URL__ |
-|:-------:|-------------------|
-|TravelService| http://localhost:8090/api/travel/monitor/health &nbsp; http://localhost:8090/api/travel/monitor/info
-|HotelService| http://localhost:8081/api/hotels/monitor/health &nbsp; http://localhost:8081/api/hotels/monitor/info
-|FlightService| http://localhost:8082/api/flights/monitor/health &nbsp; http://localhost:8082/api/flights/monitor/info
+| __Service__ | __URL to health endpoint__ |  __URL to info endpoint__ |
+|:-------:|------------------|-------------------|
+|TravelService| http://localhost:8090/api/travel/monitor/health | http://localhost:8090/api/travel/monitor/info
+|HotelService| http://localhost:8081/api/hotels/monitor/health | http://localhost:8081/api/hotels/monitor/info
+|FlightService| http://localhost:8082/api/flights/monitor/health | http://localhost:8082/api/flights/monitor/info
 
 
 If you are on Windows or Mac, you sometimes have to replace _localhost_ with the default IP of your docker machine (use `docker-machine ip default` to get this default IP).
