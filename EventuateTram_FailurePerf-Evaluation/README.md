@@ -15,9 +15,13 @@ have been included that simulate different failure scenarios given a particular 
 3. Requesting trip bookings is now possible. Either use `curl` commands,
    the provided `TravelApplication.json` insomnia file, which includes different trip booking requests,
    or access the [Swagger UI](https://swagger.io/tools/swagger-ui/) of the different services:
-    - TravelService: http://localhost:8090/swagger-ui.html
-    - HotelService: http://localhost:8081/swagger-ui.html
-    - FlightService: http://localhost:8082/swagger-ui.html
+
+   | __Service__ | __URL to Swagger UI__ |
+      |:-------|:-------------------:| 
+   |TravelService| http://localhost:8090/swagger-ui.html
+   |HotelService| http://localhost:8081/swagger-ui.html
+   |FlightService| http://localhost:8082/swagger-ui.html
+
 
 To simulate a Saga that fails because __no hotel__ or __no flight__ is __available__, use one of the following Strings 
 as `destination country` in the trip booking request:

@@ -15,9 +15,12 @@ HotelService and FlightService. For simplicity reasons, only the workflow for bo
 3. Requesting trip bookings is now possible. Either use `curl` commands,
    the provided `TravelApplication.json` insomnia file, which includes different trip booking requests,
    or access the [Swagger UI](https://swagger.io/tools/swagger-ui/) of the different services:
-    - TravelService: http://localhost:8090/swagger-ui.html
-    - HotelService: http://localhost:8081/swagger-ui.html
-    - FlightService: http://localhost:8082/swagger-ui.html
+   
+   | __Service__ | __URL to Swagger UI__ |
+   |:-------|:-------------------:| 
+   |TravelService| http://localhost:8090/swagger-ui.html
+   |HotelService| http://localhost:8081/swagger-ui.html
+   |FlightService| http://localhost:8082/swagger-ui.html
 
 An example for such a request:
 ```
@@ -103,4 +106,5 @@ The Zipkin UI can be accessed via http://localhost:9411/zipkin/
 ### Metrics of the CDC Service
 
 Eventuate's __CDC Service__ publishes some metrics like the number of processed messages.
-They can be accessed via http://localhost:8099/actuator/prometheus
+
+The metrics can be accessed via http://localhost:8099/actuator/prometheus
