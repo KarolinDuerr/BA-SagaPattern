@@ -53,7 +53,7 @@ If you are on Windows or Mac, you sometimes have to replace _localhost_ with the
 
 ## Stop the Application
 
-To stop the application and remove the created containers execute the following command:
+To stop the application and remove the created containers, execute the following command:
 ```
 docker-compose down --remove-orphans
 ```

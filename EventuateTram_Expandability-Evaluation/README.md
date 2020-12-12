@@ -21,6 +21,30 @@ to realize the Saga pattern. The __CustomerService__ has to authorize the custom
 - FlightService: http://localhost:8082/swagger-ui.html
 - CustomerService: http://localhost:8083/swagger-ui.html
 
+An example for such a request:
+```
+{
+    "duration":
+    {
+        "start":"2021-12-01",
+        "end":"2021-12-12"
+    },
+    "start":
+    {
+        "country":"Scotland",
+        "city":"Stirling"
+    },
+    "destination":
+    {
+        "country":"Sweden",
+        "city":"Stockholm"
+    },
+    "travellerName": "Max Mustermann",
+    "boardType":"breakfast",
+    "customerId":"1"
+}
+```
+
 To simulate a Saga that fails because __no hotel__ or __no flight__ is __available__, use one of the following Strings
 as `destination country` in the trip booking request:
 ```
@@ -73,7 +97,7 @@ If you are on Windows or Mac, you sometimes have to replace _localhost_ with the
 
 ## Stop the Application
 
-To stop the application and remove the created containers execute the following command:
+To stop the application and remove the created containers, execute the following command:
 ```
 docker-compose down --remove-orphans
 ```
