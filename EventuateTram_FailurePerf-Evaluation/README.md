@@ -1,6 +1,7 @@
 # Eventuate Tram Failure Performance Evaluation
-This project is part of the evaluation of a Saga pattern implementation using the Eventuate Tram framework.
-Additional sections to the original [Eventuate Saga pattern implementation](https://github.com/KarolinDuerr/BA-SagaPattern/tree/master/EventuateTram) 
+This project is part of the evaluation of a Saga pattern implementation using the [Eventuate Tram](https://github.com/eventuate-tram/eventuate-tram-core)
+and [Eventuate Tram Sagas](https://github.com/eventuate-tram/eventuate-tram-sagas) framework.
+Additional sections to the original [Saga Pattern Realization with Eventuate Tram](https://github.com/KarolinDuerr/BA-SagaPattern/tree/master/EventuateTram) 
 have been included that simulate different failure scenarios given a particular input.
 
 ## Start the Application
