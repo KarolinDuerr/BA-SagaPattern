@@ -31,7 +31,7 @@ dependencies {
     // Netflix Conductor
     compile "com.netflix.conductor:conductor-client:$netflixConductorVersion"
 
-    // Metrics Test
+    // Enable Server and Client Metrics
     compile "com.netflix.spectator:spectator-reg-metrics3:0.120.0"
 
     // Swagger OpenAPI definition
