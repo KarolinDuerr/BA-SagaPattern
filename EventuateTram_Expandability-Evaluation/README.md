@@ -1,4 +1,4 @@
-# BA-SagaPattern: Eventuate Tram Expandability Evaluation
+# Eventuate Tram Expandability Evaluation
 This project is part of the evaluation of a Saga pattern implementation using the Eventuate Tram framework.
 The original [Eventuate Saga pattern implementation](https://github.com/KarolinDuerr/BA-SagaPattern/tree/master/EventuateTram)
 has been extended by a __CustomerService__ in order to evaluate the expandability of an implementation using Eventuate Tram

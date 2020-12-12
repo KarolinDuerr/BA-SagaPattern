@@ -1,4 +1,4 @@
-# BA-SagaPattern: Eventuate Tram Failure Performance Evaluation
+# Eventuate Tram Failure Performance Evaluation
 This project is part of the evaluation of a Saga pattern implementation using the Eventuate Tram framework.
 Additional sections to the original [Eventuate Saga pattern implementation](https://github.com/KarolinDuerr/BA-SagaPattern/tree/master/EventuateTram) 
 have been included that simulate different failure scenarios given a particular input.
@@ -18,7 +18,7 @@ have been included that simulate different failure scenarios given a particular 
   - HotelService: http://localhost:8081/swagger-ui.html
   - FlightService: http://localhost:8082/swagger-ui.html
 
-To simulate a Saga that fails because no hotel or no flight is available, use one of the following Strings 
+To simulate a Saga that fails because __no hotel__ or __no flight__ is __available__, use one of the following Strings 
 as `destination country` in the trip booking request:
 ```
 "Provoke hotel failure"
