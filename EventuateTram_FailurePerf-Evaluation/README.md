@@ -15,9 +15,9 @@ have been included that simulate different failure scenarios given a particular 
 3. Requesting trip bookings is now possible. Either use `curl` commands,
    the provided `TravelApplication.json` insomnia file, which includes different trip booking requests,
    or access the [Swagger UI](https://swagger.io/tools/swagger-ui/) of the different services:
-  - TravelService: http://localhost:8090/swagger-ui.html
-  - HotelService: http://localhost:8081/swagger-ui.html
-  - FlightService: http://localhost:8082/swagger-ui.html
+    - TravelService: http://localhost:8090/swagger-ui.html
+    - HotelService: http://localhost:8081/swagger-ui.html
+    - FlightService: http://localhost:8082/swagger-ui.html
 
 To simulate a Saga that fails because __no hotel__ or __no flight__ is __available__, use one of the following Strings 
 as `destination country` in the trip booking request:
@@ -31,24 +31,13 @@ http://localhost:9411/zipkin/
 
 The services also provide a *health* and an *info* endpoint that show some information about the system like
 that the DB is up and running. These endpoints can be accessed via:
-- TravelService:
 
-  http://localhost:8090/api/travel/monitor/health
+| __Service__ | __URL to health endpoint__ |  __URL to info endpoint__ |
+|:-------:|------------------|-------------------|
+|TravelService| http://localhost:8090/api/travel/monitor/health | http://localhost:8090/api/travel/monitor/info
+|HotelService| http://localhost:8081/api/hotels/monitor/health | http://localhost:8081/api/hotels/monitor/info
+|FlightService| http://localhost:8082/api/flights/monitor/health | http://localhost:8082/api/flights/monitor/info
 
-  http://localhost:8090/api/travel/monitor/info
-
-
-- HotelService:  
-  http://localhost:8081/api/hotels/monitor/health
-
-  http://localhost:8081/api/hotels/monitor/info
-
-
-- FlightService:
-
-  http://localhost:8082/api/flights/monitor/health
-
-  http://localhost:8082/api/flights/monitor/info
 
 If you are on Windows or Mac, you sometimes have to replace _localhost_ with the default IP of your docker machine (use `docker-machine ip default` to get this default IP).
 
