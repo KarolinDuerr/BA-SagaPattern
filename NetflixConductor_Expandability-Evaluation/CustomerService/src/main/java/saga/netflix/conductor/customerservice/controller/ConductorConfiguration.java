@@ -26,15 +26,8 @@ public class ConductorConfiguration {
     }
 
     @Bean
-//    @Retryable(value = {SocketException.class, RuntimeException.class, ConductorClientException.class}, maxAttempts
-//    = 10, backoff = @Backoff(delay = 20000))
     public WorkerDispatcher workerDispatcher(TaskClient taskClient, ObjectMapper objectMapper,
                                              ICustomerService customerService) {
-        try {
-            Thread.sleep(65000); // TODO
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         WorkerDispatcher createdWorkerDispatcher = new WorkerDispatcher(taskClient, objectMapper, customerService);
         createdWorkerDispatcher.startTaskPolling();
         return createdWorkerDispatcher;

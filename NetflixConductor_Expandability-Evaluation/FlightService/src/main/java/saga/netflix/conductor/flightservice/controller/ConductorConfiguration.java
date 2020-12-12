@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
 import saga.netflix.conductor.flightservice.resources.DtoConverter;
 
 @Configuration
-//@EnableRetry
 public class ConductorConfiguration {
 
     @Value("${conductor.server.uri}")
@@ -28,15 +27,8 @@ public class ConductorConfiguration {
     }
 
     @Bean
-//    @Retryable(value = {SocketException.class, RuntimeException.class, ConductorClientException.class}, maxAttempts
-//    = 10, backoff = @Backoff(delay = 20000))
     public WorkerDispatcher workerDispatcher(TaskClient taskClient, ObjectMapper objectMapper,
                                              IFlightService flightService, DtoConverter dtoConverter) {
-        try {
-            Thread.sleep(65000); // TODO
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         WorkerDispatcher createdWorkerDispatcher = new WorkerDispatcher(taskClient, objectMapper, flightService,
                 dtoConverter);
         createdWorkerDispatcher.startTaskPolling();

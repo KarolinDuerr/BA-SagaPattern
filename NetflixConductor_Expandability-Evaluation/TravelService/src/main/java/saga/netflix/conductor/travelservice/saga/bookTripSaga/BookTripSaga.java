@@ -138,7 +138,6 @@ public class BookTripSaga {
         logger.info(String.format("Workflow definition (%s) trying to register.", workflowToRegister.get("name")));
     }
 
-    // TODO use springs Retryable instead?
     private void waitForServerToBeAvailable() {
         boolean serverUp = false;
         while (!serverUp) {
