@@ -3,6 +3,56 @@ This project is part of the evaluation of a Saga pattern implementation using th
 Additional sections to the original [Eventuate Saga pattern implementation](https://github.com/KarolinDuerr/BA-SagaPattern/tree/master/EventuateTram) 
 have been included that simulate different failure scenarios given a particular input.
 
+## Start the Application
+
+1. Run `./gradlew clean build`
+
+
+2. Execute `docker-compose up `
+
+
+3. Requesting trip bookings is now possible. Either use `curl` commands,
+   the provided `TravelApplication.json` insomnia file, which includes different trip booking requests,
+   or access the [Swagger UI](https://swagger.io/tools/swagger-ui/) of the different services:
+  - TravelService: http://localhost:8090/swagger-ui.html
+  - HotelService: http://localhost:8081/swagger-ui.html
+  - FlightService: http://localhost:8082/swagger-ui.html
+
+To simulate a Saga that fails because no hotel or no flight is available, use one of the following Strings 
+as `destination country` in the trip booking request:
+```
+"Provoke hotel failure"
+
+"Provoke flight failure"
+```
+Additionally, the [Zipkin](https://zipkin.io/) UI can be accessed to trace performed calls:
+http://localhost:9411/zipkin/
+
+The services also provide a *health* and an *info* endpoint that show some information about the system like
+that the DB is up and running. These endpoints can be accessed via:
+- TravelService:
+
+  http://localhost:8090/api/travel/monitor/health
+
+  http://localhost:8090/api/travel/monitor/info
+
+
+- HotelService:  
+  http://localhost:8081/api/hotels/monitor/health
+
+  http://localhost:8081/api/hotels/monitor/info
+
+
+- FlightService:
+
+  http://localhost:8082/api/flights/monitor/health
+
+  http://localhost:8082/api/flights/monitor/info
+
+If you are on Windows or Mac, you sometimes have to replace _localhost_ with the default IP of your docker machine (use `docker-machine ip default` to get this default IP).
+
+-------------------------------------------------
+
 ## Provoke Failure Scenarios
 The respective String has to be used as `destination country` in the trip booking request to provoke a participant failure.
 
@@ -102,21 +152,6 @@ involves failures of the __TravelService__ as well as the __CDC service__.
   The __FlightService__ terminates then the docker container of the __TravelService__ after booking a flight, but before informing the orchestrator about it.
   Afterwards, the __TravelService__ has to be __restarted__ manually to investigate what happens as soon as the service is running again.
   This can be done using the same command as before but with `travelservice_eventuateFailurePerf` as the container name.
+  
 
 
-## Start the Application
-
-#### 1. Start the 
-
-
-
-
-
-
-
-OpenAPI:
-- TravelService:http://localhost:8090/swagger-ui.html
-- HotelService: http://localhost:8081/swagger-ui.html
-- FlightService: http://localhost:8082/swagger-ui.html
-
-Zipkin: http://localhost:9411/zipkin/
