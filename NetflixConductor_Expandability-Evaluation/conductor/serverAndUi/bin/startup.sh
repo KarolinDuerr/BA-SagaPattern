@@ -42,4 +42,4 @@ if [ -z "$LOG4J_PROP" ];
     export log4j_file=/app/config/$LOG4J_PROP
 fi
 
-nohup java -jar conductor-server-*-all.jar $config_file $log4j_file #1>&2 > /app/logs/server.log // TODO
+nohup java -jar conductor-server-*-all.jar $config_file $log4j_file
