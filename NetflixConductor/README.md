@@ -101,9 +101,9 @@ The different logs can be accessed using the following commands:
 
 | __Log of__ | __Command to execute__ |
 |:-------|:-------------------|
-|TravelService| `docker logs travelservice_eventuate`|
-|HotelService| `docker logs hotelservice_eventuate`|
-|FlightService|  `docker logs flightservice_eventuate`|
+|TravelService| `docker logs travelservice_conductor`|
+|HotelService| `docker logs hotelservice_conductor`|
+|FlightService|  `docker logs flightservice_conductor`|
 |Conductor Server|  `docker logs conductor-server-ui`|
 
 By using the `--follow` supplement, it will be continued to stream the service's output to the console.
