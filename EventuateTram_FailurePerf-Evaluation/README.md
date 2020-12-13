@@ -90,7 +90,7 @@ An example for such a request:
     Afterwards, the __FlightService__ has to be __restarted__ manually to investigate what happens as soon as the service is running again.
     This can be done using one of the following commands:
     ```
-    docker-compose start flightservice_eventuateFailurePerf
+    docker-compose start flightservice
     
     docker start flightservice_eventuateFailurePerf
     ```
@@ -105,6 +105,7 @@ An example for such a request:
     ```  
     The __FlightService__ forces then its JVM to terminate itself, after booking a flight but before informing the orchestrator about it, in order to simulate a *sudden failure* of the system.
     Afterwards, the __FlightService__, again, has to be __restarted__ using the same commands as above.
+
 
 - Provoke an __exception__ in the __FlightService__ participant __while executing__ a local transaction of the *BookTripSaga* with the following string as `destination country`:
     ```  
@@ -152,7 +153,7 @@ involves failures of the __TravelService__ as well as the __CDC service__.
     ```  
   The __FlightService__ terminates then the docker container of the __TravelService__ after booking a flight, but before informing the orchestrator about it.
   Afterwards, the __TravelService__ has to be __restarted__ manually to investigate what happens as soon as the service is running again.
-  This can be done using the same command as before but with `travelservice_eventuateFailurePerf` as the container name.
+  This can be done using the same commands as before but with `travelservice`, respectively `travelservice_eventuateFailurePerf` as the container name.
   
 
 
