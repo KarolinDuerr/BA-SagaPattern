@@ -1,4 +1,4 @@
-# BA-Saga Pattern:
+# BA-Saga Pattern
 This repository inludes two implementations that realize an example travel application by using orchestrated Sagas.
 One is realized using the [Eventuate Tram](https://github.com/eventuate-tram/eventuate-tram-core) and the [Eventuate Tram Sagas](https://github.com/eventuate-tram/eventuate-tram-sagas) framework.
 The other is realized using [Netflix Conductor](https://github.com/eventuate-tram/eventuate-tram-core).
