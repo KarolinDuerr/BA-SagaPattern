@@ -1,7 +1,7 @@
 # BA-Saga Pattern
 This repository inludes two implementations that realize an example travel application by using orchestrated Sagas.
 One is realized using the [Eventuate Tram](https://github.com/eventuate-tram/eventuate-tram-core) and the [Eventuate Tram Sagas](https://github.com/eventuate-tram/eventuate-tram-sagas) framework.
-The other is realized using [Netflix Conductor](https://github.com/eventuate-tram/eventuate-tram-core).
+The other is realized using [Netflix Conductor](https://github.com/Netflix/conductor).
 The example travel application consists of three backend services: TravelService,
 HotelService and FlightService. For simplicity reasons, only the workflow for booking a trip has been implemented.
 
