@@ -106,7 +106,7 @@ An example for such a request:
     The __FlightService__ forces then its JVM to terminate itself, after booking a flight but before informing the orchestrator about it, in order to simulate a *sudden failure* of the system.
     Afterwards, the __FlightService__, again, has to be __restarted__ using the same commands as above.
 
-- Provoke an __exception__ in the __FlightService__ participant __while executing__ a local transaction of the *BookTripSaga* with the following string as`destination country`:
+- Provoke an __exception__ in the __FlightService__ participant __while executing__ a local transaction of the *BookTripSaga* with the following string as `destination country`:
     ```  
     "Provoke exception while executing"
     ```  
@@ -143,7 +143,7 @@ involves failures of the __TravelService__ as well as the __CDC service__.
     "Provoke CDC failure while executing"
     ```  
   The __FlightService__ terminates then the docker container of the __CDC Service__ after booking a flight, but before informing the orchestrator about it.
-  Afterwards, the __CDC service__,again, has to be __restarted__ using the same commands as above.
+  Afterwards, the __CDC service__, again, has to be __restarted__ using the same commands as above.
 
   
 - Provoke a failure of the orchestrator, which means the __TravelService__, __while executing__ a local transaction of the *BookTripSaga* with the following string as `destination country`:

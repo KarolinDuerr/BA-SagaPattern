@@ -38,7 +38,7 @@ as `destination country` in the trip booking request:
 "Provoke flight failure"
 ```
 Additionally, the __Conductor UI__ can be accessed via 
-http://localhost:5000/, and the [Swagger UI](https://swagger.io/tools/swagger-ui/) of the __Conductor server__ via
+http://localhost:5000/ and the [Swagger UI](https://swagger.io/tools/swagger-ui/) of the __Conductor server__ via
 http://localhost:8080/.
 
 The services also provide a *health* and an *info* endpoint that show some information about the system like
@@ -115,7 +115,7 @@ An example for such a request:
   The __FlightService__ forces then its JVM to terminate itself, after booking a flight but before informing the orchestrator about it, in order to simulate a *sudden failure* of the system.
   Afterwards, the __FlightService__, again, has to be __restarted__ using the same commands as above.
 
-- Provoke an __exception__ in the __FlightService__ participant __while executing__ a local transaction of the *BookTripSaga* with the following string as`destination country`:
+- Provoke an __exception__ in the __FlightService__ participant __while executing__ a local transaction of the *BookTripSaga* with the following string as `destination country`:
     ```  
     "Provoke exception while executing"
     ```  
@@ -152,5 +152,5 @@ orchestrator failures involves failures of this service.
     "Provoke orchestrator failure while executing"
     ```  
   The __FlightService__ terminates then the docker container of the __Conductor server__ after booking a flight, but before informing the orchestrator about it.
-  Afterwards, the __Conductor server__,again, has to be __restarted__ using the same commands as above.
+  Afterwards, the __Conductor server__, again, has to be __restarted__ using the same commands as above.
  

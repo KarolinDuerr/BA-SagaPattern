@@ -1,7 +1,6 @@
 # BA-Saga Pattern
-This repository inludes two implementations that realize an example travel application by using orchestrated Sagas.
-One is realized using the [Eventuate Tram](https://github.com/eventuate-tram/eventuate-tram-core) and the [Eventuate Tram Sagas](https://github.com/eventuate-tram/eventuate-tram-sagas) framework.
-The other is realized using [Netflix Conductor](https://github.com/Netflix/conductor).
+This repository includes two implementations that realize an example travel application using orchestrated Sagas.
+One is realized using the [Eventuate Tram](https://github.com/eventuate-tram/eventuate-tram-core) and the [Eventuate Tram Sagas](https://github.com/eventuate-tram/eventuate-tram-sagas) framework, the other using [Netflix Conductor](https://github.com/Netflix/conductor).
 The example travel application consists of three backend services: TravelService,
 HotelService and FlightService. For simplicity reasons, only the workflow for booking a trip has been implemented.
 
@@ -25,7 +24,7 @@ The `NetflixConductor_Expandability-Evaluation` directory includes the same appl
 
 The `EventuateTram_FailurePerf-Evaluation` is also based on the `EventuateTram` application but includes additional sections that provoke different failure scenarios given a certain input.
 
-The same applies for the `NetflixConductor_FailurePerf-Evaluation` directory but the implementation is based on the `NetflixConductor` application.
+The same applies to the `NetflixConductor_FailurePerf-Evaluation` directory, but the implementation is based on the `NetflixConductor` application.
 
 -----------------------------------------------------------------------------
 For more information about the projects and their setups see the `Readme` files in the respective directories.

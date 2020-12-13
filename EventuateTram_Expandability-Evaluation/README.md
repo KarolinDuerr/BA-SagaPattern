@@ -57,7 +57,7 @@ as `destination country` in the trip booking request:
 "Provoke flight failure"
 ```
 
-To simulate a Saga that fails because the __customer validation failed__, the `customerId` in the trip bookig request
+To simulate a Saga that fails because the __customer validation failed__, the `customerId` in the trip booking request
 has to be __smaller than 1__, for example:
 ```
 {

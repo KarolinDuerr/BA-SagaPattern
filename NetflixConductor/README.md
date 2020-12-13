@@ -92,8 +92,7 @@ docker-compose down --remove-orphans
 The project already includes the UI module in the __Conductor Server__ that is started using
 `docker-compose`.
 
-The UI that can be accessed via
-http://localhost:5000/.
+The UI can be accessed via http://localhost:5000/.
 
 ### Log Files
 Each service provides a log that contains some information about it.
@@ -115,7 +114,7 @@ The logging level can be changed in the respective `application.properties` file
 The __Conductor Server__ publishes some metrics concerning the server and the client, like the amount of time it takes to execute a task.
 
 The necessary gradle dependency has already been added to the services.
-To connect the metrics registry with the logging framework two lines within the `config.properties`
+To connect the metrics registry with the logging framework, two lines within the `config.properties`
 have to be __activated__ as they are currently commented out:
 ```
 conductor.additional.modules=com.netflix.conductor.contribs.metrics.MetricsRegistryModule,com.netflix.conductor.contribs.metrics.LoggingMetricsModule
@@ -126,7 +125,7 @@ beneath the `Additional modules for metrics collection (optional)` comment withi
 
 Additionally, it can be configured that the metrics will be printed into a dedicated file instead
 of printing it as a regular log message.
-To achieve that, the `conductor-server-ui`service within the `docker-compose.yml` file has to 
+To achieve that, the `conductor-server-ui` service within the `docker-compose.yml` file has to 
 include another environment variable: `LOG4J_PROP=log4j-file-appender.properties`.
 The referenced file is already included within the project's `serverAndUi` directory.
 It configures the different logging properties.

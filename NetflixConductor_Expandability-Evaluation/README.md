@@ -65,7 +65,7 @@ as `destination country` in the trip booking request:
 "Provoke flight failure"
 ```
 
-To simulate a Saga that fails because the __customer validation failed__, the `customerId` in the trip bookig request
+To simulate a Saga that fails because the __customer validation failed__, the `customerId` in the trip booking request
 has to be __smaller than 1__, for example:
 ```
 {
@@ -75,7 +75,7 @@ has to be __smaller than 1__, for example:
 ```
 
 Additionally, the __Conductor UI__ can be accessed via
-http://localhost:5000/, and the [Swagger UI](https://swagger.io/tools/swagger-ui/) of the __Conductor server__ via
+http://localhost:5000/ and the [Swagger UI](https://swagger.io/tools/swagger-ui/) of the __Conductor server__ via
 http://localhost:8080/.
 
 The services also provide a *health* and an *info* endpoint that show some information about the system like

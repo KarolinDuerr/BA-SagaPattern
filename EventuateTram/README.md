@@ -79,7 +79,7 @@ docker-compose down --remove-orphans
 
 ### MySQL database
 
-The eventuate database with its different tables can be accessed with the following information, 
+The eventuate database, with its different tables, can be accessed with the following information, 
 which is also included in the `docker-compose.yaml` file:
 
 - User: mysqluser 
