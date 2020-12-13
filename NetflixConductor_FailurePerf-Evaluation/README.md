@@ -44,12 +44,11 @@ http://localhost:8080/.
 The services also provide a *health* and an *info* endpoint that show some information about the system like
 that the DB is up and running. These endpoints can be accessed via:
 
-| __Log of__ | __Command to execute__ |
-|:-------|:-------------------|
-|TravelService| `docker logs travelservice_eventuate`|
-|HotelService| `docker logs hotelservice_eventuate`|
-|FlightService|  `docker logs flightservice_eventuate`|
-|Conductor Server|  `docker logs conductor-server-ui`|
+| __Service__ | __URL to health endpoint__ |  __URL to info endpoint__ |
+|:-------:|------------------|-------------------|
+|TravelService| http://localhost:8090/api/travel/monitor/health | http://localhost:8090/api/travel/monitor/info
+|HotelService| http://localhost:8081/api/hotels/monitor/health | http://localhost:8081/api/hotels/monitor/info
+|FlightService| http://localhost:8082/api/flights/monitor/health | http://localhost:8082/api/flights/monitor/info
 
 
 If you are on Windows or Mac, you sometimes have to replace _localhost_ with the default IP of your docker machine (use `docker-machine ip default` to get this default IP).
@@ -99,13 +98,15 @@ An example for such a request:
   Afterwards, the __FlightService__ has to be __restarted__ manually to investigate what happens as soon as the service is running again.
   This can be done using one of the following commands:
     ```
-    docker-compose start flightservice_conductorFailurePerf
+    docker-compose start flightservice
     
     docker start flightservice_conductorFailurePerf
     ```
 
   If the container name of the __FlightService__ has been changed in the `docker-compose.yml` file, the
-  container has to be started using this name.
+  container has to be started using this name with the `docker start` command.
+  The same applies for the `docker-compose start` command if the service name of the __FlightService__ has been changed
+  in the `docker-compose.yml` file.
 
 
 - Provoke a __termination__ failure of the __FlightService__ participant __while executing__ a local transaction of the *BookTripSaga* with the following string as `destination country`:
@@ -114,6 +115,7 @@ An example for such a request:
     ```  
   The __FlightService__ forces then its JVM to terminate itself, after booking a flight but before informing the orchestrator about it, in order to simulate a *sudden failure* of the system.
   Afterwards, the __FlightService__, again, has to be __restarted__ using the same commands as above.
+
 
 - Provoke an __exception__ in the __FlightService__ participant __while executing__ a local transaction of the *BookTripSaga* with the following string as `destination country`:
     ```  
