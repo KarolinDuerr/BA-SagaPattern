@@ -1,4 +1,9 @@
 # BA-Saga Pattern
+The implementation for the paper "*An Evaluation of Saga Pattern Implementation Technologies*" of the 13th ZEUS Workshop can be found
+in the following release [An Evaluation of Saga Pattern Implementation Technologies](https://github.com/KarolinDuerr/BA-SagaPattern/releases/tag/v1.0).
+
+-----------------------------------------------------------------------------
+
 This repository includes two implementations that realize an example travel application using orchestrated Sagas.
 One is realized using the [Eventuate Tram](https://github.com/eventuate-tram/eventuate-tram-core) and the [Eventuate Tram Sagas](https://github.com/eventuate-tram/eventuate-tram-sagas) framework, the other using [Netflix Conductor](https://github.com/Netflix/conductor).
 The example travel application consists of three backend services: TravelService,
