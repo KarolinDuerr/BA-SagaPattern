@@ -6,14 +6,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import saga.camunda.hotelservice.controller.CamundaConfiguration;
 import saga.camunda.hotelservice.controller.HotelServiceConfiguration;
 import saga.camunda.hotelservice.controller.OpenApiConfiguration;
 
 @EnableAutoConfiguration
 @EnableJpaRepositories
 @SpringBootApplication
-@Import({HotelServiceConfiguration.class, CamundaConfiguration.class, OpenApiConfiguration.class})
+@Import({HotelServiceConfiguration.class, OpenApiConfiguration.class})
 @ComponentScan
 public class HotelServiceApplication {
 

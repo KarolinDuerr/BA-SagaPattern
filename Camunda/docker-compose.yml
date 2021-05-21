@@ -36,20 +36,22 @@ services:
       TRAVEL_SERVICE_BASE_URL: http://travelservice:8090
 
 
-#  flightservice:
-#    build: ./FlightService/
-#    image: flightservice:camunda
-#    container_name: flightservice_camunda
-#    networks:
-#      - travel_application
-#    ports:
-#      - 8082:8082
-#    depends_on:
-#    environment:
+  flightservice:
+    build: ./FlightService/
+    image: flightservice:camunda
+    container_name: flightservice_camunda
+    networks:
+      - travel_application
+    ports:
+      - 8082:8082
+    depends_on:
+      - travelservice
+    environment:
 #      SPRING_DATASOURCE_URL: jdbc:mysql://mysql/conductor
 #      SPRING_DATASOURCE_USERNAME: mysqluser
 #      SPRING_DATASOURCE_PASSWORD: mysqlpw
 #      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
+      TRAVEL_SERVICE_BASE_URL: http://travelservice:8090
 
 
 #  zookeeper:

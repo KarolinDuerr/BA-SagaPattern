@@ -22,11 +22,15 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion"
     compile "org.springframework.boot:spring-boot-starter-jetty:$springBootVersion"
 
+    // Camunda External Task Client
+    compile "org.camunda.bpm.springboot:camunda-bpm-spring-boot-starter-external-task-client:$camundaVersion"
+
     // Enable health and info endpoint
     compile "org.springframework.boot:spring-boot-starter-actuator"
 
     // MySQL
-    compile "mysql:mysql-connector-java:$mySQLVersion"
+//    compile "mysql:mysql-connector-java:$mySQLVersion"  // TODO
+    compile "com.h2database:h2"
 
     // Swagger OpenAPI definition
     compile "org.springdoc:springdoc-openapi-ui:1.5.0"
