@@ -80,7 +80,6 @@ public class BookHotelWorker implements ExternalTaskHandler {
         variables.put(HotelServiceTopics.DataOutput.BOOK_HOTEL_RESPONSE, typedBookHotelResponse);
 
         externalTaskService.complete(externalTask, variables);
-        externalTaskService.complete(externalTask);
         logger.info("Hotel successfully booked: " + bookingResponse);
     }
 }

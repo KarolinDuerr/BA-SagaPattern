@@ -9,13 +9,13 @@ services:
       - travel_application
     ports:
       - 8090:8090
-#    depends_on:
-#      - mysql
-#    environment:
-#      SPRING_DATASOURCE_URL: jdbc:mysql://mysql/conductor
-#      SPRING_DATASOURCE_USERNAME: mysqluser
-#      SPRING_DATASOURCE_PASSWORD: mysqlpw
-#      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
+    depends_on:
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql/camunda
+      SPRING_DATASOURCE_USERNAME: camunda
+      SPRING_DATASOURCE_PASSWORD: camunda
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
 
 
   hotelservice:
@@ -28,11 +28,12 @@ services:
       - 8081:8081
     depends_on:
       - travelservice
+      - mysql
     environment:
-#      SPRING_DATASOURCE_URL: jdbc:mysql://mysql/conductor
-#      SPRING_DATASOURCE_USERNAME: mysqluser
-#      SPRING_DATASOURCE_PASSWORD: mysqlpw
-#      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql/camunda
+      SPRING_DATASOURCE_USERNAME: camunda
+      SPRING_DATASOURCE_PASSWORD: camunda
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
       TRAVEL_SERVICE_BASE_URL: http://travelservice:8090
 
 
@@ -46,73 +47,36 @@ services:
       - 8082:8082
     depends_on:
       - travelservice
+      - mysql
     environment:
-#      SPRING_DATASOURCE_URL: jdbc:mysql://mysql/conductor
-#      SPRING_DATASOURCE_USERNAME: mysqluser
-#      SPRING_DATASOURCE_PASSWORD: mysqlpw
-#      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql/camunda
+      SPRING_DATASOURCE_USERNAME: camunda
+      SPRING_DATASOURCE_PASSWORD: camunda
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
       TRAVEL_SERVICE_BASE_URL: http://travelservice:8090
 
 
-#  zookeeper:
-#    image: confluentinc/cp-zookeeper:latest
-#    container_name: zookeeper
-#    ports:
-#      - 2181:2181
-#    networks:
-#      - travel_application
-#    environment:
-#      ZOOKEEPER_CLIENT_PORT: 2181
-#      KAFKA_HEAP_OPTS: -Xmx64m
-
-
-#  kafka:
-#    image: confluentinc/cp-kafka:latest
-#    container_name: kafka
-#    ports:
-#      - 9092:9092
-#      - 29092:29092
-#    networks:
-#      - travel_application
-#    depends_on:
-#      - zookeeper
-#    environment:
-#      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-#      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-#      KAFKA_LISTENERS: PLAINTEXT://:9092,PLAINTEXT_HOST://:29092
-#      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://${DOCKER_HOST_IP:-localhost}:29092
-#      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-##      KAFKA_LISTENERS: LC://kafka:29092,LX://kafka:9092
-##      KAFKA_ADVERTISED_LISTENERS: LC://kafka:29092,LX://${DOCKER_HOST_IP:-localhost}:9092
-##      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LC:PLAINTEXT,LX:PLAINTEXT
-##      KAFKA_INTER_BROKER_LISTENER_NAME: LC
-##      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-##      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-##      KAFKA_ZOOKEEPER_CONNECTION_TIMEOUT_MS: 60000
-##      KAFKA_HEAP_OPTS: -Xmx192m
-
-
-#  mysql:
-#    image: library/mysql:5.6
-#    container_name: mysql_camunda
-#    restart: always
-#    volumes:
-#      - travel_db_conductor:/var/lib/mysql
-#    ports:
-#      - 3306:3306
-#    networks:
-#      - travel_application
-#    expose:
-#      - '3306'
-#    environment:
-#      - MYSQL_ROOT_PASSWORD=rootpassword
-#      - MYSQL_DATABASE=conductor
-#      - MYSQL_USER=mysqluser
-#      - MYSQL_PASSWORD=mysqlpw
+  mysql:
+    image: library/mysql:5.6
+    container_name: mysql_camunda
+    restart: always
+    volumes:
+      - travel_db_camunda:/var/lib/mysql
+    ports:
+      - 3306:3306
+    networks:
+      - travel_application
+    expose:
+      - '3306'
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=camunda
+      - MYSQL_USER=camunda
+      - MYSQL_PASSWORD=camunda
 
 
 networks:
   travel_application:
 
-#volumes:
-#  travel_db_microProfile:
+volumes:
+  travel_db_camunda:

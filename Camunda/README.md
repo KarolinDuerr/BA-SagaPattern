@@ -11,13 +11,16 @@ HotelService and FlightService. For simplicity reasons, only the workflow for bo
 2. Execute `docker-compose up --no-start`
 
 
-3. Execute `docker-compose start travelservice`
+3. Execute `docker-compose start mysql`
+   
+
+4. Execute `docker-compose start travelservice`
 
 
-4. Execute `docker-compose up`
+5. Execute `docker-compose up`
 
 
-5. Requesting trip bookings is now possible. Either use `curl` commands,
+6. Requesting trip bookings is now possible. Either use `curl` commands,
    the provided `TravelApplication.json` insomnia file, which includes different trip booking requests,
    or access the [Swagger UI](https://swagger.io/tools/swagger-ui/) of the different services:
 

@@ -79,7 +79,6 @@ public class BookFlightWorker implements ExternalTaskHandler {
         variables.put(FlightServiceTopics.DataOutput.BOOK_FLIGHT_RESPONSE, typedBookFlightResponse);
 
         externalTaskService.complete(externalTask, variables);
-        externalTaskService.complete(externalTask);
         logger.info("Flight successfully booked: " + bookFlightResponse);
     }
 }
