@@ -4,7 +4,7 @@
     <bpmn:serviceTask id="Activity_BookTrip" name="Book Trip" camunda:delegateExpression="#{bookTripAdapter}">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="BookTripSagaData">
+          <camunda:inputParameter name="BookTripId">
             <camunda:map />
           </camunda:inputParameter>
         </camunda:inputOutput>
@@ -33,21 +33,26 @@
     <bpmn:serviceTask id="Activity_CancelTrip" name="Reject Trip" isForCompensation="true" camunda:delegateExpression="#{rejectTripAdapter}">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="bookingId" />
+          <camunda:inputParameter name="TripRejectionReason" />
+          <camunda:inputParameter name="BookTripId" />
         </camunda:inputOutput>
       </bpmn:extensionElements>
     </bpmn:serviceTask>
     <bpmn:serviceTask id="Activity_CancelHotel" name="Cancel Hotel" isForCompensation="true" camunda:type="external" camunda:topic="cancelHotel">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="bookingId" />
+          <camunda:inputParameter name="BookHotelRequest">
+            <camunda:map />
+          </camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
     </bpmn:serviceTask>
     <bpmn:serviceTask id="Activity_CancelFlight" name="Cancel Flight" isForCompensation="true" camunda:type="external" camunda:topic="cancelFlight">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="bookingId" />
+          <camunda:inputParameter name="BookFlightRequest">
+            <camunda:map />
+          </camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
     </bpmn:serviceTask>
@@ -82,6 +87,10 @@
     <bpmn:serviceTask id="Activity_ConfirmHotel" name="Confirm Hotel" camunda:type="external" camunda:topic="confirmHotel">
       <bpmn:extensionElements>
         <camunda:inputOutput>
+          <camunda:inputParameter name="BookTripId" />
+          <camunda:inputParameter name="BookFlightResponse">
+            <camunda:map />
+          </camunda:inputParameter>
           <camunda:inputParameter name="BookHotelResponse">
             <camunda:map />
           </camunda:inputParameter>
@@ -93,7 +102,13 @@
     <bpmn:serviceTask id="Activity_ConfirmTrip" name="Confirm Trip" camunda:delegateExpression="#{confirmTripAdapter}">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="bookingId" />
+          <camunda:inputParameter name="BookFlightResponse">
+            <camunda:map />
+          </camunda:inputParameter>
+          <camunda:inputParameter name="BookHotelResponse">
+            <camunda:map />
+          </camunda:inputParameter>
+          <camunda:inputParameter name="BookTripId" />
         </camunda:inputOutput>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0mxwzpf</bpmn:incoming>

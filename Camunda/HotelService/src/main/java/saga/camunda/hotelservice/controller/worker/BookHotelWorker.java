@@ -4,6 +4,8 @@ import org.camunda.bpm.client.spring.annotation.ExternalTaskSubscription;
 import org.camunda.bpm.client.task.ExternalTask;
 import org.camunda.bpm.client.task.ExternalTaskHandler;
 import org.camunda.bpm.client.task.ExternalTaskService;
+import org.camunda.bpm.engine.variable.Variables;
+import org.camunda.bpm.engine.variable.value.ObjectValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,9 @@ import saga.camunda.hotelservice.error.HotelServiceException;
 import saga.camunda.hotelservice.model.HotelBooking;
 import saga.camunda.hotelservice.model.HotelBookingInformation;
 import saga.camunda.hotelservice.resources.DtoConverter;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 @ExternalTaskSubscription("bookHotel")
@@ -69,10 +74,12 @@ public class BookHotelWorker implements ExternalTaskHandler {
         BookHotelResponse bookingResponse = new BookHotelResponse(bookHotelRequest.getTripId(), hotelBooking.getId(),
                 hotelBooking.getHotelName(), hotelBooking.getBookingStatus().toString());
 
-//        Map<String, Object> variables = new HashMap<>();
-//        variables.put(HotelServiceTopics.DataOutput.BOOK_HOTEL_RESPONSE, bookingResponse);
+        ObjectValue typedBookHotelResponse =
+                Variables.objectValue(bookingResponse).serializationDataFormat(Variables.SerializationDataFormats.JSON).create();
+        Map<String, Object> variables = new HashMap<>();
+        variables.put(HotelServiceTopics.DataOutput.BOOK_HOTEL_RESPONSE, typedBookHotelResponse);
 
-//        externalTaskService.complete(externalTask, variables);
+        externalTaskService.complete(externalTask, variables);
         externalTaskService.complete(externalTask);
         logger.info("Hotel successfully booked: " + bookingResponse);
     }

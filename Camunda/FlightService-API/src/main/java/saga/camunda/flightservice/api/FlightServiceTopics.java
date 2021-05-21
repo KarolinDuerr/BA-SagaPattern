@@ -4,7 +4,7 @@ public class FlightServiceTopics {
 
     public static class DataInput {
 
-        public static final String BOOK_FLIGHT_DATA = "bookFlightData";
+        public static final String BOOK_FLIGHT_DATA = "bookFlightRequest";
 
     }
 

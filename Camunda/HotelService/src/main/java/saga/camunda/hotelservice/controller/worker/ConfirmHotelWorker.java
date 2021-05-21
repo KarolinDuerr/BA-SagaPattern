@@ -12,7 +12,6 @@ import saga.camunda.hotelservice.api.HotelServiceTopics;
 import saga.camunda.hotelservice.api.dto.BookHotelResponse;
 import saga.camunda.hotelservice.controller.IHotelService;
 import saga.camunda.hotelservice.error.ErrorType;
-import saga.camunda.hotelservice.resources.DtoConverter;
 
 @Component
 @ExternalTaskSubscription("confirmHotel")
@@ -23,12 +22,8 @@ public class ConfirmHotelWorker implements ExternalTaskHandler {
     @Autowired
     private final IHotelService hotelService;
 
-    @Autowired
-    private final DtoConverter dtoConverter;
-
-    public ConfirmHotelWorker(final IHotelService hotelService, final DtoConverter dtoConverter) {
+    public ConfirmHotelWorker(final IHotelService hotelService) {
         this.hotelService = hotelService;
-        this.dtoConverter = dtoConverter;
     }
 
     @Override

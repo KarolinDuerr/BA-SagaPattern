@@ -36,8 +36,8 @@ dependencies {
     compile "org.camunda.bpm.springboot:camunda-bpm-spring-boot-starter-webapp:$camundaVersion"
     compile "org.camunda.bpm.springboot:camunda-bpm-spring-boot-starter-rest:$camundaVersion"
     compile "org.camunda.bpm.springboot:camunda-bpm-spring-boot-starter:$camundaVersion"
-//    compile "org.camunda.bpm:camunda-engine"
-//    compile "org.camunda.bpm:camunda-engine-spring"
+    compile "org.camunda.bpm:camunda-engine-plugin-spin:$camundaVersion"
+    compile "org.camunda.spin:camunda-spin-dataformat-json-jackson:1.10.1"
 
     // Enable health and info endpoint
     compile "org.springframework.boot:spring-boot-starter-actuator"

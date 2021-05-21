@@ -1,6 +1,8 @@
 package saga.camunda.travelservice.saga;
 
 import org.camunda.bpm.engine.ProcessEngine;
+import org.camunda.bpm.engine.variable.Variables;
+import org.camunda.bpm.engine.variable.value.ObjectValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import saga.camunda.flightservice.api.FlightServiceTopics;
 import saga.camunda.flightservice.api.dto.BookFlightRequest;
@@ -23,9 +25,15 @@ public class BookTripSaga {
         BookHotelRequest bookHotelRequest = bookTripSagaData.makeBookHotelRequest();
         BookFlightRequest bookFlightRequest = bookTripSagaData.makeBookFlightRequest();
 
+        // Use Spin's built-in JSON data format for deserialization
+        ObjectValue typedBookHotelRequest =
+                Variables.objectValue(bookHotelRequest).serializationDataFormat(Variables.SerializationDataFormats.JSON).create();
+        ObjectValue typedBookFlightRequest =
+                Variables.objectValue(bookFlightRequest).serializationDataFormat(Variables.SerializationDataFormats.JSON).create();
+
         HashMap<String, Object> processVariables = new HashMap<>();
-        processVariables.put(HotelServiceTopics.DataInput.BOOK_HOTEL_DATA, bookHotelRequest);
-        processVariables.put(FlightServiceTopics.DataInput.BOOK_FLIGHT_DATA, bookFlightRequest);
+        processVariables.put(HotelServiceTopics.DataInput.BOOK_HOTEL_DATA, typedBookHotelRequest);
+        processVariables.put(FlightServiceTopics.DataInput.BOOK_FLIGHT_DATA, typedBookFlightRequest);
         processVariables.put(TravelServiceTopics.DataInput.BOOK_TRIP_ID, bookTripSagaData.getTripId());
 
         camunda.getRuntimeService().startProcessInstanceByKey("BookTripSaga", processVariables);

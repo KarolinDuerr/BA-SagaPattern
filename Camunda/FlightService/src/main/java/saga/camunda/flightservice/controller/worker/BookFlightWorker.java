@@ -4,6 +4,8 @@ import org.camunda.bpm.client.spring.annotation.ExternalTaskSubscription;
 import org.camunda.bpm.client.task.ExternalTask;
 import org.camunda.bpm.client.task.ExternalTaskHandler;
 import org.camunda.bpm.client.task.ExternalTaskService;
+import org.camunda.bpm.engine.variable.Variables;
+import org.camunda.bpm.engine.variable.value.ObjectValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,9 @@ import saga.camunda.flightservice.error.FlightServiceException;
 import saga.camunda.flightservice.model.FindAndBookFlightInformation;
 import saga.camunda.flightservice.model.FlightInformation;
 import saga.camunda.flightservice.resources.DtoConverter;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 @ExternalTaskSubscription("bookFlight")
@@ -59,7 +64,7 @@ public class BookFlightWorker implements ExternalTaskHandler {
     }
 
     private void bookFlight(final BookFlightRequest bookFlightRequest, final ExternalTask externalTask,
-                          final ExternalTaskService externalTaskService) throws FlightServiceException {
+                            final ExternalTaskService externalTaskService) throws FlightServiceException {
         FindAndBookFlightInformation flightInformation =
                 dtoConverter.convertToFindAndBookFlightInformation(bookFlightRequest);
         FlightInformation receivedFlightInformation = flightService.findAndBookFlight(flightInformation);
@@ -68,10 +73,12 @@ public class BookFlightWorker implements ExternalTaskHandler {
                 receivedFlightInformation.getId(),
                 receivedFlightInformation.getBookingStatus().toString());
 
-//        Map<String, Object> variables = new HashMap<>();
-//        variables.put(FlightServiceTopics.DataOutput.BOOK_FLIGHT_RESPONSE, bookFlightResponse);
+        ObjectValue typedBookFlightResponse =
+                Variables.objectValue(bookFlightResponse).serializationDataFormat(Variables.SerializationDataFormats.JSON).create();
+        Map<String, Object> variables = new HashMap<>();
+        variables.put(FlightServiceTopics.DataOutput.BOOK_FLIGHT_RESPONSE, typedBookFlightResponse);
 
-//        externalTaskService.complete(externalTask, variables);
+        externalTaskService.complete(externalTask, variables);
         externalTaskService.complete(externalTask);
         logger.info("Flight successfully booked: " + bookFlightResponse);
     }
