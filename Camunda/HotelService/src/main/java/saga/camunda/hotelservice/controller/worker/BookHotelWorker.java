@@ -62,7 +62,7 @@ public class BookHotelWorker implements ExternalTaskHandler {
             externalTaskService.complete(externalTask, null);
         }
 
-        logger.info("Finished Task: " + externalTask.getActivityId() + "(ID: " + externalTask.getId() + ")");
+        logger.debug("Finished Task: " + externalTask.getActivityId() + "(ID: " + externalTask.getId() + ")");
     }
 
     private void bookHotel(final BookHotelRequest bookHotelRequest, final ExternalTask externalTask,

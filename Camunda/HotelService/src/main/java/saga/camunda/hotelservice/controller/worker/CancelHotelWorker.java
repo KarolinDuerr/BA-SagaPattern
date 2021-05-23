@@ -43,6 +43,6 @@ public class CancelHotelWorker implements ExternalTaskHandler {
         logger.info("Hotel successfully cancelled which is associated with Trip: " + bookHotelRequest.getTripId());
 
         externalTaskService.complete(externalTask);
-        logger.info("Finished Task: " + externalTask.getActivityId() + "(ID: " + externalTask.getId() + ")");
+        logger.debug("Finished Task: " + externalTask.getActivityId() + "(ID: " + externalTask.getId() + ")");
     }
 }
