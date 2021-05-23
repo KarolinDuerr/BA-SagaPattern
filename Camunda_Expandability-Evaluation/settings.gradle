@@ -1,0 +1,10 @@
+rootProject.name = 'SagaPattern-Camunda'
+include 'FlightService'
+include 'FlightService-API'
+include 'HotelService'
+include 'HotelService-API'
+include 'TravelService'
+include 'TravelService-API'
+include 'CustomerService'
+include 'CustomerService-API'
+
