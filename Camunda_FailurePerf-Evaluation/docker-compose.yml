@@ -1,0 +1,82 @@
+version: '3'
+
+services:
+  travelservice:
+    build: ./TravelService/
+    image: travelservice:camundaFailurePerf
+    container_name: travelservice_camundaFailurePerf
+    networks:
+      - travel_application
+    ports:
+      - 8090:8090
+    depends_on:
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql/camunda
+      SPRING_DATASOURCE_USERNAME: camunda
+      SPRING_DATASOURCE_PASSWORD: camunda
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
+
+
+  hotelservice:
+    build: ./HotelService/
+    image: hotelservice:camundaFailurePerf
+    container_name: hotelservice_camundaFailurePerf
+    networks:
+      - travel_application
+    ports:
+      - 8081:8081
+    depends_on:
+      - travelservice
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql/camunda
+      SPRING_DATASOURCE_USERNAME: camunda
+      SPRING_DATASOURCE_PASSWORD: camunda
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
+      TRAVEL_SERVICE_BASE_URL: http://travelservice:8090
+
+
+  flightservice:
+    build: ./FlightService/
+    image: flightservice:camundaFailurePerf
+    container_name: flightservice_camundaFailurePerf
+    networks:
+      - travel_application
+    ports:
+      - 8082:8082
+    depends_on:
+      - travelservice
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql/camunda
+      SPRING_DATASOURCE_USERNAME: camunda
+      SPRING_DATASOURCE_PASSWORD: camunda
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
+      TRAVEL_SERVICE_BASE_URL: http://travelservice:8090
+
+
+  mysql:
+    image: library/mysql:5.6
+    container_name: mysql_camunda
+    restart: always
+    volumes:
+      - travel_db_camunda:/var/lib/mysql
+    ports:
+      - 3306:3306
+    networks:
+      - travel_application
+    expose:
+      - '3306'
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=camunda
+      - MYSQL_USER=camunda
+      - MYSQL_PASSWORD=camunda
+
+
+networks:
+  travel_application:
+
+volumes:
+  travel_db_camunda:
