@@ -1,4 +1,4 @@
-# Eventuate Tram Expandability Evaluation
+# Camunda Expandability Evaluation
 This project is part of the evaluation of a Saga pattern implementation using the [Camunda](https://github.com/camunda/camunda-bpm-platform/tree/master/spring-boot-starter).
 The original [Saga Pattern Realization with Camunda](https://github.com/KarolinDuerr/BA-SagaPattern/tree/master/Camunda)
 has been extended by a __CustomerService__ in order to evaluate the expandability of an implementation using Eventuate Tram
