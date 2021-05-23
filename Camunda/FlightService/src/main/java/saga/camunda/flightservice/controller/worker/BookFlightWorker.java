@@ -14,7 +14,6 @@ import saga.camunda.flightservice.api.FlightServiceTopics;
 import saga.camunda.flightservice.api.dto.BookFlightRequest;
 import saga.camunda.flightservice.api.dto.BookFlightResponse;
 import saga.camunda.flightservice.controller.IFlightService;
-import saga.camunda.flightservice.error.ErrorType;
 import saga.camunda.flightservice.error.FlightServiceException;
 import saga.camunda.flightservice.model.FindAndBookFlightInformation;
 import saga.camunda.flightservice.model.FlightInformation;
@@ -48,8 +47,9 @@ public class BookFlightWorker implements ExternalTaskHandler {
 
         if (bookFlightRequest == null) {
             logger.info("The given input could not be parsed to a bookFlightRequest.");
-            externalTaskService.handleBpmnError(externalTask, ErrorType.INVALID_PARAMETER.toString(), "Something went" +
-                    " wrong with the given input."); // TODO
+            externalTaskService.handleBpmnError(externalTask, FlightServiceTopics.BpmnError.FLIGHT_ERROR, "Something went" +
+                    " wrong with the given input.");
+            externalTaskService.complete(externalTask, null);
             return;
         }
 
@@ -57,8 +57,9 @@ public class BookFlightWorker implements ExternalTaskHandler {
             bookFlight(bookFlightRequest, externalTask, externalTaskService);
         } catch (FlightServiceException exception) {
             logger.error(exception.toString());
-            externalTaskService.handleBpmnError(externalTask, exception.getErrorType().toString(),
-                    exception.getMessage()); // TODO
+            externalTaskService.handleBpmnError(externalTask, FlightServiceTopics.BpmnError.FLIGHT_ERROR,
+                    exception.toString());
+            externalTaskService.complete(externalTask, null);
         }
         logger.info("Finished Task: " + externalTask.getActivityId() + "(ID: " + externalTask.getId() + ")");
     }

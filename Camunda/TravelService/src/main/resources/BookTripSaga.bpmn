@@ -12,9 +12,6 @@
       <bpmn:incoming>Flow_1a4dwmu</bpmn:incoming>
       <bpmn:outgoing>Flow_0cem218</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:boundaryEvent id="Event_compensateBookHotel" attachedToRef="Activity_BookHotel">
-      <bpmn:compensateEventDefinition id="CompensateEventDefinition_0ggetfl" />
-    </bpmn:boundaryEvent>
     <bpmn:boundaryEvent id="Event_compensateBookFlight" attachedToRef="Activity_BookFlight">
       <bpmn:compensateEventDefinition id="CompensateEventDefinition_00hn4sn" />
     </bpmn:boundaryEvent>
@@ -87,10 +84,6 @@
     <bpmn:serviceTask id="Activity_ConfirmHotel" name="Confirm Hotel" camunda:type="external" camunda:topic="confirmHotel">
       <bpmn:extensionElements>
         <camunda:inputOutput>
-          <camunda:inputParameter name="BookTripId" />
-          <camunda:inputParameter name="BookFlightResponse">
-            <camunda:map />
-          </camunda:inputParameter>
           <camunda:inputParameter name="BookHotelResponse">
             <camunda:map />
           </camunda:inputParameter>
@@ -117,12 +110,50 @@
     <bpmn:boundaryEvent id="Event_compensateBookTrip" attachedToRef="Activity_BookTrip">
       <bpmn:compensateEventDefinition id="CompensateEventDefinition_1ewczv7" />
     </bpmn:boundaryEvent>
-    <bpmn:association id="Association_compensateBookHotel" sourceRef="Event_compensateBookHotel" targetRef="Activity_CancelHotel" />
+    <bpmn:boundaryEvent id="Event_compensateBookHotel" attachedToRef="Activity_BookHotel">
+      <bpmn:compensateEventDefinition id="CompensateEventDefinition_0ggetfl" />
+    </bpmn:boundaryEvent>
+    <bpmn:subProcess id="Activity_HotelError" name="Hotel Error Handling" triggeredByEvent="true">
+      <bpmn:endEvent id="Event_164kags">
+        <bpmn:incoming>Flow_1ieluu8</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:intermediateThrowEvent id="Event_1qjslfe">
+        <bpmn:incoming>Flow_0vysvkz</bpmn:incoming>
+        <bpmn:outgoing>Flow_1ieluu8</bpmn:outgoing>
+        <bpmn:compensateEventDefinition id="CompensateEventDefinition_1r8ksj8" />
+      </bpmn:intermediateThrowEvent>
+      <bpmn:sequenceFlow id="Flow_0vysvkz" sourceRef="Event_HotelError" targetRef="Event_1qjslfe" />
+      <bpmn:sequenceFlow id="Flow_1ieluu8" sourceRef="Event_1qjslfe" targetRef="Event_164kags" />
+      <bpmn:startEvent id="Event_HotelError" name="Hotel Error">
+        <bpmn:outgoing>Flow_0vysvkz</bpmn:outgoing>
+        <bpmn:errorEventDefinition id="ErrorEventDefinition_0g6jqif" errorRef="Error_11tkg6a" camunda:errorCodeVariable="errorCode" camunda:errorMessageVariable="errorMessage" />
+      </bpmn:startEvent>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="Activity_FlightError" name="Flight Error Handling" triggeredByEvent="true">
+      <bpmn:endEvent id="Event_1v9hi9j">
+        <bpmn:incoming>Flow_1f42cgh</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:intermediateThrowEvent id="Event_0a39xo4">
+        <bpmn:incoming>Flow_14nkj7t</bpmn:incoming>
+        <bpmn:outgoing>Flow_1f42cgh</bpmn:outgoing>
+        <bpmn:compensateEventDefinition id="CompensateEventDefinition_1rfsi37" />
+      </bpmn:intermediateThrowEvent>
+      <bpmn:sequenceFlow id="Flow_14nkj7t" sourceRef="Event_FlightError" targetRef="Event_0a39xo4" />
+      <bpmn:sequenceFlow id="Flow_1f42cgh" sourceRef="Event_0a39xo4" targetRef="Event_1v9hi9j" />
+      <bpmn:startEvent id="Event_FlightError" name="Flight Error">
+        <bpmn:outgoing>Flow_14nkj7t</bpmn:outgoing>
+        <bpmn:errorEventDefinition id="ErrorEventDefinition_07j43qs" errorRef="Error_1efpukx" camunda:errorCodeVariable="errorCode" camunda:errorMessageVariable="errorMessage" />
+      </bpmn:startEvent>
+    </bpmn:subProcess>
     <bpmn:association id="Association_compensateBookFlight" sourceRef="Event_compensateBookFlight" targetRef="Activity_CancelFlight" />
     <bpmn:association id="Association_compensateBookTrip" sourceRef="Event_compensateBookTrip" targetRef="Activity_CancelTrip" />
+    <bpmn:association id="Association_compensateBookHotel" sourceRef="Event_compensateBookHotel" targetRef="Activity_CancelHotel" />
   </bpmn:process>
   <bpmn:message id="Message_0bbc2z4" name="HotelBookedEvent" />
   <bpmn:message id="Message_07j0v8h" name="FlightBookedEvent" />
+  <bpmn:error id="Error_033ioma" />
+  <bpmn:error id="Error_11tkg6a" name="HOTEL_ERROR" errorCode="HOTEL_ERROR" />
+  <bpmn:error id="Error_1efpukx" name="FLIGHT_ERROR" errorCode="FLIGHT_ERROR" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="BookTripSaga">
       <bpmndi:BPMNEdge id="Flow_1a4dwmu_di" bpmnElement="Flow_1a4dwmu">
@@ -134,20 +165,20 @@
         <di:waypoint x="1402" y="120" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0mxwzpf_di" bpmnElement="Flow_0mxwzpf">
-        <di:waypoint x="1190" y="120" />
+        <di:waypoint x="1110" y="120" />
         <di:waypoint x="1240" y="120" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_081w4gj_di" bpmnElement="Flow_081w4gj">
         <di:waypoint x="880" y="120" />
-        <di:waypoint x="1090" y="120" />
+        <di:waypoint x="1010" y="120" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0bnz1b8_di" bpmnElement="Flow_0bnz1b8">
-        <di:waypoint x="550" y="120" />
+        <di:waypoint x="630" y="120" />
         <di:waypoint x="780" y="120" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0cem218_di" bpmnElement="Flow_0cem218">
         <di:waypoint x="380" y="120" />
-        <di:waypoint x="450" y="120" />
+        <di:waypoint x="530" y="120" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Activity_1g3it4x_di" bpmnElement="Activity_BookTrip">
         <dc:Bounds x="280" y="80" width="100" height="80" />
@@ -167,23 +198,84 @@
       <bpmndi:BPMNShape id="Activity_17eotrz_di" bpmnElement="Activity_CancelTrip">
         <dc:Bounds x="370" y="240" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0o4aq68_di" bpmnElement="Activity_CancelHotel">
-        <dc:Bounds x="540" y="240" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_07t5id4_di" bpmnElement="Activity_CancelFlight">
         <dc:Bounds x="872" y="240" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1pwxw08_di" bpmnElement="Activity_BookHotel">
-        <dc:Bounds x="450" y="80" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0q4x4t2_di" bpmnElement="Activity_BookFlight">
         <dc:Bounds x="780" y="80" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0yzdnhg_di" bpmnElement="Activity_ConfirmHotel">
-        <dc:Bounds x="1090" y="80" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0k94huy_di" bpmnElement="Activity_ConfirmTrip">
         <dc:Bounds x="1240" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0o4aq68_di" bpmnElement="Activity_CancelHotel">
+        <dc:Bounds x="620" y="240" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1pwxw08_di" bpmnElement="Activity_BookHotel">
+        <dc:Bounds x="530" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0yzdnhg_di" bpmnElement="Activity_ConfirmHotel">
+        <dc:Bounds x="1010" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_1i4jmj4_di" bpmnElement="Association_compensateBookTrip">
+        <di:waypoint x="350" y="178" />
+        <di:waypoint x="350" y="280" />
+        <di:waypoint x="370" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_14cf1mw_di" bpmnElement="Association_compensateBookFlight">
+        <di:waypoint x="850" y="178" />
+        <di:waypoint x="850" y="280" />
+        <di:waypoint x="872" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0unrd9k_di" bpmnElement="Association_compensateBookHotel">
+        <di:waypoint x="600" y="178" />
+        <di:waypoint x="600" y="280" />
+        <di:waypoint x="620" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Activity_1iyka7c_di" bpmnElement="Activity_HotelError" isExpanded="true">
+        <dc:Bounds x="190" y="410" width="350" height="200" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0vysvkz_di" bpmnElement="Flow_0vysvkz">
+        <di:waypoint x="258" y="510" />
+        <di:waypoint x="342" y="510" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ieluu8_di" bpmnElement="Flow_1ieluu8">
+        <di:waypoint x="378" y="510" />
+        <di:waypoint x="452" y="510" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_164kags_di" bpmnElement="Event_164kags">
+        <dc:Bounds x="452" y="492" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1qjslfe_di" bpmnElement="Event_1qjslfe">
+        <dc:Bounds x="342" y="492" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1kmok9m_di" bpmnElement="Event_HotelError">
+        <dc:Bounds x="222" y="492" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="213" y="535" width="54" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1jzk29o_di" bpmnElement="Activity_FlightError" isExpanded="true">
+        <dc:Bounds x="690" y="410" width="350" height="200" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_14nkj7t_di" bpmnElement="Flow_14nkj7t">
+        <di:waypoint x="758" y="510" />
+        <di:waypoint x="842" y="510" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1f42cgh_di" bpmnElement="Flow_1f42cgh">
+        <di:waypoint x="878" y="510" />
+        <di:waypoint x="952" y="510" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_1v9hi9j_di" bpmnElement="Event_1v9hi9j">
+        <dc:Bounds x="952" y="492" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0a39xo4_di" bpmnElement="Event_0a39xo4">
+        <dc:Bounds x="842" y="492" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0dk49ei_di" bpmnElement="Event_FlightError">
+        <dc:Bounds x="722" y="492" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="713" y="535" width="55" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1da0cr5_di" bpmnElement="Event_compensateBookTrip">
         <dc:Bounds x="332" y="142" width="36" height="36" />
@@ -195,23 +287,8 @@
         <dc:Bounds x="832" y="142" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0q0jkg8_di" bpmnElement="Event_compensateBookHotel">
-        <dc:Bounds x="502" y="142" width="36" height="36" />
+        <dc:Bounds x="582" y="142" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Association_0unrd9k_di" bpmnElement="Association_compensateBookHotel">
-        <di:waypoint x="520" y="178" />
-        <di:waypoint x="520" y="280" />
-        <di:waypoint x="540" y="280" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Association_14cf1mw_di" bpmnElement="Association_compensateBookFlight">
-        <di:waypoint x="850" y="178" />
-        <di:waypoint x="850" y="280" />
-        <di:waypoint x="872" y="280" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Association_1i4jmj4_di" bpmnElement="Association_compensateBookTrip">
-        <di:waypoint x="350" y="178" />
-        <di:waypoint x="350" y="280" />
-        <di:waypoint x="370" y="280" />
-      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

@@ -19,7 +19,7 @@ public class ConfirmTripAdapter implements JavaDelegate {
     private static final Logger logger = LoggerFactory.getLogger(ConfirmTripAdapter.class);
 
     @Autowired
-    private ITravelService travelService;
+    private final ITravelService travelService;
 
     public ConfirmTripAdapter(final ITravelService travelService) {
         this.travelService = travelService;

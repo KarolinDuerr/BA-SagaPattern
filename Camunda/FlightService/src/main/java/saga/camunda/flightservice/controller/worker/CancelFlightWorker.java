@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import saga.camunda.flightservice.api.FlightServiceTopics;
 import saga.camunda.flightservice.api.dto.BookFlightRequest;
 import saga.camunda.flightservice.controller.IFlightService;
-import saga.camunda.flightservice.error.ErrorType;
 
 
 @Component
@@ -35,8 +34,9 @@ public class CancelFlightWorker implements ExternalTaskHandler {
 
         if (bookFlightRequest == null) {
             logger.info("The given input could not be parsed to a bookHotelRequest.");
-            externalTaskService.handleBpmnError(externalTask, ErrorType.INVALID_PARAMETER.toString(), "Something went" +
-                    " wrong with the given input."); // TODO
+            externalTaskService.handleBpmnError(externalTask, FlightServiceTopics.BpmnError.FLIGHT_ERROR, "Something went" +
+                    " wrong with the given input.");
+            externalTaskService.complete(externalTask, null);
             return;
         }
 

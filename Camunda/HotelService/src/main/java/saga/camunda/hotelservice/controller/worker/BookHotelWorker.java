@@ -14,7 +14,6 @@ import saga.camunda.hotelservice.api.HotelServiceTopics;
 import saga.camunda.hotelservice.api.dto.BookHotelRequest;
 import saga.camunda.hotelservice.api.dto.BookHotelResponse;
 import saga.camunda.hotelservice.controller.IHotelService;
-import saga.camunda.hotelservice.error.ErrorType;
 import saga.camunda.hotelservice.error.HotelServiceException;
 import saga.camunda.hotelservice.model.HotelBooking;
 import saga.camunda.hotelservice.model.HotelBookingInformation;
@@ -48,17 +47,19 @@ public class BookHotelWorker implements ExternalTaskHandler {
 
         if (bookHotelRequest == null) {
             logger.info("The given input could not be parsed to a bookHotelRequest.");
-            externalTaskService.handleBpmnError(externalTask, ErrorType.INVALID_PARAMETER.toString(), "Something went" +
-                    " wrong with the given input."); // TODO
+            externalTaskService.handleBpmnError(externalTask, HotelServiceTopics.BpmnError.HOTEL_ERROR, "Something went" +
+                    " wrong with the given input.");
+            externalTaskService.complete(externalTask, null);
+            return;
         }
 
         try {
             bookHotel(bookHotelRequest, externalTask, externalTaskService);
         } catch (HotelServiceException exception) {
             logger.error(exception.toString());
-            externalTaskService.handleBpmnError(externalTask, exception.getErrorType().toString(),
-                    exception.getMessage()); // TODO
-//            externalTaskService.handleFailure(externalTask, exception.getMessage(), exception.getErrorType().toString(), 0, 5000);
+            externalTaskService.handleBpmnError(externalTask, HotelServiceTopics.BpmnError.HOTEL_ERROR,
+                    exception.toString());
+            externalTaskService.complete(externalTask, null);
         }
 
         logger.info("Finished Task: " + externalTask.getActivityId() + "(ID: " + externalTask.getId() + ")");

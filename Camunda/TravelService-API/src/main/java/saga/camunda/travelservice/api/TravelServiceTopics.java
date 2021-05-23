@@ -6,7 +6,11 @@ public class TravelServiceTopics {
 
         public static final String BOOK_TRIP_ID = "bookTripId";
 
-        public static final String REJECT_TRIP_REASON = "tripRejectionReason";
+    }
+
+    public static class BpmnError {
+
+        public static final String REJECT_TRIP_REASON = "errorMessage";
 
     }
 }

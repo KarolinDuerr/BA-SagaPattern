@@ -13,4 +13,10 @@ public class FlightServiceTopics {
         public static final String BOOK_FLIGHT_RESPONSE = "bookFlightResponse";
 
     }
+
+    public static class BpmnError {
+
+        public static final String FLIGHT_ERROR = "FLIGHT_ERROR";
+
+    }
 }
