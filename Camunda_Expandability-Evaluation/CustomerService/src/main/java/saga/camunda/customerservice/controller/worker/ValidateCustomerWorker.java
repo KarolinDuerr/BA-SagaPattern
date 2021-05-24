@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import saga.camunda.customerservice.api.CustomerServiceTopics;
-import saga.camunda.customerservice.api.dto.ValidateCustomerRequest;
 import saga.camunda.customerservice.controller.ICustomerService;
 import saga.camunda.customerservice.error.CustomerServiceException;
 
@@ -30,24 +29,22 @@ public class ValidateCustomerWorker implements ExternalTaskHandler {
     public void execute(final ExternalTask externalTask, final ExternalTaskService externalTaskService) {
         logger.info("Start execution of: " + externalTask.getActivityId() + "(ID: " + externalTask.getId() + ")");
 
-        ValidateCustomerRequest customerIdValue = externalTask.getVariable(CustomerServiceTopics.DataInput.VALIDATE_CUSTOMER_DATA);
+        Long customerId = externalTask.getVariable(CustomerServiceTopics.DataInput.VALIDATE_CUSTOMER_DATA);
 
-        if (customerIdValue == null) {
+        if (customerId == null) {
             logger.info("The given input could not be parsed to receive the customer ID.");
             externalTaskService.handleBpmnError(externalTask, CustomerServiceTopics.BpmnError.CUSTOMER_ERROR, "Something went" +
                     " wrong with the given input.");
-            externalTaskService.complete(externalTask, null);
             return;
         }
 
         try {
-            customerService.validateCustomer(customerIdValue.getCustomerId());
+            customerService.validateCustomer(customerId);
             externalTaskService.complete(externalTask, null);
         } catch (CustomerServiceException exception) {
             logger.error(exception.toString());
             externalTaskService.handleBpmnError(externalTask, CustomerServiceTopics.BpmnError.CUSTOMER_ERROR,
                     exception.toString());
-            externalTaskService.complete(externalTask, null);
         }
 
         logger.debug("Finished Task: " + externalTask.getActivityId() + "(ID: " + externalTask.getId() + ")");

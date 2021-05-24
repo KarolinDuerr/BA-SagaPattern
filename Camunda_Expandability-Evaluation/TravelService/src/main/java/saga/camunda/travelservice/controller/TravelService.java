@@ -136,6 +136,8 @@ public class TravelService implements ITravelService {
                 return BookingStatus.REJECTED_NO_HOTEL_AVAILABLE;
             case NO_FLIGHT_AVAILABLE:
                 return BookingStatus.REJECTED_NO_FLIGHT_AVAILABLE;
+            case CUSTOMER_VALIDATION_FAILED:
+                return BookingStatus.REJECTED_CUSTOMER_VALIDATION_FAILED;
             default:
                 return BookingStatus.REJECTED_UNKNOWN;
         }
