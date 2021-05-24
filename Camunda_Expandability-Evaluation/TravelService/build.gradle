@@ -45,7 +45,6 @@ dependencies {
 
     // MySQL
     compile "mysql:mysql-connector-java:$mySQLVersion"
-    compile "com.h2database:h2"
 
     // Swagger OpenAPI definition
     compile "org.springdoc:springdoc-openapi-ui:1.5.0"

@@ -5,6 +5,7 @@ import org.camunda.bpm.engine.variable.Variables;
 import org.camunda.bpm.engine.variable.value.ObjectValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import saga.camunda.customerservice.api.CustomerServiceTopics;
+import saga.camunda.customerservice.api.dto.ValidateCustomerRequest;
 import saga.camunda.flightservice.api.FlightServiceTopics;
 import saga.camunda.flightservice.api.dto.BookFlightRequest;
 import saga.camunda.hotelservice.api.HotelServiceTopics;
@@ -25,7 +26,7 @@ public class BookTripSaga {
     public void bookTrip(final BookTripSagaData bookTripSagaData) {
         BookHotelRequest bookHotelRequest = bookTripSagaData.makeBookHotelRequest();
         BookFlightRequest bookFlightRequest = bookTripSagaData.makeBookFlightRequest();
-        Long customerId = bookTripSagaData.getTripInformation().getCustomerId();
+        ValidateCustomerRequest customerId = new ValidateCustomerRequest(bookTripSagaData.getTripInformation().getCustomerId());
 
         // Use Spin's built-in JSON data format for deserialization
         ObjectValue typedBookHotelRequest =

@@ -4,7 +4,7 @@ public class CustomerServiceTopics {
 
     public static class DataInput {
 
-        public static final String VALIDATE_CUSTOMER_DATA = "customerId";
+        public static final String VALIDATE_CUSTOMER_DATA = "validateCustomerRequest";
 
     }
 

@@ -4,13 +4,12 @@ import org.camunda.bpm.client.spring.annotation.ExternalTaskSubscription;
 import org.camunda.bpm.client.task.ExternalTask;
 import org.camunda.bpm.client.task.ExternalTaskHandler;
 import org.camunda.bpm.client.task.ExternalTaskService;
-import org.camunda.bpm.client.variable.value.JsonValue;
-import org.camunda.bpm.engine.variable.value.TypedValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import saga.camunda.customerservice.api.CustomerServiceTopics;
+import saga.camunda.customerservice.api.dto.ValidateCustomerRequest;
 import saga.camunda.customerservice.controller.ICustomerService;
 import saga.camunda.customerservice.error.CustomerServiceException;
 
@@ -31,11 +30,9 @@ public class ValidateCustomerWorker implements ExternalTaskHandler {
     public void execute(final ExternalTask externalTask, final ExternalTaskService externalTaskService) {
         logger.info("Start execution of: " + externalTask.getActivityId() + "(ID: " + externalTask.getId() + ")");
 
-        logger.info("Validating customer with ID: " + externalTask.getVariable(CustomerServiceTopics.DataInput.VALIDATE_CUSTOMER_DATA));
-        TypedValue customerIdValue = externalTask.getVariableTyped(CustomerServiceTopics.DataInput.VALIDATE_CUSTOMER_DATA); // TODO
-        logger.info("Validating customer with ID2: " + customerIdValue);
+        ValidateCustomerRequest customerIdValue = externalTask.getVariable(CustomerServiceTopics.DataInput.VALIDATE_CUSTOMER_DATA);
 
-        if (customerIdValue == null || customerIdValue.getValue() == null) {
+        if (customerIdValue == null) {
             logger.info("The given input could not be parsed to receive the customer ID.");
             externalTaskService.handleBpmnError(externalTask, CustomerServiceTopics.BpmnError.CUSTOMER_ERROR, "Something went" +
                     " wrong with the given input.");
@@ -44,7 +41,7 @@ public class ValidateCustomerWorker implements ExternalTaskHandler {
         }
 
         try {
-            customerService.validateCustomer(Long.getLong("2"));
+            customerService.validateCustomer(customerIdValue.getCustomerId());
             externalTaskService.complete(externalTask, null);
         } catch (CustomerServiceException exception) {
             logger.error(exception.toString());

@@ -26,7 +26,7 @@ public class ConfirmTripAdapter implements JavaDelegate {
     }
 
     @Override
-    public void execute(DelegateExecution executionContext) throws Exception {
+    public void execute(final DelegateExecution executionContext) {
         Long tripId = (Long) executionContext.getVariable(TravelServiceTopics.DataInput.BOOK_TRIP_ID);
         final BookHotelResponse bookHotelResponse = (BookHotelResponse) executionContext.getVariable(HotelServiceTopics.DataOutput.BOOK_HOTEL_RESPONSE);
         final BookFlightResponse bookFlightResponse = (BookFlightResponse) executionContext.getVariable(FlightServiceTopics.DataOutput.BOOK_FLIGHT_RESPONSE);

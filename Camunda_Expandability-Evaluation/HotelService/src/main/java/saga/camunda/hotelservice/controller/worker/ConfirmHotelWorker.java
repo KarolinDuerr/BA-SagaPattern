@@ -26,7 +26,7 @@ public class ConfirmHotelWorker implements ExternalTaskHandler {
     }
 
     @Override
-    public void execute(ExternalTask externalTask, ExternalTaskService externalTaskService) {
+    public void execute(final ExternalTask externalTask, final ExternalTaskService externalTaskService) {
         logger.info("Start execution of: " + externalTask.getActivityId() + "(ID: " + externalTask.getId() + ")");
 
         BookHotelResponse bookHotelResponse = externalTask.getVariable(HotelServiceTopics.DataOutput.BOOK_HOTEL_RESPONSE);

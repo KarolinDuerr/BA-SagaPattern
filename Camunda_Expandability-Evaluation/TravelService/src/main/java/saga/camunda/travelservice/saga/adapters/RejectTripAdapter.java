@@ -23,7 +23,7 @@ public class RejectTripAdapter implements JavaDelegate {
     }
 
     @Override
-    public void execute(DelegateExecution executionContext) {
+    public void execute(final DelegateExecution executionContext) {
         Long tripId = (Long) executionContext.getVariable(TravelServiceTopics.DataInput.BOOK_TRIP_ID);
         String reason = (String) executionContext.getVariable(TravelServiceTopics.BpmnError.REJECT_TRIP_REASON);
         RejectionReason rejectionReason = getRejectionReason(reason);
@@ -37,7 +37,7 @@ public class RejectTripAdapter implements JavaDelegate {
             return RejectionReason.NO_HOTEL_AVAILABLE;
         } else if (reason != null && reason.contains(RejectionReason.NO_FLIGHT_AVAILABLE.toString())) {
             return RejectionReason.NO_FLIGHT_AVAILABLE;
-        } else if (reason.contains(RejectionReason.CUSTOMER_VALIDATION_FAILED.toString())) {
+        } else if (reason != null && reason.contains(RejectionReason.CUSTOMER_VALIDATION_FAILED.toString())) {
             return RejectionReason.CUSTOMER_VALIDATION_FAILED;
         }
         return RejectionReason.REASON_UNKNOWN;

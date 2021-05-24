@@ -40,7 +40,7 @@ public class BookHotelWorker implements ExternalTaskHandler {
     }
 
     @Override
-    public void execute(ExternalTask externalTask, ExternalTaskService externalTaskService) {
+    public void execute(final ExternalTask externalTask, final ExternalTaskService externalTaskService) {
         logger.info("Start execution of: " + externalTask.getActivityId() + "(ID: " + externalTask.getId() + ")");
 
         BookHotelRequest bookHotelRequest = externalTask.getVariable(HotelServiceTopics.DataInput.BOOK_HOTEL_DATA);

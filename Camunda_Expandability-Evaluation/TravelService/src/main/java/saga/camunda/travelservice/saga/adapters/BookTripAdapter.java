@@ -13,7 +13,7 @@ public class BookTripAdapter implements JavaDelegate {
     private static final Logger logger = LoggerFactory.getLogger(BookTripAdapter.class);
 
     @Override
-    public void execute(DelegateExecution executionContext) throws Exception {
+    public void execute(final DelegateExecution executionContext) {
         Long id = (Long) executionContext.getVariable(TravelServiceTopics.DataInput.BOOK_TRIP_ID);
         logger.info("BookTripSaga for trip" + id + " is being started.");
     }
