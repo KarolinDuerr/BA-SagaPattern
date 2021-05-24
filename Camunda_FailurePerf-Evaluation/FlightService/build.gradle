@@ -29,8 +29,7 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-actuator"
 
     // MySQL
-//    compile "mysql:mysql-connector-java:$mySQLVersion"
-    compile "com.h2database:h2"
+    compile "mysql:mysql-connector-java:$mySQLVersion"
 
     // Docker Client
     compile "com.github.docker-java:docker-java-core:3.2.6"

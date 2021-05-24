@@ -67,7 +67,8 @@ public class BookFlightWorker implements ExternalTaskHandler {
                     exception.toString());
             externalTaskService.complete(externalTask, null);
         }
-        logger.info("Finished Task: " + externalTask.getActivityId() + "(ID: " + externalTask.getId() + ")");
+
+        logger.debug("Finished Task: " + externalTask.getActivityId() + "(ID: " + externalTask.getId() + ")");
     }
 
     private void bookFlight(final BookFlightRequest bookFlightRequest, final ExternalTask externalTask,
@@ -85,7 +86,7 @@ public class BookFlightWorker implements ExternalTaskHandler {
         Map<String, Object> variables = new HashMap<>();
         variables.put(FlightServiceTopics.DataOutput.BOOK_FLIGHT_RESPONSE, typedBookFlightResponse);
 
-        // provoke Orchestrator failure (Conductor Server)
+        // provoke Orchestrator failure (TravelService)
         provokeOrchestratorFailure(flightInformation.getDestination().getCountry(),
                 receivedFlightInformation.getProvokedFailure());
 
@@ -102,7 +103,7 @@ public class BookFlightWorker implements ExternalTaskHandler {
             return;
         }
 
-        logger.info("Shutting down ConductorServer due to corresponding input.");
+        logger.info("Shutting down TravelService due to corresponding input.");
         DefaultDockerClientConfig config = DefaultDockerClientConfig.createDefaultConfigBuilder()
                 .withDockerHost("unix:///var/run/docker.sock")
                 .withDockerTlsVerify(false)

@@ -44,6 +44,6 @@ public class CancelFlightWorker implements ExternalTaskHandler {
         logger.info("Flight successfully cancelled which is associated with Trip: " + bookFlightRequest.getTripId());
 
         externalTaskService.complete(externalTask);
-        logger.info("Finished Task: " + externalTask.getActivityId() + "(ID: " + externalTask.getId() + ")");
+        logger.debug("Finished Task: " + externalTask.getActivityId() + "(ID: " + externalTask.getId() + ")");
     }
 }

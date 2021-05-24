@@ -43,6 +43,6 @@ public class ConfirmHotelWorker implements ExternalTaskHandler {
         logger.info("Hotel confirmed: " + bookHotelResponse.getBookingId());
 
         externalTaskService.complete(externalTask);
-        logger.info("Finished Task: " + externalTask.getActivityId() + "(ID: " + externalTask.getId() + ")");
+        logger.debug("Finished Task: " + externalTask.getActivityId() + "(ID: " + externalTask.getId() + ")");
     }
 }
