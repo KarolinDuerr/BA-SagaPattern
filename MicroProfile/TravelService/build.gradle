@@ -1,7 +1,15 @@
-plugins {
-    id 'java'
-    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
-    id 'org.springframework.boot' version '2.3.1.RELEASE'
+apply plugin: 'war'
+apply plugin: 'liberty'
+apply plugin: 'java'
+
+// configure liberty-gradle-plugin
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'io.openliberty.tools:liberty-gradle-plugin:3.0'
+    }
 }
 
 group 'org.example'
@@ -9,6 +17,13 @@ version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+ext {
+    liberty.server.var.artifactId = "${rootProject.name}"
+}
 
 repositories {
     mavenCentral()
@@ -19,19 +34,25 @@ dependencies {
     compile project(":HotelService-API")
     compile project(":FlightService-API")
 
-    // Springframework
-    compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
-    compile "org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion"
-    compile "org.springframework.boot:spring-boot-starter-jetty:$springBootVersion"
+    // Javax persistence
+    compile "javax.persistence:javax.persistence-api:2.2"
+
+    // Eclipse MicroProfile
+//    compileOnly group: 'org.eclipse.microprofile', name: 'microprofile', version: '4.0.1', ext: 'pom'
+    providedCompile "jakarta.platform:jakarta.jakartaee-api:8.0.0" // TODO nötig?
+    providedCompile "org.eclipse.microprofile:microprofile:4.0.1"
+
+    // Eclipse MicroProfile LRA
+    implementation group: 'org.eclipse.microprofile.lra', name: 'microprofile-lra-api', version: '1.0-RC3'
 
     // Enable health and info endpoint
-    compile "org.springframework.boot:spring-boot-starter-actuator"
 
     // MySQL
     compile "mysql:mysql-connector-java:$mySQLVersion"
 
     // Swagger OpenAPI definition
-    compile "org.springdoc:springdoc-openapi-ui:1.5.0"
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
+
+clean.dependsOn 'libertyStop'

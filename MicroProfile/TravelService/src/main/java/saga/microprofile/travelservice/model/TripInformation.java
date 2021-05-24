@@ -8,6 +8,11 @@ import java.util.Objects;
 @Entity
 @Table(name = "tripsInformation")
 @Access(AccessType.FIELD)
+@NamedQueries({
+        @NamedQuery(name = "TripInformation.findAll", query = "SELECT trips FROM tripsInformation trips"),
+        @NamedQuery(name = "TripInformation.findTripByName", query = "SELECT trips FROM tripsInformation trips WHERE trips" +
+                ".travellerName = :travellerName")
+})
 public class TripInformation {
 
     @Id

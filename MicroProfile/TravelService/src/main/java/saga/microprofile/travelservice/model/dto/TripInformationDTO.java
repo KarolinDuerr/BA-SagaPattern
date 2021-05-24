@@ -1,8 +1,8 @@
 package saga.microprofile.travelservice.model.dto;
 
-import saga.microprofile.travelservice.model.BookingStatus;
 import saga.microprofile.travelservice.api.dto.LocationDTO;
 import saga.microprofile.travelservice.api.dto.TripDurationDTO;
+import saga.microprofile.travelservice.model.BookingStatus;
 
 public class TripInformationDTO {
 

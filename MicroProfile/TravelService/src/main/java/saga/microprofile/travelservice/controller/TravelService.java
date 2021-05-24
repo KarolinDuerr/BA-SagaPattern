@@ -1,23 +1,22 @@
 package saga.microprofile.travelservice.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import saga.microprofile.travelservice.error.*;
 import saga.microprofile.travelservice.model.*;
 import saga.microprofile.travelservice.saga.*;
 
+import javax.enterprise.context.ApplicationScoped;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
-@Service("TravelService")
+@ApplicationScoped
+@TravelServiceImpl
 public class TravelService implements ITravelService {
 
-    private static final Logger logger = LoggerFactory.getLogger(TravelService.class);
+    private static final Logger logger = Logger.getLogger(TravelService.class.toString());
 
-    @Autowired
+//    @Autowired
     private final TripInformationRepository tripInformationRepository;
 
 //    @Autowired
@@ -46,15 +45,15 @@ public class TravelService implements ITravelService {
     public TripInformation getTripInformation(final Long tripId) throws TravelException {
         logger.info(String.format("Get trip booking (ID: %d) from Repository.", tripId));
 
-        Optional<TripInformation> tripInformation = tripInformationRepository.findById(tripId);
+        TripInformation tripInformation = tripInformationRepository.findById(tripId);
 
-        if (!tripInformation.isPresent()) {
+        if (tripInformation == null) {
             String message = String.format("The trip booking (ID: %d) does not exist.", tripId);
             logger.info(message);
             throw new TravelException(ErrorType.NON_EXISTING_ITEM, message);
         }
 
-        return tripInformation.get();
+        return tripInformation;
     }
 
     @Override
