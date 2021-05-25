@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import saga.eventuate.tram.travelservice.api.TravelServiceChannels;
 import saga.eventuate.tram.travelservice.command.ConfirmTripBooking;
+import saga.eventuate.tram.travelservice.command.ConfirmTripCancellationCommand;
+import saga.eventuate.tram.travelservice.command.RejectTripCancellationCommand;
 import saga.eventuate.tram.travelservice.command.RejectTripCommand;
 import saga.eventuate.tram.travelservice.model.RejectionReason;
 
@@ -32,6 +34,8 @@ public class TravelCommandHandler {
                 .fromChannel(TravelServiceChannels.travelServiceChannel)
                 .onMessage(RejectTripCommand.class, this::rejectTrip)
                 .onMessage(ConfirmTripBooking.class, this::confirmBooking)
+                .onMessage(RejectTripCancellationCommand.class, this::rejectCancellation)
+                .onMessage(ConfirmTripCancellationCommand.class, this::confirmCancellation)
                 .build();
     }
 
@@ -54,6 +58,27 @@ public class TravelCommandHandler {
                 confirmTripBooking.getFlightId());
 
         logger.info("Successfully confirmed trip with tripId = " + confirmTripBooking.getTripId());
+        return CommandHandlerReplyBuilder.withSuccess();
+    }
+
+    private Message rejectCancellation(CommandMessage<RejectTripCancellationCommand> command) {
+        final long tripId = command.getCommand().getTripId();
+        final RejectionReason rejectionReason = command.getCommand().getRejectionReason();
+        logger.info("Received RejectTripCancellation for tripId = " + tripId + ", rejection reason: " + rejectionReason);
+
+        travelService.rejectTripCancellation(tripId, rejectionReason);
+
+        logger.info("Successfully rejected trip cancellation for tripId = " + tripId);
+        return CommandHandlerReplyBuilder.withSuccess();
+    }
+
+    private Message confirmCancellation(CommandMessage<ConfirmTripCancellationCommand> command) {
+        final ConfirmTripCancellationCommand confirmTripCancellation = command.getCommand();
+        logger.info("Received ConfirmTripCancellation for tripId = " + confirmTripCancellation.getTripId());
+
+        travelService.confirmTripCancellation(confirmTripCancellation.getTripId());
+
+        logger.info("Successfully confirmed trip cancellation for tripId = " + confirmTripCancellation.getTripId());
         return CommandHandlerReplyBuilder.withSuccess();
     }
 

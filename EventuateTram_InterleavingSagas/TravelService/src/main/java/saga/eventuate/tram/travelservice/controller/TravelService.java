@@ -15,6 +15,8 @@ import saga.eventuate.tram.travelservice.model.TripInformation;
 import saga.eventuate.tram.travelservice.model.TripInformationRepository;
 import saga.eventuate.tram.travelservice.saga.BookTripSaga;
 import saga.eventuate.tram.travelservice.saga.BookTripSagaData;
+import saga.eventuate.tram.travelservice.saga.CancelTripSaga;
+import saga.eventuate.tram.travelservice.saga.CancelTripSagaData;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -22,7 +24,7 @@ import java.util.Optional;
 
 @Service("TravelService")
 @Transactional
-public class TravelService implements  ITravelService {
+public class TravelService implements ITravelService {
 
     private static final Logger logger = LoggerFactory.getLogger(TravelService.class);
 
@@ -35,10 +37,16 @@ public class TravelService implements  ITravelService {
     @Autowired
     private final BookTripSaga bookTripSaga;
 
-    public TravelService(final TripInformationRepository tripInformationRepository, final SagaInstanceFactory sagaInstanceFactory, final BookTripSaga bookTripSaga) {
+    @Autowired
+    private final CancelTripSaga cancelTripSaga;
+
+    public TravelService(final TripInformationRepository tripInformationRepository,
+                         final SagaInstanceFactory sagaInstanceFactory, final BookTripSaga bookTripSaga,
+                         final CancelTripSaga cancelTripSaga) {
         this.tripInformationRepository = tripInformationRepository;
         this.sagaInstanceFactory = sagaInstanceFactory;
         this.bookTripSaga = bookTripSaga;
+        this.cancelTripSaga = cancelTripSaga;
     }
 
     @Override
@@ -91,6 +99,28 @@ public class TravelService implements  ITravelService {
     }
 
     @Override
+    public BookingStatus cancelTrip(final Long tripId, final Long customerId) throws TravelException {
+        logger.info("Starting to cancel the Trip: " + tripId);
+
+        // ensure idempotence of trip bookings
+        TripInformation tripBooking = getTripInformation(tripId);
+
+        if (tripBooking.getBookingStatus() == BookingStatus.CANCELLED || tripBooking.getBookingStatus() == BookingStatus.CANCELLING) {
+            return tripBooking.getBookingStatus();
+        }
+
+        tripBooking.cancel();
+        tripInformationRepository.save(tripBooking);
+
+        // create the BookTripSaga with the necessary information
+        CancelTripSagaData sagaData = new CancelTripSagaData(tripId, tripBooking.getHotelId(),
+                tripBooking.getFlightId(), customerId);
+        sagaInstanceFactory.create(cancelTripSaga, sagaData);
+
+        return tripBooking.getBookingStatus();
+    }
+
+    @Override
     public void rejectTrip(final Long tripId, final RejectionReason rejectionReason) {
         logger.info("Rejecting the booked trip with ID " + tripId);
 
@@ -99,6 +129,20 @@ public class TravelService implements  ITravelService {
 
             BookingStatus newBookingStatus = convertToBookingStatus(rejectionReason);
             tripInformation.reject(newBookingStatus);
+            tripInformationRepository.save(tripInformation);
+        } catch (TravelException exception) {
+            throw new BookingNotFound(tripId);
+        }
+    }
+
+    @Override
+    public void rejectTripCancellation(Long tripId, RejectionReason rejectionReason) {
+        logger.info("Rejecting the trip cancellation with ID " + tripId);
+
+        try {
+            TripInformation tripInformation = getTripInformation(tripId);
+
+            tripInformation.rejectCancellation();
             tripInformationRepository.save(tripInformation);
         } catch (TravelException exception) {
             throw new BookingNotFound(tripId);
@@ -115,6 +159,20 @@ public class TravelService implements  ITravelService {
             tripInformation.setHotelId(hotelId);
             tripInformation.setFlightId(flightId);
             tripInformation.confirm();
+            tripInformationRepository.save(tripInformation);
+        } catch (TravelException exception) {
+            throw new BookingNotFound(tripId);
+        }
+    }
+
+    @Override
+    public void confirmTripCancellation(Long tripId) {
+        logger.info("Confirming the cancellation for trip with ID " + tripId);
+
+        try {
+            TripInformation tripInformation = getTripInformation(tripId);
+
+            tripInformation.cancelled();
             tripInformationRepository.save(tripInformation);
         } catch (TravelException exception) {
             throw new BookingNotFound(tripId);
@@ -138,7 +196,7 @@ public class TravelService implements  ITravelService {
     }
 
     private BookingStatus convertToBookingStatus(final RejectionReason rejectionReason) {
-        switch(rejectionReason) {
+        switch (rejectionReason) {
             case NO_HOTEL_AVAILABLE:
                 return BookingStatus.REJECTED_NO_HOTEL_AVAILABLE;
             case NO_FLIGHT_AVAILABLE:

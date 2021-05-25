@@ -142,11 +142,25 @@ public class TripInformation {
         switch (this.bookingStatus) {
             case PENDING:
             case CONFIRMED:
+            case CANCELLING:
+                this.bookingStatus = BookingStatus.CANCELLING;
+                break;
+            default:
+                throw new UnsupportedStateTransition("The trip can only be cancelled if its still PENDING, but the " +
+                        "current status is: " + getBookingStatus());
+        }
+    }
+
+    public void cancelled() {
+        switch (this.bookingStatus) {
+            case PENDING:
+            case CONFIRMED:
+            case CANCELLING:
             case CANCELLED:
                 this.bookingStatus = BookingStatus.CANCELLED;
                 break;
             default:
-                throw new UnsupportedStateTransition("The trip can only be rejected if its still PENDING, but the " +
+                throw new UnsupportedStateTransition("The trip can only be cancelled if its still PENDING, but the " +
                         "current status is: " + getBookingStatus());
         }
     }
@@ -165,11 +179,27 @@ public class TripInformation {
         }
     }
 
+    public void rejectCancellation() {
+        switch (this.bookingStatus) {
+            case CANCELLING:
+            case CONFIRMED:
+                this.bookingStatus = BookingStatus.CONFIRMED;
+                break;
+            default:
+                throw new UnsupportedStateTransition("The trip cancellation can only be rejected if its still " +
+                        "PENDING, but the current status is: " + getBookingStatus());
+        }
+    }
+
     public void confirm() {
         switch (this.bookingStatus) {
             case PENDING:
             case CONFIRMED:
                 this.bookingStatus = BookingStatus.CONFIRMED;
+                break;
+            case CANCELLING:
+            case CANCELLED:
+                // Ignore, since the trip has already been cancelled
                 break;
             default:
                 throw new UnsupportedStateTransition("The trip can only be confirmed if its still PENDING, but the " +

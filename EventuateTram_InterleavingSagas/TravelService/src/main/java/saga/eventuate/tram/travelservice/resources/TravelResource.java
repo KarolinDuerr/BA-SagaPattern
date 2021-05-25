@@ -9,8 +9,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import saga.eventuate.tram.travelservice.api.dto.BookTripRequest;
 import saga.eventuate.tram.travelservice.api.dto.BookTripResponse;
+import saga.eventuate.tram.travelservice.api.dto.CancelTripRequest;
+import saga.eventuate.tram.travelservice.api.dto.CancelTripResponse;
 import saga.eventuate.tram.travelservice.controller.ITravelService;
 import saga.eventuate.tram.travelservice.error.TravelServiceException;
+import saga.eventuate.tram.travelservice.model.BookingStatus;
 import saga.eventuate.tram.travelservice.model.TripInformation;
 import saga.eventuate.tram.travelservice.model.dto.TripInformationDTO;
 
@@ -77,5 +80,24 @@ public class TravelResource {
 
         return ResponseEntity.ok(new BookTripResponse(tripInformation.getId(),
                 tripInformation.getBookingStatus().toString()));
+    }
+
+    @DeleteMapping
+    public ResponseEntity<CancelTripResponse> cancelTrip(@RequestBody final CancelTripRequest cancelTripRequest) throws TravelServiceException {
+        logger.info("Cancel trip: " + cancelTripRequest);
+
+        if (cancelTripRequest == null) {
+            logger.info("CancelTripRequest is missing, therefore no trip can be cancelled.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The information to cancel the trip is missing.");
+        }
+
+        BookingStatus bookingStatus = travelService.cancelTrip(cancelTripRequest.getTripId(), cancelTripRequest.getCustomerId());
+
+        if (bookingStatus == null) {
+            logger.info("Something went wrong during cancellation.");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong during cancellation.");
+        }
+
+        return ResponseEntity.ok(new CancelTripResponse(cancelTripRequest.getTripId(), bookingStatus.toString()));
     }
 }

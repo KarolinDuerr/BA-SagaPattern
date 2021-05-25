@@ -14,16 +14,20 @@ import org.springframework.context.annotation.Import;
 import saga.eventuate.tram.travelservice.model.TripInformationRepository;
 import saga.eventuate.tram.travelservice.resources.DtoConverter;
 import saga.eventuate.tram.travelservice.saga.BookTripSaga;
+import saga.eventuate.tram.travelservice.saga.CancelTripSaga;
 
 @Configuration
 @EnableAutoConfiguration
-@Import({SagaOrchestratorConfiguration.class, SagaParticipantConfiguration.class, TramMessageProducerJdbcConfiguration.class,
+@Import({SagaOrchestratorConfiguration.class, SagaParticipantConfiguration.class,
+        TramMessageProducerJdbcConfiguration.class,
         EventuateTramKafkaMessageConsumerConfiguration.class})
 public class TravelServiceConfiguration {
 
     @Bean
-    public ITravelService travelService(TripInformationRepository tripInformationRepository, SagaInstanceFactory sagaInstanceFactory, BookTripSaga bookTripSaga) {
-        return new TravelService(tripInformationRepository, sagaInstanceFactory, bookTripSaga);
+    public ITravelService travelService(TripInformationRepository tripInformationRepository,
+                                        SagaInstanceFactory sagaInstanceFactory, BookTripSaga bookTripSaga,
+                                        CancelTripSaga cancelTripSaga) {
+        return new TravelService(tripInformationRepository, sagaInstanceFactory, bookTripSaga, cancelTripSaga);
     }
 
     @Bean
@@ -34,6 +38,11 @@ public class TravelServiceConfiguration {
     @Bean
     public BookTripSaga bookTripSaga() {
         return new BookTripSaga();
+    }
+
+    @Bean
+    public CancelTripSaga cancelTripSaga() {
+        return new CancelTripSaga();
     }
 
     @Bean
