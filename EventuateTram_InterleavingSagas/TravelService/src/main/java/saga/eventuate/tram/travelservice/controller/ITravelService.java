@@ -2,6 +2,7 @@ package saga.eventuate.tram.travelservice.controller;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
+import saga.eventuate.tram.travelservice.api.dto.FailureType;
 import saga.eventuate.tram.travelservice.error.TravelException;
 import saga.eventuate.tram.travelservice.model.BookingStatus;
 import saga.eventuate.tram.travelservice.model.RejectionReason;
@@ -22,7 +23,7 @@ public interface ITravelService {
     TripInformation bookTrip(final TripInformation tripInformation);
 
     @Transactional
-    BookingStatus cancelTrip(final Long tripId, final Long customerId) throws TravelException;
+    BookingStatus cancelTrip(final Long tripId, final Long customerId, final FailureType provokeFailureType) throws TravelException;
 
     @Transactional
     void rejectTrip(final Long tripId, final RejectionReason rejectionReason);

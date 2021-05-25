@@ -31,7 +31,8 @@ public class HotelBooking {
 
     }
 
-    public HotelBooking(final String hotelName, final String travellerName, final HotelBookingInformation bookingInformation) {
+    public HotelBooking(final String hotelName, final String travellerName,
+                        final HotelBookingInformation bookingInformation) {
         this.hotelName = hotelName;
         this.travellerName = travellerName;
         this.bookingInformation = bookingInformation;
@@ -74,16 +75,30 @@ public class HotelBooking {
         return bookingStatus;
     }
 
-    public void cancel(final BookingStatus bookingStatus) {
+    public void cancel() {
         switch (this.bookingStatus) {
             case PENDING:
             case CONFIRMED:
-            case CANCELLED:
-                this.bookingStatus = bookingStatus;
+            case CANCELLING:
+                this.bookingStatus = BookingStatus.CANCELLING;
                 break;
             default:
                 throw new UnsupportedStateTransition("The hotel booking can only be rejected if its still PENDING, " +
                         "but the current status is: " + getBookingStatus());
+        }
+    }
+
+    public void cancelled() {
+        switch (this.bookingStatus) {
+            case PENDING:
+            case CONFIRMED:
+            case CANCELLING:
+            case CANCELLED:
+                this.bookingStatus = BookingStatus.CANCELLED;
+                break;
+            default:
+                throw new UnsupportedStateTransition("The hotel booking can only be rejected if its still PENDING or " +
+                        "CANCELLING, but the current status is: " + getBookingStatus());
         }
     }
 
@@ -93,9 +108,25 @@ public class HotelBooking {
             case CONFIRMED:
                 this.bookingStatus = BookingStatus.CONFIRMED;
                 break;
+            case CANCELLING:
+            case CANCELLED:
+                // Ignore, since the hotel has already been cancelled
+                break;
             default:
                 throw new UnsupportedStateTransition("The hotel booking  can only be confirmed if its still PENDING, " +
                         "but the current status is: " + getBookingStatus());
+        }
+    }
+
+    public void rebook() {
+        switch (this.bookingStatus) {
+            case CANCELLED:
+            case CONFIRMED:
+                this.bookingStatus = BookingStatus.CONFIRMED;
+                break;
+            default:
+                throw new UnsupportedStateTransition("The trip can only be rebooked if its " +
+                        "CANCELLED, but the current status is: " + getBookingStatus());
         }
     }
 

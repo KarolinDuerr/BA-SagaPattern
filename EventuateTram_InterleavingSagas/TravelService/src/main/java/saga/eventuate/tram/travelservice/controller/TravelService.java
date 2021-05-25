@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import saga.eventuate.tram.travelservice.api.dto.FailureType;
 import saga.eventuate.tram.travelservice.error.BookingNotFound;
 import saga.eventuate.tram.travelservice.error.ErrorType;
 import saga.eventuate.tram.travelservice.error.TravelException;
@@ -99,15 +100,18 @@ public class TravelService implements ITravelService {
     }
 
     @Override
-    public BookingStatus cancelTrip(final Long tripId, final Long customerId) throws TravelException {
+    public BookingStatus cancelTrip(final Long tripId, final Long customerId, final FailureType provokeFailureType) throws TravelException {
         logger.info("Starting to cancel the Trip: " + tripId);
 
         // ensure idempotence of trip bookings
         TripInformation tripBooking = getTripInformation(tripId);
 
         if (tripBooking.getBookingStatus() == BookingStatus.CANCELLED || tripBooking.getBookingStatus() == BookingStatus.CANCELLING) {
+            logger.info("Trip has already been cancelled: " + tripBooking);
             return tripBooking.getBookingStatus();
         }
+
+        prepareFailureIfRequested(tripBooking, provokeFailureType);
 
         tripBooking.cancel();
         tripInformationRepository.save(tripBooking);
@@ -142,7 +146,8 @@ public class TravelService implements ITravelService {
         try {
             TripInformation tripInformation = getTripInformation(tripId);
 
-            tripInformation.rejectCancellation();
+            BookingStatus newBookingStatus = convertToBookingStatus(rejectionReason);
+            tripInformation.rejectCancellation(newBookingStatus);
             tripInformationRepository.save(tripInformation);
         } catch (TravelException exception) {
             throw new BookingNotFound(tripId);
@@ -191,7 +196,7 @@ public class TravelService implements ITravelService {
             return null;
         }
 
-        logger.info("Trip has already been booked: " + savedTripBooking.toString());
+        logger.info("Trip has already been booked: " + savedTripBooking);
         return savedTripBooking.get();
     }
 
@@ -201,8 +206,26 @@ public class TravelService implements ITravelService {
                 return BookingStatus.REJECTED_NO_HOTEL_AVAILABLE;
             case NO_FLIGHT_AVAILABLE:
                 return BookingStatus.REJECTED_NO_FLIGHT_AVAILABLE;
+            case HOTEL_CANCELLATION_REJECTED:
+                return BookingStatus.CONFIRMED_HOTEL_CANCELLATION_REJECTED;
+            case FLIGHT_CANCELLATION_REJECTED:
+                return BookingStatus.CONFIRMED_FLIGHT_CANCELLATION_REJECTED;
             default:
                 return BookingStatus.REJECTED_UNKNOWN;
+        }
+    }
+
+    private void prepareFailureIfRequested(final TripInformation tripInformation, final FailureType provokeFailureType) {
+        switch(provokeFailureType) {
+            case HOTEL_FAILURE:
+                tripInformation.setHotelId(-1);
+                break;
+            case FLIGHT_FAILURE:
+                tripInformation.setFlightId(-1);
+                break;
+            default:
+                // successful execution requested
+                break;
         }
     }
 }

@@ -91,7 +91,7 @@ public class TravelResource {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The information to cancel the trip is missing.");
         }
 
-        BookingStatus bookingStatus = travelService.cancelTrip(cancelTripRequest.getTripId(), cancelTripRequest.getCustomerId());
+        BookingStatus bookingStatus = travelService.cancelTrip(cancelTripRequest.getTripId(), cancelTripRequest.getCustomerId(), cancelTripRequest.getProvokeFailureType());
 
         if (bookingStatus == null) {
             logger.info("Something went wrong during cancellation.");

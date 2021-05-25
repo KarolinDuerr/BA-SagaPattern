@@ -153,14 +153,14 @@ public class TripInformation {
 
     public void cancelled() {
         switch (this.bookingStatus) {
-            case PENDING:
+            case PENDING: // TODO sinnvoll?
             case CONFIRMED:
             case CANCELLING:
             case CANCELLED:
                 this.bookingStatus = BookingStatus.CANCELLED;
                 break;
             default:
-                throw new UnsupportedStateTransition("The trip can only be cancelled if its still PENDING, but the " +
+                throw new UnsupportedStateTransition("The trip can only be cancelled if its still PENDING or CANCELLING, but the " +
                         "current status is: " + getBookingStatus());
         }
     }
@@ -179,15 +179,15 @@ public class TripInformation {
         }
     }
 
-    public void rejectCancellation() {
+    public void rejectCancellation(final BookingStatus bookingStatus) {
         switch (this.bookingStatus) {
             case CANCELLING:
             case CONFIRMED:
-                this.bookingStatus = BookingStatus.CONFIRMED;
+                this.bookingStatus = bookingStatus;
                 break;
             default:
                 throw new UnsupportedStateTransition("The trip cancellation can only be rejected if its still " +
-                        "PENDING, but the current status is: " + getBookingStatus());
+                        "CANCELLING, but the current status is: " + getBookingStatus());
         }
     }
 

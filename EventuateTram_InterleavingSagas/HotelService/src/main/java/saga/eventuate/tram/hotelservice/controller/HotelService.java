@@ -83,6 +83,44 @@ public class HotelService implements IHotelService {
     }
 
     @Override
+    public void rebookHotel(Long bookingId, Long tripId) {
+        logger.info("Rebooking the cancelled hotel booking with ID " + bookingId);
+
+        try {
+            HotelBooking hotelBooking = getHotelBooking(bookingId);
+
+            if (hotelBooking.getBookingInformation() == null || hotelBooking.getBookingInformation().getTripId() != tripId) {
+                throw new BookingNotFound(bookingId);
+            }
+
+            hotelBooking.rebook();
+            hotelBookingRepository.save(hotelBooking);
+        } catch (HotelException e) {
+            throw new BookingNotFound(bookingId);
+        }
+    }
+
+    @Override
+    public void cancelHotel(Long bookingId, Long tripId) throws HotelException {
+        logger.info("Cancelling the booked hotel with ID " + bookingId);
+
+        checkIfProvokeCancellationFailure(bookingId, tripId);
+
+        try {
+            HotelBooking hotelBooking = getHotelBooking(bookingId);
+
+            if (hotelBooking.getBookingInformation() == null || hotelBooking.getBookingInformation().getTripId() != tripId) {
+                throw new BookingNotFound(bookingId);
+            }
+
+            hotelBooking.cancel();
+            hotelBookingRepository.save(hotelBooking);
+        } catch (HotelException e) {
+            throw new BookingNotFound(bookingId);
+        }
+    }
+
+    @Override
     public void cancelHotelBooking(final Long bookingId, final Long tripId) {
         logger.info("Cancelling the booked hotel with ID " + bookingId);
 
@@ -93,7 +131,7 @@ public class HotelService implements IHotelService {
                 throw new BookingNotFound(bookingId);
             }
 
-            hotelBooking.cancel(BookingStatus.CANCELLED);
+            hotelBooking.cancelled();
             hotelBookingRepository.save(hotelBooking);
         } catch (HotelException e) {
             throw new BookingNotFound(bookingId);
@@ -112,6 +150,24 @@ public class HotelService implements IHotelService {
             }
 
             hotelBooking.confirm();
+            hotelBookingRepository.save(hotelBooking);
+        } catch (HotelException e) {
+            throw new BookingNotFound(bookingId);
+        }
+    }
+
+    @Override
+    public void confirmHotelCancellation(Long bookingId, Long tripId) {
+        logger.info("Confirming the cancelled hotel booking with ID " + bookingId);
+
+        try {
+            HotelBooking hotelBooking = getHotelBooking(bookingId);
+
+            if (hotelBooking.getBookingInformation() == null || hotelBooking.getBookingInformation().getTripId() != tripId) {
+                throw new BookingNotFound(bookingId);
+            }
+
+            hotelBooking.cancelled();
             hotelBookingRepository.save(hotelBooking);
         } catch (HotelException e) {
             throw new BookingNotFound(bookingId);
@@ -143,5 +199,12 @@ public class HotelService implements IHotelService {
 
         logger.info("Hotel has already been booked: " + savedHotelBooking.toString());
         return savedHotelBooking.get();
+    }
+
+    private void checkIfProvokeCancellationFailure(final Long bookingId, final Long tripId) throws HotelException {
+        if (bookingId < 1) {
+            logger.info("Provoked hotel exception: hotel cancellation not possible anymore for trip: " + tripId);
+            throw new HotelException(ErrorType.CANCELLATION_NON_ALLOWED, "Hotel cancellation not possible anymore.");
+        }
     }
 }
