@@ -9,12 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import saga.eventuate.tram.flightservice.api.FlightServiceChannels;
-import saga.eventuate.tram.flightservice.api.dto.BookFlightCommand;
-import saga.eventuate.tram.flightservice.api.dto.BookFlightResponse;
-import saga.eventuate.tram.flightservice.api.dto.CancelFlightBooking;
-import saga.eventuate.tram.flightservice.api.dto.NoFlightAvailable;
+import saga.eventuate.tram.flightservice.api.dto.*;
 import saga.eventuate.tram.flightservice.error.ErrorType;
 import saga.eventuate.tram.flightservice.error.FlightServiceException;
+import saga.eventuate.tram.flightservice.model.BookingStatus;
 import saga.eventuate.tram.flightservice.model.FindAndBookFlightInformation;
 import saga.eventuate.tram.flightservice.model.FlightInformation;
 import saga.eventuate.tram.flightservice.resources.DtoConverter;
@@ -38,7 +36,8 @@ public class FlightCommandHandler {
         return SagaCommandHandlersBuilder
                 .fromChannel(FlightServiceChannels.flightServiceChannel)
                 .onMessage(BookFlightCommand.class, this::bookFlight)
-                .onMessage(CancelFlightBooking.class, this::cancelFlight)
+                .onMessage(CancelFlightBooking.class, this::cancelFlightBooking)
+                .onMessage(CancelFlightRequest.class, this::cancelFlight)
                 .build();
     }
 
@@ -65,11 +64,32 @@ public class FlightCommandHandler {
         }
     }
 
-    private Message cancelFlight(CommandMessage<CancelFlightBooking> command) {
+    private Message cancelFlightBooking(CommandMessage<CancelFlightBooking> command) {
         CancelFlightBooking cancelFlightBooking = command.getCommand();
         logger.info("Received CancelHotelBooking: " + cancelFlightBooking);
 
         flightService.cancelFlightBooking(cancelFlightBooking.getBookingId(), cancelFlightBooking.getTripId());
         return CommandHandlerReplyBuilder.withSuccess();
+    }
+
+    private Message cancelFlight(CommandMessage<CancelFlightRequest> command) {
+        CancelFlightRequest cancelFlightRequest = command.getCommand();
+        logger.info("Received CancelFlightRequest: " + cancelFlightRequest);
+
+        try {
+            flightService.cancelFlight(cancelFlightRequest.getBookingId(), cancelFlightRequest.getTripId());
+
+            CancelFlightResponse cancelFlightResponse = new CancelFlightResponse(cancelFlightRequest.getTripId(),
+                    BookingStatus.CANCELLED.toString());
+            return CommandHandlerReplyBuilder.withSuccess(cancelFlightResponse);
+        } catch (FlightServiceException exception) {
+            logger.error(exception.toString());
+
+            if (exception.getErrorType() == ErrorType.CANCELLATION_NON_ALLOWED) {
+                return CommandHandlerReplyBuilder.withFailure(new NonAllowedFlightCancellation(cancelFlightRequest.getBookingId(), cancelFlightRequest.getTripId()));
+            }
+
+            return CommandHandlerReplyBuilder.withFailure(exception.toString());
+        }
     }
 }

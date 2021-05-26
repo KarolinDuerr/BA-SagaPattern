@@ -22,4 +22,7 @@ public interface IFlightService {
 
     @Transactional
     void cancelFlightBooking(final Long flightBookingId, final Long tripId);
+
+    @Transactional
+    void cancelFlight(final Long flightBookingId, final Long tripId) throws FlightException;
 }

@@ -85,10 +85,30 @@ public class FlightService implements IFlightService {
                 throw new BookingNotFound(bookingId);
             }
 
-            flightInformation.cancel(BookingStatus.CANCELLED);
+            flightInformation.cancel();
             flightInformationRepository.save(flightInformation);
         } catch (FlightException e) {
             throw new BookingNotFound(bookingId);
+        }
+    }
+
+    @Override
+    public void cancelFlight(Long flightBookingId, Long tripId) throws FlightException {
+        logger.info("Cancelling the booked flight with ID " + flightBookingId);
+
+        checkIfProvokeCancellationFailure(flightBookingId, tripId);
+
+        try {
+            FlightInformation flightInformation = getFlightInformation(flightBookingId);
+
+            if (flightInformation.getTripId() != tripId) {
+                throw new BookingNotFound(flightBookingId);
+            }
+
+            flightInformation.cancel();
+            flightInformationRepository.save(flightInformation);
+        } catch (FlightException e) {
+            throw new BookingNotFound(flightBookingId);
         }
     }
 
@@ -124,5 +144,12 @@ public class FlightService implements IFlightService {
 
         logger.info("Flight has already been booked: " + savedFlightInformation.toString());
         return savedFlightInformation.get();
+    }
+
+    private void checkIfProvokeCancellationFailure(final Long bookingId, final Long tripId) throws FlightException {
+        if (bookingId < 1) {
+            logger.info("Provoked flight exception: flight cancellation not possible anymore for trip: " + tripId);
+            throw new FlightException(ErrorType.CANCELLATION_NON_ALLOWED, "Flight cancellation not possible anymore.");
+        }
     }
 }

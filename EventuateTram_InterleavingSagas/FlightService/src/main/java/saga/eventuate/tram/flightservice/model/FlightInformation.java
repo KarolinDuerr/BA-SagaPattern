@@ -120,12 +120,12 @@ public class FlightInformation {
         }
     }
 
-    public void cancel(final BookingStatus bookingStatus) {
+    public void cancel() {
         switch (this.bookingStatus) {
             case PENDING:
             case CONFIRMED:
             case CANCELLED:
-                this.bookingStatus = bookingStatus;
+                this.bookingStatus = BookingStatus.CANCELLED;
                 break;
             default:
                 throw new UnsupportedStateTransition("The flight booking can only be rejected if its still PENDING, " +
