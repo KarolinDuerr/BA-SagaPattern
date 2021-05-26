@@ -92,7 +92,7 @@ public class CancelTripSaga implements SimpleSaga<CancelTripSagaData> {
     private CommandWithDestination cancelFlight(CancelTripSagaData cancelTripSagaData) {
         logger.info("Trying to cancel the flight.");
 
-        return CommandWithDestinationBuilder.send(new CancelFlightBooking(cancelTripSagaData.getFlightId(), // TODO
+        return CommandWithDestinationBuilder.send(new CancelFlightRequest(cancelTripSagaData.getFlightId(),
                 cancelTripSagaData.getTripId()))
                 .to(FlightServiceChannels.flightServiceChannel)
                 .build();
