@@ -1,8 +1,9 @@
-# Saga Pattern Realization With Eventuate Tram
-This project includes an example implementation of the Saga pattern using the [Eventuate Tram](https://github.com/eventuate-tram/eventuate-tram-core) 
+# Interleaving the BookTripSaga With Eventuate Tram
+This project is part of the evaluation of a Saga pattern implementation using the [Eventuate Tram](https://github.com/eventuate-tram/eventuate-tram-core)
 and [Eventuate Tram Sagas](https://github.com/eventuate-tram/eventuate-tram-sagas) framework.
-The example application represents a travel application that consists of three backend services: TravelService,
-HotelService and FlightService. For simplicity reasons, only the workflow for booking a trip has been implemented.
+The original [Saga Pattern Realization with Eventuate Tram](https://github.com/KarolinDuerr/BA-SagaPattern/tree/master/EventuateTram)
+has been extended by implementing another workflow for cancelling a booked trip. Therefore, this project includes another Saga: the __CancelTripSaga__. 
+
 
 ## Start the Application
 
@@ -75,39 +76,24 @@ docker-compose down --remove-orphans
 
 ----------------------------
 
-## Monitor the Application
+## CancelTripSaga
+It is possible to cancel already booked trips, as well as trips that are currently being executed.
+Again curl requests, or the [Swagger UI](https://swagger.io/tools/swagger-ui/) can be used to cancel a trip.
 
-### MySQL database
+An example for such a cancelling request:
+```
+{
+   "tripId": 1,
+   "customerId": 1,
+   "provokeFailureType": "NONE"
+}
+```
+Setting the `provokeFailureType` to the value `NONE` implies that the trip cancelling is supposed to be successful. 
 
-The eventuate database, with its different tables, can be accessed with the following information, 
-which is also included in the `docker-compose.yaml` file:
+To simulate a CancelTripSaga that fails because the hotel, or the flight booking cannot be cancelled anymore, 
+use one of the following enum types as `provokeFailureType` in the trip cancelling request:
+```
+"HOTEL_FAILURE"
 
-- User: mysqluser 
-- Password: mysqlpw
-
-### Log Files
-Each service provides a log that contains some information about it.
-The logs can be accessed using the name of the relevant container.
-The different logs can be accessed using the following commands:
-
-| __Log of__ | __Command to execute__ |
-|:-------|:-------------------|
-|TravelService| `docker logs travelservice_eventuate`|
-|HotelService| `docker logs hotelservice_eventuate`|
-|FlightService|  `docker logs flightservice_eventuate`|
-
-By using the `--follow` supplement, it will be continued to stream the service's output to the console.
-
-The logging level can be changed in the respective `application.properties` file.
-
-### Zipkin
-The services include the necessary gradle dependencies to enable distributed tracing with [Zipkin](https://zipkin.io/)
-when using the [Eventuate Tram](https://github.com/eventuate-tram/eventuate-tram-core) framework. 
-
-The Zipkin UI can be accessed via http://localhost:9411/zipkin/
-
-### Metrics of the CDC Service
-
-Eventuate's __CDC Service__ publishes some metrics like the number of processed messages.
-
-The metrics can be accessed via http://localhost:8099/actuator/prometheus
+"FLIGHT_FAILURE"
+```

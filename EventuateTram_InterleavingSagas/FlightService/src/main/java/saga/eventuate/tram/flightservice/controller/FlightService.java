@@ -75,6 +75,24 @@ public class FlightService implements IFlightService {
     }
 
     @Override
+    public void rebookFlight(Long flightBookingId, Long tripId) {
+        logger.info("Rebooking the cancelled flight booking with ID " + flightBookingId);
+
+        try {
+            FlightInformation flightInformation = getFlightInformation(flightBookingId);
+
+            if (flightInformation == null || flightInformation.getTripId() != tripId) {
+                throw new BookingNotFound(flightBookingId);
+            }
+
+            flightInformation.rebook();
+            flightInformationRepository.save(flightInformation);
+        } catch (FlightException e) {
+            throw new BookingNotFound(flightBookingId);
+        }
+    }
+
+    @Override
     public void cancelFlightBooking(final Long bookingId, final Long tripId) {
         logger.info("Cancelling the booked flight with ID " + bookingId);
 

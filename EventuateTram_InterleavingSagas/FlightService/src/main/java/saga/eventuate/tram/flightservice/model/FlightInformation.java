@@ -140,8 +140,20 @@ public class FlightInformation {
                 this.bookingStatus = BookingStatus.CONFIRMED;
                 break;
             default:
-                throw new UnsupportedStateTransition("The flight booking  can only be confirmed if its still PENDING," +
+                throw new UnsupportedStateTransition("The flight booking can only be confirmed if its still PENDING," +
                         " but the current status is: " + getBookingStatus());
+        }
+    }
+
+    public void rebook() {
+        switch (this.bookingStatus) {
+            case CANCELLED:
+            case CONFIRMED:
+                this.bookingStatus = BookingStatus.CONFIRMED;
+                break;
+            default:
+                throw new UnsupportedStateTransition("The flight booking can only be rebooked if its " +
+                        "CANCELLED, but the current status is: " + getBookingStatus());
         }
     }
 

@@ -21,6 +21,9 @@ public interface IFlightService {
     FlightInformation findAndBookFlight(final FindAndBookFlightInformation findAndBookFlightInformation) throws FlightException;
 
     @Transactional
+    void rebookFlight(final Long flightBookingId, final Long tripId);
+
+    @Transactional
     void cancelFlightBooking(final Long flightBookingId, final Long tripId);
 
     @Transactional

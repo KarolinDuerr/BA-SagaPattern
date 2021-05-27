@@ -120,6 +120,7 @@ public class HotelBooking {
 
     public void rebook() {
         switch (this.bookingStatus) {
+            case CANCELLING:
             case CANCELLED:
             case CONFIRMED:
                 this.bookingStatus = BookingStatus.CONFIRMED;

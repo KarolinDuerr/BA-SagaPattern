@@ -38,6 +38,7 @@ public class FlightCommandHandler {
                 .onMessage(BookFlightCommand.class, this::bookFlight)
                 .onMessage(CancelFlightBooking.class, this::cancelFlightBooking)
                 .onMessage(CancelFlightRequest.class, this::cancelFlight)
+                .onMessage(RebookFlightRequest.class, this::rebookFlight)
                 .build();
     }
 
@@ -91,5 +92,13 @@ public class FlightCommandHandler {
 
             return CommandHandlerReplyBuilder.withFailure(exception.toString());
         }
+    }
+
+    private Message rebookFlight(CommandMessage<RebookFlightRequest> command) {
+        RebookFlightRequest rebookFlightRequest = command.getCommand();
+        logger.info("Received RebookFlightRequest: " + rebookFlightRequest);
+
+        flightService.rebookFlight(rebookFlightRequest.getBookingId(), rebookFlightRequest.getTripId());
+        return CommandHandlerReplyBuilder.withSuccess();
     }
 }
