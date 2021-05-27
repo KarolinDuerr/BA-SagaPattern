@@ -4,7 +4,9 @@ import saga.microprofile.travelservice.api.dto.LocationDTO;
 import saga.microprofile.travelservice.api.dto.TripDurationDTO;
 import saga.microprofile.travelservice.model.BookingStatus;
 
-public class TripInformationDTO {
+import java.io.Serializable;
+
+public class TripInformationDTO implements Serializable {
 
     private Long id;
 

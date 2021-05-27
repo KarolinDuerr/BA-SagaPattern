@@ -6,6 +6,9 @@ import saga.microprofile.hotelservice.api.dto.DestinationDTO;
 import saga.microprofile.hotelservice.api.dto.StayDurationDTO;
 import saga.microprofile.travelservice.model.*;
 
+import java.time.ZoneId;
+import java.util.Date;
+
 public class BookTripSagaData {
 
     private final long tripId;
@@ -66,8 +69,10 @@ public class BookTripSagaData {
     public BookHotelRequest makeBookHotelRequest() {
         DestinationDTO destination = new DestinationDTO(tripInformation.getDestination().getCountry(),
                 tripInformation.getDestination().getCity());
-        StayDurationDTO stayDuration = new StayDurationDTO(tripInformation.getDuration().getStart(),
-                tripInformation.getDuration().getEnd());
+        ZoneId zoneId = ZoneId.systemDefault();
+        Date startDate = Date.from(tripInformation.getDuration().getStart().atStartOfDay(zoneId).toInstant());
+        Date endDate = Date.from(tripInformation.getDuration().getEnd().atStartOfDay(zoneId).toInstant());
+        StayDurationDTO stayDuration = new StayDurationDTO(startDate, endDate);
         return new BookHotelRequest(getTripId(), destination, stayDuration, tripInformation.getBoardType(),
                 tripInformation.getTravellerName());
     }
@@ -77,8 +82,11 @@ public class BookTripSagaData {
                 tripInformation.getStart().getCity());
         LocationDTO destination = new LocationDTO(tripInformation.getDestination().getCountry(),
                 tripInformation.getDestination().getCity());
-        return new BookFlightRequest(getTripId(), home, destination, tripInformation.getDuration().getStart(),
-                tripInformation.getDuration().getEnd(), tripInformation.getTravellerName());
+        ZoneId zoneId = ZoneId.systemDefault();
+        Date startDate = Date.from(tripInformation.getDuration().getStart().atStartOfDay(zoneId).toInstant());
+        Date endDate = Date.from(tripInformation.getDuration().getEnd().atStartOfDay(zoneId).toInstant());
+        return new BookFlightRequest(getTripId(), home, destination, startDate, endDate,
+                tripInformation.getTravellerName());
     }
 
     @Override

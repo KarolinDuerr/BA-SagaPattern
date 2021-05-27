@@ -2,7 +2,9 @@ package saga.microprofile.travelservice.model.dto;
 
 import saga.microprofile.travelservice.model.RejectionReason;
 
-public class RejectTripBooking {
+import java.io.Serializable;
+
+public class RejectTripBooking implements Serializable {
 
     private final long tripId;
 

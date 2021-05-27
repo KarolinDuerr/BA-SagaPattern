@@ -1,0 +1,22 @@
+<server description="OpenLiberty MicroProfile TravelService server">
+    <featureManager>
+        <feature>microProfile-4.0</feature>
+        <feature>eventLogging-1.0</feature> // test
+    </featureManager>
+
+<!--    <variable name="default.http.port" defaultValue="9080"/>-->
+<!--    <variable name="default.https.port" defaultValue="9443"/>-->
+
+    <logging consoleLogLevel="INFO" consoleFormat="SIMPLE" consoleSource="message" />
+
+    <httpEndpoint httpPort="${default.http.port}" httpsPort="${default.https.port}"
+                  id="defaultHttpEndpoint" host="*"/>
+<!--    <applicationManager autoExpand="true"/>-->
+
+    <webApplication id="TravelService"
+                    location="TravelService-1.0-SNAPSHOT.war" contextRoot="${app.context.root}">
+<!--        <appProperties>-->
+<!--            <property name="port" value="8090"/>-->
+<!--        </appProperties>-->
+    </webApplication>
+</server>

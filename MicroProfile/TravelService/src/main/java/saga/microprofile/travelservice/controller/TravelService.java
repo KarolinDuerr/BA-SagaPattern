@@ -5,6 +5,7 @@ import saga.microprofile.travelservice.model.*;
 import saga.microprofile.travelservice.saga.*;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -16,14 +17,17 @@ public class TravelService implements ITravelService {
 
     private static final Logger logger = Logger.getLogger(TravelService.class.toString());
 
-//    @Autowired
-    private final TripInformationRepository tripInformationRepository;
+    @Inject
+    private TripInformationRepository tripInformationRepository;
 
 //    @Autowired
 //    private final SagaInstanceFactory sagaInstanceFactory; // TODO
 
-    public TravelService(final TripInformationRepository tripInformationRepository) {
-        this.tripInformationRepository = tripInformationRepository;
+//    public TravelService(final TripInformationRepository tripInformationRepository) {
+//        this.tripInformationRepository = tripInformationRepository;
+//    }
+
+    public TravelService() {
     }
 
     @Override

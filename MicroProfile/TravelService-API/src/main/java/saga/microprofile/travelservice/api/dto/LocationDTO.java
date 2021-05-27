@@ -1,8 +1,12 @@
 package saga.microprofile.travelservice.api.dto;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.json.bind.annotation.JsonbCreator;
+import jakarta.json.bind.annotation.JsonbProperty;
 
-public class LocationDTO {
+import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
+
+public class LocationDTO implements Serializable {
 
     @NotBlank(message = "Country cannot be missing")
     private String country;
@@ -10,7 +14,7 @@ public class LocationDTO {
     @NotBlank(message = "City cannot be missing")
     private String city;
 
-    private LocationDTO() {
+    public LocationDTO() {
 
     }
 

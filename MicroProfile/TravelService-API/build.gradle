@@ -11,8 +11,10 @@ repositories {
 
 dependencies {
 
-    // Jackson for ObjectMapper of Annotation
-    compile "com.fasterxml.jackson.core:jackson-databind:2.11.3"
+    // JSON-B for converting POJOs to and from JSON
+    implementation "org.eclipse:yasson:2.0.2"
+//    implementation "org.glassfish:jakarta.json:2.0.1" // TODO nötig?
+//    implementation "jakarta.json.bind:jakarta.json.bind-api:2.0.0" // TODO nötig?
 
     // Annotations for Validation and OpenAPI
     compile "javax.validation:validation-api:2.0.1.Final"

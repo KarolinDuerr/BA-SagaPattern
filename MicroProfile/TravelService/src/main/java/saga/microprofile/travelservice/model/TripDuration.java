@@ -4,49 +4,50 @@ import saga.microprofile.travelservice.error.ErrorType;
 import saga.microprofile.travelservice.error.TravelException;
 
 import javax.persistence.Embeddable;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Embeddable
 public class TripDuration {
 
-    private Date start;
+    private LocalDate start;
 
-    private Date end;
+    private LocalDate end;
 
     private TripDuration() {
 
     }
 
-    public TripDuration(final Date start, final Date end) throws TravelException {
+    public TripDuration(final LocalDate start, final LocalDate end) throws TravelException {
         validateDates(start, end);
         this.start = start;
         this.end = end;
     }
 
-    public Date getStart() {
+    public LocalDate getStart() {
         return start;
     }
 
-    public void setStart(final Date start) throws TravelException {
+    public void setStart(final LocalDate start) throws TravelException {
         validateDates(start, end);
         this.start = start;
     }
 
-    public Date getEnd() {
+    public LocalDate getEnd() {
         return end;
     }
 
-    public void setEnd(final Date end) throws TravelException {
+    public void setEnd(final LocalDate end) throws TravelException {
         validateDates(start, end);
         this.end = end;
     }
 
-    private void validateDates(final Date start, final Date end) throws TravelException {
+    private void validateDates(final LocalDate start, final LocalDate end) throws TravelException {
         if (start == null  || end == null) {
             return;
         }
 
-        if (!start.before(end)) {
+        if (!start.isBefore(end)) {
             throw new TravelException(ErrorType.INVALID_PARAMETER, "The departure is before the actual arrival.");
         }
     }
@@ -71,11 +72,11 @@ public class TripDuration {
 
         TripDuration tripDuration = (TripDuration) o;
 
-        if (tripDuration.getStart().compareTo(this.getStart()) != 0 && tripDuration.getStart().getTime() != this.getStart().getTime()) {
+        if (tripDuration.getStart().compareTo(this.getStart()) != 0) {
             return false;
         }
 
-        if (tripDuration.getEnd().compareTo(this.getEnd()) != 0 && tripDuration.getEnd().getTime() != this.getEnd().getTime()) {
+        if (tripDuration.getEnd().compareTo(this.getEnd()) != 0) {
             return false;
         }
 

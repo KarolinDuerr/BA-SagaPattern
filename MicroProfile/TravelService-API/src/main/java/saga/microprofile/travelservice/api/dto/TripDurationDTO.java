@@ -1,47 +1,46 @@
 package saga.microprofile.travelservice.api.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.json.bind.annotation.JsonbDateFormat;
 
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotBlank;
-import java.util.Date;
+import java.io.Serializable;
+import java.time.LocalDate;
 
-public class TripDurationDTO {
+public class TripDurationDTO implements Serializable {
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonbDateFormat(value = "yyyy-MM-dd")
     @NotBlank(message = "Start date cannot be missing")
     @FutureOrPresent(message = "Date has to be in the present or the future.")
-    private Date start;
+    private LocalDate start;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonbDateFormat(value = "yyyy-MM-dd")
     @NotBlank(message = "End date cannot be missing")
     @FutureOrPresent(message = "Date has to be in the present or the future.")
-    private Date end;
+    private LocalDate end;
 
-    private TripDurationDTO() {
+    public TripDurationDTO() {
 
     }
 
-    public TripDurationDTO(final Date start, final Date end) {
+    public TripDurationDTO(final LocalDate start, final LocalDate end) {
         this.start = start;
         this.end = end;
     }
 
-    public void setStart(final Date start) {
+    public void setStart(final LocalDate start) {
         this.start = start;
     }
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
-    public Date getStart() {
+    public LocalDate getStart() {
         return start;
     }
 
-    public void setEnd(final Date end) {
+    public void setEnd(final LocalDate end) {
         this.end = end;
     }
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
-    public Date getEnd() {
+    public LocalDate getEnd() {
         return end;
     }
 

@@ -2,8 +2,9 @@ package saga.microprofile.travelservice.api.dto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
-public class BookTripRequest {
+public class BookTripRequest implements Serializable {
 
     @NotNull(message = "Trip duration cannot be missing")
     private TripDurationDTO duration;
@@ -22,7 +23,7 @@ public class BookTripRequest {
 
     private long customerId;
 
-    private BookTripRequest() {
+    public BookTripRequest() {
 
     }
 

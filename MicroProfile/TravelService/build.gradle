@@ -2,16 +2,6 @@ apply plugin: 'war'
 apply plugin: 'liberty'
 apply plugin: 'java'
 
-// configure liberty-gradle-plugin
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'io.openliberty.tools:liberty-gradle-plugin:3.0'
-    }
-}
-
 group 'org.example'
 version '1.0-SNAPSHOT'
 
@@ -21,8 +11,15 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
-ext {
-    liberty.server.var.artifactId = "${rootProject.name}"
+// configure liberty-gradle-plugin
+buildscript {
+    setArchivesBaseName("TravelService")
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'io.openliberty.tools:liberty-gradle-plugin:3.0'
+    }
 }
 
 repositories {
@@ -38,12 +35,11 @@ dependencies {
     compile "javax.persistence:javax.persistence-api:2.2"
 
     // Eclipse MicroProfile
-//    compileOnly group: 'org.eclipse.microprofile', name: 'microprofile', version: '4.0.1', ext: 'pom'
-    providedCompile "jakarta.platform:jakarta.jakartaee-api:8.0.0" // TODO nötig?
+    providedCompile "jakarta.platform:jakarta.jakartaee-api:8.0.0"
     providedCompile "org.eclipse.microprofile:microprofile:4.0.1"
 
     // Eclipse MicroProfile LRA
-    implementation group: 'org.eclipse.microprofile.lra', name: 'microprofile-lra-api', version: '1.0-RC3'
+//    implementation group: 'org.eclipse.microprofile.lra', name: 'microprofile-lra-api', version: '1.0-RC3'
 
     // Enable health and info endpoint
 
@@ -53,6 +49,12 @@ dependencies {
     // Swagger OpenAPI definition
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+ext {
+    liberty.server.var.'default.http.port' = '8090'
+    liberty.server.var.'default.https.port' = '9443'
+    liberty.server.var.'app.context.root' = project.name
 }
 
 clean.dependsOn 'libertyStop'

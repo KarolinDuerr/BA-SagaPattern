@@ -11,9 +11,11 @@ import saga.microprofile.travelservice.model.TripDuration;
 import saga.microprofile.travelservice.model.TripInformation;
 import saga.microprofile.travelservice.model.dto.TripInformationDTO;
 
+import javax.enterprise.context.ApplicationScoped;
 import java.util.LinkedList;
 import java.util.List;
 
+@ApplicationScoped
 public class DtoConverter {
 
     public TripInformation convertToTripInformation(final BookTripRequest bookTripRequest) throws ConverterException,
@@ -64,6 +66,8 @@ public class DtoConverter {
             throw new ConverterException("The duration of the trip is missing.");
         }
 
+//        LocalDate start = LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(tripDurationDTO.getStart()));
+//        LocalDate end = LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(tripDurationDTO.getEnd()));
         return new TripDuration(tripDurationDTO.getStart(), tripDurationDTO.getEnd());
     }
 

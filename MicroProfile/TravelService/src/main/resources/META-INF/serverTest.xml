@@ -1,0 +1,24 @@
+<!--<server description="OpenLiberty MicroProfile TravelService server">-->
+<!--    <featureManager>-->
+<!--        <feature>jaxrs-2.1</feature>-->
+<!--&lt;!&ndash;        <feature>cdi-2.0</feature>&ndash;&gt;-->
+<!--        <feature>jsonp-1.1</feature>-->
+<!--    </featureManager>-->
+
+<!--    <variable name="default.http.port" defaultValue="9080"/>-->
+<!--    <variable name="default.https.port" defaultValue="9443"/>-->
+
+<!--    <httpEndpoint httpPort="${default.http.port}" httpsPort="${default.https.port}"-->
+<!--                  id="defaultHttpEndpoint" host="*"/>-->
+<!--&lt;!&ndash;    <applicationManager autoExpand="true"/>&ndash;&gt;-->
+<!--&lt;!&ndash;    <webApplication context-root="${app.context.root}" location="${app.location}"/>&ndash;&gt;-->
+
+<!--    <webApplication id="TravelService"-->
+<!--                    location="TravelService.war" contextRoot="${app.context.root}">-->
+<!--&lt;!&ndash;                    location="TravelService.war" contextRoot="/">&ndash;&gt;-->
+<!--        &lt;!&ndash;                    location="travelApplication.war" contextRoot="${app.context.root}">&ndash;&gt;-->
+<!--&lt;!&ndash;        <appProperties>&ndash;&gt;-->
+<!--&lt;!&ndash;            <property name="port" value="8090"/>&ndash;&gt;-->
+<!--&lt;!&ndash;        </appProperties>&ndash;&gt;-->
+<!--    </webApplication>-->
+<!--</server>-->

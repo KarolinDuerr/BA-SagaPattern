@@ -1,12 +1,14 @@
 package saga.microprofile.travelservice.api.dto;
 
-public class BookTripResponse {
+import java.io.Serializable;
+
+public class BookTripResponse implements Serializable {
 
     private final long tripId;
 
     private String bookingStatus;
 
-    private BookTripResponse() {
+    public BookTripResponse() {
         tripId = -1;
     }
 
