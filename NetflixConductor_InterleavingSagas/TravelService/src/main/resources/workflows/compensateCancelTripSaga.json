@@ -1,0 +1,38 @@
+{
+  "ownerApp": "Travel Application",
+  "name": "compensateCancelTripSaga",
+  "description": "Workflow for compensating the Saga of cancelling a trip",
+  "version": 1,
+  "tasks": [
+    {
+      "name": "rebookFlight",
+      "taskReferenceName": "rebookFlight",
+      "inputParameters": {
+        "rebookFlight": "${workflow.input.cancelFlightRequest}"
+      },
+      "type": "SIMPLE"
+    },
+    {
+      "name": "rebookHotel",
+      "taskReferenceName": "rebookHotel",
+      "inputParameters": {
+        "rebookHotel": "${workflow.input.cancelHotelRequest}"
+      },
+      "type": "SIMPLE"
+    },
+    {
+      "name": "rejectTripCancellation",
+      "taskReferenceName": "rejectTripCancellation",
+      "inputParameters": { // TODO
+        "reason": "${workflow.input.reason}",
+        "tripIdInHotelBookingRequest": "${workflow.input.cancelTripRequest}"
+      },
+      "type": "SIMPLE"
+    }
+  ],
+  "inputParameters": [],
+  "outputParameters": {},
+  "schemaVersion": 2,
+  "restartable": true,
+  "ownerEmail": "travelService@exampleMail.com"
+}

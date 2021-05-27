@@ -5,45 +5,45 @@
   "version": 1,
   "tasks": [
     {
-      "name": "bookHotel",
-      "taskReferenceName": "bookHotel",
+      "name": "cancelHotel",
+      "taskReferenceName": "cancelHotel",
       "inputParameters": {
-        "bookHotelRequest": "${workflow.input.bookHotelRequest}"
+        "cancelHotelRequest": "${workflow.input.cancelHotelRequest}"
       },
       "type": "SIMPLE"
     },
     {
-      "name": "bookFlight",
-      "taskReferenceName": "bookFlight",
+      "name": "cancelFlight",
+      "taskReferenceName": "cancelFlight",
       "inputParameters": {
-        "bookFlightRequest": "${workflow.input.bookFlightRequest}"
+        "cancelFlightRequest": "${workflow.input.cancelFlightRequest}"
       },
       "type": "SIMPLE"
     },
     {
-      "name": "confirmHotel",
-      "taskReferenceName": "confirmHotel",
+      "name": "confirmHotelCancellation",
+      "taskReferenceName": "confirmHotelCancellation",
       "inputParameters": {
-        "confirmHotelBooking": "${bookHotel.output.bookHotelResponse}"
+        "confirmHotelCancellation": "${cancelHotel.output.cancelHotelRequest}"
       },
       "type": "SIMPLE"
     },
     {
-      "name": "confirmTrip",
-      "taskReferenceName": "confirmTrip",
+      "name": "confirmTripCancellation",
+      "taskReferenceName": "confirmTripCancellation",
       "inputParameters": {
-        "confirmHotelInTripBooking": "${bookHotel.output.bookHotelResponse}",
-        "confirmFlightInTripBooking": "${bookFlight.output.bookFlightResponse}"
+        "cancelTripId": "${workflow.input.cancelTripId}"
       },
       "type": "SIMPLE"
     }
   ],
   "inputParameters": [
-    "bookHotelRequest",
-    "bookFlightRequest"
+    "cancelTripId",
+    "cancelHotelRequest",
+    "cancelFlightRequest"
   ],
   "outputParameters": {},
-  "failureWorkflow": "compensateBookTripSaga",
+  "failureWorkflow": "compensateCancelTripSaga",
   "schemaVersion": 2,
   "restartable": true,
   "ownerEmail": "travelService@exampleMail.com"

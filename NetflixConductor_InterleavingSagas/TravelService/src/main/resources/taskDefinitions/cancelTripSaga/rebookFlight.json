@@ -1,10 +1,9 @@
 {
-  "name": "cancelHotel",
-  "description": "Invokes the HotelService to cancel the booked hotel with the corresponding tripId.",
+  "name": "rebookFlight",
+  "description": "Invokes the FlightService to rebook the cancelled flight.",
   "inputKeys": [
-    "cancelHotelBooking"
+    "rebookFlight"
   ],
-  "outputKeys": [],
   "timeoutSeconds": 10800,
   "timeoutPolicy": "RETRY",
   "retryCount": 1,

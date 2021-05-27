@@ -1,8 +1,8 @@
 {
-  "name": "cancelFlight",
-  "description": "Invokes the FlightService to cancel the booked flight with the corresponding tripId.",
+  "name": "confirmHotelCancellation",
+  "description": "Invokes the HotelService to confirm the cancellation of the hotel with the corresponding tripId.",
   "inputKeys": [
-    "cancelFlightBooking"
+    "confirmHotelCancellation"
   ],
   "outputKeys": [],
   "timeoutSeconds": 10800,

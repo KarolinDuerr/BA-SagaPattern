@@ -34,7 +34,7 @@ public class BookTripSaga {
 
     private final List<JsonNode> taskDefinitions;
 
-    private final static String TASK_DEFINITION_ENDPOINT = "metadata/taskdefs";
+    private final static String TASK_DEFINITION_ENDPOINT = "metadata/taskdefs/bookTripSaga";
     private final static String WORKFLOW_DEFINITION_ENDPOINT = "metadata/workflow";
 
     public BookTripSaga(final String conductorServerUri, final RestTemplate restTemplate,
@@ -60,19 +60,19 @@ public class BookTripSaga {
     private void getTaskDefinitions() {
         try {
             final JsonNode bookHotelTask =
-                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/bookHotel.json")));
+                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/bookTripSaga/bookHotel.json")));
             final JsonNode cancelHotelTask =
-                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/cancelHotel.json")));
+                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/bookTripSaga/cancelHotelBooking.json")));
             final JsonNode bookFlightTask =
-                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/bookFlight.json")));
+                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/bookTripSaga/bookFlight.json")));
             final JsonNode cancelFlightTask =
-                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/cancelFlight.json")));
+                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/bookTripSaga/cancelFlightBooking.json")));
             final JsonNode confirmHotelTask =
-                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/confirmHotel.json")));
+                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/bookTripSaga/confirmHotel.json")));
             final JsonNode confirmTripTask =
-                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/confirmTrip.json")));
+                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/bookTripSaga/confirmTrip.json")));
             final JsonNode rejectTripTask =
-                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/rejectTrip.json")));
+                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/bookTripSaga/rejectTrip.json")));
 
             taskDefinitions.add(bookHotelTask);
             taskDefinitions.add(cancelHotelTask);

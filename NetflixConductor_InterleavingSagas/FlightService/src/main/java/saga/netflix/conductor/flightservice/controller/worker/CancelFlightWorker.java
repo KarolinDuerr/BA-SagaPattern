@@ -33,7 +33,7 @@ public class CancelFlightWorker implements Worker {
 
     @Override
     public String getTaskDefName() {
-        return FlightServiceTasks.Task.CANCEL_FLIGHT;
+        return FlightServiceTasks.Task.CANCEL_FLIGHT_BOOKING;
     }
 
     @Override
@@ -43,9 +43,9 @@ public class CancelFlightWorker implements Worker {
         final TaskResult taskResult = new TaskResult(task);
 
         Map<String, Object> taskInput = task.getInputData();
-        if (taskInput == null || !taskInput.containsKey(FlightServiceTasks.TaskInput.CANCEL_FLIGHT_INPUT)) {
+        if (taskInput == null || !taskInput.containsKey(FlightServiceTasks.TaskInput.CANCEL_FLIGHT_BOOKING_INPUT)) {
             String errorMessage = String.format("%s: misses the necessary input data (%s)", getTaskDefName(),
-                    FlightServiceTasks.TaskInput.CANCEL_FLIGHT_INPUT);
+                    FlightServiceTasks.TaskInput.CANCEL_FLIGHT_BOOKING_INPUT);
             logger.info(errorMessage);
             taskResult.setReasonForIncompletion(new ErrorMessage(ErrorType.INTERNAL_ERROR, errorMessage).toString());
             // prevent retry --> input would still be missing, so no reason to retry
@@ -53,9 +53,9 @@ public class CancelFlightWorker implements Worker {
             return taskResult;
         }
 
-        logger.info("TaskInput: " + taskInput.get(FlightServiceTasks.TaskInput.CANCEL_FLIGHT_INPUT));
+        logger.info("TaskInput: " + taskInput.get(FlightServiceTasks.TaskInput.CANCEL_FLIGHT_BOOKING_INPUT));
         final BookFlightRequest bookFlightRequest =
-                objectMapper.convertValue(taskInput.get(FlightServiceTasks.TaskInput.CANCEL_FLIGHT_INPUT),
+                objectMapper.convertValue(taskInput.get(FlightServiceTasks.TaskInput.CANCEL_FLIGHT_BOOKING_INPUT),
                         BookFlightRequest.class);
 
 

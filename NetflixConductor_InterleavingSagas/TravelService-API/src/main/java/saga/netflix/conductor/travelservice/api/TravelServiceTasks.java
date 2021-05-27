@@ -8,6 +8,10 @@ public class TravelServiceTasks {
 
         public static final String REJECT_TRIP = "rejectTrip";
 
+        public static final String CONFIRM_TRIP_CANCELLATION = "confirmTripCancellation";
+
+        public static final String REJECT_TRIP_CANCELLATION = "rejectTripCancellation";
+
     }
 
     public static class TaskInput {
@@ -19,5 +23,10 @@ public class TravelServiceTasks {
         public static final String REJECT_TRIP_INPUT = "reason";
 
         public static final String REJECT_TRIP_ID_INPUT = "tripIdInHotelBookingRequest";
+
+        public static final String CONFIRM_TRIP_CANCELLATION_INPUT = "confirmTripCancellation";
+
+        // TODO
+        public static final String CANCEL_TRIP_ID = "cancelTripId";
     }
 }

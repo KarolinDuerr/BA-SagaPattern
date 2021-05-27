@@ -25,7 +25,7 @@ public class CancelHotelWorker implements Worker {
     @Autowired
     private final IHotelService hotelService;
 
-    private final String inputCancelHotel = HotelServiceTasks.TaskInput.CANCEL_HOTEL_INPUT;
+    private final String inputCancelHotel = HotelServiceTasks.TaskInput.CANCEL_HOTEL_BOOKING_INPUT;
 
     public CancelHotelWorker(final ObjectMapper objectMapper, final IHotelService hotelService) {
         this.objectMapper = objectMapper;
@@ -34,7 +34,7 @@ public class CancelHotelWorker implements Worker {
 
     @Override
     public String getTaskDefName() {
-        return HotelServiceTasks.Task.CANCEL_HOTEL;
+        return HotelServiceTasks.Task.CANCEL_HOTEL_BOOKING;
     }
 
     @Override

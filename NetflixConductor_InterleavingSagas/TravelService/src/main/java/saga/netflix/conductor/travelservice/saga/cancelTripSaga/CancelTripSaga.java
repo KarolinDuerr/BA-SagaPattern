@@ -34,7 +34,7 @@ public class CancelTripSaga {
 
     private final List<JsonNode> taskDefinitions;
 
-    private final static String TASK_DEFINITION_ENDPOINT = "metadata/taskdefs";
+    private final static String TASK_DEFINITION_ENDPOINT = "metadata/taskdefs/cancelTripSaga";
     private final static String WORKFLOW_DEFINITION_ENDPOINT = "metadata/workflow";
 
     public CancelTripSaga(final String conductorServerUri, final RestTemplate restTemplate,
@@ -59,28 +59,28 @@ public class CancelTripSaga {
 
     private void getTaskDefinitions() {
         try {
-            final JsonNode bookHotelTask =
-                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/bookHotel.json")));
             final JsonNode cancelHotelTask =
-                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/cancelHotel.json")));
-            final JsonNode bookFlightTask =
-                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/bookFlight.json")));
+                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/cancelTripSaga/cancelHotel.json")));
+            final JsonNode rebookHotelTask =
+                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/cancelTripSaga/rebookHotel.json")));
             final JsonNode cancelFlightTask =
-                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/cancelFlight.json")));
-            final JsonNode confirmHotelTask =
-                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/confirmHotel.json")));
-            final JsonNode confirmTripTask =
-                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/confirmTrip.json")));
-            final JsonNode rejectTripTask =
-                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/rejectTrip.json")));
+                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/cancelTripSaga/cancelFlight.json")));
+            final JsonNode rebookFlightTask =
+                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/cancelTripSaga/rebookFlight.json")));
+            final JsonNode confirmHotelCancellationTask =
+                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/cancelTripSaga/confirmHotelCancellation.json")));
+            final JsonNode confirmTripCancellationTask =
+                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/cancelTripSaga/confirmTripCancellation.json")));
+            final JsonNode rejectTripCancellationTask =
+                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/taskDefinitions/cancelTripSaga/rejectTripCancellation.json")));
 
-            taskDefinitions.add(bookHotelTask);
             taskDefinitions.add(cancelHotelTask);
-            taskDefinitions.add(bookFlightTask);
+            taskDefinitions.add(rebookHotelTask);
             taskDefinitions.add(cancelFlightTask);
-            taskDefinitions.add(confirmHotelTask);
-            taskDefinitions.add(confirmTripTask);
-            taskDefinitions.add(rejectTripTask);
+            taskDefinitions.add(rebookFlightTask);
+            taskDefinitions.add(confirmHotelCancellationTask);
+            taskDefinitions.add(confirmTripCancellationTask);
+            taskDefinitions.add(rejectTripCancellationTask);
         } catch (IOException exception) {
             logger.error("Exception while reading task blueprints: " + exception.getMessage() + ", with cause: " + exception.getCause());
         }

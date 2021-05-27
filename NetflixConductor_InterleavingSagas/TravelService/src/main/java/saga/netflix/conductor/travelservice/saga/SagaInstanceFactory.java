@@ -6,8 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import saga.netflix.conductor.hotelservice.api.HotelServiceTasks;
+import saga.netflix.conductor.travelservice.api.TravelServiceTasks;
 import saga.netflix.conductor.travelservice.saga.bookTripSaga.BookTripSagaData;
-import saga.netflix.conductor.travelservice.saga.cancelTripSaga.CancelTripSaga;
 import saga.netflix.conductor.travelservice.saga.cancelTripSaga.CancelTripSagaData;
 import saga.netlfix.conductor.flightservice.api.FlightServiceTasks;
 
@@ -62,10 +62,12 @@ public class SagaInstanceFactory {
         cancelTripSagaRequest.setName(Sagas.CANCEL_TRIP_SAGA);
 
         final Map<String, Object> inputParameters = new HashMap<>();
-        // the input for the bookHotel task: "bookHotelRequest"
-//        inputParameters.put(HotelServiceTasks.TaskInput.BOOK_HOTEL_INPUT, bookTripSagaData.makeBookHotelRequest());
-        // the input for the bookFlight task: "bookFlightRequest"
-//        inputParameters.put(FlightServiceTasks.TaskInput.BOOK_FLIGHT_INPUT, bookTripSagaData.makeBookFlightRequest());
+        // the input for the cancelHotel task: "cancelHotelRequest"
+        inputParameters.put(HotelServiceTasks.TaskInput.CANCEL_HOTEL_INPUT, cancelTripSagaData.makeCancelHotelRequest());
+        // the input for the cancelFlight task: "cancelFlightRequest"
+        inputParameters.put(FlightServiceTasks.TaskInput.CANCEL_FLIGHT_INPUT, cancelTripSagaData.makeCancelFlightRequest());
+        // the input for the confirmTripCancellation task: "tripId"
+        inputParameters.put(TravelServiceTasks.TaskInput.CANCEL_TRIP_ID, cancelTripSagaData.getTripId());
 
         cancelTripSagaRequest.setInput(inputParameters);
 

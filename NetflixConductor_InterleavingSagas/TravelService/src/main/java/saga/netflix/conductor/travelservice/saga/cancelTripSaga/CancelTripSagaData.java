@@ -1,6 +1,13 @@
 package saga.netflix.conductor.travelservice.saga.cancelTripSaga;
 
+import saga.netflix.conductor.hotelservice.api.dto.BookHotelRequest;
+import saga.netflix.conductor.hotelservice.api.dto.CancelHotelRequest;
+import saga.netflix.conductor.hotelservice.api.dto.DestinationDTO;
+import saga.netflix.conductor.hotelservice.api.dto.StayDurationDTO;
 import saga.netflix.conductor.travelservice.model.RejectionReason;
+import saga.netlfix.conductor.flightservice.api.dto.BookFlightRequest;
+import saga.netlfix.conductor.flightservice.api.dto.CancelFlightRequest;
+import saga.netlfix.conductor.flightservice.api.dto.LocationDTO;
 
 public class CancelTripSagaData {
 
@@ -50,6 +57,14 @@ public class CancelTripSagaData {
 
     public void setRejectionReason(final RejectionReason rejectionReason) {
         this.rejectionReason = rejectionReason;
+    }
+
+    public CancelHotelRequest makeCancelHotelRequest() {
+        return new CancelHotelRequest(getHotelId(), getTripId());
+    }
+
+    public CancelFlightRequest makeCancelFlightRequest() {
+        return new CancelFlightRequest(getFlightId(), getTripId());
     }
 
     @Override
