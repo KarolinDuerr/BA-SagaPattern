@@ -1,16 +1,16 @@
-package saga.eventuate.tram.travelservice.api.dto;
+package saga.netflix.conductor.travelservice.api.dto;
 
-public class CancelTripResponse {
+public class BookTripResponse {
 
     private final long tripId;
 
     private String bookingStatus;
 
-    private CancelTripResponse() {
+    private BookTripResponse() {
         tripId = -1;
     }
 
-    public CancelTripResponse(final Long tripId, final String bookingStatus) {
+    public BookTripResponse(final Long tripId, final String bookingStatus) {
         this.tripId = tripId;
         this.bookingStatus = bookingStatus;
     }
@@ -25,7 +25,7 @@ public class CancelTripResponse {
 
     @Override
     public String toString() {
-        return "CancelTripResponse{" +
+        return "BookTripResponse{" +
                 "tripId=" + tripId +
                 ", bookingStatus='" + bookingStatus + '\'' +
                 '}';
