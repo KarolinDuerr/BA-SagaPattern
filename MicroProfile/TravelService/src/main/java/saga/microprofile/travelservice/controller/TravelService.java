@@ -6,6 +6,7 @@ import saga.microprofile.travelservice.saga.*;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +32,7 @@ public class TravelService implements ITravelService {
     }
 
     @Override
+    @Transactional
     public List<TripInformation> getTripsInformation() {
         logger.info("Get trip bookings from Repository.");
 
@@ -46,6 +48,7 @@ public class TravelService implements ITravelService {
     }
 
     @Override
+    @Transactional
     public TripInformation getTripInformation(final Long tripId) throws TravelException {
         logger.info(String.format("Get trip booking (ID: %d) from Repository.", tripId));
 
@@ -61,6 +64,7 @@ public class TravelService implements ITravelService {
     }
 
     @Override
+    @Transactional
     public TripInformation bookTrip(final TripInformation tripInformation) {
         logger.info("Saving the booked Trip: " + tripInformation);
 
@@ -81,6 +85,7 @@ public class TravelService implements ITravelService {
     }
 
     @Override
+    @Transactional
     public void rejectTrip(final Long tripId, final RejectionReason rejectionReason) {
         logger.info("Rejecting the booked trip with ID " + tripId);
 
@@ -89,13 +94,14 @@ public class TravelService implements ITravelService {
 
             BookingStatus newBookingStatus = convertToBookingStatus(rejectionReason);
             tripInformation.reject(newBookingStatus);
-            tripInformationRepository.save(tripInformation);
+            tripInformationRepository.update(tripInformation);
         } catch (TravelException exception) {
             throw new BookingNotFound(tripId);
         }
     }
 
     @Override
+    @Transactional
     public void confirmTripBooking(final Long tripId, final long hotelId, final long flightId) {
         logger.info("Confirming the booked trip with ID " + tripId);
 
@@ -105,7 +111,7 @@ public class TravelService implements ITravelService {
             tripInformation.setHotelId(hotelId);
             tripInformation.setFlightId(flightId);
             tripInformation.confirm();
-            tripInformationRepository.save(tripInformation);
+            tripInformationRepository.update(tripInformation);
         } catch (TravelException exception) {
             throw new BookingNotFound(tripId);
         }

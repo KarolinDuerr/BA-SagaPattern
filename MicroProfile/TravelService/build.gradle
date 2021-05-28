@@ -18,7 +18,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'io.openliberty.tools:liberty-gradle-plugin:3.0'
+        classpath 'io.openliberty.tools:liberty-gradle-plugin:3.1.2'
     }
 }
 
@@ -34,9 +34,10 @@ dependencies {
     // Javax persistence
     compile "javax.persistence:javax.persistence-api:2.2"
 
-    // Eclipse MicroProfile
+    // Eclipse MicroProfile using OpenLiberty implementation
     providedCompile "jakarta.platform:jakarta.jakartaee-api:8.0.0"
     providedCompile "org.eclipse.microprofile:microprofile:4.0.1"
+//    libertyRuntime "io.openliberty:openliberty-runtime:19.0.0.12" // TODO nötig?
 
     // Eclipse MicroProfile LRA
 //    implementation group: 'org.eclipse.microprofile.lra', name: 'microprofile-lra-api', version: '1.0-RC3'
@@ -49,12 +50,6 @@ dependencies {
     // Swagger OpenAPI definition
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
-}
-
-ext {
-    liberty.server.var.'default.http.port' = '8090'
-    liberty.server.var.'default.https.port' = '9443'
-    liberty.server.var.'app.context.root' = project.name
 }
 
 clean.dependsOn 'libertyStop'

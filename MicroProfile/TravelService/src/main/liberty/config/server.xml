@@ -1,22 +1,48 @@
 <server description="OpenLiberty MicroProfile TravelService server">
     <featureManager>
+<!--        <feature>jdbc-4.3</feature>-->
+        <feature>jpa-2.2</feature>
+        <feature>jndi-1.0</feature>
         <feature>microProfile-4.0</feature>
-        <feature>eventLogging-1.0</feature> // test
+        <feature>eventLogging-1.0</feature>
+        // test
     </featureManager>
 
-<!--    <variable name="default.http.port" defaultValue="9080"/>-->
-<!--    <variable name="default.https.port" defaultValue="9443"/>-->
+    <variable name="default.http.port" defaultValue="8090"/>
+    <variable name="default.https.port" defaultValue="9443"/>
 
-    <logging consoleLogLevel="INFO" consoleFormat="SIMPLE" consoleSource="message" />
+    <logging consoleLogLevel="${openLiberty.microprofile.logging.level}"
+             consoleFormat="${openLiberty.microprofile.logging.format}"
+             consoleSource="${openLiberty.microprofile.logging.console.source}"/>
+    <logging  traceSpecification="eclipselink.sql=all" />
 
     <httpEndpoint httpPort="${default.http.port}" httpsPort="${default.https.port}"
                   id="defaultHttpEndpoint" host="*"/>
-<!--    <applicationManager autoExpand="true"/>-->
+
+    <!-- Automatically expand WAR files and EAR files -->
+    <applicationManager autoExpand="true"/>
 
     <webApplication id="TravelService"
-                    location="TravelService-1.0-SNAPSHOT.war" contextRoot="${app.context.root}">
-<!--        <appProperties>-->
-<!--            <property name="port" value="8090"/>-->
-<!--        </appProperties>-->
+                    location="TravelService-1.0-SNAPSHOT.war" contextRoot="/">
     </webApplication>
+
+    <library id="mySQLLib">
+        <fileset dir="${server.config.dir}"
+                 includes="mysql-connector-java-*.jar"/>
+    </library>
+
+    <!-- Datasource Configuration -->
+    <dataSource id="microProfileTravelService"
+                jndiName="jdbc/TravelService">
+        <jdbcDriver libraryRef="mySQLLib" />
+<!--        <properties serverName="${openLiberty.microprofile.serverName}" portNumber="${openLiberty.microprofile.port}"-->
+<!--                    databaseName="${openLiberty.microprofile.databaseName}"-->
+<!--                    user="${openLiberty.microprofile.username}"-->
+<!--                    password="${openLiberty.microprofile.password}"-->
+<!--                    serverTimezone="${openLiberty.microprofile.serverTimezone}"/>-->
+        <properties user="${openLiberty.microprofile.username}"
+                    password="${openLiberty.microprofile.password}"
+                            URL="${openLiberty.microprofile.url}"/>
+    </dataSource>
+
 </server>

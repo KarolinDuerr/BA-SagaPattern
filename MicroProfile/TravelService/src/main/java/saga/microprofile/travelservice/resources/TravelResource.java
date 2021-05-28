@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 @RequestScoped
-@Path("/travel")
+@Path("api/travel")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class TravelResource {

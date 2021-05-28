@@ -14,7 +14,7 @@ public class TripDuration {
 
     private LocalDate end;
 
-    private TripDuration() {
+    public TripDuration() {
 
     }
 
