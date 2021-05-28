@@ -3,20 +3,21 @@ package saga.microprofile.travelservice.model;
 import saga.microprofile.travelservice.error.UnsupportedStateTransition;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
 @Table(name = "tripsInformation")
 @Access(AccessType.FIELD)
-@NamedQueries({
-        @NamedQuery(name = "TripInformation.findAll", query = "SELECT trips FROM tripsInformation trips"),
-        @NamedQuery(name = "TripInformation.findTripByName", query = "SELECT trips FROM tripsInformation trips WHERE trips" +
-                ".travellerName = :travellerName")
-})
-public class TripInformation {
+@NamedQuery(name = "TripInformation.findAll", query = "SELECT trips FROM TripInformation trips")
+@NamedQuery(name = "TripInformation.findTripByName", query = "SELECT trips FROM TripInformation trips WHERE " +
+        "trips" +
+        ".travellerName = :travellerName")
+public class TripInformation implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY) // TODO
     private Long id;
 
     @Version
@@ -52,7 +53,7 @@ public class TripInformation {
 
     private long flightId = -1;
 
-    private TripInformation() {
+    public TripInformation() {
 
     }
 

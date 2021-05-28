@@ -6,10 +6,13 @@
                         http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
     <persistence-unit name="TripInformationRepository" transaction-type="JTA">
         <jta-data-source>jdbc/TravelService</jta-data-source>
+        <class>saga.microprofile.travelservice.model.TripInformation</class> <!--TODO-->
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties>
             <property name="eclipselink.ddl-generation" value="create-tables"/>
-            <property name="eclipselink.ddl-generation.output-mode" value="both" />
+            <property name="eclipselink.ddl-generation.output-mode" value="both"/>
+            <!--            <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>-->
+            <property name="javax.persistence.schema-generation.database.action" value="create"/>
         </properties>
     </persistence-unit>
 </persistence>
