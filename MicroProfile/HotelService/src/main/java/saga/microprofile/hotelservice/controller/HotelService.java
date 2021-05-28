@@ -1,9 +1,5 @@
 package saga.microprofile.hotelservice.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import saga.microprofile.hotelservice.error.BookingNotFound;
 import saga.microprofile.hotelservice.error.ErrorType;
 import saga.microprofile.hotelservice.error.HotelException;
@@ -12,21 +8,28 @@ import saga.microprofile.hotelservice.model.HotelBooking;
 import saga.microprofile.hotelservice.model.HotelBookingInformation;
 import saga.microprofile.hotelservice.model.HotelBookingRepository;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
-@Service("HotelService")
+@ApplicationScoped
+@HotelServiceImpl
 public class HotelService implements IHotelService {
 
-    private static final Logger logger = LoggerFactory.getLogger(HotelService.class);
+    private static final Logger logger = Logger.getLogger(HotelService.class.toString());
 
-    @Autowired
-    private final HotelBookingRepository hotelBookingRepository;
+    @Inject
+    private HotelBookingRepository hotelBookingRepository;
 
-    public HotelService(final HotelBookingRepository hotelBookingRepository) {
-        this.hotelBookingRepository = hotelBookingRepository;
+    public HotelService() {
     }
+
+//    public HotelService(final HotelBookingRepository hotelBookingRepository) {
+//        this.hotelBookingRepository = hotelBookingRepository;
+//    }
 
     @Override
     public List<HotelBooking> getHotelBookings() {
@@ -47,15 +50,15 @@ public class HotelService implements IHotelService {
     public HotelBooking getHotelBooking(final Long bookingId) throws HotelException {
         logger.info(String.format("Get hotel booking (ID: %d) from Repository.", bookingId));
 
-        Optional<HotelBooking> hotelBooking = hotelBookingRepository.findById(bookingId);
+        HotelBooking hotelBooking = hotelBookingRepository.findById(bookingId);
 
-        if (!hotelBooking.isPresent()) {
+        if (hotelBooking == null) {
             String message = String.format("The hotel booking (ID: %d) does not exist.", bookingId);
             logger.info(message);
             throw new HotelException(ErrorType.NON_EXISTING_ITEM, message);
         }
 
-        return hotelBooking.get();
+        return hotelBooking;
     }
 
     @Override

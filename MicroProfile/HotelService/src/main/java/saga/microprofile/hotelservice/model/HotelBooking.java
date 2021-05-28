@@ -3,15 +3,20 @@ package saga.microprofile.hotelservice.model;
 import saga.microprofile.hotelservice.error.UnsupportedStateTransition;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
 @Table(name = "hotelBookings")
 @Access(AccessType.FIELD)
-public class HotelBooking {
+@NamedQuery(name = "HotelBooking.findAll", query = "SELECT hotelBookings FROM HotelBooking hotelBookings")
+@NamedQuery(name = "HotelBooking.findHotelByName", query = "SELECT hotelBookings FROM HotelBooking hotelBookings " +
+        "WHERE hotelBookings.travellerName = :travellerName")
+public class HotelBooking implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Version
@@ -31,7 +36,8 @@ public class HotelBooking {
 
     }
 
-    public HotelBooking(final String hotelName, final String travellerName, final HotelBookingInformation bookingInformation) {
+    public HotelBooking(final String hotelName, final String travellerName,
+                        final HotelBookingInformation bookingInformation) {
         this.hotelName = hotelName;
         this.travellerName = travellerName;
         this.bookingInformation = bookingInformation;

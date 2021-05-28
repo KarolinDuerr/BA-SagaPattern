@@ -1,16 +1,16 @@
 package saga.microprofile.hotelservice.api.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.json.bind.annotation.JsonbDateFormat;
+import jakarta.json.bind.annotation.JsonbProperty;
 
 import java.util.Date;
 
 public class StayDurationDTO {
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
+    @JsonbDateFormat(value = "yyyy-MM-dd")
     private Date arrival;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
+    @JsonbDateFormat(value = "yyyy-MM-dd")
     private Date departure;
 
     private StayDurationDTO() {
@@ -26,7 +26,7 @@ public class StayDurationDTO {
         this.arrival = arrival;
     }
 
-    @JsonProperty("arrival")
+    @JsonbProperty("arrival")
     public Date getArrival() {
         return arrival;
     }
@@ -35,7 +35,7 @@ public class StayDurationDTO {
         this.departure = departure;
     }
 
-    @JsonProperty("departure")
+    @JsonbProperty("departure")
     public Date getDeparture() {
         return departure;
     }

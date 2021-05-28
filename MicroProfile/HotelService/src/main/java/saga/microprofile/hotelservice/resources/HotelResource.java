@@ -1,59 +1,60 @@
 package saga.microprofile.hotelservice.resources;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
+import saga.microprofile.hotelservice.controller.HotelServiceImpl;
 import saga.microprofile.hotelservice.controller.IHotelService;
 import saga.microprofile.hotelservice.error.HotelServiceException;
 import saga.microprofile.hotelservice.model.HotelBooking;
-import saga.microprofile.hotelservice.model.dto.HotelBookingDTO;
 
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.logging.Logger;
 
-@RestController
-@RequestMapping(path = "/api/hotels")
+@RequestScoped
+@Path("/api/hotels")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class HotelResource {
 
-    private static final Logger logger = LoggerFactory.getLogger(HotelResource.class);
+    private static final Logger logger = Logger.getLogger(HotelResource.class.toString());
 
-    @Autowired
+    @Inject
+    @HotelServiceImpl
     private IHotelService hotelService;
 
-    @Autowired
+    @Inject
     private DtoConverter dtoConverter;
 
-    @GetMapping("/bookings")
-    public ResponseEntity<List<HotelBookingDTO>> getHotelBookings() throws HotelServiceException {
+    @GET
+    @Path("/bookings")
+    public Response getHotelBookings() throws HotelServiceException {
         logger.info("Get hotels.");
 
         List<HotelBooking> hotelBookings = hotelService.getHotelBookings();
 
         if (hotelBookings == null) {
             logger.info("Something went wrong during receiving the hotel bookings.");
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong during receiving the hotel bookings.");
+            throw new WebApplicationException("Something went wrong during receiving the hotel bookings.", Response.Status.INTERNAL_SERVER_ERROR);
         }
 
-        return ResponseEntity.ok(dtoConverter.convertToHotelBookingDTOList(hotelBookings));
+        return Response.ok(dtoConverter.convertToHotelBookingDTOList(hotelBookings)).build();
     }
 
-    @GetMapping("/bookings/{bookingId}")
-    public ResponseEntity<HotelBookingDTO> getHotelBooking(@PathVariable(value = "bookingId") final Long bookingId) throws HotelServiceException {
+    @GET
+    @Path("/bookings/{bookingId}")
+    public Response getHotelBooking(@PathParam(value = "bookingId") final Long bookingId) throws HotelServiceException {
         logger.info("Get hotel with ID: " + bookingId);
 
         HotelBooking hotelBooking = hotelService.getHotelBooking(bookingId);
 
         if (hotelBooking == null) {
             logger.info("Something went wrong during receiving the hotel booking.");
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong during receiving the hotel booking.");
+            throw new WebApplicationException("Something went wrong during receiving the hotel booking.", Response.Status.INTERNAL_SERVER_ERROR);
         }
 
-        return ResponseEntity.ok(dtoConverter.convertToHotelBookingDTO(hotelBooking));
+        return Response.ok(dtoConverter.convertToHotelBookingDTO(hotelBooking)).build();
     }
 }

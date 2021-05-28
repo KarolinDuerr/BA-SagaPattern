@@ -1,22 +1,21 @@
 package saga.microprofile.hotelservice;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Import;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import saga.microprofile.hotelservice.controller.HotelServiceConfiguration;
-import saga.microprofile.hotelservice.controller.OpenApiConfiguration;
+import org.eclipse.microprofile.openapi.annotations.OpenAPIDefinition;
+import org.eclipse.microprofile.openapi.annotations.info.Contact;
+import org.eclipse.microprofile.openapi.annotations.info.Info;
 
-@EnableAutoConfiguration
-@EnableJpaRepositories
-@SpringBootApplication
-@Import({HotelServiceConfiguration.class, OpenApiConfiguration.class})
-@ComponentScan
-public class HotelServiceApplication {
+import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.core.Application;
 
-    public static void main(String[] args) {
-        SpringApplication.run(HotelServiceApplication.class, args);
-    }
+@ApplicationPath("/")
+@OpenAPIDefinition(
+        info = @Info(
+                title = "Hotel Service",
+                description = "An example for a Hotel Service that enables the user to see already booked hotels.",
+                version = "1.0.0",
+                contact = @Contact(
+                        url = "https://github.com/KarolinDuerr/BA-SagaPattern/tree/master/MicroProfile",
+                        name = "Karolin Dürr"))
+)
+public class HotelServiceApplication extends Application {
 }

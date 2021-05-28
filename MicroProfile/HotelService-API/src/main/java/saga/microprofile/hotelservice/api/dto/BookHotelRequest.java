@@ -1,6 +1,7 @@
 package saga.microprofile.hotelservice.api.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+
+import jakarta.json.bind.annotation.JsonbProperty;
 
 public class BookHotelRequest {
 
@@ -44,7 +45,7 @@ public class BookHotelRequest {
         this.destination = destination;
     }
 
-    @JsonProperty("destination")
+    @JsonbProperty("destination")
     public DestinationDTO getDestination() {
         return destination;
     }
@@ -53,7 +54,7 @@ public class BookHotelRequest {
         this.duration = duration;
     }
 
-    @JsonProperty("duration")
+    @JsonbProperty("duration")
     public StayDurationDTO getDuration() {
         return duration;
     }
@@ -62,7 +63,7 @@ public class BookHotelRequest {
         this.boardType = boardType;
     }
 
-    @JsonProperty("boardType")
+    @JsonbProperty("boardType")
     public String getBoardType() {
         return boardType;
     }
@@ -71,7 +72,7 @@ public class BookHotelRequest {
         this.travellerName = travellerName;
     }
 
-    @JsonProperty("travellerName")
+    @JsonbProperty("travellerName")
     public String getTravellerName() {
         return travellerName;
     }

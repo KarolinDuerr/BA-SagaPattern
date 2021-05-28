@@ -1,6 +1,6 @@
 package saga.microprofile.hotelservice.api.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.json.bind.annotation.JsonbProperty;
 
 public class DestinationDTO {
 
@@ -17,7 +17,7 @@ public class DestinationDTO {
         this.city = city;
     }
 
-    @JsonProperty("country")
+    @JsonbProperty("country")
     public String getCountry() {
         return country;
     }
@@ -26,7 +26,7 @@ public class DestinationDTO {
         this.country = country;
     }
 
-    @JsonProperty("city")
+    @JsonbProperty("city")
     public String getCity() {
         return city;
     }

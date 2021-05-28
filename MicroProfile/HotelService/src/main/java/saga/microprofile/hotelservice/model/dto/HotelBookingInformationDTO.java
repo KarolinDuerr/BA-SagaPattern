@@ -3,7 +3,9 @@ package saga.microprofile.hotelservice.model.dto;
 import saga.microprofile.hotelservice.api.dto.DestinationDTO;
 import saga.microprofile.hotelservice.api.dto.StayDurationDTO;
 
-public class HotelBookingInformationDTO {
+import java.io.Serializable;
+
+public class HotelBookingInformationDTO implements Serializable {
 
     private DestinationDTO destination;
 

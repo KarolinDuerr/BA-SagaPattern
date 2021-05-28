@@ -13,9 +13,11 @@ import saga.microprofile.hotelservice.model.StayDuration;
 import saga.microprofile.hotelservice.model.dto.HotelBookingDTO;
 import saga.microprofile.hotelservice.model.dto.HotelBookingInformationDTO;
 
+import javax.enterprise.context.ApplicationScoped;
 import java.util.LinkedList;
 import java.util.List;
 
+@ApplicationScoped
 public class DtoConverter {
 
     public HotelBookingInformation convertToHotelBookingInformation(final BookHotelRequest bookHotelRequest) throws HotelServiceException {
