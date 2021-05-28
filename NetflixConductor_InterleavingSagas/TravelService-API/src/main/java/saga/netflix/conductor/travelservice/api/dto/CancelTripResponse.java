@@ -1,4 +1,4 @@
-package saga.eventuate.tram.travelservice.api.dto;
+package saga.netflix.conductor.travelservice.api.dto;
 
 public class CancelTripResponse {
 

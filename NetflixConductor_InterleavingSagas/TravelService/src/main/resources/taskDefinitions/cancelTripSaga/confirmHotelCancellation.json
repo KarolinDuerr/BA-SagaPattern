@@ -1,0 +1,16 @@
+{
+  "name": "confirmHotelCancellation",
+  "description": "Invokes the HotelService to confirm the cancellation of the hotel with the corresponding tripId.",
+  "inputKeys": [
+    "confirmHotelCancellation"
+  ],
+  "outputKeys": [],
+  "timeoutSeconds": 10800,
+  "timeoutPolicy": "RETRY",
+  "retryCount": 1,
+  "retryLogic": "FIXED",
+  "retryDelaySeconds": 30,
+  "responseTimeoutSeconds": 3600,
+  "pollTimeoutSeconds": 14400,
+  "ownerEmail": "travelService@exampleMail.com"
+}

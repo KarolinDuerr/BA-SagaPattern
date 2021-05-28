@@ -1,0 +1,50 @@
+{
+  "ownerApp": "Travel Application",
+  "name": "cancelTripSaga",
+  "description": "Workflow for the Saga of cancelling a trip",
+  "version": 1,
+  "tasks": [
+    {
+      "name": "cancelHotel",
+      "taskReferenceName": "cancelHotel",
+      "inputParameters": {
+        "cancelHotelRequest": "${workflow.input.cancelHotelRequest}"
+      },
+      "type": "SIMPLE"
+    },
+    {
+      "name": "cancelFlight",
+      "taskReferenceName": "cancelFlight",
+      "inputParameters": {
+        "cancelFlightRequest": "${workflow.input.cancelFlightRequest}"
+      },
+      "type": "SIMPLE"
+    },
+    {
+      "name": "confirmHotelCancellation",
+      "taskReferenceName": "confirmHotelCancellation",
+      "inputParameters": {
+        "confirmHotelCancellation": "${cancelHotel.output.cancelHotelRequest}"
+      },
+      "type": "SIMPLE"
+    },
+    {
+      "name": "confirmTripCancellation",
+      "taskReferenceName": "confirmTripCancellation",
+      "inputParameters": {
+        "cancelTripId": "${workflow.input.cancelTripId}"
+      },
+      "type": "SIMPLE"
+    }
+  ],
+  "inputParameters": [
+    "cancelTripId",
+    "cancelHotelRequest",
+    "cancelFlightRequest"
+  ],
+  "outputParameters": {},
+  "failureWorkflow": "compensateCancelTripSaga",
+  "schemaVersion": 2,
+  "restartable": true,
+  "ownerEmail": "travelService@exampleMail.com"
+}

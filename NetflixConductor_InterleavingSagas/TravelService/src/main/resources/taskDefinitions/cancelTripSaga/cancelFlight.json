@@ -1,0 +1,19 @@
+{
+  "name": "cancelFlight",
+  "description": "Invokes the FlightService to cancel the flight with the corresponding tripId.",
+  "inputKeys": [
+    "cancelFlightRequest"
+  ],
+  "outputKeys": [
+    "cancelFlightResponse"
+  ],
+  "outputKeys": [],
+  "timeoutSeconds": 10800,
+  "timeoutPolicy": "RETRY",
+  "retryCount": 1,
+  "retryLogic": "FIXED",
+  "retryDelaySeconds": 30,
+  "responseTimeoutSeconds": 3600,
+  "pollTimeoutSeconds": 14400,
+  "ownerEmail": "travelService@exampleMail.com"
+}
