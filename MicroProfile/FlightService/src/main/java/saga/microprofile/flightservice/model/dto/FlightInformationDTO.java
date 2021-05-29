@@ -2,7 +2,9 @@ package saga.microprofile.flightservice.model.dto;
 
 import saga.microprofile.flightservice.model.BookingStatus;
 
-public class FlightInformationDTO {
+import java.io.Serializable;
+
+public class FlightInformationDTO  implements Serializable {
 
     private Long id;
 

@@ -1,22 +1,22 @@
 package saga.microprofile.flightservice;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Import;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import saga.microprofile.flightservice.controller.FlightServiceConfiguration;
-import saga.microprofile.flightservice.controller.OpenApiConfiguration;
+import org.eclipse.microprofile.openapi.annotations.OpenAPIDefinition;
+import org.eclipse.microprofile.openapi.annotations.info.Contact;
+import org.eclipse.microprofile.openapi.annotations.info.Info;
 
-@EnableAutoConfiguration
-@EnableJpaRepositories
-@SpringBootApplication
-@Import({FlightServiceConfiguration.class, OpenApiConfiguration.class})
-@ComponentScan
-public class FlightServiceApplication {
+import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.core.Application;
 
-    public static void main(String[] args) {
-        SpringApplication.run(FlightServiceApplication.class, args);
-    }
+@ApplicationPath("/")
+@OpenAPIDefinition(
+        info = @Info(
+                title = "Flight Service",
+                description = "An example for a Flight Service that enables the user to see already booked flights.",
+                version = "1.0.0",
+                contact = @Contact(
+                        url = "https://github.com/KarolinDuerr/BA-SagaPattern/tree/master/MicroProfile",
+                        name = "Karolin Dürr"))
+)
+public class FlightServiceApplication extends Application {
+
 }

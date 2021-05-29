@@ -10,7 +10,7 @@ public class BookHotelResponse {
 
     private String bookingStatus;
 
-    private BookHotelResponse() {
+    public BookHotelResponse() {
 
     }
 

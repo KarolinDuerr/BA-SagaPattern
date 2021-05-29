@@ -1,11 +1,12 @@
 package saga.microprofile.flightservice.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.json.bind.annotation.JsonbDateFormat;
+import javax.json.bind.annotation.JsonbProperty;
+import java.io.Serializable;
 import java.util.Date;
 
-public class FlightDTO {
+public class FlightDTO  implements Serializable {
 
     private String country;
 
@@ -13,10 +14,10 @@ public class FlightDTO {
 
     private String toAirport;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
+    @JsonbDateFormat(value = "yyyy-MM-dd hh:mm:ss")
     private Date flightDate;
 
-    private FlightDTO() {
+    public FlightDTO() {
 
     }
 
@@ -27,7 +28,7 @@ public class FlightDTO {
         this.flightDate = flightDate;
     }
 
-    @JsonProperty("country")
+    @JsonbProperty("country")
     public String getCountry() {
         return country;
     }
@@ -36,7 +37,7 @@ public class FlightDTO {
         this.country = country;
     }
 
-    @JsonProperty("fromAirport")
+    @JsonbProperty("fromAirport")
     public String getFromAirport() {
         return fromAirport;
     }
@@ -45,7 +46,7 @@ public class FlightDTO {
         this.fromAirport = fromAirport;
     }
 
-    @JsonProperty("toAirport")
+    @JsonbProperty("toAirport")
     public String getToAirport() {
         return toAirport;
     }
@@ -54,7 +55,7 @@ public class FlightDTO {
         this.toAirport = toAirport;
     }
 
-    @JsonProperty("flightDate")
+    @JsonbProperty("flightDate")
     public Date getFlightDate() {
         return flightDate;
     }

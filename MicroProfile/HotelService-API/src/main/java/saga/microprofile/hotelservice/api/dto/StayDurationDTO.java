@@ -13,7 +13,7 @@ public class StayDurationDTO {
     @JsonbDateFormat(value = "yyyy-MM-dd")
     private Date departure;
 
-    private StayDurationDTO() {
+    public StayDurationDTO() {
 
     }
 

@@ -1,7 +1,7 @@
 package saga.microprofile.flightservice.api.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.json.bind.annotation.JsonbDateFormat;
+import jakarta.json.bind.annotation.JsonbProperty;
 
 import java.util.Date;
 
@@ -13,15 +13,15 @@ public class BookFlightRequest {
 
     private LocationDTO destination;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
+    @JsonbDateFormat(value = "yyyy-MM-dd")
     private Date outboundFlightDate;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
+    @JsonbDateFormat(value = "yyyy-MM-dd")
     private Date returnFlightDate;
 
     private String travellerName;
 
-    private BookFlightRequest() {
+    public BookFlightRequest() {
         this.tripId = -1; // no trip assigned to this booking
     }
 
@@ -45,12 +45,12 @@ public class BookFlightRequest {
         this.travellerName = travellerName;
     }
 
-    @JsonProperty("tripId")
+    @JsonbProperty("tripId")
     public long getTripId() {
         return tripId;
     }
 
-    @JsonProperty("home")
+    @JsonbProperty("home")
     public LocationDTO getHome() {
         return home;
     }
@@ -59,7 +59,7 @@ public class BookFlightRequest {
         this.home = home;
     }
 
-    @JsonProperty("destination")
+    @JsonbProperty("destination")
     public LocationDTO getDestination() {
         return destination;
     }
@@ -68,7 +68,7 @@ public class BookFlightRequest {
         this.destination = destination;
     }
 
-    @JsonProperty("outboundFlightDate")
+    @JsonbProperty("outboundFlightDate")
     public Date getOutboundFlightDate() {
         return outboundFlightDate;
     }
@@ -77,7 +77,7 @@ public class BookFlightRequest {
         this.outboundFlightDate = outboundFlightDate;
     }
 
-    @JsonProperty("returnFlightDate")
+    @JsonbProperty("returnFlightDate")
     public Date getReturnFlightDate() {
         return returnFlightDate;
     }
@@ -86,7 +86,7 @@ public class BookFlightRequest {
         this.returnFlightDate = returnFlightDate;
     }
 
-    @JsonProperty("travellerName")
+    @JsonbProperty("travellerName")
     public String getTravellerName() {
         return travellerName;
     }

@@ -8,7 +8,7 @@ public class BookFlightResponse {
 
     private String bookingStatus;
 
-    private BookFlightResponse() {
+    public BookFlightResponse() {
 
     }
 

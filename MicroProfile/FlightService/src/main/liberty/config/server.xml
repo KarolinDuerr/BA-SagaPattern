@@ -1,0 +1,41 @@
+<server description="OpenLiberty MicroProfile FlightService server">
+    <featureManager>
+        <feature>jpa-2.2</feature>
+        <feature>jndi-1.0</feature>
+        <feature>microProfile-4.0</feature>
+        <feature>eventLogging-1.0</feature>
+    </featureManager>
+
+    <variable name="default.http.port" defaultValue="8082"/>
+    <variable name="default.https.port" defaultValue="9443"/>
+
+    <logging consoleLogLevel="${openLiberty.microprofile.logging.level}"
+             consoleFormat="${openLiberty.microprofile.logging.format}"
+             consoleSource="${openLiberty.microprofile.logging.console.source}"/>
+    <logging traceSpecification="eclipselink.sql=all"/>
+
+    <httpEndpoint httpPort="${default.http.port}" httpsPort="${default.https.port}"
+                  id="defaultHttpEndpoint" host="*"/>
+
+    <!-- Automatically expand WAR files and EAR files -->
+    <applicationManager autoExpand="true"/>
+
+    <webApplication id="FlightService"
+                    location="FlightService-1.0-SNAPSHOT.war" contextRoot="/">
+    </webApplication>
+
+    <library id="mySQLLib">
+        <fileset dir="${server.config.dir}"
+                 includes="mysql-connector-java-*.jar"/>
+    </library>
+
+    <!-- Datasource Configuration -->
+    <dataSource id="microProfileFlightService"
+                jndiName="jdbc/FlightService">
+        <jdbcDriver libraryRef="mySQLLib"/>
+        <properties user="${openLiberty.microprofile.username}"
+                    password="${openLiberty.microprofile.password}"
+                    URL="${openLiberty.microprofile.url}"/>
+    </dataSource>
+
+</server>

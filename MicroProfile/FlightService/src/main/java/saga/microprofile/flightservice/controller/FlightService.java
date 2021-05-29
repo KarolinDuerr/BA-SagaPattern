@@ -1,27 +1,29 @@
 package saga.microprofile.flightservice.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import saga.microprofile.flightservice.error.ErrorType;
 import saga.microprofile.flightservice.error.FlightException;
 import saga.microprofile.flightservice.model.*;
 
+import javax.inject.Inject;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
-@Service("FlightService")
+@FlightServiceImpl
 public class FlightService implements IFlightService {
 
-    private static final Logger logger = LoggerFactory.getLogger(FlightService.class);
+    private static final Logger logger = Logger.getLogger(FlightService.class.toString());
 
-    @Autowired
-    private final FlightInformationRepository flightInformationRepository;
+    @Inject
+    private FlightInformationRepository flightInformationRepository;
 
-    public FlightService(final FlightInformationRepository flightInformationRepository) {
-        this.flightInformationRepository = flightInformationRepository;
+//    public FlightService(final FlightInformationRepository flightInformationRepository) {
+//            this.flightInformationRepository = flightInformationRepository;
+//    }
+
+    public FlightService() {
+
     }
 
     @Override
@@ -43,15 +45,15 @@ public class FlightService implements IFlightService {
     public FlightInformation getFlightInformation(Long flightBookingId) throws FlightException {
         logger.info(String.format("Get flight information (ID: %d) from Repository.", flightBookingId));
 
-        Optional<FlightInformation> flightInformation = flightInformationRepository.findById(flightBookingId);
+        FlightInformation flightInformation = flightInformationRepository.findById(flightBookingId);
 
-        if (!flightInformation.isPresent()) {
+        if (flightInformation == null) {
             String message = String.format("The flight information (ID: %d) does not exist.", flightBookingId);
             logger.info(message);
             throw new FlightException(ErrorType.NON_EXISTING_ITEM, message);
         }
 
-        return flightInformation.get();
+        return flightInformation;
     }
 
     @Override

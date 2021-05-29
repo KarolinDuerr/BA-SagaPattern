@@ -12,9 +12,11 @@ import saga.microprofile.flightservice.model.Location;
 import saga.microprofile.flightservice.model.dto.FlightDTO;
 import saga.microprofile.flightservice.model.dto.FlightInformationDTO;
 
+import javax.enterprise.context.ApplicationScoped;
 import java.util.LinkedList;
 import java.util.List;
 
+@ApplicationScoped
 public class DtoConverter {
 
     public FindAndBookFlightInformation convertToFindAndBookFlightInformation(final BookFlightRequest bookFlightRequest) throws ConverterException, FlightException {

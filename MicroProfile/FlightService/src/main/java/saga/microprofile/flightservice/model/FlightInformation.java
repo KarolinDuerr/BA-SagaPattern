@@ -5,15 +5,20 @@ import saga.microprofile.flightservice.error.FlightException;
 import saga.microprofile.flightservice.error.UnsupportedStateTransition;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
 @Table(name = "flightsInformation")
 @Access(AccessType.FIELD)
-public class FlightInformation {
+@NamedQuery(name = "FlightBooking.findAll", query = "SELECT flightBookings FROM FlightInformation flightBookings")
+@NamedQuery(name = "FlightBooking.findFlightByName", query = "SELECT flightBookings FROM FlightInformation flightBookings " +
+        "WHERE flightBookings.travellerName = :travellerName")
+public class FlightInformation implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Version

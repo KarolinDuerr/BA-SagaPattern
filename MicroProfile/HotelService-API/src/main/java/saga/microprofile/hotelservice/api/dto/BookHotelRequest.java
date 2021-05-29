@@ -15,7 +15,7 @@ public class BookHotelRequest {
 
     private String travellerName;
 
-    private BookHotelRequest() {
+    public BookHotelRequest() {
         this.tripId = -1; // no trip assigned to this booking
     }
 

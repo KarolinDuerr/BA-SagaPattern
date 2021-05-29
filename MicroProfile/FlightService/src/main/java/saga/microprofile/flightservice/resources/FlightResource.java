@@ -1,61 +1,61 @@
 package saga.microprofile.flightservice.resources;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
+import saga.microprofile.flightservice.controller.FlightServiceImpl;
 import saga.microprofile.flightservice.controller.IFlightService;
 import saga.microprofile.flightservice.error.FlightServiceException;
 import saga.microprofile.flightservice.model.FlightInformation;
 import saga.microprofile.flightservice.model.dto.FlightInformationDTO;
 
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.logging.Logger;
 
-@RestController
-@RequestMapping(path = "/api/flights")
+@RequestScoped
+@Path("/api/flights")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class FlightResource {
 
-    private static final Logger logger = LoggerFactory.getLogger(FlightResource.class);
+    private static final Logger logger = Logger.getLogger(FlightResource.class.toString());
 
-    @Autowired
+    @Inject
+    @FlightServiceImpl
     private IFlightService flightService;
 
-    @Autowired
+    @Inject
     private DtoConverter dtoConverter;
 
-    @GetMapping("/bookings")
-    public ResponseEntity<List<FlightInformationDTO>> getFlightsInformation() throws FlightServiceException {
+    @GET
+    @Path("/bookings")
+    public Response getFlightsInformation() throws FlightServiceException {
         logger.info("Get information about all flights.");
 
         List<FlightInformation> flightsInformation = flightService.getFlightsInformation();
 
         if (flightsInformation == null) {
             logger.info("Something went wrong during receiving the flights information.");
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong during " +
-                    "receiving the flights information.");
+            throw new WebApplicationException("Something went wrong during receiving the flights information.", Response.Status.INTERNAL_SERVER_ERROR);
         }
 
-        return ResponseEntity.ok(dtoConverter.convertToFlightInformationDTOList(flightsInformation));
+        return Response.ok(dtoConverter.convertToFlightInformationDTOList(flightsInformation)).build();
     }
 
-    @GetMapping("/bookings/{flightBookingId}")
-    public ResponseEntity<FlightInformationDTO> getFlightInformation(@PathVariable(value = "flightBookingId") final Long flightBookingId) throws FlightServiceException {
+    @GET
+    @Path("/bookings/{flightBookingId}")
+    public Response getFlightInformation(@PathParam(value = "flightBookingId") final Long flightBookingId) throws FlightServiceException {
         logger.info("Get flight booking with ID: " + flightBookingId);
 
         FlightInformation flightInformation = flightService.getFlightInformation(flightBookingId);
 
         if (flightInformation == null) {
             logger.info("Something went wrong during receiving the flight information.");
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong during " +
-                    "receiving the flight information.");
+            throw new WebApplicationException("Something went wrong during receiving the flight information.", Response.Status.INTERNAL_SERVER_ERROR);
         }
 
-        return ResponseEntity.ok(dtoConverter.convertToFlightInformationDTO(flightInformation));
+        return Response.ok(dtoConverter.convertToFlightInformationDTO(flightInformation)).build();
     }
 }
