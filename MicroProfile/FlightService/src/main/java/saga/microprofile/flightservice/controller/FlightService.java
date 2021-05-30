@@ -4,12 +4,14 @@ import saga.microprofile.flightservice.error.ErrorType;
 import saga.microprofile.flightservice.error.FlightException;
 import saga.microprofile.flightservice.model.*;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
+@ApplicationScoped
 @FlightServiceImpl
 public class FlightService implements IFlightService {
 
