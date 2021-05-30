@@ -14,11 +14,14 @@ import org.camunda.bpm.engine.variable.value.ObjectValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import saga.camunda.hotelservice.api.HotelServiceTopics;
 import saga.camunda.hotelservice.api.dto.BookHotelRequest;
 import saga.camunda.hotelservice.api.dto.BookHotelResponse;
 import saga.camunda.hotelservice.controller.IHotelService;
+import saga.camunda.hotelservice.controller.worker.failure.CompleteTaskRequest;
+import saga.camunda.hotelservice.controller.worker.failure.OldMessageProvoker;
 import saga.camunda.hotelservice.error.HotelServiceException;
 import saga.camunda.hotelservice.model.HotelBooking;
 import saga.camunda.hotelservice.model.HotelBookingInformation;
@@ -39,6 +42,9 @@ public class BookHotelWorker implements ExternalTaskHandler {
 
     @Autowired
     private final DtoConverter dtoConverter;
+
+    @Value("${camunda.bpm.client.base-url}")
+    private String camundaServerUri;
 
     public BookHotelWorker(final IHotelService hotelService, final DtoConverter dtoConverter) {
         this.hotelService = hotelService;
@@ -86,11 +92,22 @@ public class BookHotelWorker implements ExternalTaskHandler {
         Map<String, Object> variables = new HashMap<>();
         variables.put(HotelServiceTopics.DataOutput.BOOK_HOTEL_RESPONSE, typedBookHotelResponse);
 
-        // provoke Participant failure (FlightService)
-        provokeParticipantFailure(bookingInformation.getDestination().getCountry());
+        // provoke different failure scenarios
+        provokeFailures(bookingInformation.getDestination().getCountry(), externalTaskService, externalTask, variables);
 
         externalTaskService.complete(externalTask, variables);
         logger.info("Hotel successfully booked: " + bookingResponse);
+    }
+
+    private void provokeFailures(final String failureInput, final ExternalTaskService externalTaskService, final ExternalTask externalTask, final Map<String, Object> variables) {
+        // provoke Participant failure (FlightService)
+        provokeParticipantFailure(failureInput);
+
+        // provoke duplicate message --> acknowledge task twice
+        provokeDuplicateMessageToOrchestrator(failureInput, externalTaskService, externalTask, variables);
+
+        // provoke sending an old message to the orchestrator
+        provokeOldMessageToOrchestrator(failureInput, externalTask, variables);
     }
 
     private void provokeParticipantFailure(String failureInput) {
@@ -116,5 +133,29 @@ public class BookHotelWorker implements ExternalTaskHandler {
         } catch (IOException e) {
             logger.warn("Docker client could not be closed", e);
         }
+    }
+
+    // TODO check --> also using a Thread?
+    private void provokeDuplicateMessageToOrchestrator(final String failureInput, final ExternalTaskService externalTaskService, final ExternalTask externalTask, final Map<String, Object> variables) {
+        if (!failureInput.equalsIgnoreCase("Provoke duplicate message to orchestrator")) {
+            return;
+        }
+
+        // TODO using own POST request instead?
+        externalTaskService.complete(externalTask, variables);
+    }
+
+    // TODO check
+    private void provokeOldMessageToOrchestrator(final String failureInput, final ExternalTask externalTask, final Map<String, Object> variables) {
+        if (!failureInput.equalsIgnoreCase("Provoke sending old message to orchestrator")) {
+            return;
+        }
+
+        CompleteTaskRequest completeTaskRequest = new CompleteTaskRequest(externalTask.getWorkerId(), variables);
+        ObjectValue typedRequest =
+                Variables.objectValue(completeTaskRequest).serializationDataFormat(Variables.SerializationDataFormats.JSON).create();
+
+        OldMessageProvoker oldMessageProvoker = new OldMessageProvoker(camundaServerUri, typedRequest, externalTask.getId());
+        new Thread(oldMessageProvoker).start();
     }
 }
