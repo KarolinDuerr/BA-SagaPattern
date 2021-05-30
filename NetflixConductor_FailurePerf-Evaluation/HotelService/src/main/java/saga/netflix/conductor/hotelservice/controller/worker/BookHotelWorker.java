@@ -1,5 +1,6 @@
 package saga.netflix.conductor.hotelservice.controller.worker;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
@@ -12,6 +13,11 @@ import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.web.client.RestTemplate;
 import saga.netflix.conductor.hotelservice.api.HotelServiceTasks;
 import saga.netflix.conductor.hotelservice.api.dto.BookHotelRequest;
 import saga.netflix.conductor.hotelservice.api.dto.BookHotelResponse;
@@ -40,6 +46,9 @@ public class BookHotelWorker implements Worker {
     private final DtoConverter dtoConverter;
 
     private final String inputBookHotel = HotelServiceTasks.TaskInput.BOOK_HOTEL_INPUT;
+
+    @Value("${CONDUCTOR_SERVER_URI:conductor.server.uri}")
+    private String conductorServerUri;
 
     public BookHotelWorker(final ObjectMapper objectMapper, final IHotelService hotelService,
                            final DtoConverter dtoConverter) {
@@ -99,11 +108,22 @@ public class BookHotelWorker implements Worker {
         taskResult.getOutputData().put(HotelServiceTasks.TaskOutput.BOOK_HOTEL_OUTPUT, bookingResponse);
         logger.info("Hotel successfully booked: " + bookingResponse);
 
-        // provoke Participant failure (FlightService)
-        provokeParticipantFailure(bookingInformation.getDestination().getCountry());
+        // provoke different failure scenarios
+        provokeFailures(bookingInformation.getDestination().getCountry(), taskResult);
     }
 
-    private void provokeParticipantFailure(String failureInput) {
+    private void provokeFailures(final String failureInput, final TaskResult taskResult) {
+        // provoke Participant failure (FlightService)
+        provokeParticipantFailure(failureInput);
+
+        // provoke duplicate message --> acknowledge task twice
+        provokeDuplicateMessageToOrchestrator(failureInput, taskResult);
+
+        // provoke sending an old message to the orchestrator
+        provokeOldMessageToOrchestrator(failureInput, taskResult);
+    }
+
+    private void provokeParticipantFailure(final String failureInput) {
         if (!failureInput.equalsIgnoreCase("Provoke participant failure before receiving task")) {
             return;
         }
@@ -128,4 +148,36 @@ public class BookHotelWorker implements Worker {
         }
     }
 
+    // TODO check --> also using a Thread?
+    private void provokeDuplicateMessageToOrchestrator(final String failureInput, final TaskResult taskResult) {
+        if (!failureInput.equalsIgnoreCase("Provoke duplicate message to orchestrator")) {
+            return;
+        }
+
+        String updateTaskEndpoint = "/tasks";
+        HttpHeaders requestHeader = new HttpHeaders();
+        requestHeader.setContentType(MediaType.APPLICATION_JSON);
+        taskResult.setStatus(TaskResult.Status.COMPLETED);
+        final JsonNode result =
+                objectMapper.valueToTree(taskResult);
+
+        HttpEntity<JsonNode> request = new HttpEntity<>(result, requestHeader);
+
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.postForObject(conductorServerUri + updateTaskEndpoint, request, Void.class);
+    }
+
+    // TODO check
+    private void provokeOldMessageToOrchestrator(final String failureInput, final TaskResult taskResult) {
+        if (!failureInput.equalsIgnoreCase("Provoke sending old message to orchestrator")) {
+            return;
+        }
+
+        taskResult.setStatus(TaskResult.Status.COMPLETED);
+        final JsonNode result =
+                objectMapper.valueToTree(taskResult);
+
+        OldMessageProvoker oldMessageProvoker = new OldMessageProvoker(conductorServerUri, result);
+        new Thread(oldMessageProvoker).start();
+    }
 }

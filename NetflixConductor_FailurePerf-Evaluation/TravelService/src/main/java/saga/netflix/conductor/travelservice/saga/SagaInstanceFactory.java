@@ -46,6 +46,43 @@ public class SagaInstanceFactory {
 
         logger.info("Start BookTripSaga workflow");
         // POST request to Conductor's "/workflow" endpoint
+        String workflowId = workflowClient.startWorkflow(bookTripSagaRequest);
+
+        // provoke different failure scenarios
+        String failureInput = bookTripSagaData.getTripInformation().getDestination().getCountry();
+        provokeFailures(failureInput, bookTripSagaRequest, workflowId);
+    }
+
+    private void provokeFailures(final String failureInput, final StartWorkflowRequest bookTripSagaRequest, final String workflowId) {
+        // provoke to start same Saga again
+        provokeSagaStartAgain(failureInput, bookTripSagaRequest, workflowId);
+
+        // provoke to start same Saga again after 5 minutes
+        provokeOldMessageToOrchestrator(failureInput, bookTripSagaRequest, workflowId);
+    }
+
+    // TODO check
+    private void provokeSagaStartAgain(final String failureInput, final StartWorkflowRequest bookTripSagaRequest, final String workflowId) {
+        if (!failureInput.equalsIgnoreCase("Provoke duplicate Saga start")) {
+            return;
+        }
+
+        logger.info("Correlation ID: " + bookTripSagaRequest.getCorrelationId());
+        bookTripSagaRequest.setCorrelationId(workflowId);
+        // TODO check if a POST request instead of Java client usage is needed
         workflowClient.startWorkflow(bookTripSagaRequest);
+    }
+
+    // TODO check
+    private void provokeOldMessageToOrchestrator(final String failureInput, final StartWorkflowRequest bookTripSagaRequest, final String workflowId) {
+        if (!failureInput.equalsIgnoreCase("Provoke sending old Saga start message")) {
+            return;
+        }
+
+        logger.info("Correlation ID: " + bookTripSagaRequest.getCorrelationId());
+        bookTripSagaRequest.setCorrelationId(workflowId);
+
+        OldSagaMessageProvoker oldMessageProvoker = new OldSagaMessageProvoker(failureInput, bookTripSagaRequest);
+        new Thread(oldMessageProvoker).start();
     }
 }
