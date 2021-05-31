@@ -1,97 +1,29 @@
-# Saga Pattern Realization With Camunda
-This project includes an example implementation of the Saga pattern using [Camunda](https://github.com/camunda/camunda-bpm-platform/tree/master/spring-boot-starter).
-The example application represents a travel application that consists of three backend services: TravelService,
-HotelService and FlightService. For simplicity reasons, only the workflow for booking a trip has been implemented.
-
-## Start the Application
-
-1. Run `./gradlew clean build`
+# BA-Saga Pattern: Camunda
+This directory contains four different realizations concerning the Saga Pattern using Camunda. 
 
 
-2. Execute `docker-compose up --no-start`
+## Saga Pattern Realization
+
+The `Camunda` directory includes the travel application that has been realized using Eventuate Tram.
+
+Additionally, a short description of the different possibilities to   __monitor__ the applications is included in the respective `Readme` file.
 
 
-3. Execute `docker-compose start mysql`
+## Saga Pattern Realization: Expandability Evaluation
+
+Based on the `Camunda` implementation, the `Camunda_Expandability-Evaluation` directory includes the same travel application but extended by a __CustomerService__ to examine how easily a new service can be included.
 
 
-4. Execute `docker-compose start travelservice`
+
+## Saga Pattern Realization: Failure Performance Evaluation
+
+The `Camunda_FailurePerf-Evaluation` is also based on the `Camunda` application but includes additional sections that provoke different failure scenarios given a certain input.
 
 
-5. Execute `docker-compose up`
+## Saga Pattern Realization: Interleaving Sagas Evaluation
 
+Based on the `Camunda` implementation, the `Camunda_InterleavingSagas` directory includes the same travel application but extended by a __CancelBookTripSaga__ which allows to cancel trips that
+have been booked or trip bookings that are currently being executed.
 
-6. Requesting trip bookings is now possible. Either use `curl` commands,
-   the provided `TravelApplication.json` insomnia file, which includes different trip booking requests,
-   or access the [Swagger UI](https://swagger.io/tools/swagger-ui/) of the different services:
-
-   | __Service__ | __URL to Swagger UI__ |
-   |:-------|:-------------------:|
-   |TravelService| http://localhost:8090/swagger-ui.html
-   |HotelService| http://localhost:8081/swagger-ui.html
-   |FlightService| http://localhost:8082/swagger-ui.html
-
-An example for such a request:
-```
-{
-    "duration":
-    {
-        "start":"2021-12-01",
-        "end":"2021-12-12"
-    },
-    "start":
-    {
-        "country":"Scotland",
-        "city":"Stirling"
-    },
-    "destination":
-    {
-        "country":"Sweden",
-        "city":"Stockholm"
-    },
-    "travellerName": "Max Mustermann",
-    "boardType":"breakfast",
-    "customerId":"1"
-}
-```
-
-To simulate a Saga that fails because no hotel or no flight is available, use one of the following Strings
-as `destination country` in the trip booking request:
-```
-"Provoke hotel failure"
-
-"Provoke flight failure"
-```
-
-The services also provide a *health* and an *info* endpoint that show some information about the system like
-that the DB is up and running. These endpoints can be accessed via:
-
-| __Service__ | __URL to health endpoint__ |  __URL to info endpoint__ |
-|:-------:|------------------|-------------------|
-|TravelService| http://localhost:8090/api/travel/monitor/health | http://localhost:8090/api/travel/monitor/info
-|HotelService| http://localhost:8081/api/hotels/monitor/health | http://localhost:8081/api/hotels/monitor/info
-|FlightService| http://localhost:8082/api/flights/monitor/health | http://localhost:8082/api/flights/monitor/info
-
-
-If you are on Windows or Mac, you sometimes have to replace _localhost_ with the default IP of your docker machine (use `docker-machine ip default` to get this default IP).
-
-## Stop the Application
-
-To stop the application and remove the created containers, execute the following command:
-```
-docker-compose down --remove-orphans
-```
-
-----------------------------
-
-## Monitor the Application
-
-### Camunda's Cockpit
-The cockpit can be accessed either just via http://localhost:8090/
-or by using the whole path http://localhost:8090/camunda/app/welcome/default/#!/welcome.
-
-The following credentials are needed in order to be able to access the cockpit:
-Username:   admin
-Password:   admin
-
-If the respective values have been changed in the application.properties file of the TravelService
-the new values have to be used for the username and the password.
+-----------------------------------------------------------------------------
+For more information about the projects and their setups see the `Readme` files in the respective directories.

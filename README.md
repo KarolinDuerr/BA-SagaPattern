@@ -5,37 +5,26 @@ in the following release [An Evaluation of Saga Pattern Implementation Technolog
 -----------------------------------------------------------------------------
 
 This repository includes four implementations that realize an example travel application using orchestrated Sagas.
+Implementation
 - using the [Eventuate Tram](https://github.com/eventuate-tram/eventuate-tram-core) and the [Eventuate Tram Sagas](https://github.com/eventuate-tram/eventuate-tram-sagas) framework
 - using [Netflix Conductor](https://github.com/Netflix/conductor)
 - using [Camunda](https://github.com/camunda/camunda-bpm-platform/tree/master/spring-boot-starter)
+- using [MicroProfile LRA](https://github.com/eclipse/microprofile-lra)
 
 The example travel application consists of three backend services: TravelService,
-HotelService and FlightService. For simplicity reasons, only the workflow for booking a trip has been implemented.
+HotelService and FlightService. For simplicity reasons, in most projects only the workflow for booking a trip has been implemented.
 
+
+Each directory contains several realizations using the respective technology: A basic implementation for the mentioned trip booking scenario and three   
+- Saga Pattern Realization
 
 ## Saga Pattern Realization
 
-The `EventuateTram` directory includes the travel application that has been realized using Eventuate Tram, and the `Netflix Conductor` directory the one that has been realized using Netflix Conductor.
-`Camunda` contains the realization using Camunda.
-
-Additionally, a short description of the different possibilities to   __monitor__ the applications is included in all three directories in the respective `Readme` file.
-
-
-## Saga Pattern Realization: Expandability Evaluation
-
-Based on the `EventuateTram` implementation, the `EventuateTram_Expandability-Evaluation` directory includes the same travel application but extended by a __CustomerService__ to examine how easily a new service can be included.
-
-
-The `NetflixConductor_Expandability-Evaluation` directory includes the same application as the `NetflixConductor` directory but also extended by a __CustomerService__.
-The same applies for the `Camunda_ExpandabilityEvaluation` directory.
-
-
-## Saga Pattern Realization: Failure Performance Evaluation
-
-The `EventuateTram_FailurePerf-Evaluation` is also based on the `EventuateTram` application but includes additional sections that provoke different failure scenarios given a certain input.
-
-The same applies to the `NetflixConductor_FailurePerf-Evaluation` directory, but the implementation is based on the `NetflixConductor` application.
-The directory `Camunda_FailurePerf-Evaluation` rests on the same concept.
+Each directory contains several realizations using the respective technology: A basic implementation(*) for the mentioned trip booking scenario and three further implementations that extend the basic one:
+- <ins>*</ins>: the travel application contains the workflow for booking a trip.
+- <ins>*_Expandability-Evaluation:</ins> a __CustomerService__ extends the travel application to examine how easily a new service can be included.
+- <ins>*_FailurePerf-Evaluation:</ins>  the application includes additional sections that provoke different failure scenarios given a certain input.
+- <ins>*_InterleavingSagas</ins>: the travel application also offers the possibility to cancel trips. Therefore, the __CancelBookTripSaga__ is also implemented.
 
 -----------------------------------------------------------------------------
 For more information about the projects and their setups see the `Readme` files in the respective directories.
