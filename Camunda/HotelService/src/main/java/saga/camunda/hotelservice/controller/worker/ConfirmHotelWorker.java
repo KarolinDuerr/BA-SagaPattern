@@ -35,7 +35,6 @@ public class ConfirmHotelWorker implements ExternalTaskHandler {
             logger.info("The given input could not be used to confirm the hotel booking.");
             externalTaskService.handleBpmnError(externalTask, HotelServiceTopics.BpmnError.HOTEL_ERROR, "Something went" +
                     " wrong with the given input.");
-            externalTaskService.complete(externalTask, null);
             return;
         }
 

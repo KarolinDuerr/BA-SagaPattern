@@ -85,4 +85,13 @@ docker-compose down --remove-orphans
 
 ## Monitor the Application
 
-// TODO
+### Camunda's Cockpit
+The cockpit can be accessed either just via http://localhost:8090/
+or by using the whole path http://localhost:8090/camunda/app/welcome/default/#!/welcome.
+
+The following credentials are needed in order to be able to access the cockpit:
+Username:   admin
+Password:   admin
+
+If the respective values have been changed in the application.properties file of the TravelService
+the new values have to be used for the username and the password.

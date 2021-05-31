@@ -36,7 +36,6 @@ public class CancelFlightWorker implements ExternalTaskHandler {
             logger.info("The given input could not be parsed to a bookHotelRequest.");
             externalTaskService.handleBpmnError(externalTask, FlightServiceTopics.BpmnError.FLIGHT_ERROR, "Something went" +
                     " wrong with the given input.");
-            externalTaskService.complete(externalTask, null);
             return;
         }
 

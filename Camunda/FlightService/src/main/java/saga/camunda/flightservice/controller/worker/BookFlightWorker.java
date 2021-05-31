@@ -49,7 +49,6 @@ public class BookFlightWorker implements ExternalTaskHandler {
             logger.info("The given input could not be parsed to a bookFlightRequest.");
             externalTaskService.handleBpmnError(externalTask, FlightServiceTopics.BpmnError.FLIGHT_ERROR, "Something went" +
                     " wrong with the given input.");
-            externalTaskService.complete(externalTask, null);
             return;
         }
 
@@ -59,7 +58,6 @@ public class BookFlightWorker implements ExternalTaskHandler {
             logger.error(exception.toString());
             externalTaskService.handleBpmnError(externalTask, FlightServiceTopics.BpmnError.FLIGHT_ERROR,
                     exception.toString());
-            externalTaskService.complete(externalTask, null);
         }
         logger.debug("Finished Task: " + externalTask.getActivityId() + "(ID: " + externalTask.getId() + ")");
     }
