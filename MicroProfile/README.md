@@ -1,20 +1,20 @@
-# Saga Pattern Realization With Camunda
-This project includes an example implementation of the Saga pattern using [Camunda](https://github.com/camunda/camunda-bpm-platform/tree/master/spring-boot-starter).
+# Saga Pattern Realization With MicroProfile LRA
+This project includes an example implementation of the Saga pattern using [MicroProfile LRA](https://github.com/eclipse/microprofile-lra).
 The example application represents a travel application that consists of three backend services: TravelService,
 HotelService and FlightService. For simplicity reasons, only the workflow for booking a trip has been implemented.
 
 ## Start the Application
-
+ // TODO
 1. Run `./gradlew clean build`
 
 
 2. Execute `docker-compose up --no-start`
 
 
-3. Execute `docker-compose start mysql`
+3. Execute `docker-compose start elasticsearch`
 
 
-4. Execute `docker-compose start travelservice`
+4. Execute `docker-compose start dynomite`
 
 
 5. Execute `docker-compose up`
@@ -25,7 +25,7 @@ HotelService and FlightService. For simplicity reasons, only the workflow for bo
    or access the [Swagger UI](https://swagger.io/tools/swagger-ui/) of the different services:
 
    | __Service__ | __URL to Swagger UI__ |
-   |:-------|:-------------------:|
+   |:-------|:-------------------:| 
    |TravelService| http://localhost:8090/swagger-ui.html
    |HotelService| http://localhost:8081/swagger-ui.html
    |FlightService| http://localhost:8082/swagger-ui.html
@@ -84,14 +84,4 @@ docker-compose down --remove-orphans
 ----------------------------
 
 ## Monitor the Application
-
-### Camunda's Cockpit
-The cockpit can be accessed either just via http://localhost:8090/
-or by using the whole path http://localhost:8090/camunda/app/welcome/default/#!/welcome.
-
-The following credentials are needed in order to be able to access the cockpit:
-Username:   admin
-Password:   admin
-
-If the respective values have been changed in the application.properties file of the TravelService
-the new values have to be used for the username and the password.
+// TODO

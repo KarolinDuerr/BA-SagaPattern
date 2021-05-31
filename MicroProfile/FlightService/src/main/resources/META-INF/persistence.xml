@@ -7,6 +7,7 @@
     <persistence-unit name="FlightBookingRepository" transaction-type="JTA">
         <jta-data-source>jdbc/FlightService</jta-data-source>
         <class>saga.microprofile.flightservice.model.FlightInformation</class> <!--TODO-->
+        <class>saga.microprofile.flightservice.model.Flight</class> <!--TODO-->
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties>
             <property name="eclipselink.ddl-generation" value="create-tables"/>
