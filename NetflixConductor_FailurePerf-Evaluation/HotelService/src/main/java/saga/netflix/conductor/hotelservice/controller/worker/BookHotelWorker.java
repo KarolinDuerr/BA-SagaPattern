@@ -13,10 +13,10 @@ import com.netflix.conductor.common.metadata.tasks.TaskResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import saga.netflix.conductor.hotelservice.api.HotelServiceTasks;
 import saga.netflix.conductor.hotelservice.api.dto.BookHotelRequest;
@@ -45,16 +45,16 @@ public class BookHotelWorker implements Worker {
     @Autowired
     private final DtoConverter dtoConverter;
 
+    private final String conductorServerUri;
+
     private final String inputBookHotel = HotelServiceTasks.TaskInput.BOOK_HOTEL_INPUT;
 
-    @Value("${CONDUCTOR_SERVER_URI:conductor.server.uri}")
-    private String conductorServerUri;
-
     public BookHotelWorker(final ObjectMapper objectMapper, final IHotelService hotelService,
-                           final DtoConverter dtoConverter) {
+                           final DtoConverter dtoConverter, final String conductorServerUri) {
         this.objectMapper = objectMapper;
         this.hotelService = hotelService;
         this.dtoConverter = dtoConverter;
+        this.conductorServerUri = conductorServerUri;
     }
 
     @Override
@@ -148,11 +148,12 @@ public class BookHotelWorker implements Worker {
         }
     }
 
-    // TODO check --> also using a Thread?
     private void provokeDuplicateMessageToOrchestrator(final String failureInput, final TaskResult taskResult) {
         if (!failureInput.equalsIgnoreCase("Provoke duplicate message to orchestrator")) {
             return;
         }
+
+        logger.info("Provoking immediate duplicate message to orchestrator.");
 
         String updateTaskEndpoint = "/tasks";
         HttpHeaders requestHeader = new HttpHeaders();
@@ -164,14 +165,20 @@ public class BookHotelWorker implements Worker {
         HttpEntity<JsonNode> request = new HttpEntity<>(result, requestHeader);
 
         RestTemplate restTemplate = new RestTemplate();
-        restTemplate.postForObject(conductorServerUri + updateTaskEndpoint, request, Void.class);
+        try {
+            String taskId = restTemplate.postForObject(conductorServerUri + updateTaskEndpoint, request, String.class);
+            logger.info("Received taskId: " + taskId);
+        } catch (RestClientException restClientException) {
+            logger.info("Received exception: " + restClientException.getMessage());
+        }
     }
 
-    // TODO check
     private void provokeOldMessageToOrchestrator(final String failureInput, final TaskResult taskResult) {
         if (!failureInput.equalsIgnoreCase("Provoke sending old message to orchestrator")) {
             return;
         }
+
+        logger.info("Provoking delayed duplicate message to orchestrator --> old message");
 
         taskResult.setStatus(TaskResult.Status.COMPLETED);
         final JsonNode result =
