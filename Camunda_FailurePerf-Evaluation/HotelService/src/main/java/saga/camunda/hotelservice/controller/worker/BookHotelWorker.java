@@ -59,7 +59,8 @@ public class BookHotelWorker implements ExternalTaskHandler {
 
         if (bookHotelRequest == null) {
             logger.info("The given input could not be parsed to a bookHotelRequest.");
-            externalTaskService.handleBpmnError(externalTask, HotelServiceTopics.BpmnError.HOTEL_ERROR, "Something went" +
+            externalTaskService.handleBpmnError(externalTask, HotelServiceTopics.BpmnError.HOTEL_ERROR, "Something " +
+                    "went" +
                     " wrong with the given input.");
             externalTaskService.complete(externalTask, null);
             return;
@@ -78,7 +79,7 @@ public class BookHotelWorker implements ExternalTaskHandler {
     }
 
     private void bookHotel(final BookHotelRequest bookHotelRequest, final ExternalTask externalTask,
-                          final ExternalTaskService externalTaskService) throws HotelServiceException {
+                           final ExternalTaskService externalTaskService) throws HotelServiceException {
         HotelBookingInformation bookingInformation =
                 dtoConverter.convertToHotelBookingInformation(bookHotelRequest);
 
@@ -99,7 +100,8 @@ public class BookHotelWorker implements ExternalTaskHandler {
         logger.info("Hotel successfully booked: " + bookingResponse);
     }
 
-    private void provokeFailures(final String failureInput, final ExternalTaskService externalTaskService, final ExternalTask externalTask, final Map<String, Object> variables) {
+    private void provokeFailures(final String failureInput, final ExternalTaskService externalTaskService,
+                                 final ExternalTask externalTask, final Map<String, Object> variables) {
         // provoke Participant failure (FlightService)
         provokeParticipantFailure(failureInput);
 
@@ -135,27 +137,32 @@ public class BookHotelWorker implements ExternalTaskHandler {
         }
     }
 
-    // TODO check --> also using a Thread?
-    private void provokeDuplicateMessageToOrchestrator(final String failureInput, final ExternalTaskService externalTaskService, final ExternalTask externalTask, final Map<String, Object> variables) {
+    private void provokeDuplicateMessageToOrchestrator(final String failureInput,
+                                                       final ExternalTaskService externalTaskService,
+                                                       final ExternalTask externalTask,
+                                                       final Map<String, Object> variables) {
         if (!failureInput.equalsIgnoreCase("Provoke duplicate message to orchestrator")) {
             return;
         }
 
-        // TODO using own POST request instead?
+        logger.info("Provoking immediate duplicate message to orchestrator.");
         externalTaskService.complete(externalTask, variables);
     }
 
-    // TODO check
-    private void provokeOldMessageToOrchestrator(final String failureInput, final ExternalTask externalTask, final Map<String, Object> variables) {
+    private void provokeOldMessageToOrchestrator(final String failureInput, final ExternalTask externalTask,
+                                                 final Map<String, Object> variables) {
         if (!failureInput.equalsIgnoreCase("Provoke sending old message to orchestrator")) {
             return;
         }
+
+        logger.info("Provoking delayed duplicate message to orchestrator --> old message");
 
         CompleteTaskRequest completeTaskRequest = new CompleteTaskRequest(externalTask.getWorkerId(), variables);
         ObjectValue typedRequest =
                 Variables.objectValue(completeTaskRequest).serializationDataFormat(Variables.SerializationDataFormats.JSON).create();
 
-        OldMessageProvoker oldMessageProvoker = new OldMessageProvoker(camundaServerUri, typedRequest, externalTask.getId());
+        OldMessageProvoker oldMessageProvoker = new OldMessageProvoker(camundaServerUri, typedRequest,
+                externalTask.getId());
         new Thread(oldMessageProvoker).start();
     }
 }

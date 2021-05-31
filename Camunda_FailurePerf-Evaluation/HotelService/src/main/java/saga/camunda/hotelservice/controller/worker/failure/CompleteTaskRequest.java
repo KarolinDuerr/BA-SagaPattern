@@ -1,8 +1,9 @@
 package saga.camunda.hotelservice.controller.worker.failure;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class CompleteTaskRequest {
+public class CompleteTaskRequest implements Serializable {
 
     private String workerId;
 

@@ -74,6 +74,8 @@ has to be __smaller than 1__, for example:
 }
 ```
 
+Additionally, the Camunda Cockpit can be accessed via http://localhost:8090/ using _admin_ as username and password.
+
 The services also provide a *health* and an *info* endpoint that show some information about the system like
 that the DB is up and running. These endpoints can be accessed via:
 
