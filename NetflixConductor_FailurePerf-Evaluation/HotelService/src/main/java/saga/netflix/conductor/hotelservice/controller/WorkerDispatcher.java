@@ -44,8 +44,9 @@ public class WorkerDispatcher {
         this.dtoConverter = dtoConverter;
     }
 
-    public void startTaskPolling() {
-        final Worker bookHotelWorker = new BookHotelWorker(objectMapper, hotelService, dtoConverter);
+    public void startTaskPolling(final String conductorServerUri) {
+        final Worker bookHotelWorker = new BookHotelWorker(objectMapper, hotelService, dtoConverter,
+                conductorServerUri);
         final Worker confirmHotelWorker = new ConfirmHotelWorker(objectMapper, hotelService);
         final Worker cancelHotelWorker = new CancelHotelWorker(objectMapper, hotelService);
 

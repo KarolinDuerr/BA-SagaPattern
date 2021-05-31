@@ -37,8 +37,8 @@ public class ConductorConfiguration {
     }
 
     @Bean
-    public SagaInstanceFactory sagaInstanceFactory(WorkflowClient workflowClient) {
-        return new SagaInstanceFactory(workflowClient);
+    public SagaInstanceFactory sagaInstanceFactory(final WorkflowClient workflowClient) {
+        return new SagaInstanceFactory(workflowClient, conductorServerUri);
     }
 
     @Bean
@@ -47,15 +47,15 @@ public class ConductorConfiguration {
     }
 
     @Bean
-    public BookTripSaga bookTripSaga(RestTemplate restTemplate, ObjectMapper objectMapper) {
+    public BookTripSaga bookTripSaga(final RestTemplate restTemplate, final ObjectMapper objectMapper) {
         BookTripSaga bookTripSaga = new BookTripSaga(conductorServerUri, restTemplate, objectMapper);
         bookTripSaga.registerWorkflowAndTasks();
         return bookTripSaga;
     }
 
     @Bean
-    public WorkerDispatcher workerDispatcher(TaskClient taskClient, ObjectMapper objectMapper,
-                                             ITravelService travelService) {
+    public WorkerDispatcher workerDispatcher(final TaskClient taskClient, final ObjectMapper objectMapper,
+                                             final ITravelService travelService) {
         WorkerDispatcher createdWorkerDispatcher = new WorkerDispatcher(taskClient, objectMapper, travelService);
         createdWorkerDispatcher.startTaskPolling();
         return createdWorkerDispatcher;

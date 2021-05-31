@@ -27,11 +27,11 @@ public class ConductorConfiguration {
     }
 
     @Bean
-    public WorkerDispatcher workerDispatcher(TaskClient taskClient, ObjectMapper objectMapper,
-                                             IHotelService hotelService, DtoConverter dtoConverter) {
+    public WorkerDispatcher workerDispatcher(final TaskClient taskClient, final ObjectMapper objectMapper,
+                                             final IHotelService hotelService, final DtoConverter dtoConverter) {
         WorkerDispatcher createdWorkerDispatcher = new WorkerDispatcher(taskClient, objectMapper, hotelService,
                 dtoConverter);
-        createdWorkerDispatcher.startTaskPolling();
+        createdWorkerDispatcher.startTaskPolling(conductorServerUri);
         return createdWorkerDispatcher;
     }
 }

@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 public class OldMessageProvoker implements Runnable {
@@ -32,7 +33,7 @@ public class OldMessageProvoker implements Runnable {
 
         HttpEntity<JsonNode> request = new HttpEntity<>(result, requestHeader);
 
-        try { // TODO Alternative idea: wait for conidition that will become true while confirming the HotelTask
+        try { // TODO Alternative idea: wait for condition that will become true while confirming the HotelTask
             logger.info("Wait for 5 minutes before sending the request again.");
             // wait for 5 minutes so that the message will definitely be an old one
             Thread.sleep(300000);
@@ -41,7 +42,11 @@ public class OldMessageProvoker implements Runnable {
         }
 
         RestTemplate restTemplate = new RestTemplate();
-        String response = restTemplate.postForObject(conductorServerUri + updateTaskEndpoint, request, String.class);
-        logger.info("Sent request and received response: " + response);
+        try {
+            String taskId = restTemplate.postForObject(conductorServerUri + updateTaskEndpoint, request, String.class);
+            logger.info("Received taskId: " + taskId);
+        } catch (RestClientException restClientException) {
+            logger.info("Received exception: " + restClientException.getMessage());
+        }
     }
 }

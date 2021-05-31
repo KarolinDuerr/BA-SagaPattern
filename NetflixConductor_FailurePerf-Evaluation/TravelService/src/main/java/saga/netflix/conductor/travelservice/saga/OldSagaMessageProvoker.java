@@ -25,7 +25,7 @@ public class OldSagaMessageProvoker implements Runnable {
         WorkflowClient workflowClient = new WorkflowClient();
         workflowClient.setRootURI(conductorServerUri);
 
-        try { // TODO Alternative idea: wait for conidition that will become true while confirming the TripTask
+        try { // TODO Alternative idea: wait for condition that will become true while confirming the TripTask
             logger.info("Wait for 5 minutes before sending the Saga start request again.");
             // wait for 5 minutes so that the message will definitely be an old one
             Thread.sleep(300000);
@@ -33,7 +33,6 @@ public class OldSagaMessageProvoker implements Runnable {
             // ignore
         }
 
-        // TODO check if a POST request instead of Java client usage is needed
         workflowClient.startWorkflow(bookTripSagaRequest);
         logger.info("Sent start Saga request again.");
     }
