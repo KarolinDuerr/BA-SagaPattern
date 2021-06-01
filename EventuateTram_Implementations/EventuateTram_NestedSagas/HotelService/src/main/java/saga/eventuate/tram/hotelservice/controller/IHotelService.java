@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import saga.eventuate.tram.hotelservice.error.HotelException;
 import saga.eventuate.tram.hotelservice.model.HotelBooking;
 import saga.eventuate.tram.hotelservice.model.HotelBookingInformation;
+import saga.eventuate.tram.hotelservice.model.RejectionReason;
 
 import java.util.List;
 
@@ -25,4 +26,10 @@ public interface IHotelService {
 
     @Transactional
     void confirmHotelBooking(final Long bookingId, final Long tripId);
+
+    @Transactional
+    void confirmHotelEventBooking(final Long eventBookingId, final Long hotelBookingId);
+
+    @Transactional
+    void rejectHotelEventBooking(final Long hotelBookingId, final RejectionReason rejectionReason);
 }

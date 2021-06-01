@@ -25,7 +25,8 @@ public class DtoConverter {
 
         return new HotelBookingInformation(bookHotelRequest.getTripId(),
                 convertToDestination(bookHotelRequest.getDestination()),
-                convertToStayDuration(bookHotelRequest.getDuration()), bookHotelRequest.getBoardType());
+                convertToStayDuration(bookHotelRequest.getDuration()), bookHotelRequest.getBoardType(),
+                bookHotelRequest.getEventId());
     }
 
     public List<HotelBookingDTO> convertToHotelBookingDTOList(final List<HotelBooking> hotelBookings) throws ConverterException {
@@ -51,7 +52,7 @@ public class DtoConverter {
 
         return new HotelBookingDTO(hotelBooking.getId(), hotelBooking.getHotelName(),
                 convertToHotelBookingInformationDTO(hotelBooking.getBookingInformation()),
-                hotelBooking.getBookingStatus());
+                hotelBooking.getBookingStatus(), hotelBooking.getEventBookingId());
     }
 
     public HotelBookingInformationDTO convertToHotelBookingInformationDTO(final HotelBookingInformation hotelBookingInformation) throws ConverterException {
@@ -62,7 +63,7 @@ public class DtoConverter {
 
         return new HotelBookingInformationDTO(convertToDestinationDTO(hotelBookingInformation.getDestination()),
                 convertToStayDurationDTO(hotelBookingInformation.getDuration()), hotelBookingInformation.getBoardType(),
-                hotelBookingInformation.getTripId());
+                hotelBookingInformation.getTripId(), hotelBookingInformation.getEventId());
     }
 
     private Destination convertToDestination(final DestinationDTO destinationDTO) throws ConverterException {

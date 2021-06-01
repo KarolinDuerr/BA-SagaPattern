@@ -3,8 +3,8 @@ version: '3'
 services:
   travelservice:
     build: ./TravelService/
-    image: travelservice:eventuate
-    container_name: travelservice_eventuate
+    image: travelservice:eventuateNestedSagas
+    container_name: travelservice_eventuateNestedSagas
     ports:
       - 8090:8090
     networks:
@@ -28,8 +28,8 @@ services:
 
   hotelservice:
     build: ./HotelService/
-    image: hotelservice:eventuate
-    container_name: hotelservice_eventuate
+    image: hotelservice:eventuateNestedSagas
+    container_name: hotelservice_eventuateNestedSagas
     ports:
       - 8081:8081
     networks:
@@ -53,10 +53,35 @@ services:
 
   flightservice:
     build: ./FlightService/
-    image: flightservice:eventuate
-    container_name: flightservice_eventuate
+    image: flightservice:eventuateNestedSagas
+    container_name: flightservice_eventuateNestedSagas
     ports:
       - 8082:8082
+    networks:
+      - travel_application
+    depends_on:
+      - mysql
+      - kafka
+      - zookeeper
+      - cdcservice
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql/eventuate
+      SPRING_DATASOURCE_USERNAME: mysqluser
+      SPRING_DATASOURCE_PASSWORD: mysqlpw
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
+      EVENTUATELOCAL_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      EVENTUATELOCAL_ZOOKEEPER_CONNECTION_STRING: zookeeper:2181
+      SPRING_SLEUTH_ENABLED: "true"
+      SPRING_SLEUTH_SAMPLER_PROBABILITY: 1
+      SPRING_ZIPKIN_BASE_URL: http://zipkin:9411/
+
+
+  eventservice:
+    build: ./EventService/
+    image: eventservice:eventuateNestedSagas
+    container_name: eventservice_eventuateNestedSagas
+    ports:
+      - 8083:8083
     networks:
       - travel_application
     depends_on:

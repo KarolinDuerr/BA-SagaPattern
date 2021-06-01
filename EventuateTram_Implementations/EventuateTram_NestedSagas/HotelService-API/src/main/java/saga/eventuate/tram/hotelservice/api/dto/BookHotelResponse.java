@@ -6,16 +6,27 @@ public class BookHotelResponse {
 
     private String hotelName;
 
+    private final long eventBookingId;
+
     private String bookingStatus;
 
     private BookHotelResponse() {
-
+        this.eventBookingId = -1; // no event booked for this hotel booking
     }
 
     public BookHotelResponse(final long bookingId, final String hotelName, final String bookingStatus) {
         this.bookingId = bookingId;
         this.hotelName = hotelName;
         this.bookingStatus = bookingStatus;
+        this.eventBookingId = -1; // no event booked for this hotel booking
+    }
+
+    public BookHotelResponse(final long bookingId, final String hotelName, final String bookingStatus,
+                             final long eventBookingId) {
+        this.bookingId = bookingId;
+        this.hotelName = hotelName;
+        this.bookingStatus = bookingStatus;
+        this.eventBookingId = eventBookingId;
     }
 
     public long getBookingId() {
@@ -30,11 +41,16 @@ public class BookHotelResponse {
         return bookingStatus;
     }
 
+    public long getEventBookingId() {
+        return eventBookingId;
+    }
+
     @Override
     public String toString() {
         return "BookHotelResponse{" +
                 "bookingId=" + bookingId +
                 ", hotelName='" + hotelName + '\'' +
+                ", eventBookingId=" + eventBookingId +
                 ", bookingStatus='" + bookingStatus + '\'' +
                 '}';
     }

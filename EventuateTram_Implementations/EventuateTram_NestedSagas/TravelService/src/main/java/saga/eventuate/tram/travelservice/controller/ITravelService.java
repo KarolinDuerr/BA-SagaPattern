@@ -24,6 +24,6 @@ public interface ITravelService {
     void rejectTrip(final Long tripId, final RejectionReason rejectionReason);
 
     @Transactional
-    void confirmTripBooking(final Long tripId, final long hotelId, final long flightId);
+    void confirmTripBooking(final Long tripId, final long hotelId, final long flightId, final long eventBookingId);
 
 }

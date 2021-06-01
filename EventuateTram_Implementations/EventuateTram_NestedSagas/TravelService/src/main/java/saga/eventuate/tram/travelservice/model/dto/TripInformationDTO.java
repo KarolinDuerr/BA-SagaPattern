@@ -20,13 +20,11 @@ public class TripInformationDTO {
 
     private String boardType;
 
+    private long eventId = 0;
+
     private long customerId;
 
-    private BookingStatus bookingStatus;
-
-    private long hotelId = -1;
-
-    private long flightId = -1;
+    private ConfirmationInformationDTO confirmationInformation;
 
     private TripInformationDTO() {
 
@@ -34,31 +32,17 @@ public class TripInformationDTO {
 
     public TripInformationDTO(final long id, final TripDurationDTO duration, final LocationDTO start,
                               final LocationDTO destination, final String travellerName,
-                              final String boardType, final long customerId, final BookingStatus bookingStatus) {
+                              final String boardType, final long customerId, final long eventId,
+                              final ConfirmationInformationDTO confirmationInformation) {
         this.id = id;
         this.duration = duration;
         this.destination = destination;
         this.start = start;
         this.travellerName = travellerName;
         this.boardType = boardType;
+        this.eventId = eventId;
         this.customerId = customerId;
-        this.bookingStatus = bookingStatus;
-    }
-
-    public TripInformationDTO(final long id, final TripDurationDTO duration, final LocationDTO start,
-                              final LocationDTO destination, final String travellerName,
-                              final String boardType, final long customerId, final BookingStatus bookingStatus,
-                              final long hotelId, final long flightId) {
-        this.id = id;
-        this.duration = duration;
-        this.destination = destination;
-        this.start = start;
-        this.travellerName = travellerName;
-        this.boardType = boardType;
-        this.customerId = customerId;
-        this.bookingStatus = bookingStatus;
-        this.hotelId = hotelId;
-        this.flightId = flightId;
+        this.confirmationInformation = confirmationInformation;
     }
 
     public Long getId() {
@@ -117,28 +101,20 @@ public class TripInformationDTO {
         this.customerId = customerId;
     }
 
-    public BookingStatus getBookingStatus() {
-        return bookingStatus;
+    public long getEventId() {
+        return eventId;
     }
 
-    public void setBookingStatus(final BookingStatus bookingStatus) {
-        this.bookingStatus = bookingStatus;
+    public void setEventId(long eventId) {
+        this.eventId = eventId;
     }
 
-    public long getHotelId() {
-        return hotelId;
+    public ConfirmationInformationDTO getConfirmationInformation() {
+        return confirmationInformation;
     }
 
-    public void setHotelId(final long hotelId) {
-        this.hotelId = hotelId;
-    }
-
-    public long getFlightId() {
-        return flightId;
-    }
-
-    public void setFlightId(final long flightId) {
-        this.flightId = flightId;
+    public void setConfirmationInformation(ConfirmationInformationDTO confirmationInformation) {
+        this.confirmationInformation = confirmationInformation;
     }
 
     @Override
@@ -151,9 +127,6 @@ public class TripInformationDTO {
                 ", travellerName='" + travellerName + '\'' +
                 ", boardType='" + boardType + '\'' +
                 ", customerId=" + customerId +
-                ", bookingStatus=" + bookingStatus +
-                ", hotelId=" + hotelId +
-                ", flightId=" + flightId +
                 '}';
     }
 }

@@ -51,7 +51,7 @@ public class TravelCommandHandler {
         logger.info("Received ConfirmTripBooking for tripId = " + confirmTripBooking.getTripId());
 
         travelService.confirmTripBooking(confirmTripBooking.getTripId(), confirmTripBooking.getHotelId(),
-                confirmTripBooking.getFlightId());
+                confirmTripBooking.getFlightId(), confirmTripBooking.getEventBookingId());
 
         logger.info("Successfully confirmed trip with tripId = " + confirmTripBooking.getTripId());
         return CommandHandlerReplyBuilder.withSuccess();

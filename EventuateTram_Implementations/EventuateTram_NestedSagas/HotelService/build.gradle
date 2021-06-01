@@ -17,11 +17,15 @@ dependencyManagement {
 }
 
 repositories {
+    eventuateMavenRepoUrl.split(',').each { repoUrl -> maven { url repoUrl } }
+
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
     compile project(":HotelService-API")
+    compile project(":EventService-API")
 
     // Springframework
     compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
@@ -35,6 +39,7 @@ dependencies {
 
     // Eventuate Tram Sagas
     compile "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-participant:$eventuateTramSagasVersion"
+    compile "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-orchestration-simple-dsl:$eventuateTramSagasVersion"
 
     // Eventuate Tram Core for JDB and Kafka
     compile "io.eventuate.tram.core:eventuate-tram-spring-producer-jdbc:$eventuateTramVersion"

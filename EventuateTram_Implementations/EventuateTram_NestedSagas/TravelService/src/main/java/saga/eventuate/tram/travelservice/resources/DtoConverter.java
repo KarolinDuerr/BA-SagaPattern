@@ -9,6 +9,7 @@ import saga.eventuate.tram.travelservice.error.TravelException;
 import saga.eventuate.tram.travelservice.model.Location;
 import saga.eventuate.tram.travelservice.model.TripDuration;
 import saga.eventuate.tram.travelservice.model.TripInformation;
+import saga.eventuate.tram.travelservice.model.dto.ConfirmationInformationDTO;
 import saga.eventuate.tram.travelservice.model.dto.TripInformationDTO;
 
 import java.util.LinkedList;
@@ -25,8 +26,9 @@ public class DtoConverter {
         TripDuration tripDuration = convertToTripDuration(bookTripRequest.getDuration());
         Location start = convertToLocation(bookTripRequest.getStart());
         Location destination = convertToLocation(bookTripRequest.getDestination());
+
         return new TripInformation(tripDuration, start, destination, bookTripRequest.getTravellerName(),
-                bookTripRequest.getBoardType(), bookTripRequest.getCustomerId());
+                bookTripRequest.getBoardType(), bookTripRequest.getCustomerId(), bookTripRequest.getEventId());
     }
 
     public List<TripInformationDTO> convertToTripInformationDTOList(final List<TripInformation> tripsInformation) throws ConverterException {
@@ -53,9 +55,10 @@ public class DtoConverter {
         TripDurationDTO tripDuration = convertToTripDurationDTO(tripInformation.getDuration());
         LocationDTO start = convertToLocationDTO(tripInformation.getStart());
         LocationDTO destination = convertToLocationDTO(tripInformation.getDestination());
+        ConfirmationInformationDTO confirmationInformation = convertToConfirmationInformationDTO(tripInformation);
         return new TripInformationDTO(tripInformation.getId(), tripDuration, start, destination,
                 tripInformation.getTravellerName(), tripInformation.getBoardType(), tripInformation.getCustomerId(),
-                tripInformation.getBookingStatus(), tripInformation.getHotelId(), tripInformation.getFlightId());
+                tripInformation.getEventId(), confirmationInformation);
     }
 
     private TripDuration convertToTripDuration(final TripDurationDTO tripDurationDTO) throws ConverterException,
@@ -89,5 +92,15 @@ public class DtoConverter {
         }
 
         return new LocationDTO(location.getCountry(), location.getCity());
+    }
+
+    private ConfirmationInformationDTO convertToConfirmationInformationDTO(final TripInformation tripInformation) throws ConverterException {
+        if (tripInformation.getBookingStatus() == null) {
+            throw new ConverterException(ErrorType.INTERNAL_ERROR, "The included confirmation information could not " +
+                    "be received.");
+        }
+
+        return new ConfirmationInformationDTO(tripInformation.getBookingStatus(), tripInformation.getHotelId(),
+                tripInformation.getFlightId(), tripInformation.getEventBookingId());
     }
 }

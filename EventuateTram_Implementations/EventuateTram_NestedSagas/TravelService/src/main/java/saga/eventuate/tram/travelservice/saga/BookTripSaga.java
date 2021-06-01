@@ -11,10 +11,7 @@ import saga.eventuate.tram.flightservice.api.dto.BookFlightResponse;
 import saga.eventuate.tram.flightservice.api.dto.CancelFlightBooking;
 import saga.eventuate.tram.flightservice.api.dto.NoFlightAvailable;
 import saga.eventuate.tram.hotelservice.api.HotelServiceChannels;
-import saga.eventuate.tram.hotelservice.api.dto.BookHotelResponse;
-import saga.eventuate.tram.hotelservice.api.dto.CancelHotelBooking;
-import saga.eventuate.tram.hotelservice.api.dto.ConfirmHotelBooking;
-import saga.eventuate.tram.hotelservice.api.dto.NoHotelAvailable;
+import saga.eventuate.tram.hotelservice.api.dto.*;
 import saga.eventuate.tram.travelservice.api.TravelServiceChannels;
 import saga.eventuate.tram.travelservice.command.ConfirmTripBooking;
 import saga.eventuate.tram.travelservice.command.RejectTripCommand;
@@ -37,6 +34,7 @@ public class BookTripSaga implements SimpleSaga<BookTripSagaData> {
                         .invokeParticipant(this::bookHotel)
                         .onReply(BookHotelResponse.class, this::handleBookHotelReply)
                         .onReply(NoHotelAvailable.class, this::handleNoHotelAvailableReply)
+                        .onReply(NoHotelEventSpaceAvailable.class, this::handleNoHotelEventSpaceAvailableReply)
                         .withCompensation(this::cancelHotel)
                         .step()
                         .invokeParticipant(this::bookFlight)
@@ -73,14 +71,22 @@ public class BookTripSaga implements SimpleSaga<BookTripSagaData> {
     }
 
     private void handleBookHotelReply(BookTripSagaData bookTripSagaData, BookHotelResponse bookHotelResponse) {
-        logger.info("Hotel has been successfully booked: " + bookHotelResponse.getBookingId());
+        long eventBookingId = bookHotelResponse.getEventBookingId();
+        String eventBooking = eventBookingId == -1 ? "" : String.format(" with event booking (ID: %s)", eventBookingId);
+        logger.info("Hotel has been successfully booked: " + bookHotelResponse.getBookingId() + eventBooking);
 
         bookTripSagaData.setHotelId(bookHotelResponse.getBookingId());
+        bookTripSagaData.setEventBookingId(bookHotelResponse.getEventBookingId());
     }
 
     private void handleNoHotelAvailableReply(BookTripSagaData bookTripSagaData, NoHotelAvailable noHotelAvailable) {
         logger.debug("Received provoked NoHotelAvailable response for trip " + noHotelAvailable.getTripId());
         bookTripSagaData.setRejectionReason(RejectionReason.NO_HOTEL_AVAILABLE);
+    }
+
+    private void handleNoHotelEventSpaceAvailableReply(BookTripSagaData bookTripSagaData, NoHotelEventSpaceAvailable noHotelAvailable) {
+        logger.debug("Received provoked NoHotelEventSpaceAvailable response for trip " + noHotelAvailable.getTripId());
+        bookTripSagaData.setRejectionReason(RejectionReason.NO_HOTEL_EVENT_AVAILABLE);
     }
 
     private CommandWithDestination cancelHotel(BookTripSagaData bookTripSagaData) {
@@ -133,7 +139,7 @@ public class BookTripSaga implements SimpleSaga<BookTripSagaData> {
         logger.info("Confirming the trip booking: " + bookTripSagaData.getTripId());
 
         return CommandWithDestinationBuilder.send(new ConfirmTripBooking(bookTripSagaData.getTripId(),
-                bookTripSagaData.getHotelId(), bookTripSagaData.getFlightId()))
+                bookTripSagaData.getHotelId(), bookTripSagaData.getFlightId(), bookTripSagaData.getEventBookingId()))
                 .to(TravelServiceChannels.travelServiceChannel)
                 .build();
     }

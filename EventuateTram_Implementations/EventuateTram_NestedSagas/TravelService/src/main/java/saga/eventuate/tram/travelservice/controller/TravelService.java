@@ -106,7 +106,7 @@ public class TravelService implements  ITravelService {
     }
 
     @Override
-    public void confirmTripBooking(final Long tripId, final long hotelId, final long flightId) {
+    public void confirmTripBooking(final Long tripId, final long hotelId, final long flightId, final long eventBookingId) {
         logger.info("Confirming the booked trip with ID " + tripId);
 
         try {
@@ -114,6 +114,7 @@ public class TravelService implements  ITravelService {
 
             tripInformation.setHotelId(hotelId);
             tripInformation.setFlightId(flightId);
+            tripInformation.setEventBookingId(eventBookingId);
             tripInformation.confirm();
             tripInformationRepository.save(tripInformation);
         } catch (TravelException exception) {

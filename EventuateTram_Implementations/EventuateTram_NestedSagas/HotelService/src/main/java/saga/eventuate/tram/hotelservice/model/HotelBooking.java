@@ -27,15 +27,27 @@ public class HotelBooking {
     @Enumerated(EnumType.STRING)
     private BookingStatus bookingStatus;
 
-    private HotelBooking() {
+    private long eventBookingId;
 
+    private HotelBooking() {
+        eventBookingId = -1; // no event assigned to this booking
     }
 
-    public HotelBooking(final String hotelName, final String travellerName, final HotelBookingInformation bookingInformation) {
+    public HotelBooking(final String hotelName, final String travellerName,
+                        final HotelBookingInformation bookingInformation) {
         this.hotelName = hotelName;
         this.travellerName = travellerName;
         this.bookingInformation = bookingInformation;
         this.bookingStatus = BookingStatus.PENDING;
+    }
+
+    public HotelBooking(final String hotelName, final String travellerName,
+                        final HotelBookingInformation bookingInformation, final long eventBookingId) {
+        this.hotelName = hotelName;
+        this.travellerName = travellerName;
+        this.bookingInformation = bookingInformation;
+        this.bookingStatus = BookingStatus.PENDING;
+        this.eventBookingId = eventBookingId;
     }
 
     public Long getId() {
@@ -74,6 +86,14 @@ public class HotelBooking {
         return bookingStatus;
     }
 
+    public long getEventBookingId() {
+        return eventBookingId;
+    }
+
+    public void setEventBookingId(long eventBookingId) {
+        this.eventBookingId = eventBookingId;
+    }
+
     public void cancel(final BookingStatus bookingStatus) {
         switch (this.bookingStatus) {
             case PENDING:
@@ -93,8 +113,25 @@ public class HotelBooking {
             case CONFIRMED:
                 this.bookingStatus = BookingStatus.CONFIRMED;
                 break;
+            case REJECTED_NO_HOTEL_EVENT_AVAILABLE: // TODO
+                break;
             default:
-                throw new UnsupportedStateTransition("The hotel booking  can only be confirmed if its still PENDING, " +
+                throw new UnsupportedStateTransition("The hotel booking can only be confirmed if its still PENDING, " +
+                        "but the current status is: " + getBookingStatus());
+        }
+    }
+
+    public void reject(final BookingStatus bookingStatus) {
+        switch (this.bookingStatus) {
+            case PENDING:
+            case REJECTED_NO_HOTEL_EVENT_AVAILABLE:
+            case REJECTED_UNKNOWN:
+                this.bookingStatus = bookingStatus;
+                break;
+            case CONFIRMED: // TODO
+                break;
+            default:
+                throw new UnsupportedStateTransition("The hotel booking can only be rejected if its still PENDING, " +
                         "but the current status is: " + getBookingStatus());
         }
     }
@@ -108,6 +145,7 @@ public class HotelBooking {
                 ", travellerName='" + travellerName + '\'' +
                 ", bookingInformation=" + bookingInformation +
                 ", bookingStatus=" + bookingStatus +
+                ", eventBookingId=" + eventBookingId +
                 '}';
     }
 
@@ -128,6 +166,10 @@ public class HotelBooking {
         }
 
         if (!Objects.equals(hotelBooking.getBookingInformation(), this.getBookingInformation())) {
+            return false;
+        }
+
+        if (!Objects.equals(hotelBooking.getEventBookingId(), this.getEventBookingId())) {
             return false;
         }
 

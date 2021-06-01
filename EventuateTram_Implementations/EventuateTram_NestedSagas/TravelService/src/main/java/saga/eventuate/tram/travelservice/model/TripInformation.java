@@ -43,22 +43,28 @@ public class TripInformation {
     @Enumerated(EnumType.STRING)
     private BookingStatus bookingStatus;
 
+    private long eventId = 0;
+
     private long hotelId = -1;
 
     private long flightId = -1;
+
+    private long eventBookingId = -1;
 
     private TripInformation() {
 
     }
 
     public TripInformation(final TripDuration duration, final Location start, final Location destination,
-                           final String travellerName, final String boardType, final long customerId) {
+                           final String travellerName, final String boardType, final long customerId,
+                           final long eventId) {
         this.duration = duration;
         this.start = start;
         this.destination = destination;
         this.travellerName = travellerName;
         this.boardType = boardType;
         this.customerId = customerId;
+        this.eventId = eventId;
         this.bookingStatus = BookingStatus.PENDING;
     }
 
@@ -138,6 +144,22 @@ public class TripInformation {
         this.flightId = flightId;
     }
 
+    public long getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(long eventId) {
+        this.eventId = eventId;
+    }
+
+    public long getEventBookingId() {
+        return eventBookingId;
+    }
+
+    public void setEventBookingId(long eventBookingId) {
+        this.eventBookingId = eventBookingId;
+    }
+
     public void cancel() {
         switch (this.bookingStatus) {
             case PENDING:
@@ -183,14 +205,16 @@ public class TripInformation {
                 "id=" + id +
                 ", version=" + version +
                 ", duration=" + duration +
-                ", destination=" + destination +
                 ", start=" + start +
-                ", travellerName=" + travellerName +
-                ", boardType=" + boardType +
+                ", destination=" + destination +
+                ", travellerName='" + travellerName + '\'' +
+                ", boardType='" + boardType + '\'' +
                 ", customerId=" + customerId +
                 ", bookingStatus=" + bookingStatus +
+                ", eventId=" + eventId +
                 ", hotelId=" + hotelId +
                 ", flightId=" + flightId +
+                ", eventBookingId=" + eventBookingId +
                 '}';
     }
 

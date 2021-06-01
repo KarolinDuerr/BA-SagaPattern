@@ -18,12 +18,15 @@ public class BookTripSagaData {
 
     private long flightId;
 
+    private long eventBookingId;
+
     private RejectionReason rejectionReason;
 
     private BookTripSagaData() {
         this.tripId = 0;
         this.hotelId = -1;
         this.flightId = -1;
+        this.eventBookingId = -1;
     }
 
     public BookTripSagaData(final long tripId, final TripInformation tripInformation) {
@@ -31,6 +34,7 @@ public class BookTripSagaData {
         this.tripInformation = tripInformation;
         this.hotelId = -1;
         this.flightId = -1;
+        this.eventBookingId = -1;
     }
 
     public long getTripId() {
@@ -57,6 +61,14 @@ public class BookTripSagaData {
         this.flightId = flightId;
     }
 
+    public long getEventBookingId() {
+        return eventBookingId;
+    }
+
+    public void setEventBookingId(long eventBookingId) {
+        this.eventBookingId = eventBookingId;
+    }
+
     public RejectionReason getRejectionReason() {
         return rejectionReason;
     }
@@ -71,7 +83,7 @@ public class BookTripSagaData {
         StayDurationDTO stayDuration = new StayDurationDTO(tripInformation.getDuration().getStart(),
                 tripInformation.getDuration().getEnd());
         return new BookHotelRequest(getTripId(), destination, stayDuration, tripInformation.getBoardType(),
-                tripInformation.getTravellerName());
+                tripInformation.getTravellerName(), tripInformation.getEventId());
     }
 
     public BookFlightCommand makeBookFlightCommand() {
@@ -90,6 +102,7 @@ public class BookTripSagaData {
                 ", tripInformation=" + tripInformation +
                 ", hotelId=" + hotelId +
                 ", flightId=" + flightId +
+                ", eventBookingId=" + eventBookingId +
                 ", rejectionReason=" + rejectionReason +
                 '}';
     }

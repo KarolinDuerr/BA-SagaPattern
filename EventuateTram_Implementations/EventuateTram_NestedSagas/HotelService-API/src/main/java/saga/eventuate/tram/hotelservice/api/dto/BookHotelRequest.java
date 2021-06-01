@@ -14,26 +14,41 @@ public class BookHotelRequest implements Command {
 
     private String travellerName;
 
+    private final long eventId;
+
     private BookHotelRequest() {
         this.tripId = -1; // no trip assigned to this booking
+        this.eventId = 0; // no event booked for this hotel booking
     }
 
     public BookHotelRequest(final DestinationDTO destination, final StayDurationDTO duration, final String boardType,
                             final String travellerName) {
         this.tripId = -1; // no trip assigned to this booking
+        this.eventId = 0; // no event booked for this hotel booking
         this.destination = destination;
         this.duration = duration;
         this.boardType = boardType;
         this.travellerName = travellerName;
     }
 
+//    public BookHotelRequest(final long tripId, final DestinationDTO destination, final StayDurationDTO duration,
+//                            final String boardType, final String travellerName) {
+//        this.eventId = 0; // no event booked for this hotel booking
+//        this.destination = destination;
+//        this.duration = duration;
+//        this.boardType = boardType;
+//        this.travellerName = travellerName;
+//        this.tripId = tripId;
+//    }
+
     public BookHotelRequest(final long tripId, final DestinationDTO destination, final StayDurationDTO duration,
-                            final String boardType, final String travellerName) {
+                            final String boardType, final String travellerName, final long eventId) {
         this.destination = destination;
         this.duration = duration;
         this.boardType = boardType;
         this.travellerName = travellerName;
         this.tripId = tripId;
+        this.eventId = eventId;
     }
 
     public long getTripId() {
@@ -72,6 +87,10 @@ public class BookHotelRequest implements Command {
         return travellerName;
     }
 
+    public long getEventId() {
+        return eventId;
+    }
+
     @Override
     public String toString() {
         return "BookHotelRequest{" +
@@ -80,6 +99,7 @@ public class BookHotelRequest implements Command {
                 ", duration=" + duration +
                 ", boardType='" + boardType + '\'' +
                 ", travellerName='" + travellerName + '\'' +
+                ", eventId=" + eventId +
                 '}';
     }
 }

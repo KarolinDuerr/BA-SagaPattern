@@ -14,26 +14,22 @@ public class HotelBookingInformation {
 
     private String boardType;
 
+    private final long eventId;
+
     private final long tripId;
 
     private HotelBookingInformation() {
         tripId = -1; // no trip assigned to this booking
-    }
-
-    public HotelBookingInformation(final Destination destination, final StayDuration duration,
-                                   final String boardType) {
-        tripId = -1; // no trip assigned to this booking
-        this.destination = destination;
-        this.duration = duration;
-        this.boardType = boardType;
+        eventId = 0; // no event booked for this booking
     }
 
     public HotelBookingInformation(final long tripId, final Destination destination, final StayDuration duration,
-                                   final String boardType) {
+                                   final String boardType, final long eventId) {
         this.tripId = tripId;
         this.destination = destination;
         this.duration = duration;
         this.boardType = boardType;
+        this.eventId = eventId;
     }
 
     public void setDestination(final Destination destination) {
@@ -64,12 +60,17 @@ public class HotelBookingInformation {
         return tripId;
     }
 
+    public long getEventId() {
+        return eventId;
+    }
+
     @Override
     public String toString() {
         return "HotelBookingInformation{" +
                 "destination=" + destination +
                 ", duration=" + duration +
-                ", boardType=" + boardType +
+                ", boardType='" + boardType + '\'' +
+                ", eventId=" + eventId +
                 ", tripId=" + tripId +
                 '}';
     }
@@ -95,6 +96,10 @@ public class HotelBookingInformation {
         }
 
         if (!Objects.equals(hotelInfo.getDestination(), this.getDestination())) {
+            return false;
+        }
+
+        if (!Objects.equals(hotelInfo.getEventId(), this.getEventId())) {
             return false;
         }
 

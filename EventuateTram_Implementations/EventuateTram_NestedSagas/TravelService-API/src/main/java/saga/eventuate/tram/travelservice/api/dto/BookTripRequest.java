@@ -22,18 +22,32 @@ public class BookTripRequest {
 
     private long customerId;
 
-    private BookTripRequest() {
+    private long eventId;
 
+    private BookTripRequest() {
+        this.eventId = 0; // no event booked
     }
 
     private BookTripRequest(final TripDurationDTO duration, final LocationDTO start, final LocationDTO destination,
                             final String travellerName, final String boardType, final long customerId) {
+        this.eventId = 0; // no event booked
         this.duration = duration;
         this.destination = destination;
         this.start = start;
         this.travellerName = travellerName;
         this.boardType = boardType;
         this.customerId = customerId;
+    }
+
+    private BookTripRequest(final TripDurationDTO duration, final LocationDTO start, final LocationDTO destination,
+                            final String travellerName, final String boardType, final long customerId, final long eventId) {
+        this.duration = duration;
+        this.destination = destination;
+        this.start = start;
+        this.travellerName = travellerName;
+        this.boardType = boardType;
+        this.customerId = customerId;
+        this.eventId = eventId;
     }
 
     public TripDurationDTO getDuration() {
@@ -84,6 +98,14 @@ public class BookTripRequest {
         this.customerId = customerId;
     }
 
+    public long getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(long eventId) {
+        this.eventId = eventId;
+    }
+
     @Override
     public String toString() {
         return "BookTripRequest{" +
@@ -93,6 +115,7 @@ public class BookTripRequest {
                 ", travellerName='" + travellerName + '\'' +
                 ", boardType='" + boardType + '\'' +
                 ", customerId=" + customerId +
+                ", eventId=" + eventId +
                 '}';
     }
 }

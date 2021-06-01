@@ -1,5 +1,6 @@
 package saga.eventuate.tram.hotelservice.controller;
 
+import io.eventuate.tram.sagas.orchestration.SagaInstanceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,13 +9,13 @@ import org.springframework.transaction.annotation.Transactional;
 import saga.eventuate.tram.hotelservice.error.BookingNotFound;
 import saga.eventuate.tram.hotelservice.error.ErrorType;
 import saga.eventuate.tram.hotelservice.error.HotelException;
-import saga.eventuate.tram.hotelservice.model.BookingStatus;
-import saga.eventuate.tram.hotelservice.model.HotelBooking;
-import saga.eventuate.tram.hotelservice.model.HotelBookingInformation;
-import saga.eventuate.tram.hotelservice.model.HotelBookingRepository;
+import saga.eventuate.tram.hotelservice.model.*;
+import saga.eventuate.tram.hotelservice.saga.BookHotelEventSaga;
+import saga.eventuate.tram.hotelservice.saga.BookHotelEventSagaData;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service("HotelService")
@@ -26,8 +27,18 @@ public class HotelService implements IHotelService {
     @Autowired
     private final HotelBookingRepository hotelBookingRepository;
 
-    public HotelService(final HotelBookingRepository hotelBookingRepository) {
+
+    @Autowired
+    private final SagaInstanceFactory sagaInstanceFactory;
+
+    @Autowired
+    private final BookHotelEventSaga bookHotelEventSaga;
+
+    public HotelService(final HotelBookingRepository hotelBookingRepository,
+                        final SagaInstanceFactory sagaInstanceFactory, final BookHotelEventSaga bookHotelEventSaga) {
         this.hotelBookingRepository = hotelBookingRepository;
+        this.sagaInstanceFactory = sagaInstanceFactory;
+        this.bookHotelEventSaga = bookHotelEventSaga;
     }
 
     @Override
@@ -66,8 +77,8 @@ public class HotelService implements IHotelService {
 
         HotelBooking newHotelBooking = findAvailableHotel(travellerName, hotelBooking);
 
-        // no trip assigned therefore the booking has already been confirmed
-        if (newHotelBooking.getBookingInformation() != null && newHotelBooking.getBookingInformation().getTripId() == -1) {
+        // no trip and no event assigned therefore the booking has already been confirmed
+        if (newHotelBooking.getBookingInformation() != null && newHotelBooking.getBookingInformation().getTripId() == -1 && newHotelBooking.getBookingInformation().getEventId() == 0) {
             newHotelBooking.confirm();
         }
 
@@ -78,6 +89,14 @@ public class HotelService implements IHotelService {
         }
 
         hotelBookingRepository.save(newHotelBooking);
+
+        // book event if an event has been selected
+        if (newHotelBooking.getBookingInformation() != null && newHotelBooking.getBookingInformation().getEventId() != 0) {
+            // create the BookHotelEventSaga with the necessary information
+            BookHotelEventSagaData sagaData = new BookHotelEventSagaData(newHotelBooking.getId(), travellerName,
+                    hotelBooking.getEventId());
+            sagaInstanceFactory.create(bookHotelEventSaga, sagaData);
+        }
 
         return newHotelBooking;
     }
@@ -118,6 +137,35 @@ public class HotelService implements IHotelService {
         }
     }
 
+    @Override
+    public void confirmHotelEventBooking(final Long eventBookingId, final Long hotelBookingId) {
+        logger.info("Confirming the booked event with ID " + eventBookingId);
+
+        try {
+            HotelBooking hotelBooking = getHotelBooking(hotelBookingId);
+
+            hotelBooking.setEventBookingId(eventBookingId);
+            hotelBookingRepository.save(hotelBooking);
+        } catch (HotelException e) {
+            throw new BookingNotFound(hotelBookingId);
+        }
+    }
+
+    @Override
+    public void rejectHotelEventBooking(final Long hotelBookingId, final RejectionReason rejectionReason) {
+        logger.info("Rejecting the booked hotel with ID " + hotelBookingId + " due to failed event booking.");
+
+        try {
+            HotelBooking hotelBooking = getHotelBooking(hotelBookingId);
+
+            BookingStatus newBookingStatus = convertToBookingStatus(rejectionReason);
+            hotelBooking.reject(newBookingStatus);
+            hotelBookingRepository.save(hotelBooking);
+        } catch (HotelException exception) {
+            throw new BookingNotFound(hotelBookingId);
+        }
+    }
+
     // only mocking the general function of this method
     private HotelBooking findAvailableHotel(final String travellerName,
                                             final HotelBookingInformation hotelBookingInformation) throws HotelException {
@@ -141,7 +189,14 @@ public class HotelService implements IHotelService {
             return null;
         }
 
-        logger.info("Hotel has already been booked: " + savedHotelBooking.toString());
+        logger.info("Hotel has already been booked: " + savedHotelBooking.get());
         return savedHotelBooking.get();
+    }
+
+    private BookingStatus convertToBookingStatus(final RejectionReason rejectionReason) {
+        if (Objects.equals(rejectionReason, RejectionReason.NO_EVENT_SPACE_AVAILABLE)) {
+            return BookingStatus.REJECTED_NO_HOTEL_EVENT_AVAILABLE;
+        }
+        return BookingStatus.REJECTED_UNKNOWN;
     }
 }

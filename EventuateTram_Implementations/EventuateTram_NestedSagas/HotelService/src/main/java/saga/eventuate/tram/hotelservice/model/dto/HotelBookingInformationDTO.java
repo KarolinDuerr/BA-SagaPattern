@@ -13,8 +13,11 @@ public class HotelBookingInformationDTO {
 
     private final long tripId;
 
+    private final long eventId;
+
     private HotelBookingInformationDTO() {
         this.tripId = -1; // no trip assigned to this booking
+        this.eventId = 0; // no event booked for this booking
     }
 
     public HotelBookingInformationDTO(final DestinationDTO destination, final StayDurationDTO duration,
@@ -23,14 +26,16 @@ public class HotelBookingInformationDTO {
         this.duration = duration;
         this.boardType = boardType;
         this.tripId = -1; // no trip assigned to this booking
+        this.eventId = 0; // no event booked for this booking
     }
 
     public HotelBookingInformationDTO(final DestinationDTO destination, final StayDurationDTO duration,
-                                      final String boardType, final long tripId) {
+                                      final String boardType, final long tripId, final long eventId) {
         this.destination = destination;
         this.duration = duration;
         this.boardType = boardType;
         this.tripId = tripId;
+        this.eventId = eventId;
     }
 
     public void setDestination(final DestinationDTO destination) {
@@ -61,13 +66,18 @@ public class HotelBookingInformationDTO {
         return tripId;
     }
 
+    public long getEventId() {
+        return eventId;
+    }
+
     @Override
     public String toString() {
         return "HotelBookingInformationDTO{" +
                 "destination=" + destination +
                 ", duration=" + duration +
-                ", boardType=" + boardType +
+                ", boardType='" + boardType + '\'' +
                 ", tripId=" + tripId +
+                ", eventId=" + eventId +
                 '}';
     }
 }
