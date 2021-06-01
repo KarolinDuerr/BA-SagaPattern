@@ -25,7 +25,7 @@
     </webApplication>
 
     <library id="mySQLLib">
-        <fileset dir="${server.config.dir}"
+        <fileset dir="jdbc"
                  includes="mysql-connector-java-*.jar"/>
     </library>
 

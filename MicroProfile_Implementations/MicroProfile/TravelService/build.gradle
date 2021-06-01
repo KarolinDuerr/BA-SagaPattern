@@ -19,7 +19,6 @@ buildscript {
     }
     dependencies {
         classpath 'io.openliberty.tools:liberty-gradle-plugin:3.1.2'
-//        classpath 'mysql:mysql-connector-java:8.0.22'
     }
 }
 
@@ -43,14 +42,18 @@ dependencies {
     // Eclipse MicroProfile LRA
 //    implementation group: 'org.eclipse.microprofile.lra', name: 'microprofile-lra-api', version: '1.0-RC3'
 
-    // Enable health and info endpoint
-
     // MySQL
     compile "mysql:mysql-connector-java:$mySQLVersion"
-
-    // Swagger OpenAPI definition
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
+task copyDependenciesToOpenLiberty(type: Copy) {
+    from configurations.compile
+    include 'mysql-connector-java-*.jar'
+    into "$buildDir/wlp/usr/servers/defaultServer/jdbc"
+}
+
+deploy.finalizedBy 'copyDependenciesToOpenLiberty'
+libertyDev.dependsOn 'deploy'
 clean.dependsOn 'libertyStop'
