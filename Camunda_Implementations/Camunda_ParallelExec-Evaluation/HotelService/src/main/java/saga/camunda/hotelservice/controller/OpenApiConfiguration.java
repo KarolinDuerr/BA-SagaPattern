@@ -12,7 +12,8 @@ import org.springframework.context.annotation.Configuration;
                 description = "An example for a Hotel Service that enables the user to see already booked hotels.",
                 version = "1.0.0",
                 contact = @Contact(
-                        url = "https://github.com/KarolinDuerr/BA-SagaPattern/tree/master/Camunda",
+                        url = "https://github.com/KarolinDuerr/BA-SagaPattern/tree/master/Camunda_Implementations" +
+                                "/Camunda_ParallelExec-Evaluation",
                         name = "Karolin Dürr")),
         servers = @Server(url = "http://localhost:8081")
 )
