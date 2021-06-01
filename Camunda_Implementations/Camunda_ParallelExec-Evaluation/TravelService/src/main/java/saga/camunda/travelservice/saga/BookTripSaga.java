@@ -36,6 +36,6 @@ public class BookTripSaga {
         processVariables.put(FlightServiceTopics.DataInput.BOOK_FLIGHT_DATA, typedBookFlightRequest);
         processVariables.put(TravelServiceTopics.DataInput.BOOK_TRIP_ID, bookTripSagaData.getTripId());
 
-        camunda.getRuntimeService().startProcessInstanceByKey("BookTripSaga", processVariables);
+        camunda.getRuntimeService().startProcessInstanceByKey("BookTripSagaParallelExec", processVariables);
     }
 }

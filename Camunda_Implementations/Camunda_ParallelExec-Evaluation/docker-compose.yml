@@ -3,8 +3,8 @@ version: '3'
 services:
   travelservice:
     build: ./TravelService/
-    image: travelservice:camunda
-    container_name: travelservice_camunda
+    image: travelservice:camundaParallelExec
+    container_name: travelservice_camundaParallelExec
     networks:
       - travel_application
     ports:
@@ -20,8 +20,8 @@ services:
 
   hotelservice:
     build: ./HotelService/
-    image: hotelservice:camunda
-    container_name: hotelservice_camunda
+    image: hotelservice:camundaParallelExec
+    container_name: hotelservice_camundaParallelExec
     networks:
       - travel_application
     ports:
@@ -39,8 +39,8 @@ services:
 
   flightservice:
     build: ./FlightService/
-    image: flightservice:camunda
-    container_name: flightservice_camunda
+    image: flightservice:camundaParallelExec
+    container_name: flightservice_camundaParallelExec
     networks:
       - travel_application
     ports:

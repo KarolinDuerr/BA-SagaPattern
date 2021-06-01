@@ -1,7 +1,7 @@
 # Saga Pattern Realization With Camunda
 This project includes an example implementation of the Saga pattern using [Camunda](https://github.com/camunda/camunda-bpm-platform/tree/master/spring-boot-starter).
-The example application represents a travel application that consists of three backend services: TravelService,
-HotelService and FlightService. For simplicity reasons, only the workflow for booking a trip has been implemented.
+The difference to the original [Saga Pattern Realization With Camunda](https://github.com/KarolinDuerr/BA-SagaPattern/tree/master/Camunda_Implementations/Camunda)
+is the **parallel execution** of specific tasks instead of a sequential one.
 
 ## Start the Application
 
@@ -83,15 +83,8 @@ docker-compose down --remove-orphans
 
 ----------------------------
 
-## Monitor the Application
+## Parallel Execution of Tasks
 
-### Camunda's Cockpit
-The cockpit can be accessed either just via http://localhost:8090/
-or by using the whole path http://localhost:8090/camunda/app/welcome/default/#!/welcome.
-
-The following credentials are needed in order to be able to access the cockpit:
-Username:   admin
-Password:   admin
-
-If the respective values have been changed in the application.properties file of the TravelService
-the new values have to be used for the username and the password.
+The `bookHotel` and the `bookFlight` tasks, as well as the `confirmHotel` and the `confirmTrip` tasks, are now executed in parallel
+by using Conductor's provided _fork_ and _join_ system tasks. Additionally, the compensating workflow also runs the `cancelHotel` and the
+`cancelFlight` tasks in parallel.
