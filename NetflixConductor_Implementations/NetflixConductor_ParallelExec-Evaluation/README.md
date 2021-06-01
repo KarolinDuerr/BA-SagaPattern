@@ -1,7 +1,7 @@
 # Netflix Conductor Parallel Execution Evaluation
 This project includes an example implementation of the Saga pattern using [Netflix Conductor](https://github.com/Netflix/conductor).
-The difference to the original [Saga Pattern Realization With Netflix Conductor](https://github.com/KarolinDuerr/BA-SagaPattern/tree/master/NetflixConductor)
-is the parallel execution of specific tasks instead of a sequential one.
+The difference to the original [Saga Pattern Realization With Netflix Conductor](https://github.com/KarolinDuerr/BA-SagaPattern/tree/master/NetflixConductor_Implementations/NetflixConductor)
+is the **parallel execution** of specific tasks instead of a sequential one.
 
 ## Start the Application
 
