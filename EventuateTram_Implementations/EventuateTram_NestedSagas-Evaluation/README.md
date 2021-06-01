@@ -1,7 +1,7 @@
 # Nested Sagas With Eventuate Tram
 This project is part of the evaluation of a Saga pattern implementation using the [Eventuate Tram](https://github.com/eventuate-tram/eventuate-tram-core)
 and [Eventuate Tram Sagas](https://github.com/eventuate-tram/eventuate-tram-sagas) framework.
-The original [Saga Pattern Realization with Eventuate Tram](https://github.com/KarolinDuerr/BA-SagaPattern/tree/master/EventuateTram)
+The original [Saga Pattern Realization with Eventuate Tram](https://github.com/KarolinDuerr/BA-SagaPattern/tree/master/EventuateTram_Implementations/EventuateTram)
 has been extended by implementing another workflow for cancelling a booked trip. Therefore, this project includes another Saga: the __CancelTripSaga__. 
 
 
