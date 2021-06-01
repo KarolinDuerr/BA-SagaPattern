@@ -3,8 +3,8 @@ version: '3'
 services:
   travelservice:
     build: ./TravelService/
-    image: travelservice:conductor
-    container_name: travelservice_conductor
+    image: travelservice:conductorParallelExec
+    container_name: travelservice_conductorParallelExec
     networks:
       - travel_application
     ports:
@@ -24,8 +24,8 @@ services:
 
   hotelservice:
     build: ./HotelService/
-    image: hotelservice:conductor
-    container_name: hotelservice_conductor
+    image: hotelservice:conductorParallelExec
+    container_name: hotelservice_conductorParallelExec
     networks:
       - travel_application
     ports:
@@ -45,8 +45,8 @@ services:
 
   flightservice:
     build: ./FlightService/
-    image: flightservice:conductor
-    container_name: flightservice_conductor
+    image: flightservice:conductorParallelExec
+    container_name: flightservice_conductorParallelExec
     networks:
       - travel_application
     ports:

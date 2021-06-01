@@ -1,0 +1,90 @@
+{
+  "ownerApp": "Travel Application",
+  "name": "bookTripSaga",
+  "description": "Workflow for the Saga of booking a trip",
+  "version": 1,
+  "tasks": [
+    {
+      "name": "fork_joinBookingTasks",
+      "taskReferenceName": "fork_joinBookingTasks",
+      "type": "FORK_JOIN",
+      "forkTasks": [
+        [
+          {
+            "name": "bookHotel",
+            "taskReferenceName": "bookHotel",
+            "inputParameters": {
+              "bookHotelRequest": "${workflow.input.bookHotelRequest}"
+            },
+            "type": "SIMPLE"
+          }
+        ],
+        [
+          {
+            "name": "bookFlight",
+            "taskReferenceName": "bookFlight",
+            "inputParameters": {
+              "bookFlightRequest": "${workflow.input.bookFlightRequest}"
+            },
+            "type": "SIMPLE"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "joinBookingTasks",
+      "taskReferenceName": "joinBookingTasks",
+      "type": "JOIN",
+      "joinOn": [
+        "bookHotel",
+        "bookFlight"
+      ]
+    },
+    {
+      "name": "fork_joinConfirmationTasks",
+      "taskReferenceName": "fork_joinConfirmationTaskss",
+      "type": "FORK_JOIN",
+      "forkTasks": [
+        [
+          {
+            "name": "confirmHotel",
+            "taskReferenceName": "confirmHotel",
+            "inputParameters": {
+              "confirmHotelBooking": "${bookHotel.output.bookHotelResponse}"
+            },
+            "type": "SIMPLE"
+          }
+        ],
+        [
+          {
+            "name": "confirmTrip",
+            "taskReferenceName": "confirmTrip",
+            "inputParameters": {
+              "confirmHotelInTripBooking": "${bookHotel.output.bookHotelResponse}",
+              "confirmFlightInTripBooking": "${bookFlight.output.bookFlightResponse}"
+            },
+            "type": "SIMPLE"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "joinConfirmationTasks",
+      "taskReferenceName": "joinConfirmationTasks",
+      "type": "JOIN",
+      "joinOn": [
+        "confirmHotel",
+        "confirmTrip"
+      ]
+    }
+  ],
+  "inputParameters": [
+    "bookHotelRequest",
+    "bookFlightRequest"
+  ],
+  "outputParameters": {},
+  "failureWorkflow": "compensateBookTripSaga",
+  "schemaVersion": 2,
+  "restartable": true,
+  "ownerEmail": "travelService@exampleMail.com"
+}

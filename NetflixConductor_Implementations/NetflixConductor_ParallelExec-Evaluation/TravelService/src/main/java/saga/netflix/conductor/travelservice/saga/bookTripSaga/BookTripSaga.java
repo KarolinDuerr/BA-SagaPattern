@@ -105,9 +105,9 @@ public class BookTripSaga {
     private void registerWorkflows() {
         try {
             final JsonNode bookTripDefinition =
-                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/workflows/bookTripSaga.json")));
+                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/workflows/bookTripSagaParallelExec.json")));
             final JsonNode cancelTripDefinition =
-                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/workflows/compensateBookTripSaga.json")));
+                    objectMapper.readTree(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("/workflows/compensateBookTripSagaParallelExec.json")));
 
             registerWorkflow(bookTripDefinition);
             registerWorkflow(cancelTripDefinition);

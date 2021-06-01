@@ -1,0 +1,58 @@
+{
+  "ownerApp": "Travel Application",
+  "name": "compensateBookTripSaga",
+  "description": "Workflow for compensating the Saga of booking a trip",
+  "version": 1,
+  "tasks": [
+    {
+      "name": "fork_joinCompensateBookingTasks",
+      "taskReferenceName": "fork_joinCompensateBookingTasks",
+      "type": "FORK_JOIN",
+      "forkTasks": [
+        [
+          {
+            "name": "cancelFlight",
+            "taskReferenceName": "cancelFlight",
+            "inputParameters": {
+              "cancelFlightBooking": "${workflow.input.bookFlightRequest}"
+            },
+            "type": "SIMPLE"
+          }
+        ],
+        [
+          {
+            "name": "cancelHotel",
+            "taskReferenceName": "cancelHotel",
+            "inputParameters": {
+              "cancelHotelBooking": "${workflow.input.bookHotelRequest}"
+            },
+            "type": "SIMPLE"
+          }
+        ]
+      ]
+    },
+    {
+      "name": "joinCompensateBookingTasks",
+      "taskReferenceName": "joinCompensateBookingTasks",
+      "type": "JOIN",
+      "joinOn": [
+        "cancelFlight",
+        "cancelHotel"
+      ]
+    },
+    {
+      "name": "rejectTrip",
+      "taskReferenceName": "rejectTrip",
+      "inputParameters": {
+        "reason": "${workflow.input.reason}",
+        "tripIdInHotelBookingRequest": "${workflow.input.bookHotelRequest}"
+      },
+      "type": "SIMPLE"
+    }
+  ],
+  "inputParameters": [],
+  "outputParameters": {},
+  "schemaVersion": 2,
+  "restartable": true,
+  "ownerEmail": "travelService@exampleMail.com"
+}
