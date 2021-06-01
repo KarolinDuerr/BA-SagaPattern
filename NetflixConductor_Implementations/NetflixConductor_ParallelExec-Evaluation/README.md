@@ -1,7 +1,7 @@
-# Saga Pattern Realization With Netflix Conductor
+# Netflix Conductor Parallel Execution Evaluation
 This project includes an example implementation of the Saga pattern using [Netflix Conductor](https://github.com/Netflix/conductor).
-The example application represents a travel application that consists of three backend services: TravelService,
-HotelService and FlightService. For simplicity reasons, only the workflow for booking a trip has been implemented.
+The difference to the original [Saga Pattern Realization With Netflix Conductor](https://github.com/KarolinDuerr/BA-SagaPattern/tree/master/NetflixConductor)
+is the parallel execution of specific tasks instead of a sequential one.
 
 ## Start the Application
 
@@ -86,51 +86,8 @@ docker-compose down --remove-orphans
 
 ----------------------------
 
-## Monitor the Application
+## Parallel Execution of Tasks
 
-### Conductor's UI
-The project already includes the UI module in the __Conductor Server__ that is started using
-`docker-compose`.
-
-The UI can be accessed via http://localhost:5000/.
-
-### Log Files
-Each service provides a log that contains some information about it.
-The logs can be accessed using the name of the relevant container.
-The different logs can be accessed using the following commands:
-
-| __Log of__ | __Command to execute__ |
-|:-------|:-------------------|
-|TravelService| `docker logs travelservice_conductor`|
-|HotelService| `docker logs hotelservice_conductor`|
-|FlightService|  `docker logs flightservice_conductor`|
-|Conductor Server|  `docker logs conductor-server-ui`|
-
-By using the `--follow` supplement, it will be continued to stream the service's output to the console.
-
-The logging level can be changed in the respective `application.properties` file.
-
-### Metrics of the Conductor Server and the Java Client
-The __Conductor Server__ publishes some metrics concerning the server and the client, like the amount of time it takes to execute a task.
-
-The necessary gradle dependency has already been added to the services.
-To connect the metrics registry with the logging framework, two lines within the `config.properties`
-have to be __activated__ as they are currently commented out:
-```
-conductor.additional.modules=com.netflix.conductor.contribs.metrics.MetricsRegistryModule,com.netflix.conductor.contribs.metrics.LoggingMetricsModule
-com.netflix.conductor.contribs.metrics.LoggingMetricsModule.reportPeriodSeconds=15
-```
-These lines can be found
-beneath the `Additional modules for metrics collection (optional)` comment within the file.  
-
-Additionally, it can be configured that the metrics will be printed into a dedicated file instead
-of printing it as a regular log message.
-To achieve that, the `conductor-server-ui` service within the `docker-compose.yml` file has to 
-include another environment variable: `LOG4J_PROP=log4j-file-appender.properties`.
-The referenced file is already included within the project's `serverAndUi` directory.
-It configures the different logging properties.
-
-These logs could be further processed using a collector such as ElasticSearch and then visualized
-with [Kibana UI](https://www.elastic.co/de/kibana). However, this has not been realized within this project
-for information about how to achieve that see Netflix Conductor's official [documentation](https://netflix.github.io/conductor/metrics/server/).
-
+The `bookHotel` and the `bookFlight` tasks, as well as the `confirmHotel` and the `confirmTrip` tasks, are now executed in parallel
+by using Conductor's provided _fork_ and _join_ system tasks. Additionally, the compensating workflow also runs the `cancelHotel` and the 
+`cancelFlight` tasks in parallel.
