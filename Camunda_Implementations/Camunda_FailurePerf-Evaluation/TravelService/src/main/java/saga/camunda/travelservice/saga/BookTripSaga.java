@@ -11,8 +11,6 @@ import saga.camunda.flightservice.api.dto.BookFlightRequest;
 import saga.camunda.hotelservice.api.HotelServiceTopics;
 import saga.camunda.hotelservice.api.dto.BookHotelRequest;
 import saga.camunda.travelservice.api.TravelServiceTopics;
-import saga.camunda.travelservice.saga.failure.OldSagaMessageProvoker;
-import saga.camunda.travelservice.saga.failure.StartSagaRequest;
 
 import java.util.HashMap;
 
@@ -23,11 +21,8 @@ public class BookTripSaga {
     @Autowired
     private final ProcessEngine camunda;
 
-    private final String camundaServerUri;
-
-    public BookTripSaga(final ProcessEngine camunda, final String camundaServerUri) {
+    public BookTripSaga(final ProcessEngine camunda) {
         this.camunda = camunda;
-        this.camundaServerUri = camundaServerUri;
     }
 
     public void bookTrip(final BookTripSagaData bookTripSagaData) {
@@ -47,21 +42,9 @@ public class BookTripSaga {
 
         camunda.getRuntimeService().startProcessInstanceByKey("BookTripSaga", processVariables);
 
-        // provoke different failure scenarios
-        String failureInput = bookTripSagaData.getTripInformation().getDestination().getCountry();
-        provokeFailures(failureInput, processVariables);
-    }
-
-    private void provokeFailures(final String failureInput, final HashMap<String, Object> processVariables) {
         // provoke Orchestrator failure (Camunda Engine) before the Saga is being started
         // TODO check if meaningful test is possible
-        provokeOrchestratorFailure(failureInput);
-
-        // provoke to start same Saga again
-        provokeSagaStartAgain(failureInput, processVariables);
-
-        // provoke to start same Saga again after 5 minutes
-        provokeOldMessageToOrchestrator(failureInput, processVariables);
+        provokeOrchestratorFailure(bookTripSagaData.getTripInformation().getDestination().getCountry());
     }
 
     private void provokeOrchestratorFailure(final String failureInput) {
@@ -73,28 +56,4 @@ public class BookTripSaga {
         }
     }
 
-    private void provokeSagaStartAgain(final String failureInput, final HashMap<String, Object> processVariables) {
-        if (!failureInput.equalsIgnoreCase("Provoke duplicate Saga start")) {
-            return;
-        }
-
-        logger.info("Provoking immediate duplicate Saga start");
-        // TODO check meaningfulness because engine cannot necessarily know about duplicate here
-        camunda.getRuntimeService().startProcessInstanceByKey("BookTripSaga", processVariables);
-    }
-
-    // TODO fix me --> HotelService cannot deserialze request
-    private void provokeOldMessageToOrchestrator(final String failureInput, final HashMap<String, Object> processVariables) {
-        if (!failureInput.equalsIgnoreCase("Provoke sending old Saga start message")) {
-            return;
-        }
-
-        logger.info("Provoking delayed duplicate Saga start --> old message");
-        StartSagaRequest startSagaRequest = new StartSagaRequest("BookTripSaga", processVariables);
-        ObjectValue typedStartSagaRequest =
-                Variables.objectValue(startSagaRequest).serializationDataFormat(Variables.SerializationDataFormats.JSON).create();
-
-        OldSagaMessageProvoker oldMessageProvoker = new OldSagaMessageProvoker(camundaServerUri, typedStartSagaRequest);
-        new Thread(oldMessageProvoker).start();
-    }
 }

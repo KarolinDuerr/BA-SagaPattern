@@ -17,11 +17,8 @@ public class CamundaConfiguration {
     @Autowired
     private ProcessEngine processEngine;
 
-    @Value("${camunda.bpm.client.base-url}")
-    private String camundaServerUri;
-
     @Bean
     public BookTripSaga bookTripSaga(final ProcessEngine processEngine) {
-        return new BookTripSaga(processEngine, camundaServerUri);
+        return new BookTripSaga(processEngine);
     }
 }
