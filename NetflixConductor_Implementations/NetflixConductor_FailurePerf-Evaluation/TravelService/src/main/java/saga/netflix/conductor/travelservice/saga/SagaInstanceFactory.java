@@ -50,39 +50,5 @@ public class SagaInstanceFactory {
         logger.info("Start BookTripSaga workflow");
         // POST request to Conductor's "/workflow" endpoint
         workflowClient.startWorkflow(bookTripSagaRequest);
-
-        // provoke different failure scenarios
-        String failureInput = bookTripSagaData.getTripInformation().getDestination().getCountry();
-        provokeFailures(failureInput, bookTripSagaRequest);
-    }
-
-    private void provokeFailures(final String failureInput, final StartWorkflowRequest bookTripSagaRequest) {
-        // provoke to start same Saga again
-        provokeSagaStartAgain(failureInput, bookTripSagaRequest);
-
-        // provoke to start same Saga again after 5 minutes
-        provokeOldMessageToOrchestrator(failureInput, bookTripSagaRequest);
-    }
-
-    private void provokeSagaStartAgain(final String failureInput, final StartWorkflowRequest bookTripSagaRequest) {
-        if (!failureInput.equalsIgnoreCase("Provoke duplicate Saga start")) {
-            return;
-        }
-
-        logger.info("Provoking immediate duplicate Saga start");
-        // TODO check meaningfulness because engine cannot necessarily know about duplicate here
-        workflowClient.startWorkflow(bookTripSagaRequest);
-    }
-
-    private void provokeOldMessageToOrchestrator(final String failureInput,
-                                                 final StartWorkflowRequest bookTripSagaRequest) {
-        if (!failureInput.equalsIgnoreCase("Provoke sending old Saga start message")) {
-            return;
-        }
-
-        logger.info("Provoking delayed duplicate Saga start --> old message");
-        // TODO check meaningfulness because engine cannot necessarily know about duplicate here
-        OldSagaMessageProvoker oldMessageProvoker = new OldSagaMessageProvoker(conductorServerUri, bookTripSagaRequest);
-        new Thread(oldMessageProvoker).start();
     }
 }
