@@ -1,9 +1,7 @@
-# Camunda Expandability Evaluation
+# Camunda Failure Performance Evaluation
 This project is part of the evaluation of a Saga pattern implementation using the [Camunda](https://github.com/camunda/camunda-bpm-platform/tree/master/spring-boot-starter).
-The original [Saga Pattern Realization with Camunda](https://github.com/KarolinDuerr/BA-SagaPattern/tree/master/Camunda_Implementations/Camunda)
-has been extended by a __CustomerService__ in order to evaluate the expandability of an implementation using Eventuate Tram
-to realize the Saga pattern. The __CustomerService__ has to authorize the customer before a hotel is being booked.
-
+Additional sections to the original [Saga Pattern Realization with Camunda](https://github.com/KarolinDuerr/BA-SagaPattern/tree/master/Camunda_Implementations/Camunda)
+have been included that simulate different failure scenarios given a particular input.
 
 ## Start the Application
 
@@ -63,15 +61,6 @@ as `destination country` in the trip booking request:
 "Provoke hotel failure"
 
 "Provoke flight failure"
-```
-
-To simulate a Saga that fails because the __customer validation failed__, the `customerId` in the trip booking request
-has to be __smaller than 1__, for example:
-```
-{
-    ...
-    customerId: "-1"
-}
 ```
 
 Additionally, the Camunda Cockpit can be accessed via http://localhost:8090/ using _admin_ as username and password.

@@ -1,6 +1,6 @@
 # Netflix Conductor Failure Performance Evaluation
 This project is part of the evaluation of a Saga pattern implementation using [Netflix Conductor](https://github.com/Netflix/conductor).
-Additional sections to the original [Saga Pattern Realization With Netflix Conductor](https://github.com/KarolinDuerr/BA-SagaPattern/tree/master/NetflixConductor)
+Additional sections to the original [Saga Pattern Realization With Netflix Conductor](https://github.com/KarolinDuerr/BA-SagaPattern/tree/master/NetflixConductor_Implementations/NetflixConductor)
 have been included that simulate different failure scenarios given a particular input.
 
 ## Start the Application
@@ -49,7 +49,6 @@ that the DB is up and running. These endpoints can be accessed via:
 |TravelService| http://localhost:8090/api/travel/monitor/health | http://localhost:8090/api/travel/monitor/info
 |HotelService| http://localhost:8081/api/hotels/monitor/health | http://localhost:8081/api/hotels/monitor/info
 |FlightService| http://localhost:8082/api/flights/monitor/health | http://localhost:8082/api/flights/monitor/info
-
 
 If you are on Windows or Mac, you sometimes have to replace _localhost_ with the default IP of your docker machine (use `docker-machine ip default` to get this default IP).
 

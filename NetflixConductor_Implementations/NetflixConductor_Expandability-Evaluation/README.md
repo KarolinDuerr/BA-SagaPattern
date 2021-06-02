@@ -1,6 +1,6 @@
 # Netflix Conductor Expandability Evaluation
 This project is part of the evaluation of a Saga pattern implementation using [Netflix Conductor](https://github.com/Netflix/conductor).
-The original [Saga Pattern Realization With Netflix Conductor](https://github.com/KarolinDuerr/BA-SagaPattern/tree/master/NetflixConductor)
+The original [Saga Pattern Realization With Netflix Conductor](https://github.com/KarolinDuerr/BA-SagaPattern/tree/master/NetflixConductor_Implementations/NetflixConductor)
 has been extended by a __CustomerService__ in order to evaluate the expandability of an implementation using Netflix Conductor
 to realize the Saga pattern. The __CustomerService__ has to authorize the customer before a hotel is being booked.
 
