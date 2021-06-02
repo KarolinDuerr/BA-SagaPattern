@@ -17,11 +17,18 @@ HotelService and FlightService. For simplicity reasons, in most projects only th
 
 ## Saga Pattern Realization
 
-Each directory contains several realizations using the respective technology: A basic implementation(*) for the mentioned trip booking scenario and three further implementations that extend the basic one:
-- __*:__ the travel application contains the workflow for booking a trip.
-- __*_Expandability-Evaluation:__ a _CustomerService_ extends the travel application to examine how easily a new service can be included.
-- __*_FailurePerf-Evaluation:__  the application includes additional sections that provoke different failure scenarios given a certain input.
-- __*_InterleavingSagas__: the travel application also offers the possibility to cancel trips. Therefore, the _CancelBookTripSaga_ is also implemented.
+Each directory contains several realizations using the respective technology: A basic implementation(*) for the mentioned trip booking scenario and 
+five further implementations that extend the basic one:
+
+| __Directory__ | __Short Description__ |
+   |:-------|:-------------------:| 
+| * | the travel application contains the workflow for booking a trip.|
+|||
+| *_Expandability-Evaluation | a _CustomerService_ extends the travel application to examine how easily a new service can be included.|
+| *_FailurePerf-Evaluation |  the application includes additional sections that provoke different failure scenarios given a certain input.|
+| *_InterleavingSagas-Evaluation | the travel application also offers the possibility to cancel trips. Therefore, the _CancelBookTripSaga_ is also implemented.|
+| *_NestedSagas-Evaluation | the _HotelService_ offers the possibility to book an event, e.g. a day trip to an amusement park additionally. This functionality is implemented with a Saga. Consequently, the BookTripSaga includes another Saga.|
+| *_ParallelExec-Evaluation | If possible, some transactions within the BookTripSaga are executed in parallel. The same applies for some compensating transactions.|
 
 -----------------------------------------------------------------------------
 For more information about the projects and their setups see the `Readme` files in the respective directories.
