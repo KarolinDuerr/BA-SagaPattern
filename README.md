@@ -20,9 +20,9 @@ HotelService and FlightService. For simplicity reasons, in most projects only th
 Each directory contains several realizations using the respective technology: A basic implementation(*) for the mentioned trip booking scenario and 
 five further implementations that extend the basic one:
 
-| __Directory__ | __Short Description__ |
-   |:-------|:-------------------:| 
-| * | the travel application contains the workflow for booking a trip.|
+| <center>__Directory__</center> | <center>__Short Description__</center> |
+   |:----------------------------|:-------------------| 
+| <center>*</center> | the travel application contains the workflow for booking a trip.|
 |||
 | *_Expandability-Evaluation | a _CustomerService_ extends the travel application to examine how easily a new service can be included.|
 | *_FailurePerf-Evaluation |  the application includes additional sections that provoke different failure scenarios given a certain input.|
