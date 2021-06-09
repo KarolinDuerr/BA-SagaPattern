@@ -14,9 +14,11 @@ import java.util.Objects;
         "WHERE hotelBookings.travellerName = :travellerName")
 public class HotelBooking implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY) // TODO
     private Long id;
 
     @Version

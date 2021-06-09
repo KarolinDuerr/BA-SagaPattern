@@ -52,7 +52,13 @@ dependencies {
 task copyDependenciesToOpenLiberty(type: Copy) {
     from configurations.compile
     include 'mysql-connector-java-*.jar'
-    into "$buildDir/wlp/usr/servers/defaultServer/jdbc"
+    into "$buildDir/wlp/usr/servers/FlightServiceServer/jdbc"
+}
+
+liberty {
+    server {
+        name = "FlightServiceServer"
+    }
 }
 
 deploy.finalizedBy 'copyDependenciesToOpenLiberty'

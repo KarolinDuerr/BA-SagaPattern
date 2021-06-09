@@ -1,21 +1,17 @@
-package saga.microprofile.travelservice.model.dto;
+package saga.microprofile.travelservice.api.dto;
 
-import saga.microprofile.travelservice.api.dto.RejectionReason;
-
-import java.io.Serializable;
-
-public class RejectTripBooking implements Serializable {
+public class RejectTripRequest {
 
     private final long tripId;
 
     private final RejectionReason rejectionReason;
 
-    private RejectTripBooking() {
+    private RejectTripRequest() {
         tripId = -1;
         rejectionReason = RejectionReason.REASON_UNKNOWN;
     }
 
-    public RejectTripBooking(final long tripId, final RejectionReason rejectionReason) {
+    public RejectTripRequest(final long tripId, final RejectionReason rejectionReason) {
         this.tripId = tripId;
         this.rejectionReason = rejectionReason;
     }
@@ -30,7 +26,7 @@ public class RejectTripBooking implements Serializable {
 
     @Override
     public String toString() {
-        return "RejectTripCommand{" +
+        return "RejectTripRequest{" +
                 "tripId=" + tripId +
                 ", rejectionReason=" + rejectionReason +
                 '}';

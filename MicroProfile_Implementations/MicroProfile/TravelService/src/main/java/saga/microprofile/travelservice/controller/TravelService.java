@@ -1,5 +1,6 @@
 package saga.microprofile.travelservice.controller;
 
+import saga.microprofile.travelservice.api.dto.RejectionReason;
 import saga.microprofile.travelservice.error.*;
 import saga.microprofile.travelservice.model.*;
 import saga.microprofile.travelservice.saga.*;
@@ -21,15 +22,8 @@ public class TravelService implements ITravelService {
     @Inject
     private TripInformationRepository tripInformationRepository;
 
-//    @Autowired
-//    private final SagaInstanceFactory sagaInstanceFactory; // TODO
-
-//    public TravelService(final TripInformationRepository tripInformationRepository) {
-//        this.tripInformationRepository = tripInformationRepository;
-//    }
-
-    public TravelService() {
-    }
+    @Inject
+    private BookTripSaga bookTripSaga;
 
     @Override
     @Transactional
@@ -78,8 +72,7 @@ public class TravelService implements ITravelService {
 
         // create and start the BookTripSaga with necessary information
         BookTripSagaData bookTripSagaData = new BookTripSagaData(tripInformation.getId(), tripInformation);
-        // TODO
-//        sagaInstanceFactory.startBookTripSaga(bookTripSagaData);
+        bookTripSaga.startBookTripSaga(bookTripSagaData);
 
         return tripInformation;
     }

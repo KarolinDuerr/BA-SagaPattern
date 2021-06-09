@@ -37,10 +37,15 @@ dependencies {
     // Eclipse MicroProfile using OpenLiberty implementation
     providedCompile "jakarta.platform:jakarta.jakartaee-api:8.0.0"
     providedCompile "org.eclipse.microprofile:microprofile:4.0.1"
-//    libertyRuntime "io.openliberty:openliberty-runtime:19.0.0.12" // TODO nötig?
 
     // Eclipse MicroProfile LRA
-//    implementation group: 'org.eclipse.microprofile.lra', name: 'microprofile-lra-api', version: '1.0-RC3'
+    implementation "org.eclipse.microprofile.lra:microprofile-lra-api:1.0-RC3"
+    libertyRuntime "io.openliberty.beta:openliberty-runtime:21.0.0.6-beta"
+
+    // test
+//    providedCompile group: 'javax.enterprise', name: 'cdi-api', version: '2.0'
+//    providedCompile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
+//    providedCompile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.1'
 
     // MySQL
     compile "mysql:mysql-connector-java:$mySQLVersion"
@@ -51,7 +56,13 @@ dependencies {
 task copyDependenciesToOpenLiberty(type: Copy) {
     from configurations.compile
     include 'mysql-connector-java-*.jar'
-    into "$buildDir/wlp/usr/servers/defaultServer/jdbc"
+    into "$buildDir/wlp/usr/servers/TravelServiceServer/jdbc"
+}
+
+liberty {
+    server {
+        name = "TravelServiceServer"
+    }
 }
 
 deploy.finalizedBy 'copyDependenciesToOpenLiberty'

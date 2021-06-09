@@ -14,6 +14,9 @@ import saga.microprofile.hotelservice.model.dto.HotelBookingDTO;
 import saga.microprofile.hotelservice.model.dto.HotelBookingInformationDTO;
 
 import javax.enterprise.context.ApplicationScoped;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -84,7 +87,11 @@ public class DtoConverter {
             throw new ConverterException("The duration start or end date for the stay is missing.");
         }
 
-        return new StayDuration(stayDurationDTO.getArrival(), stayDurationDTO.getDeparture());
+        ZoneId zoneId = ZoneId.systemDefault();
+        Date arrival = Date.from(stayDurationDTO.getArrival().atStartOfDay(zoneId).toInstant());
+        Date departure = Date.from(stayDurationDTO.getDeparture().atStartOfDay(zoneId).toInstant());
+
+        return new StayDuration(arrival, departure);
     }
 
     private DestinationDTO convertToDestinationDTO(final Destination destination) throws ConverterException {
@@ -102,6 +109,9 @@ public class DtoConverter {
                     "is missing.");
         }
 
-        return new StayDurationDTO(stayDuration.getArrival(), stayDuration.getDeparture());
+        ZoneId zoneId = ZoneId.systemDefault();
+        LocalDate arrival = stayDuration.getArrival().toInstant().atZone(zoneId).toLocalDate();
+        LocalDate departure = stayDuration.getDeparture().toInstant().atZone(zoneId).toLocalDate();
+        return new StayDurationDTO(arrival, departure);
     }
 }

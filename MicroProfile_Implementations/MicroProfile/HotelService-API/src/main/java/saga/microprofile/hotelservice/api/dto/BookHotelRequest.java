@@ -1,11 +1,12 @@
 package saga.microprofile.hotelservice.api.dto;
 
-
 import jakarta.json.bind.annotation.JsonbProperty;
+import jakarta.json.bind.annotation.JsonbPropertyOrder;
 
+//@JsonbPropertyOrder({"trip"})
 public class BookHotelRequest {
 
-    private final long tripId;
+    private long tripId;
 
     private DestinationDTO destination;
 
@@ -34,6 +35,10 @@ public class BookHotelRequest {
         this.duration = duration;
         this.boardType = boardType;
         this.travellerName = travellerName;
+        this.tripId = tripId;
+    }
+
+    public void setTripId(final long tripId) {
         this.tripId = tripId;
     }
 

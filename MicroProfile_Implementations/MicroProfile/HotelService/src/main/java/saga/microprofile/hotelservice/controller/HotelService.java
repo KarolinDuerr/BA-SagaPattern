@@ -3,13 +3,15 @@ package saga.microprofile.hotelservice.controller;
 import saga.microprofile.hotelservice.error.BookingNotFound;
 import saga.microprofile.hotelservice.error.ErrorType;
 import saga.microprofile.hotelservice.error.HotelException;
-import saga.microprofile.hotelservice.model.BookingStatus;
-import saga.microprofile.hotelservice.model.HotelBooking;
-import saga.microprofile.hotelservice.model.HotelBookingInformation;
-import saga.microprofile.hotelservice.model.HotelBookingRepository;
+import saga.microprofile.hotelservice.model.*;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +34,7 @@ public class HotelService implements IHotelService {
 //    }
 
     @Override
+    @Transactional
     public List<HotelBooking> getHotelBookings() {
         logger.info("Get hotel bookings from Repository.");
 
@@ -47,6 +50,7 @@ public class HotelService implements IHotelService {
     }
 
     @Override
+    @Transactional
     public HotelBooking getHotelBooking(final Long bookingId) throws HotelException {
         logger.info(String.format("Get hotel booking (ID: %d) from Repository.", bookingId));
 
@@ -62,6 +66,7 @@ public class HotelService implements IHotelService {
     }
 
     @Override
+    @Transactional
     public HotelBooking bookHotel(final String travellerName, final HotelBookingInformation hotelBooking) throws HotelException {
         logger.info("Saving the booked Hotel: " + hotelBooking);
 
@@ -84,23 +89,26 @@ public class HotelService implements IHotelService {
     }
 
     @Override
-    public void cancelHotelBooking(final long tripId, final String travellerName) {
+    @Transactional
+    public void cancelHotelBooking(final Long bookingId, final Long tripId) {
         logger.info("Cancelling the booked hotel associated with trip ID " + tripId);
 
-        HotelBooking hotelBooking = geTripHotelBookingByName(travellerName, tripId);
+        try {
+            HotelBooking hotelBooking = getHotelBooking(bookingId);
 
-        if (hotelBooking == null) {
-            logger.info(String.format("No hotel has been booked for this trip (ID: %s) yet, therefore no need to " +
-                    "cancel.", tripId));
-            // no hotel has been booked for this trip yet, therefore no need to cancel
-            return;
+            if (hotelBooking.getBookingInformation() == null || hotelBooking.getBookingInformation().getTripId() != tripId) {
+                throw new BookingNotFound(bookingId);
+            }
+
+            hotelBooking.cancel(BookingStatus.CANCELLED);
+            hotelBookingRepository.save(hotelBooking);
+        } catch (HotelException e) {
+            throw new BookingNotFound(bookingId);
         }
-
-        hotelBooking.cancel(BookingStatus.CANCELLED);
-        hotelBookingRepository.save(hotelBooking);
     }
 
     @Override
+    @Transactional
     public void confirmHotelBooking(final Long bookingId, final Long tripId) {
         logger.info("Confirming the booked hotel with ID " + bookingId);
 
@@ -118,6 +126,28 @@ public class HotelService implements IHotelService {
         }
     }
 
+    // TODO
+//    @PostConstruct
+    // to provide information which can be shown as no customers can be registered in the example application
+    private void provideExampleEntries() {
+        try {
+            Destination destination = new Destination("USA", "New York");
+            Date arrival = new SimpleDateFormat("dd-MM-yyyy").parse("31-08-2021");
+            Date departure = new SimpleDateFormat("dd-MM-yyyy").parse("10-09-2021");
+            StayDuration stayDuration = new StayDuration(arrival, departure);
+            HotelBookingInformation hotelBookingInformation = new HotelBookingInformation(destination, stayDuration,
+                    "breakfast");
+            HotelBooking hotelBooking = new HotelBooking("Hotel Royal", "Test User", hotelBookingInformation);
+
+            hotelBookingRepository.save(hotelBooking);
+        } catch (ParseException parseException) {
+            logger.warning("Couldn't parse date object for example hotel booking entry --> no entry saved in database");
+        } catch (HotelException hotelException) {
+            logger.warning("Couldn't create object for example hotel booking entry --> no entry saved in database");
+            logger.warning("Exception: " + hotelException.getMessage());
+        }
+    }
+
     // only mocking the general function of this method
     private HotelBooking findAvailableHotel(final String travellerName,
                                             final HotelBookingInformation hotelBookingInformation) throws HotelException {
@@ -131,11 +161,11 @@ public class HotelService implements IHotelService {
 
     // ensure idempotence of hotel bookings
     private HotelBooking checkIfBookingAlreadyExists(final HotelBooking hotelBooking) {
-        List<HotelBooking> customerTrips =
+        List<HotelBooking> customerHotelBookings =
                 hotelBookingRepository.findByTravellerName(hotelBooking.getTravellerName());
 
         Optional<HotelBooking> savedHotelBooking =
-                customerTrips.stream().filter(hotelInfo -> hotelInfo.equals(hotelBooking)).findFirst();
+                customerHotelBookings.stream().filter(hotelInfo -> hotelInfo.equals(hotelBooking)).findFirst();
 
         if (!savedHotelBooking.isPresent()) {
             return null;
@@ -143,16 +173,5 @@ public class HotelService implements IHotelService {
 
         logger.info("Hotel has already been booked: " + savedHotelBooking.toString());
         return savedHotelBooking.get();
-    }
-
-    private HotelBooking geTripHotelBookingByName(final String travellerName, final long tripId) {
-        List<HotelBooking> customerTrips =
-                hotelBookingRepository.findByTravellerName(travellerName);
-
-        Optional<HotelBooking> existingHotelBooking =
-                customerTrips.stream().filter(hotelInfo -> hotelInfo.getBookingInformation().getTripId() == tripId).findFirst();
-
-        // if no hotel booking can be found than no hotel has been booked for this trip yet, therefore no need to cancel
-        return existingHotelBooking.orElse(null);
     }
 }

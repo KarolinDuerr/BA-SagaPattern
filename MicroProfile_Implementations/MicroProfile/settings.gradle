@@ -5,4 +5,5 @@ include 'HotelService'
 include 'HotelService-API'
 include 'TravelService'
 include 'TravelService-API'
+include 'LRA-Coordinator'
 

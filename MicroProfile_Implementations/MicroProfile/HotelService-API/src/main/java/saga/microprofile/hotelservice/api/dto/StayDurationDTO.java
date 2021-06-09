@@ -3,40 +3,42 @@ package saga.microprofile.hotelservice.api.dto;
 import jakarta.json.bind.annotation.JsonbDateFormat;
 import jakarta.json.bind.annotation.JsonbProperty;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class StayDurationDTO {
 
     @JsonbDateFormat(value = "yyyy-MM-dd")
-    private Date arrival;
+    private LocalDate arrival;
 
     @JsonbDateFormat(value = "yyyy-MM-dd")
-    private Date departure;
+    private LocalDate departure;
 
     public StayDurationDTO() {
 
     }
 
-    public StayDurationDTO(final Date arrival, final Date departure) {
+    public StayDurationDTO(final LocalDate arrival, final LocalDate departure) {
         this.arrival = arrival;
         this.departure = departure;
     }
 
-    public void setArrival(final Date arrival) {
+    public void setArrival(final LocalDate arrival) {
         this.arrival = arrival;
     }
 
     @JsonbProperty("arrival")
-    public Date getArrival() {
+    public LocalDate getArrival() {
         return arrival;
     }
 
-    public void setDeparture(final Date departure) {
+    public void setDeparture(final LocalDate departure) {
         this.departure = departure;
     }
 
     @JsonbProperty("departure")
-    public Date getDeparture() {
+    public LocalDate getDeparture() {
         return departure;
     }
 

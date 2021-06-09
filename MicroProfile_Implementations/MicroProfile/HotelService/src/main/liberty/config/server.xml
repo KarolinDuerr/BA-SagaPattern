@@ -4,6 +4,7 @@
         <feature>jndi-1.0</feature>
         <feature>microProfile-4.0</feature>
         <feature>eventLogging-1.0</feature>
+        <feature>mpLRA-1.0</feature>
     </featureManager>
 
     <variable name="default.http.port" defaultValue="8081"/>
@@ -23,6 +24,11 @@
     <webApplication id="HotelService"
                     location="HotelService-1.0-SNAPSHOT.war" contextRoot="/">
     </webApplication>
+
+    <lra port="${lra.coordinator.port}" host="${lra.coordinator.host}" path="${lra.coordinator.path}" />
+
+    <!-- Default SSL configuration enables trust for default certificates from the Java runtime -->
+    <ssl id="defaultSSLConfig" trustDefaultCerts="true" /> <!--TODO: wichtig?-->
 
     <library id="mySQLLib">
         <fileset dir="jdbc"

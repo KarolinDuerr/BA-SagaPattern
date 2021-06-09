@@ -4,6 +4,7 @@ import saga.microprofile.flightservice.api.dto.*;
 import saga.microprofile.hotelservice.api.dto.BookHotelRequest;
 import saga.microprofile.hotelservice.api.dto.DestinationDTO;
 import saga.microprofile.hotelservice.api.dto.StayDurationDTO;
+import saga.microprofile.travelservice.api.dto.RejectionReason;
 import saga.microprofile.travelservice.model.*;
 
 import java.time.ZoneId;
@@ -69,10 +70,8 @@ public class BookTripSagaData {
     public BookHotelRequest makeBookHotelRequest() {
         DestinationDTO destination = new DestinationDTO(tripInformation.getDestination().getCountry(),
                 tripInformation.getDestination().getCity());
-        ZoneId zoneId = ZoneId.systemDefault();
-        Date startDate = Date.from(tripInformation.getDuration().getStart().atStartOfDay(zoneId).toInstant());
-        Date endDate = Date.from(tripInformation.getDuration().getEnd().atStartOfDay(zoneId).toInstant());
-        StayDurationDTO stayDuration = new StayDurationDTO(startDate, endDate);
+        StayDurationDTO stayDuration = new StayDurationDTO(tripInformation.getDuration().getStart(),
+                tripInformation.getDuration().getEnd());
         return new BookHotelRequest(getTripId(), destination, stayDuration, tripInformation.getBoardType(),
                 tripInformation.getTravellerName());
     }
