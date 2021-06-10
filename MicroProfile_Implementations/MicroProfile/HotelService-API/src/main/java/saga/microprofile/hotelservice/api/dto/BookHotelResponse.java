@@ -32,16 +32,32 @@ public class BookHotelResponse {
         return tripId;
     }
 
+    public void setTripId(final long tripId) {
+        this.tripId = tripId;
+    }
+
     public long getBookingId() {
         return bookingId;
+    }
+
+    public void setBookingId(final long bookingId) {
+        this.bookingId = bookingId;
     }
 
     public String getHotelName() {
         return hotelName;
     }
 
+    public void setHotelName(final String hotelName) {
+        this.hotelName = hotelName;
+    }
+
     public String getBookingStatus() {
         return bookingStatus;
+    }
+
+    public void setBookingStatus(final String bookingStatus) {
+        this.bookingStatus = bookingStatus;
     }
 
     @Override

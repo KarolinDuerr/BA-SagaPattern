@@ -2,9 +2,9 @@ package saga.microprofile.hotelservice.api.dto;
 
 public class ConfirmHotelBooking {
 
-    private final long tripId;
+    private long tripId;
 
-    private final long bookingId;
+    private long bookingId;
 
     // default constructor necessary for Eventuate Framework
     private ConfirmHotelBooking() {
@@ -21,8 +21,16 @@ public class ConfirmHotelBooking {
         return bookingId;
     }
 
+    public void setBookingId(final long bookingId) {
+        this.bookingId = bookingId;
+    }
+
     public long getTripId() {
         return tripId;
+    }
+
+    public void setTripId(final long tripId) {
+        this.tripId = tripId;
     }
 
     @Override

@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class BookTripResponse implements Serializable {
 
-    private final long tripId;
+    private long tripId;
 
     private String bookingStatus;
 
@@ -21,8 +21,16 @@ public class BookTripResponse implements Serializable {
         return tripId;
     }
 
+    public void setTripId(final long tripId) {
+        this.tripId = tripId;
+    }
+
     public String getBookingStatus() {
         return bookingStatus;
+    }
+
+    public void setBookingStatus(final String bookingStatus) {
+        this.bookingStatus = bookingStatus;
     }
 
     @Override

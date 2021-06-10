@@ -28,12 +28,24 @@ public class BookFlightResponse {
         return tripId;
     }
 
+    public void setTripId(final long tripId) {
+        this.tripId = tripId;
+    }
+
     public long getFlightBookingId() {
         return flightBookingId;
     }
 
+    public void setFlightBookingId(final long flightBookingId) {
+        this.flightBookingId = flightBookingId;
+    }
+
     public String getBookingStatus() {
         return bookingStatus;
+    }
+
+    public void setBookingStatus(final String bookingStatus) {
+        this.bookingStatus = bookingStatus;
     }
 
     @Override

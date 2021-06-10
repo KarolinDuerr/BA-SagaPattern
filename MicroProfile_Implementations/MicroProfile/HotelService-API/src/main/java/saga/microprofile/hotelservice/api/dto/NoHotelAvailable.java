@@ -4,10 +4,10 @@ import java.io.Serializable;
 
 public class NoHotelAvailable implements Serializable {
 
-    private final long tripId;
+    private long tripId;
 
-    // default constructor necessary for Eventuate Framework
-    private NoHotelAvailable() {
+    // default constructor necessary
+    public NoHotelAvailable() {
         tripId = -1;
     }
 
@@ -17,6 +17,10 @@ public class NoHotelAvailable implements Serializable {
 
     public long getTripId() {
         return tripId;
+    }
+
+    public void setTripId(final long tripId) {
+        this.tripId = tripId;
     }
 
     @Override

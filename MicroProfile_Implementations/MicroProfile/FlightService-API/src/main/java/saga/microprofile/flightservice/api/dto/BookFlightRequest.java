@@ -7,7 +7,7 @@ import java.util.Date;
 
 public class BookFlightRequest {
 
-    private final long tripId;
+    private long tripId;
 
     private LocationDTO home;
 
@@ -48,6 +48,10 @@ public class BookFlightRequest {
     @JsonbProperty("tripId")
     public long getTripId() {
         return tripId;
+    }
+
+    public void setTripId(final long tripId) {
+        this.tripId = tripId;
     }
 
     @JsonbProperty("home")

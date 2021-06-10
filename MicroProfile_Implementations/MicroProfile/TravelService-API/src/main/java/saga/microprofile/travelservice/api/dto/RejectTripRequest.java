@@ -2,9 +2,9 @@ package saga.microprofile.travelservice.api.dto;
 
 public class RejectTripRequest {
 
-    private final long tripId;
+    private long tripId;
 
-    private final RejectionReason rejectionReason;
+    private RejectionReason rejectionReason;
 
     private RejectTripRequest() {
         tripId = -1;
@@ -20,8 +20,16 @@ public class RejectTripRequest {
         return tripId;
     }
 
+    public void setTripId(final long tripId) {
+        this.tripId = tripId;
+    }
+
     public RejectionReason getRejectionReason() {
         return rejectionReason;
+    }
+
+    public void setRejectionReason(final RejectionReason rejectionReason) {
+        this.rejectionReason = rejectionReason;
     }
 
     @Override

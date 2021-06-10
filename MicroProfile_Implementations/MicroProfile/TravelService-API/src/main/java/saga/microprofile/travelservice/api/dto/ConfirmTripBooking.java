@@ -2,11 +2,11 @@ package saga.microprofile.travelservice.api.dto;
 
 public class ConfirmTripBooking {
 
-    private final long tripId;
+    private long tripId;
 
-    private final long hotelId;
+    private long hotelId;
 
-    private final long flightId;
+    private long flightId;
 
     private ConfirmTripBooking() {
         tripId = -1;
@@ -24,12 +24,24 @@ public class ConfirmTripBooking {
         return tripId;
     }
 
+    public void setTripId(final long tripId) {
+        this.tripId = tripId;
+    }
+
     public long getHotelId() {
         return hotelId;
     }
 
+    public void setHotelId(final long hotelId) {
+        this.hotelId = hotelId;
+    }
+
     public long getFlightId() {
         return flightId;
+    }
+
+    public void setFlightId(final long flightId) {
+        this.flightId = flightId;
     }
 
     @Override
