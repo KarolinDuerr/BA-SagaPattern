@@ -25,6 +25,8 @@ public class TripInformation implements Serializable {
     @Version
     private Long version;
 
+    private String lraId;
+
     @Embedded
     private TripDuration duration;
 
@@ -59,8 +61,10 @@ public class TripInformation implements Serializable {
 
     }
 
-    public TripInformation(final TripDuration duration, final Location start, final Location destination,
-                           final String travellerName, final String boardType, final long customerId) {
+    public TripInformation(final String lraId, final TripDuration duration, final Location start,
+                           final Location destination, final String travellerName, final String boardType,
+                           final long customerId) {
+        this.lraId = lraId;
         this.duration = duration;
         this.start = start;
         this.destination = destination;
@@ -76,6 +80,22 @@ public class TripInformation implements Serializable {
 
     public void setId(final Long id) {
         this.id = id;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
+    public String getLraId() {
+        return lraId;
+    }
+
+    public void setLraId(String lraId) {
+        this.lraId = lraId;
     }
 
     public TripDuration getDuration() {

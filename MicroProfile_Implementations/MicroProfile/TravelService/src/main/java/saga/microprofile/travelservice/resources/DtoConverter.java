@@ -18,7 +18,7 @@ import java.util.List;
 @ApplicationScoped
 public class DtoConverter {
 
-    public TripInformation convertToTripInformation(final BookTripRequest bookTripRequest) throws ConverterException,
+    public TripInformation convertToTripInformation(final String lraId, final BookTripRequest bookTripRequest) throws ConverterException,
             TravelException {
         if (bookTripRequest == null) {
             throw new ConverterException("The information to book a trip is missing.");
@@ -27,7 +27,7 @@ public class DtoConverter {
         TripDuration tripDuration = convertToTripDuration(bookTripRequest.getDuration());
         Location start = convertToLocation(bookTripRequest.getStart());
         Location destination = convertToLocation(bookTripRequest.getDestination());
-        return new TripInformation(tripDuration, start, destination, bookTripRequest.getTravellerName(),
+        return new TripInformation(lraId, tripDuration, start, destination, bookTripRequest.getTravellerName(),
                 bookTripRequest.getBoardType(), bookTripRequest.getCustomerId());
     }
 

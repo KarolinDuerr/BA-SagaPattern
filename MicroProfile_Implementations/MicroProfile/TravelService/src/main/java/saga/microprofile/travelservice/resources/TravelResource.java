@@ -16,6 +16,7 @@ import saga.microprofile.travelservice.controller.TravelServiceImpl;
 import saga.microprofile.travelservice.error.TravelServiceException;
 import saga.microprofile.travelservice.model.TripInformation;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -24,7 +25,8 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.logging.Logger;
 
-@RequestScoped
+//@RequestScoped
+@ApplicationScoped
 @Path("api/travel")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -43,7 +45,6 @@ public class TravelResource {
     @Path("/trips")
     public Response getTrips() throws TravelServiceException {
         logger.info("Get trips.");
-        logger.info("Travel Service: " + travelService);
 
         List<TripInformation> trips = travelService.getTripsInformation();
 
@@ -100,7 +101,7 @@ public class TravelResource {
     @POST
     @Path("/book")
     public Response bookTrip(@HeaderParam(LRA_HTTP_CONTEXT_HEADER) String lraId, @RequestBody final BookTripRequest bookTripRequest) throws TravelServiceException {
-        logger.info("Book trip: " + bookTripRequest + "with LRA ID: " + lraId); // TODO save lraId somewhere=
+        logger.info("Book trip: " + bookTripRequest + "with LRA ID: " + lraId); // TODO save lraId somewhere
 
         if (bookTripRequest == null) {
             logger.info("BookTripRequest is missing, therefore no trip can be booked.");
@@ -109,16 +110,15 @@ public class TravelResource {
         }
 
         TripInformation tripInformation =
-                travelService.bookTrip(dtoConverter.convertToTripInformation(bookTripRequest));
+                travelService.bookTrip(dtoConverter.convertToTripInformation(lraId, bookTripRequest));
 
         if (tripInformation == null) {
             logger.info("Something went wrong during booking.");
             throw new WebApplicationException("Something went wrong during booking.", Response.Status.INTERNAL_SERVER_ERROR);
         }
 
-//        return Response.created(UriBuilder.fromResource(this.getClass()).path(Long.toString(tripInformation.getId())).build()).build();
-        return Response.ok(new BookTripResponse(tripInformation.getId(),
-                tripInformation.getBookingStatus().toString())).build(); //TODO
+      return Response.ok(new BookTripResponse(tripInformation.getId(),
+                tripInformation.getBookingStatus().toString())).build();
     }
 
     @Compensate
@@ -135,9 +135,8 @@ public class TravelResource {
     @Complete // TODO anders --> hier nicht mehr aktiv machen lediglich resourcen freigeben
     @Path("/complete")
     @PUT
-    public Response confirmTripBooking(@HeaderParam(LRA_HTTP_CONTEXT_HEADER) String lraId, @RequestBody final ConfirmTripBooking confirmTripBooking) {
-        logger.info("Completing LRA (ID: " + lraId + ") --> Confirming trip with ID: " + confirmTripBooking.getTripId());
-        travelService.confirmTripBooking(confirmTripBooking.getTripId(), confirmTripBooking.getHotelId(), confirmTripBooking.getFlightId());
+    public Response completeTripBookingSaga(@HeaderParam(LRA_HTTP_CONTEXT_HEADER) String lraId) {
+        logger.info("Completing LRA (ID: " + lraId + ")");
         return Response.ok(ParticipantStatus.Completed).build();
     }
 
@@ -151,19 +150,12 @@ public class TravelResource {
 //    }
 //
 //    @Complete // TODO anders --> hier nicht mehr aktiv machen lediglich resourcen freigeben
-//    @Path("trips/{tripId}/confirm")
-//    @PUT
-//    public Response confirmTripBooking(@HeaderParam(LRA_HTTP_CONTEXT_HEADER) String lraId, @PathParam(value = "tripId") final Long tripId, @RequestBody final ConfirmTripBooking confirmTripBooking) {
-//        logger.info("Completing LRA (ID: " + lraId + ") --> Confirming trip with ID: " + tripId);
-//        travelService.confirmTripBooking(tripId, confirmTripBooking.getHotelId(), confirmTripBooking.getFlightId());
-//        return Response.ok(ParticipantStatus.Completed).build();
-//    }
-
-    @LRA(value = LRA.Type.REQUIRES_NEW)
-    @POST
-    @Path("test")
-    public Response test(@HeaderParam(LRA_HTTP_CONTEXT_HEADER) String lraId, String test) throws TravelServiceException {
-        logger.info("String: " + test + "with LRA ID: " + lraId); // TODO save lraId somewhere=
-        return Response.ok(test).build(); //TODO
+    @LRA(value = LRA.Type.MANDATORY, end = true)
+    @Path("trips/{tripId}/confirm")
+    @PUT
+    public Response confirmTripBooking(@HeaderParam(LRA_HTTP_CONTEXT_HEADER) String lraId, @PathParam(value = "tripId") final Long tripId, @RequestBody final ConfirmTripBooking confirmTripBooking) {
+        logger.info("Confirming trip with ID: " + tripId + " for LRA (ID: " + lraId + ")");
+        travelService.confirmTripBooking(tripId, confirmTripBooking.getHotelId(), confirmTripBooking.getFlightId());
+        return Response.ok().build();
     }
 }

@@ -4,6 +4,7 @@
         <feature>jndi-1.0</feature>
         <feature>microProfile-4.0</feature>
         <feature>eventLogging-1.0</feature>
+        <feature>mpContextPropagation-1.2</feature>
 <!--        <feature>mpLRACoordinator-1.0</feature>-->
         <feature>mpLRA-1.0</feature>
     </featureManager>
@@ -15,6 +16,8 @@
              consoleFormat="${openLiberty.microprofile.logging.format}"
              consoleSource="${openLiberty.microprofile.logging.console.source}"/>
     <logging traceSpecification="eclipselink.sql=all"/>
+
+    <mpMetrics authentication="false"/> <!--TODO: keep?-->
 
     <httpEndpoint httpPort="${default.http.port}" httpsPort="${default.https.port}"
                   id="defaultHttpEndpoint" host="*"/>
@@ -30,6 +33,13 @@
 
     <!-- Default SSL configuration enables trust for default certificates from the Java runtime -->
     <ssl id="defaultSSLConfig" trustDefaultCerts="true" /> <!--TODO: wichtig?-->
+
+    <managedThreadFactory jndiName="concurrent/threadFactory2">
+        <contextService>
+            <classloaderContext/>
+            <jeeMetadataContext/>
+        </contextService>
+    </managedThreadFactory>
 
     <library id="mySQLLib">
         <fileset dir="jdbc"

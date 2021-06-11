@@ -1,5 +1,8 @@
 package saga.microprofile.hotelservice.exceptionHandler;
 
+import saga.microprofile.hotelservice.error.ErrorMessage;
+import saga.microprofile.hotelservice.error.ErrorType;
+
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -25,9 +28,11 @@ public class GenericExceptionMapper implements ExceptionMapper<Throwable> {
 		String stackTraceAppended = Arrays.stream(stacktrace).map(Object::toString).collect(Collectors.joining(",\n "));
 
 	    String message = String.format("StackTrace: %s \n Cause: %s \n message: %s, %s", stackTraceAppended, exception.getCause(), exception.getMessage(), exception.getLocalizedMessage());
+//		String message = "There has been a problem. Please check your input and try again.";
+	    ErrorMessage errorMessage = new ErrorMessage(ErrorType.INTERNAL_ERROR, message);
 		return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
 //				.entity("There has been a problem. Please check your input and try again.").build();
-				.entity(message).build();
+				.entity(errorMessage).build();
 	}
 
 }

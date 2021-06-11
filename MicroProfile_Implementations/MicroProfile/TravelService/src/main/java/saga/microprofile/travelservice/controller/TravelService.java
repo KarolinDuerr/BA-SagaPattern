@@ -23,7 +23,7 @@ public class TravelService implements ITravelService {
     private TripInformationRepository tripInformationRepository;
 
     @Inject
-    private BookTripSaga bookTripSaga;
+    private SagaFactory sagaFactory;
 
     @Override
     @Transactional
@@ -72,7 +72,7 @@ public class TravelService implements ITravelService {
 
         // create and start the BookTripSaga with necessary information
         BookTripSagaData bookTripSagaData = new BookTripSagaData(tripInformation.getId(), tripInformation);
-        bookTripSaga.startBookTripSaga(bookTripSagaData);
+        sagaFactory.startBookTripSaga(bookTripSagaData);
 
         return tripInformation;
     }
