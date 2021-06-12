@@ -40,12 +40,7 @@ dependencies {
 
     // Eclipse MicroProfile LRA
     implementation "org.eclipse.microprofile.lra:microprofile-lra-api:1.0-RC3"
-    libertyRuntime "io.openliberty.beta:openliberty-runtime:21.0.0.6-beta"
-
-    // test
-//    providedCompile group: 'javax.enterprise', name: 'cdi-api', version: '2.0'
-//    providedCompile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
-//    providedCompile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.1'
+    libertyRuntime "io.openliberty.beta:openliberty-runtime:21.0.0.7-beta"
 
     // MySQL
     compile "mysql:mysql-connector-java:$mySQLVersion"

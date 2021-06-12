@@ -4,6 +4,7 @@ import saga.microprofile.travelservice.error.UnsupportedStateTransition;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.net.URI;
 import java.util.Objects;
 
 @Entity
@@ -11,11 +12,12 @@ import java.util.Objects;
 @Access(AccessType.FIELD)
 @NamedQuery(name = "TripInformation.findAll", query = "SELECT trips FROM TripInformation trips")
 @NamedQuery(name = "TripInformation.findTripByName", query = "SELECT trips FROM TripInformation trips WHERE " +
-        "trips" +
-        ".travellerName = :travellerName")
+        "trips.travellerName = :travellerName")
+@NamedQuery(name = "TripInformation.findByLraId", query = "SELECT trips FROM TripInformation trips WHERE " +
+        "trips.lraId = :lraId")
 public class TripInformation implements Serializable {
 
-//    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -61,10 +63,10 @@ public class TripInformation implements Serializable {
 
     }
 
-    public TripInformation(final String lraId, final TripDuration duration, final Location start,
+    public TripInformation(final URI lraId, final TripDuration duration, final Location start,
                            final Location destination, final String travellerName, final String boardType,
                            final long customerId) {
-        this.lraId = lraId;
+        this.lraId = lraId.toString();
         this.duration = duration;
         this.start = start;
         this.destination = destination;
@@ -86,7 +88,7 @@ public class TripInformation implements Serializable {
         return version;
     }
 
-    public void setVersion(Long version) {
+    public void setVersion(final Long version) {
         this.version = version;
     }
 
@@ -94,8 +96,8 @@ public class TripInformation implements Serializable {
         return lraId;
     }
 
-    public void setLraId(String lraId) {
-        this.lraId = lraId;
+    public void setLraId(final URI lraId) {
+        this.lraId = lraId.toString();
     }
 
     public TripDuration getDuration() {
@@ -211,11 +213,12 @@ public class TripInformation implements Serializable {
         return "TripInformation{" +
                 "id=" + id +
                 ", version=" + version +
+                ", lraId='" + lraId + '\'' +
                 ", duration=" + duration +
-                ", destination=" + destination +
                 ", start=" + start +
-                ", travellerName=" + travellerName +
-                ", boardType=" + boardType +
+                ", destination=" + destination +
+                ", travellerName='" + travellerName + '\'' +
+                ", boardType='" + boardType + '\'' +
                 ", customerId=" + customerId +
                 ", bookingStatus=" + bookingStatus +
                 ", hotelId=" + hotelId +

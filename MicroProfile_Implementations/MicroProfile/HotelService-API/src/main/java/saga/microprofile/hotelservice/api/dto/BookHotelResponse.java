@@ -10,6 +10,7 @@ public class BookHotelResponse {
 
     private String bookingStatus;
 
+    // default constructor necessary for unmarshalling
     public BookHotelResponse() {
 
     }

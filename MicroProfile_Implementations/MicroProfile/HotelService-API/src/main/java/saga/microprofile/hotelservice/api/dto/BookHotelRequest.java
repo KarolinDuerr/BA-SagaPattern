@@ -16,6 +16,7 @@ public class BookHotelRequest {
 
     private String travellerName;
 
+    // default constructor necessary for unmarshalling
     public BookHotelRequest() {
         this.tripId = -1; // no trip assigned to this booking
     }

@@ -8,6 +8,7 @@ public class DestinationDTO {
 
     private String city;
 
+    // default constructor necessary for unmarshalling
     public DestinationDTO() {
 
     }

@@ -14,6 +14,7 @@ import saga.microprofile.hotelservice.model.dto.HotelBookingDTO;
 import saga.microprofile.hotelservice.model.dto.HotelBookingInformationDTO;
 
 import javax.enterprise.context.ApplicationScoped;
+import java.net.URI;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -23,12 +24,12 @@ import java.util.List;
 @ApplicationScoped
 public class DtoConverter {
 
-    public HotelBookingInformation convertToHotelBookingInformation(final BookHotelRequest bookHotelRequest) throws HotelServiceException {
+    public HotelBookingInformation convertToHotelBookingInformation(final URI lraId, final BookHotelRequest bookHotelRequest) throws HotelServiceException {
         if (bookHotelRequest == null) {
             throw new ConverterException("The information to book a hotel is missing.");
         }
 
-        return new HotelBookingInformation(bookHotelRequest.getTripId(),
+        return new HotelBookingInformation(bookHotelRequest.getTripId(), lraId,
                 convertToDestination(bookHotelRequest.getDestination()),
                 convertToStayDuration(bookHotelRequest.getDuration()), bookHotelRequest.getBoardType());
     }

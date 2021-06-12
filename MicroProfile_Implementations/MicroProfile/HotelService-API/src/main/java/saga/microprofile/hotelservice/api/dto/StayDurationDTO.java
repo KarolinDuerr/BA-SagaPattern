@@ -15,6 +15,7 @@ public class StayDurationDTO {
     @JsonbDateFormat(value = "yyyy-MM-dd")
     private LocalDate departure;
 
+    // default constructor necessary for unmarshalling
     public StayDurationDTO() {
 
     }

@@ -38,7 +38,7 @@ dependencies {
 
     // Eclipse MicroProfile LRA
     implementation "org.eclipse.microprofile.lra:microprofile-lra-api:1.0-RC3"
-    libertyRuntime "io.openliberty.beta:openliberty-runtime:21.0.0.6-beta"
+    libertyRuntime "io.openliberty.beta:openliberty-runtime:21.0.0.7-beta"
 
     // MySQL
     compile "mysql:mysql-connector-java:$mySQLVersion"

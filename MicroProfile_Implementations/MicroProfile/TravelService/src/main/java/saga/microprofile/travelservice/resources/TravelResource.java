@@ -5,31 +5,28 @@ import org.eclipse.microprofile.lra.annotation.Complete;
 import org.eclipse.microprofile.lra.annotation.ParticipantStatus;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
+
 import static org.eclipse.microprofile.lra.annotation.ws.rs.LRA.LRA_HTTP_CONTEXT_HEADER;
 
 import saga.microprofile.travelservice.api.dto.BookTripRequest;
 import saga.microprofile.travelservice.api.dto.BookTripResponse;
 import saga.microprofile.travelservice.api.dto.ConfirmTripBooking;
-import saga.microprofile.travelservice.api.dto.RejectTripRequest;
 import saga.microprofile.travelservice.controller.ITravelService;
 import saga.microprofile.travelservice.controller.TravelServiceImpl;
 import saga.microprofile.travelservice.error.TravelServiceException;
 import saga.microprofile.travelservice.model.TripInformation;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.net.URI;
 import java.util.List;
 import java.util.logging.Logger;
 
-//@RequestScoped
 @ApplicationScoped
 @Path("api/travel")
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
 public class TravelResource {
 
     private static final Logger logger = Logger.getLogger(TravelResource.class.toString());
@@ -43,6 +40,7 @@ public class TravelResource {
 
     @GET
     @Path("/trips")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getTrips() throws TravelServiceException {
         logger.info("Get trips.");
 
@@ -59,6 +57,7 @@ public class TravelResource {
 
     @GET
     @Path("trips/{tripId}")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getTrip(@PathParam(value = "tripId") final Long tripId) throws TravelServiceException {
         logger.info("Get trip with ID: " + tripId);
 
@@ -73,35 +72,15 @@ public class TravelResource {
         return Response.ok(dtoConverter.convertToTripInformationDTO(tripInformation)).build();
     }
 
-//    @LRA(value = LRA.Type.REQUIRES_NEW)
-//    @POST
-//    public Response bookTrip(@HeaderParam(LRA_HTTP_CONTEXT_HEADER) String lraId, @RequestBody final BookTripRequest bookTripRequest) throws TravelServiceException {
-//        logger.info("Book trip: " + bookTripRequest + "with LRA ID: " + lraId); // TODO save lraId somewhere=
-//
-//        if (bookTripRequest == null) {
-//            logger.info("BookTripRequest is missing, therefore no trip can be booked.");
-//            throw new WebApplicationException("The information to book the trip is missing.",
-//                    Response.Status.BAD_REQUEST);
-//        }
-//
-//        TripInformation tripInformation =
-//                travelService.bookTrip(dtoConverter.convertToTripInformation(bookTripRequest));
-//
-//        if (tripInformation == null) {
-//            logger.info("Something went wrong during booking.");
-//            throw new WebApplicationException("Something went wrong during booking.", Response.Status.INTERNAL_SERVER_ERROR);
-//        }
-//
-////        return Response.created(UriBuilder.fromResource(this.getClass()).path(Long.toString(tripInformation.getId())).build()).build();
-//        return Response.ok(new BookTripResponse(tripInformation.getId(),
-//                tripInformation.getBookingStatus().toString())).build(); //TODO
-//    }
-
+    //    @LRA(value = LRA.Type.REQUIRES_NEW, end = false) // TODO
     @LRA(value = LRA.Type.REQUIRES_NEW)
     @POST
     @Path("/book")
-    public Response bookTrip(@HeaderParam(LRA_HTTP_CONTEXT_HEADER) String lraId, @RequestBody final BookTripRequest bookTripRequest) throws TravelServiceException {
-        logger.info("Book trip: " + bookTripRequest + "with LRA ID: " + lraId); // TODO save lraId somewhere
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response bookTrip(@HeaderParam(LRA_HTTP_CONTEXT_HEADER) URI lraId,
+                             @RequestBody final BookTripRequest bookTripRequest) throws TravelServiceException {
+        logger.info("Book trip: " + bookTripRequest + "with LRA ID: " + lraId);
 
         if (bookTripRequest == null) {
             logger.info("BookTripRequest is missing, therefore no trip can be booked.");
@@ -114,48 +93,42 @@ public class TravelResource {
 
         if (tripInformation == null) {
             logger.info("Something went wrong during booking.");
-            throw new WebApplicationException("Something went wrong during booking.", Response.Status.INTERNAL_SERVER_ERROR);
+            throw new WebApplicationException("Something went wrong during booking.",
+                    Response.Status.INTERNAL_SERVER_ERROR);
         }
 
-      return Response.ok(new BookTripResponse(tripInformation.getId(),
+        return Response.ok(new BookTripResponse(tripInformation.getId(),
                 tripInformation.getBookingStatus().toString())).build();
+    }
+
+    //    @LRA(value = LRA.Type.MANDATORY, end = true) // TODO
+    @LRA(value = LRA.Type.MANDATORY, end = false)
+    @Path("trips/{tripId}/confirm")
+    @PUT
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response confirmTripBooking(@HeaderParam(LRA_HTTP_CONTEXT_HEADER) URI lraId,
+                                       @PathParam(value = "tripId") final Long tripId,
+                                       @RequestBody final ConfirmTripBooking confirmTripBooking) {
+        logger.info("Confirming trip with ID: " + tripId + " for LRA (ID: " + lraId + ")");
+        travelService.confirmTripBooking(tripId, confirmTripBooking.getHotelId(), confirmTripBooking.getFlightId());
+        return Response.ok().build();
     }
 
     @Compensate
     @Path("/compensate")
     @PUT
-//    public Response rejectTripBooking(@HeaderParam(LRA_HTTP_CONTEXT_HEADER) String lraId, @PathParam(value = "tripId") final Long tripId, @RequestBody final RejectTripRequest rejectTripRequest) {
-    public Response rejectTripBooking(@HeaderParam(LRA_HTTP_CONTEXT_HEADER) String lraId) {
-//        logger.info("Compensate LRA (ID: " + lraId + ") --> Rejecting trip with ID: " + tripId);
-        logger.info("Compensate LRA (ID: " + lraId + ")");
-//        travelService.rejectTrip(tripId, rejectTripRequest.getRejectionReason());
+    public Response rejectTripBooking(@HeaderParam(LRA_HTTP_CONTEXT_HEADER) URI lraId) {
+        logger.info("Compensate LRA (ID: " + lraId + ") --> Reject trip with related ID.");
+        travelService.rejectTrip(lraId);
         return Response.ok(ParticipantStatus.Compensated.name()).build();
     }
 
-    @Complete // TODO anders --> hier nicht mehr aktiv machen lediglich resourcen freigeben
+    @Complete
     @Path("/complete")
     @PUT
-    public Response completeTripBookingSaga(@HeaderParam(LRA_HTTP_CONTEXT_HEADER) String lraId) {
+    public Response completeTripBookingSaga(@HeaderParam(LRA_HTTP_CONTEXT_HEADER) URI lraId) {
         logger.info("Completing LRA (ID: " + lraId + ")");
         return Response.ok(ParticipantStatus.Completed).build();
-    }
-
-//    @Compensate
-//    @Path("trips/{tripId}/reject")
-//    @PUT
-//    public Response rejectTripBooking(@HeaderParam(LRA_HTTP_CONTEXT_HEADER) String lraId, @PathParam(value = "tripId") final Long tripId, @RequestBody final RejectTripRequest rejectTripRequest) {
-//        logger.info("Compensate LRA (ID: " + lraId + ") --> Rejecting trip with ID: " + tripId);
-//        travelService.rejectTrip(tripId, rejectTripRequest.getRejectionReason());
-//        return Response.ok(ParticipantStatus.Compensated.name()).build();
-//    }
-//
-//    @Complete // TODO anders --> hier nicht mehr aktiv machen lediglich resourcen freigeben
-    @LRA(value = LRA.Type.MANDATORY, end = true)
-    @Path("trips/{tripId}/confirm")
-    @PUT
-    public Response confirmTripBooking(@HeaderParam(LRA_HTTP_CONTEXT_HEADER) String lraId, @PathParam(value = "tripId") final Long tripId, @RequestBody final ConfirmTripBooking confirmTripBooking) {
-        logger.info("Confirming trip with ID: " + tripId + " for LRA (ID: " + lraId + ")");
-        travelService.confirmTripBooking(tripId, confirmTripBooking.getHotelId(), confirmTripBooking.getFlightId());
-        return Response.ok().build();
     }
 }

@@ -6,8 +6,8 @@ public class ConfirmHotelBooking {
 
     private long bookingId;
 
-    // default constructor necessary for Eventuate Framework
-    private ConfirmHotelBooking() {
+    // default constructor necessary for unmarshalling
+    public ConfirmHotelBooking() {
         tripId = -1;
         bookingId = -1;
     }

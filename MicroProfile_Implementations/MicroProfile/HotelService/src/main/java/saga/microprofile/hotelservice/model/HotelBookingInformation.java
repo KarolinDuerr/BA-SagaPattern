@@ -2,6 +2,7 @@ package saga.microprofile.hotelservice.model;
 
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
+import java.net.URI;
 import java.util.Objects;
 
 @Embeddable
@@ -17,24 +18,37 @@ public class HotelBookingInformation {
 
     private final long tripId;
 
+    private String lraId;
+
     private HotelBookingInformation() {
         tripId = -1; // no trip assigned to this booking
+        lraId = ""; // no LRA assigned to this booking
     }
 
     public HotelBookingInformation(final Destination destination, final StayDuration duration,
                                    final String boardType) {
-        tripId = -1; // no trip assigned to this booking
+        this.tripId = -1; // no trip assigned to this booking
+        this.lraId = "";
         this.destination = destination;
         this.duration = duration;
         this.boardType = boardType;
     }
 
-    public HotelBookingInformation(final long tripId, final Destination destination, final StayDuration duration,
+    public HotelBookingInformation(final long tripId, final URI lraId, final Destination destination, final StayDuration duration,
                                    final String boardType) {
         this.tripId = tripId;
+        this.lraId = lraId.toString();
         this.destination = destination;
         this.duration = duration;
         this.boardType = boardType;
+    }
+
+    public String getLraId() {
+        return lraId;
+    }
+
+    public void setLraId(String lraId) {
+        this.lraId = lraId;
     }
 
     public void setDestination(final Destination destination) {
@@ -72,6 +86,7 @@ public class HotelBookingInformation {
                 ", duration=" + duration +
                 ", boardType='" + boardType + '\'' +
                 ", tripId=" + tripId +
+                ", lraId='" + lraId + '\'' +
                 '}';
     }
 

@@ -2,22 +2,39 @@
     <featureManager>
         <feature>jpa-2.2</feature>
         <feature>jndi-1.0</feature>
-        <feature>microProfile-4.0</feature>
+        <!--        <feature>microProfile-4.0</feature>-->
+        <!--TODO check needed features MicroProfile does not work with LRAs -->
+        <feature>cdi-2.0</feature>
+        <feature>jaxrs-2.1</feature>
+        <feature>jaxrsClient-2.1</feature>
+        <feature>jsonb-1.0</feature>
+        <feature>jsonp-1.1</feature>
+        <feature>mpConfig-2.0</feature>
+        <feature>mpFaultTolerance-3.0</feature>
+        <feature>mpHealth-3.0</feature>
+        <feature>mpJwt-1.2</feature>
+        <feature>mpOpenAPI-2.0</feature>
+        <feature>mpOpenTracing-2.0</feature>
+        <feature>mpRestClient-2.0</feature>
+        <feature>servlet-4.0</feature>
+
+        <!--        <feature>microProfile-4.0</feature>-->
         <feature>eventLogging-1.0</feature>
         <feature>mpContextPropagation-1.2</feature>
-<!--        <feature>mpLRACoordinator-1.0</feature>-->
+        <!--        <feature>mpLRACoordinator-1.0</feature>-->
         <feature>mpLRA-1.0</feature>
     </featureManager>
 
-    <variable name="default.http.port" defaultValue="8090"/>
-    <variable name="default.https.port" defaultValue="9443"/>
+    <variable name="default.http.port" defaultValue="8090"/> <!--TODO keep? -->
+    <variable name="default.https.port" defaultValue="9443"/> <!--TODO keep? -->
 
+    <!-- Configure Logging -->
     <logging consoleLogLevel="${openLiberty.microprofile.logging.level}"
              consoleFormat="${openLiberty.microprofile.logging.format}"
              consoleSource="${openLiberty.microprofile.logging.console.source}"/>
     <logging traceSpecification="eclipselink.sql=all"/>
 
-    <mpMetrics authentication="false"/> <!--TODO: keep?-->
+    <!--    <mpMetrics authentication="false"/> &lt;!&ndash;TODO: keep?&ndash;&gt;-->
 
     <httpEndpoint httpPort="${default.http.port}" httpsPort="${default.https.port}"
                   id="defaultHttpEndpoint" host="*"/>
@@ -29,11 +46,13 @@
                     location="TravelService-1.0-SNAPSHOT.war" contextRoot="/">
     </webApplication>
 
-    <lra port="${lra.coordinator.port}" host="${lra.coordinator.host}" path="${lra.coordinator.path}" />
+    <!-- Connect to LRA Coordinator -->
+    <lra port="${lra.coordinator.port}" host="${lra.coordinator.host}" path="${lra.coordinator.path}"/>
 
     <!-- Default SSL configuration enables trust for default certificates from the Java runtime -->
-    <ssl id="defaultSSLConfig" trustDefaultCerts="true" /> <!--TODO: wichtig?-->
+    <ssl id="defaultSSLConfig" trustDefaultCerts="true"/>
 
+    <!-- Enable Concurrency -->
     <managedThreadFactory jndiName="concurrent/threadFactory2">
         <contextService>
             <classloaderContext/>
@@ -41,6 +60,7 @@
         </contextService>
     </managedThreadFactory>
 
+    <!-- Datasource Connector Location -->
     <library id="mySQLLib">
         <fileset dir="jdbc"
                  includes="mysql-connector-java-*.jar"/>

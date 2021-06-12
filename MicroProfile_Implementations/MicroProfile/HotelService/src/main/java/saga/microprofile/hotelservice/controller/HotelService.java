@@ -9,6 +9,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import java.net.URI;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -34,7 +35,7 @@ public class HotelService implements IHotelService {
 //    }
 
     @Override
-    @Transactional
+//    @Transactional
     public List<HotelBooking> getHotelBookings() {
         logger.info("Get hotel bookings from Repository.");
 
@@ -50,7 +51,7 @@ public class HotelService implements IHotelService {
     }
 
     @Override
-    @Transactional
+//    @Transactional
     public HotelBooking getHotelBooking(final Long bookingId) throws HotelException {
         logger.info(String.format("Get hotel booking (ID: %d) from Repository.", bookingId));
 
@@ -66,7 +67,7 @@ public class HotelService implements IHotelService {
     }
 
     @Override
-    @Transactional
+//    @Transactional
     public HotelBooking bookHotel(final String travellerName, final HotelBookingInformation hotelBooking) throws HotelException {
         logger.info("Saving the booked Hotel: " + hotelBooking);
 
@@ -89,26 +90,26 @@ public class HotelService implements IHotelService {
     }
 
     @Override
-    @Transactional
-    public void cancelHotelBooking(final Long bookingId, final Long tripId) {
-        logger.info("Cancelling the booked hotel associated with trip ID " + tripId);
+//    @Transactional
+    public void cancelHotelBooking(final URI lraId) {
+        logger.info("Cancelling the booked hotel associated with LRA ID " + lraId);
 
         try {
-            HotelBooking hotelBooking = getHotelBooking(bookingId);
+            HotelBooking hotelBooking = findBookingByLraId(lraId);
 
-            if (hotelBooking.getBookingInformation() == null || hotelBooking.getBookingInformation().getTripId() != tripId) {
-                throw new BookingNotFound(bookingId);
+            if (hotelBooking.getBookingInformation() == null) {
+                throw new BookingNotFound(lraId);
             }
 
             hotelBooking.cancel(BookingStatus.CANCELLED);
-            hotelBookingRepository.save(hotelBooking);
+            hotelBookingRepository.update(hotelBooking);
         } catch (HotelException e) {
-            throw new BookingNotFound(bookingId);
+            throw new BookingNotFound(lraId);
         }
     }
 
     @Override
-    @Transactional
+//    @Transactional
     public void confirmHotelBooking(final Long bookingId, final Long tripId) {
         logger.info("Confirming the booked hotel with ID " + bookingId);
 
@@ -120,31 +121,9 @@ public class HotelService implements IHotelService {
             }
 
             hotelBooking.confirm();
-            hotelBookingRepository.save(hotelBooking);
+            hotelBookingRepository.update(hotelBooking);
         } catch (HotelException e) {
             throw new BookingNotFound(bookingId);
-        }
-    }
-
-    // TODO
-//    @PostConstruct
-    // to provide information which can be shown as no customers can be registered in the example application
-    private void provideExampleEntries() {
-        try {
-            Destination destination = new Destination("USA", "New York");
-            Date arrival = new SimpleDateFormat("dd-MM-yyyy").parse("31-08-2021");
-            Date departure = new SimpleDateFormat("dd-MM-yyyy").parse("10-09-2021");
-            StayDuration stayDuration = new StayDuration(arrival, departure);
-            HotelBookingInformation hotelBookingInformation = new HotelBookingInformation(destination, stayDuration,
-                    "breakfast");
-            HotelBooking hotelBooking = new HotelBooking("Hotel Royal", "Test User", hotelBookingInformation);
-
-            hotelBookingRepository.save(hotelBooking);
-        } catch (ParseException parseException) {
-            logger.warning("Couldn't parse date object for example hotel booking entry --> no entry saved in database");
-        } catch (HotelException hotelException) {
-            logger.warning("Couldn't create object for example hotel booking entry --> no entry saved in database");
-            logger.warning("Exception: " + hotelException.getMessage());
         }
     }
 
@@ -172,6 +151,21 @@ public class HotelService implements IHotelService {
         }
 
         logger.info("Hotel has already been booked: " + savedHotelBooking.toString());
+        return savedHotelBooking.get();
+    }
+
+    // enable compensation of bookings related with a LRA
+    private HotelBooking findBookingByLraId(final URI lraId) throws HotelException {
+        List<HotelBooking> customerHotelBookings =
+                hotelBookingRepository.findByLraId(lraId.toString());
+
+        Optional<HotelBooking> savedHotelBooking = customerHotelBookings.stream().findFirst(); // TODO check
+
+        if (!savedHotelBooking.isPresent()) {
+            throw new HotelException(ErrorType.NON_EXISTING_ITEM, "Related trip could not be found");
+        }
+
+        logger.info("Related hotel booking has been found: " + savedHotelBooking);
         return savedHotelBooking.get();
     }
 }

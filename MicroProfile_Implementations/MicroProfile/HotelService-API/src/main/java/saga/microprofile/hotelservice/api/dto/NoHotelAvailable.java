@@ -6,7 +6,7 @@ public class NoHotelAvailable implements Serializable {
 
     private long tripId;
 
-    // default constructor necessary
+    // default constructor necessary for unmarshalling
     public NoHotelAvailable() {
         tripId = -1;
     }

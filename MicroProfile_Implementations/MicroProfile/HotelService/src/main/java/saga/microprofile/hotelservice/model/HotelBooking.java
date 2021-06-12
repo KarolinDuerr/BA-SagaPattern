@@ -12,6 +12,8 @@ import java.util.Objects;
 @NamedQuery(name = "HotelBooking.findAll", query = "SELECT hotelBookings FROM HotelBooking hotelBookings")
 @NamedQuery(name = "HotelBooking.findHotelByName", query = "SELECT hotelBookings FROM HotelBooking hotelBookings " +
         "WHERE hotelBookings.travellerName = :travellerName")
+@NamedQuery(name = "HotelBooking.findByLraId", query = "SELECT hotelBookings FROM HotelBooking hotelBookings " +
+        "WHERE hotelBookings.bookingInformation.lraId = :lraId")
 public class HotelBooking implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -52,6 +54,14 @@ public class HotelBooking implements Serializable {
 
     public void setId(final Long id) {
         this.id = id;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(final Long version) {
+        this.version = version;
     }
 
     public String getHotelName() {

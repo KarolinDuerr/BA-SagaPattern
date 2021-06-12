@@ -6,7 +6,7 @@ public class RejectTripRequest {
 
     private RejectionReason rejectionReason;
 
-    private RejectTripRequest() {
+    public RejectTripRequest() {
         tripId = -1;
         rejectionReason = RejectionReason.REASON_UNKNOWN;
     }

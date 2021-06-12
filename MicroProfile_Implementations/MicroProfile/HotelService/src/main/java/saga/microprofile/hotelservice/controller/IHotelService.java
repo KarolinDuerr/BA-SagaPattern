@@ -5,22 +5,23 @@ import saga.microprofile.hotelservice.model.HotelBooking;
 import saga.microprofile.hotelservice.model.HotelBookingInformation;
 
 import javax.transaction.Transactional;
+import java.net.URI;
 import java.util.List;
 
 public interface IHotelService {
 
-    @Transactional
+//    @Transactional
     List<HotelBooking> getHotelBookings();
 
-    @Transactional
+//    @Transactional
     HotelBooking getHotelBooking(final Long bookingId) throws HotelException;
 
-    @Transactional
+//    @Transactional
     HotelBooking bookHotel(final String travellerName, final HotelBookingInformation hotelBooking) throws HotelException;
 
-    @Transactional
-    void cancelHotelBooking(final Long bookingId, final Long tripId);
+//    @Transactional
+    void cancelHotelBooking(final URI lraId);
 
-    @Transactional
+//    @Transactional
     void confirmHotelBooking(final Long bookingId, final Long tripId);
 }

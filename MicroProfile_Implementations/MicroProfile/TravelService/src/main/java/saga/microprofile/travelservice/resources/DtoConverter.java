@@ -12,13 +12,14 @@ import saga.microprofile.travelservice.model.TripInformation;
 import saga.microprofile.travelservice.model.dto.TripInformationDTO;
 
 import javax.enterprise.context.ApplicationScoped;
+import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
 
 @ApplicationScoped
 public class DtoConverter {
 
-    public TripInformation convertToTripInformation(final String lraId, final BookTripRequest bookTripRequest) throws ConverterException,
+    public TripInformation convertToTripInformation(final URI lraId, final BookTripRequest bookTripRequest) throws ConverterException,
             TravelException {
         if (bookTripRequest == null) {
             throw new ConverterException("The information to book a trip is missing.");
@@ -66,8 +67,6 @@ public class DtoConverter {
             throw new ConverterException("The duration of the trip is missing.");
         }
 
-//        LocalDate start = LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(tripDurationDTO.getStart()));
-//        LocalDate end = LocalDate.from(DateTimeFormatter.ISO_LOCAL_DATE.parse(tripDurationDTO.getEnd()));
         return new TripDuration(tripDurationDTO.getStart(), tripDurationDTO.getEnd());
     }
 

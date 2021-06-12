@@ -8,7 +8,7 @@ public class ConfirmTripBooking {
 
     private long flightId;
 
-    private ConfirmTripBooking() {
+    public ConfirmTripBooking() {
         tripId = -1;
         hotelId = -1;
         flightId = -1;

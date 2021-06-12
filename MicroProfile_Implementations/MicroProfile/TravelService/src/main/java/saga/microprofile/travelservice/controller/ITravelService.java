@@ -5,22 +5,23 @@ import saga.microprofile.travelservice.api.dto.RejectionReason;
 import saga.microprofile.travelservice.model.TripInformation;
 
 import javax.transaction.Transactional;
+import java.net.URI;
 import java.util.List;
 
 public interface ITravelService {
 
-    @Transactional
+//    @Transactional
     List<TripInformation> getTripsInformation();
 
-    @Transactional
+//    @Transactional
     TripInformation getTripInformation(final Long tripId) throws TravelException;
 
-    @Transactional
+//    @Transactional
     TripInformation bookTrip(final TripInformation tripInformation);
 
-    @Transactional
-    void rejectTrip(final Long tripId, final RejectionReason rejectionReason);
+//    @Transactional
+    void rejectTrip(final URI lraId);
 
-    @Transactional
+//    @Transactional
     void confirmTripBooking(final Long tripId, final long hotelId, final long flightId);
 }

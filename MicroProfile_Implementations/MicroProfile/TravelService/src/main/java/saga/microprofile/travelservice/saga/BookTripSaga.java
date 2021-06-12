@@ -6,11 +6,11 @@ import saga.microprofile.hotelservice.api.dto.NoHotelAvailable;
 import saga.microprofile.travelservice.api.dto.ConfirmTripBooking;
 import saga.microprofile.travelservice.error.ErrorMessage;
 
+import javax.annotation.PreDestroy;
 import javax.json.JsonObject;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.json.bind.JsonbException;
-import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -19,7 +19,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.logging.Logger;
 
-public class BookTripSaga implements Runnable {
+import static org.eclipse.microprofile.lra.annotation.ws.rs.LRA.LRA_HTTP_CONTEXT_HEADER;
+
+public class BookTripSaga implements Runnable { // TODO
 
     private static final Logger logger = Logger.getLogger(BookTripSaga.class.toString());
 
@@ -40,6 +42,7 @@ public class BookTripSaga implements Runnable {
     public BookTripSaga(final BookTripSagaData bookTripSagaData, final String flightServiceUri,
                         final String hotelServiceUri, final String travelServiceUri) {
         this.bookTripSagaData = bookTripSagaData;
+
         this.hotelServiceClient = ClientBuilder.newClient();
         this.flightServiceClient = ClientBuilder.newClient();
         this.travelServiceClient = ClientBuilder.newClient();
@@ -54,26 +57,46 @@ public class BookTripSaga implements Runnable {
         logger.info("Started BookTripSaga Thread.");
 
         bookHotel();
+        confirmHotelBooking();
         confirmTripBooking();
     }
 
     private void bookHotel() {
         logger.info("Trying to book hotel.");
-        WebTarget hotelServiceTarget = hotelServiceClient.target(hotelServiceBaseUri);;
+        WebTarget hotelServiceTarget = hotelServiceClient.target(hotelServiceBaseUri);
         BookHotelRequest bookHotelRequest = bookTripSagaData.makeBookHotelRequest();
         Response hotelResponse = hotelServiceTarget.request().post(Entity.entity(bookHotelRequest,
-                MediaType.APPLICATION_JSON_TYPE));
+                MediaType.APPLICATION_JSON));
         handleHotelBookingResponse(hotelResponse, bookTripSagaData);
     }
 
     private void confirmTripBooking() {
         logger.info("Trying to confirm the trip.");
-        String travelConfirmUri = String.format("%s/trips/%s/confirm", travelServiceBaseUri, bookTripSagaData.getTripId());
+        String travelConfirmUri = String.format("%s/trips/%s/confirm", travelServiceBaseUri,
+                bookTripSagaData.getTripId());
         WebTarget travelServiceTarget = travelServiceClient.target(travelConfirmUri);
         ConfirmTripBooking confirmTripBooking = new ConfirmTripBooking(bookTripSagaData.getTripId(),
                 bookTripSagaData.getHotelId(), bookTripSagaData.getFlightId());
         Response confirmTripResponse = travelServiceTarget.request().put(Entity.entity(confirmTripBooking,
                 MediaType.APPLICATION_JSON_TYPE));
+//        Response confirmTripResponse = travelServiceTarget.request().header(LRA_HTTP_CONTEXT_HEADER,
+//                bookTripSagaData.getTripInformation().getLraId()).put(Entity.entity(confirmTripBooking,
+//                MediaType.APPLICATION_JSON));
+        logger.info("Received from TravelService: " + confirmTripResponse.getStatus());
+    }
+
+    private void confirmHotelBooking() {
+        logger.info("Trying to confirm the hotel.");
+        String travelConfirmUri = String.format("%s/trips/%s/confirm", hotelServiceBaseUri,
+                bookTripSagaData.getTripId());
+        WebTarget travelServiceTarget = travelServiceClient.target(travelConfirmUri);
+        ConfirmTripBooking confirmTripBooking = new ConfirmTripBooking(bookTripSagaData.getTripId(),
+                bookTripSagaData.getHotelId(), bookTripSagaData.getFlightId());
+        Response confirmTripResponse = travelServiceTarget.request().put(Entity.entity(confirmTripBooking,
+                MediaType.APPLICATION_JSON_TYPE));
+//        Response confirmTripResponse = travelServiceTarget.request().header(LRA_HTTP_CONTEXT_HEADER,
+//                bookTripSagaData.getTripInformation().getLraId()).put(Entity.entity(confirmTripBooking,
+//                MediaType.APPLICATION_JSON));
         logger.info("Received from TravelService: " + confirmTripResponse.getStatus());
     }
 
@@ -88,7 +111,8 @@ public class BookTripSaga implements Runnable {
             Jsonb jsonb = JsonbBuilder.create();
             try {
                 logger.info(hotelResponseFailure.toString());
-                NoHotelAvailable noHotelAvailable = jsonb.fromJson(hotelResponseFailure.toString(), NoHotelAvailable.class);
+                NoHotelAvailable noHotelAvailable = jsonb.fromJson(hotelResponseFailure.toString(),
+                        NoHotelAvailable.class);
                 logger.info("Received response NoHotelAvailable: " + noHotelAvailable);
             } catch (JsonbException ignore) {
                 try {
@@ -98,19 +122,16 @@ public class BookTripSaga implements Runnable {
                     logger.warning("Hotel answer could not be processed: " + jsonbException.toString());
                 }
             }
-//            try {
-//                NoHotelAvailable noHotelAvailableResponse = hotelResponse.readEntity(NoHotelAvailable.class);
-//                logger.info("No Hotel available: " + noHotelAvailableResponse.toString());
-//                bookTripSagaData.setRejectionReason(RejectionReason.NO_HOTEL_AVAILABLE);
-//            } catch (ProcessingException processingException) {
-//                ErrorMessage errorMessage = hotelResponse.readEntity(ErrorMessage.class);
-//                logger.warning("Error message received from HotelService: " + errorMessage.toString());
-//            }
-//            Object test = hotelResponse.readEntity(Object.class);
-//            logger.info("Test: " + test.toString());
-//            logger.info("Test class instance: " + (test instanceof NoHotelAvailable));
         } else {
             logger.warning("Something went wrong when receiving hotel answer: " + hotelResponse.getStatusInfo().getStatusCode());
         }
+    }
+
+    @PreDestroy
+    public void cleanUp() {
+        logger.info("Clean-up: Closing the clients.");
+        hotelServiceClient.close();
+        flightServiceClient.close();
+        travelServiceClient.close();
     }
 }

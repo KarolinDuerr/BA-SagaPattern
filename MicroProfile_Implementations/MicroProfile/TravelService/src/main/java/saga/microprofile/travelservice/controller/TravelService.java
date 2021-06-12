@@ -7,7 +7,7 @@ import saga.microprofile.travelservice.saga.*;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.transaction.Transactional;
+import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -26,7 +26,7 @@ public class TravelService implements ITravelService {
     private SagaFactory sagaFactory;
 
     @Override
-    @Transactional
+//    @Transactional
     public List<TripInformation> getTripsInformation() {
         logger.info("Get trip bookings from Repository.");
 
@@ -42,7 +42,7 @@ public class TravelService implements ITravelService {
     }
 
     @Override
-    @Transactional
+//    @Transactional
     public TripInformation getTripInformation(final Long tripId) throws TravelException {
         logger.info(String.format("Get trip booking (ID: %d) from Repository.", tripId));
 
@@ -58,7 +58,7 @@ public class TravelService implements ITravelService {
     }
 
     @Override
-    @Transactional
+//    @Transactional
     public TripInformation bookTrip(final TripInformation tripInformation) {
         logger.info("Saving the booked Trip: " + tripInformation);
 
@@ -78,23 +78,23 @@ public class TravelService implements ITravelService {
     }
 
     @Override
-    @Transactional
-    public void rejectTrip(final Long tripId, final RejectionReason rejectionReason) {
-        logger.info("Rejecting the booked trip with ID " + tripId);
+//    @Transactional
+    public void rejectTrip(final URI lraId) {
+        logger.info("Rejecting the booked trip associated with LRA ID " + lraId);
 
         try {
-            TripInformation tripInformation = getTripInformation(tripId);
+            TripInformation tripInformation = findBookingByLraId(lraId);
 
-            BookingStatus newBookingStatus = convertToBookingStatus(rejectionReason);
+            BookingStatus newBookingStatus = convertToBookingStatus(RejectionReason.REASON_UNKNOWN); // TODO
             tripInformation.reject(newBookingStatus);
             tripInformationRepository.update(tripInformation);
         } catch (TravelException exception) {
-            throw new BookingNotFound(tripId);
+            throw new BookingNotFound(lraId);
         }
     }
 
     @Override
-    @Transactional
+//    @Transactional
     public void confirmTripBooking(final Long tripId, final long hotelId, final long flightId) {
         logger.info("Confirming the booked trip with ID " + tripId);
 
@@ -122,7 +122,22 @@ public class TravelService implements ITravelService {
             return null;
         }
 
-        logger.info("Trip has already been booked: " + savedTripBooking.toString());
+        logger.info("Trip has already been booked: " + savedTripBooking);
+        return savedTripBooking.get();
+    }
+
+    // enable compensation of bookings related with a LRA
+    private TripInformation findBookingByLraId(final URI lraId) throws TravelException {
+        List<TripInformation> customerTrips =
+                tripInformationRepository.findByLraId(lraId.toString());
+
+        Optional<TripInformation> savedTripBooking = customerTrips.stream().findFirst(); // TODO check
+
+        if (!savedTripBooking.isPresent()) {
+            throw new TravelException(ErrorType.NON_EXISTING_ITEM, "Related trip could not be found");
+        }
+
+        logger.info("Related trip booking has been found: " + savedTripBooking);
         return savedTripBooking.get();
     }
 
