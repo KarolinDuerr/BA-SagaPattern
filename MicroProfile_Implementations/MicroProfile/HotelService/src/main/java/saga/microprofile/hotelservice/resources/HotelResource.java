@@ -134,7 +134,7 @@ public class HotelResource {
     @Complete
     @Path("/complete")
     @PUT
-    public Response confirmHotel(@HeaderParam(LRA_HTTP_CONTEXT_HEADER) URI lraId) {
+    public Response complete(@HeaderParam(LRA_HTTP_CONTEXT_HEADER) URI lraId) {
         logger.info("Completing LRA (ID: " + lraId + ")");
         return Response.ok(ParticipantStatus.Completed).build();
     }

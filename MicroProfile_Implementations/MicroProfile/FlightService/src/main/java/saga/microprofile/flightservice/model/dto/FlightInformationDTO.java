@@ -18,7 +18,7 @@ public class FlightInformationDTO  implements Serializable {
 
     private Long tripId;
 
-    private FlightInformationDTO() {
+    public FlightInformationDTO() {
 
     }
 

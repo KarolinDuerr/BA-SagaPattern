@@ -4,7 +4,7 @@ package saga.microprofile.flightservice.model.dto;
 import javax.json.bind.annotation.JsonbDateFormat;
 import javax.json.bind.annotation.JsonbProperty;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class FlightDTO  implements Serializable {
 
@@ -15,13 +15,13 @@ public class FlightDTO  implements Serializable {
     private String toAirport;
 
     @JsonbDateFormat(value = "yyyy-MM-dd hh:mm:ss")
-    private Date flightDate;
+    private LocalDateTime flightDate;
 
     public FlightDTO() {
 
     }
 
-    public FlightDTO(final String country, final String fromAirport, final String toAirport, final Date flightDate) {
+    public FlightDTO(final String country, final String fromAirport, final String toAirport, final LocalDateTime flightDate) {
         this.country = country;
         this.fromAirport = fromAirport;
         this.toAirport = toAirport;
@@ -56,11 +56,11 @@ public class FlightDTO  implements Serializable {
     }
 
     @JsonbProperty("flightDate")
-    public Date getFlightDate() {
+    public LocalDateTime getFlightDate() {
         return flightDate;
     }
 
-    public void setFlightDate(final Date flightDate) {
+    public void setFlightDate(final LocalDateTime flightDate) {
         this.flightDate = flightDate;
     }
 

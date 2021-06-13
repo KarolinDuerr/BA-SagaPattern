@@ -4,6 +4,7 @@ import saga.microprofile.flightservice.error.FlightException;
 import saga.microprofile.flightservice.model.FindAndBookFlightInformation;
 import saga.microprofile.flightservice.model.FlightInformation;
 
+import java.net.URI;
 import java.util.List;
 
 public interface IFlightService {
@@ -14,5 +15,5 @@ public interface IFlightService {
 
     FlightInformation findAndBookFlight(final FindAndBookFlightInformation findAndBookFlightInformation) throws FlightException;
 
-    void cancelFlightBooking(final Long tripId, final String travellerName);
+    void cancelFlightBooking(final URI lraId);
 }

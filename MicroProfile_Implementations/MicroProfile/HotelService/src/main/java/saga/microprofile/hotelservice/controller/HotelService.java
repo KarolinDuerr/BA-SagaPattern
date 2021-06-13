@@ -98,7 +98,7 @@ public class HotelService implements IHotelService {
             HotelBooking hotelBooking = findBookingByLraId(lraId);
 
             if (hotelBooking.getBookingInformation() == null) {
-                throw new BookingNotFound(lraId);
+                throw new BookingNotFound(lraId); // TODO
             }
 
             hotelBooking.cancel(BookingStatus.CANCELLED);

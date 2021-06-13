@@ -3,11 +3,14 @@ package saga.microprofile.flightservice.model;
 import saga.microprofile.flightservice.error.ErrorType;
 import saga.microprofile.flightservice.error.FlightException;
 
+import java.net.URI;
 import java.util.Date;
 
 public class FindAndBookFlightInformation {
 
     private final long tripId;
+
+    private URI lraId;
 
     private Location home;
 
@@ -21,6 +24,7 @@ public class FindAndBookFlightInformation {
 
     private FindAndBookFlightInformation() {
         this.tripId = -1; // no trip assigned to this booking
+        lraId = URI.create(""); // no LRA assigned to this booking
     }
 
     public FindAndBookFlightInformation(final Location home, final Location destination, final Date outboundFlightDate,
@@ -28,6 +32,7 @@ public class FindAndBookFlightInformation {
         validateFlightDates(outboundFlightDate, returnFlightDate);
 
         this.tripId = -1; // no trip assigned to this booking
+        lraId = URI.create(""); // no LRA assigned to this bookings
         this.home = home;
         this.destination = destination;
         this.outboundFlightDate = outboundFlightDate;
@@ -35,12 +40,13 @@ public class FindAndBookFlightInformation {
         this.travellerName = travellerName;
     }
 
-    public FindAndBookFlightInformation(final long tripId, final Location home, final Location destination,
+    public FindAndBookFlightInformation(final long tripId, final URI lraId, final Location home, final Location destination,
                                         final Date outboundFlightDate, final Date returnFlightDate,
                                         final String travellerName) throws FlightException {
         validateFlightDates(outboundFlightDate, returnFlightDate);
 
         this.tripId = tripId;
+        this.lraId = lraId;
         this.home = home;
         this.destination = destination;
         this.outboundFlightDate = outboundFlightDate;
@@ -50,6 +56,14 @@ public class FindAndBookFlightInformation {
 
     public long getTripId() {
         return tripId;
+    }
+
+    public URI getLraId() {
+        return lraId;
+    }
+
+    public void setLraId(final URI lraId) {
+        this.lraId = lraId;
     }
 
     public Location getHome() {

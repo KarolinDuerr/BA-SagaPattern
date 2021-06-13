@@ -1,11 +1,13 @@
 package saga.microprofile.flightservice.controller;
 
+import saga.microprofile.flightservice.error.BookingNotFound;
 import saga.microprofile.flightservice.error.ErrorType;
 import saga.microprofile.flightservice.error.FlightException;
 import saga.microprofile.flightservice.model.*;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -44,7 +46,7 @@ public class FlightService implements IFlightService {
     }
 
     @Override
-    public FlightInformation getFlightInformation(Long flightBookingId) throws FlightException {
+    public FlightInformation getFlightInformation(final Long flightBookingId) throws FlightException {
         logger.info(String.format("Get flight information (ID: %d) from Repository.", flightBookingId));
 
         FlightInformation flightInformation = flightInformationRepository.findById(flightBookingId);
@@ -59,7 +61,7 @@ public class FlightService implements IFlightService {
     }
 
     @Override
-    public FlightInformation findAndBookFlight(FindAndBookFlightInformation findAndBookFlightInformation) throws FlightException {
+    public FlightInformation findAndBookFlight(final FindAndBookFlightInformation findAndBookFlightInformation) throws FlightException {
         logger.info("Finding a flight for the flight information: " + findAndBookFlightInformation);
 
         FlightInformation flightInformation = findAvailableFlight(findAndBookFlightInformation);
@@ -76,20 +78,25 @@ public class FlightService implements IFlightService {
     }
 
     @Override
-    public void cancelFlightBooking(Long tripId, String travellerName) {
-        logger.info("Cancelling the booked flight associated with trip ID " + tripId);
+    public void cancelFlightBooking(final URI lraId) {
+        logger.info("Cancelling the booked flight associated with LRA ID " + lraId);
 
-        FlightInformation flightInformation = getTripFlightInformationByName(travellerName, tripId);
+        try {
+            FlightInformation flightInformation = findBookingByLraId(lraId);
 
-        if (flightInformation == null) {
-            logger.info(String.format("No flight has been booked for this trip (ID: %s) yet, therefore no need to " +
-                    "cancel.", tripId));
-            // no flight has been booked for this trip yet, therefore no need to cancel
-            return;
+            // TODO
+//            if (flightInformation == null) {
+//                logger.info(String.format("No flight has been booked for this trip (LRA ID: %s) yet, therefore no " +
+//                        "need to cancel.", lraId));
+//                // no flight has been booked for this trip yet, therefore no need to cancel
+//                return;
+//            }
+
+            flightInformation.cancel(BookingStatus.CANCELLED);
+            flightInformationRepository.update(flightInformation);
+        } catch (FlightException e) {
+            throw new BookingNotFound(lraId); // TODO
         }
-
-        flightInformation.cancel(BookingStatus.CANCELLED);
-        flightInformationRepository.save(flightInformation);
     }
 
     // only mocking the general function of this method
@@ -107,7 +114,7 @@ public class FlightService implements IFlightService {
                 flightInformation.getReturnFlightDate());
 
         return new FlightInformation(outboundFlight, returnFlight, flightInformation.getTravellerName(),
-                flightInformation.getTripId());
+                flightInformation.getTripId(), flightInformation.getLraId());
     }
 
     // ensure idempotence of flight bookings
@@ -126,14 +133,18 @@ public class FlightService implements IFlightService {
         return savedFlightInformation.get();
     }
 
-    private FlightInformation getTripFlightInformationByName(final String travellerName, final long tripId) {
-        List<FlightInformation> customerTrips =
-                flightInformationRepository.findByTravellerName(travellerName);
+    // enable compensation of bookings related with a LRA
+    private FlightInformation findBookingByLraId(final URI lraId) throws FlightException {
+        List<FlightInformation> customerFlights =
+                flightInformationRepository.findByLraId(lraId.toString());
 
-        Optional<FlightInformation> existingFlightInformation =
-                customerTrips.stream().filter(flightInfo -> flightInfo.getTripId() == tripId).findFirst();
+        Optional<FlightInformation> existingFlightInformation = customerFlights.stream().findFirst(); // TODO check
 
-        // if no hotel booking can be found than no hotel has been booked for this trip yet, therefore no need to cancel
-        return existingFlightInformation.orElse(null);
+        if (!existingFlightInformation.isPresent()) {
+            throw new FlightException(ErrorType.NON_EXISTING_ITEM, "Related trip could not be found");
+        }
+
+        logger.info("Related flight booking has been found: " + existingFlightInformation);
+        return existingFlightInformation.get();
     }
 }

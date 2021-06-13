@@ -13,13 +13,18 @@ import saga.microprofile.flightservice.model.dto.FlightDTO;
 import saga.microprofile.flightservice.model.dto.FlightInformationDTO;
 
 import javax.enterprise.context.ApplicationScoped;
+import java.net.URI;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 @ApplicationScoped
 public class DtoConverter {
 
-    public FindAndBookFlightInformation convertToFindAndBookFlightInformation(final BookFlightRequest bookFlightRequest) throws ConverterException, FlightException {
+    public FindAndBookFlightInformation convertToFindAndBookFlightInformation(final URI lraId,
+                                                                              final BookFlightRequest bookFlightRequest) throws ConverterException, FlightException {
         if (bookFlightRequest == null) {
             throw new ConverterException("The information to find and book a flight is missing.");
         }
@@ -27,9 +32,13 @@ public class DtoConverter {
         checkIfInformationIsMissing(bookFlightRequest);
         Location home = convertToLocation(bookFlightRequest.getHome());
         Location destination = convertToLocation(bookFlightRequest.getDestination());
-        return new FindAndBookFlightInformation(bookFlightRequest.getTripId(), home, destination,
-                bookFlightRequest.getOutboundFlightDate(), bookFlightRequest.getReturnFlightDate(),
-                bookFlightRequest.getTravellerName());
+
+        ZoneId zoneId = ZoneId.systemDefault();
+        Date outboundFlightDate = Date.from(bookFlightRequest.getOutboundFlightDate().atStartOfDay(zoneId).toInstant());
+        Date returnFlightDate = Date.from(bookFlightRequest.getReturnFlightDate().atStartOfDay(zoneId).toInstant());
+
+        return new FindAndBookFlightInformation(bookFlightRequest.getTripId(), lraId, home, destination,
+                outboundFlightDate, returnFlightDate, bookFlightRequest.getTravellerName());
     }
 
     public List<FlightInformationDTO> convertToFlightInformationDTOList(final List<FlightInformation> flightsInformation) throws ConverterException {
@@ -74,8 +83,10 @@ public class DtoConverter {
             throw new ConverterException("Information about a flight is missing.");
         }
 
-        return new FlightDTO(flight.getCountry(), flight.getFromAirport(), flight.getToAirport(),
-                flight.getFlightDate());
+        ZoneId zoneId = ZoneId.systemDefault();
+        LocalDateTime flightDate = flight.getFlightDate().toInstant().atZone(zoneId).toLocalDateTime();
+
+        return new FlightDTO(flight.getCountry(), flight.getFromAirport(), flight.getToAirport(), flightDate);
     }
 
     private void checkIfInformationIsMissing(final BookFlightRequest bookFlightRequest) throws ConverterException {

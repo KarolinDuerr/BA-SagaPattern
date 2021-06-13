@@ -76,16 +76,13 @@ public class BookTripSagaData {
                 tripInformation.getTravellerName());
     }
 
-    public BookFlightRequest makeBookFlightCommand() {
+    public BookFlightRequest makeBookFlightRequest() {
         LocationDTO home = new LocationDTO(tripInformation.getStart().getCountry(),
                 tripInformation.getStart().getCity());
         LocationDTO destination = new LocationDTO(tripInformation.getDestination().getCountry(),
                 tripInformation.getDestination().getCity());
-        ZoneId zoneId = ZoneId.systemDefault();
-        Date startDate = Date.from(tripInformation.getDuration().getStart().atStartOfDay(zoneId).toInstant());
-        Date endDate = Date.from(tripInformation.getDuration().getEnd().atStartOfDay(zoneId).toInstant());
-        return new BookFlightRequest(getTripId(), home, destination, startDate, endDate,
-                tripInformation.getTravellerName());
+        return new BookFlightRequest(getTripId(), home, destination, tripInformation.getDuration().getStart(),
+                tripInformation.getDuration().getEnd(), tripInformation.getTravellerName());
     }
 
     @Override

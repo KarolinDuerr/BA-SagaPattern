@@ -13,7 +13,7 @@ public class ErrorMessage {
 	private ErrorType errorType;
 	private String message;
 
-	private ErrorMessage() {
+	public ErrorMessage() {
 	}
 
 	public ErrorMessage(final ErrorType errorType, final String message) {

@@ -3,9 +3,10 @@ package saga.microprofile.flightservice.api.dto;
 import jakarta.json.bind.annotation.JsonbDateFormat;
 import jakarta.json.bind.annotation.JsonbProperty;
 
-import java.util.Date;
+import java.io.Serializable;
+import java.time.LocalDate;
 
-public class BookFlightRequest {
+public class BookFlightRequest implements Serializable {
 
     private long tripId;
 
@@ -14,10 +15,10 @@ public class BookFlightRequest {
     private LocationDTO destination;
 
     @JsonbDateFormat(value = "yyyy-MM-dd")
-    private Date outboundFlightDate;
+    private LocalDate outboundFlightDate;
 
     @JsonbDateFormat(value = "yyyy-MM-dd")
-    private Date returnFlightDate;
+    private LocalDate returnFlightDate;
 
     private String travellerName;
 
@@ -25,8 +26,8 @@ public class BookFlightRequest {
         this.tripId = -1; // no trip assigned to this booking
     }
 
-    public BookFlightRequest(final LocationDTO home, final LocationDTO destination, final Date outboundFlightDate,
-                             final Date returnFlightDate, final String travellerName) {
+    public BookFlightRequest(final LocationDTO home, final LocationDTO destination, final LocalDate outboundFlightDate,
+                             final LocalDate returnFlightDate, final String travellerName) {
         this.tripId = -1; // no trip assigned to this booking
         this.home = home;
         this.destination = destination;
@@ -35,8 +36,8 @@ public class BookFlightRequest {
         this.travellerName = travellerName;
     }
 
-    public BookFlightRequest(final long tripId, final LocationDTO home, final LocationDTO destination, final Date outboundFlightDate,
-                             final Date returnFlightDate, final String travellerName) {
+    public BookFlightRequest(final long tripId, final LocationDTO home, final LocationDTO destination, final LocalDate outboundFlightDate,
+                             final LocalDate returnFlightDate, final String travellerName) {
         this.tripId = tripId;
         this.home = home;
         this.destination = destination;
@@ -73,20 +74,20 @@ public class BookFlightRequest {
     }
 
     @JsonbProperty("outboundFlightDate")
-    public Date getOutboundFlightDate() {
+    public LocalDate getOutboundFlightDate() {
         return outboundFlightDate;
     }
 
-    public void setOutboundFlightDate(final Date outboundFlightDate) {
+    public void setOutboundFlightDate(final LocalDate outboundFlightDate) {
         this.outboundFlightDate = outboundFlightDate;
     }
 
     @JsonbProperty("returnFlightDate")
-    public Date getReturnFlightDate() {
+    public LocalDate getReturnFlightDate() {
         return returnFlightDate;
     }
 
-    public void setReturnFlightDate(final Date returnFlightDate) {
+    public void setReturnFlightDate(final LocalDate returnFlightDate) {
         this.returnFlightDate = returnFlightDate;
     }
 

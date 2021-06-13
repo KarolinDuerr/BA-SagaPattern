@@ -1,6 +1,9 @@
 package saga.microprofile.travelservice.saga;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import saga.microprofile.flightservice.api.dto.BookFlightRequest;
+import saga.microprofile.flightservice.api.dto.BookFlightResponse;
+import saga.microprofile.flightservice.api.dto.NoFlightAvailable;
 import saga.microprofile.hotelservice.api.dto.BookHotelRequest;
 import saga.microprofile.hotelservice.api.dto.BookHotelResponse;
 import saga.microprofile.hotelservice.api.dto.ConfirmHotelBooking;
@@ -91,12 +94,13 @@ public class SagaFactory {
         this.bookTripSagaData = bookTripSagaData;
 
         bookHotel();
+        bookFlight();
         confirmHotelBooking(); // TODO behaviour when failure --> don't try the resulting steps
         confirmTripBooking();
     }
 
     private void bookHotel() {
-        logger.info("Trying to book hotel.");
+        logger.info("Trying to book a hotel.");
         WebTarget hotelServiceTarget = hotelServiceClient.target(hotelServiceBaseUri);
         BookHotelRequest bookHotelRequest = bookTripSagaData.makeBookHotelRequest();
         Response hotelResponse = hotelServiceTarget.request().post(Entity.entity(bookHotelRequest,
@@ -104,14 +108,23 @@ public class SagaFactory {
         handleHotelBookingResponse(hotelResponse, bookTripSagaData);
     }
 
+    private void bookFlight() {
+        logger.info("Trying to book a flight.");
+        WebTarget flightServiceTarget = flightServiceClient.target(flightServiceBaseUri);
+        BookFlightRequest bookFlightRequest = bookTripSagaData.makeBookFlightRequest();
+        Response flightResponse = flightServiceTarget.request().post(Entity.entity(bookFlightRequest,
+                MediaType.APPLICATION_JSON));
+        handleFlightBookingResponse(flightResponse, bookTripSagaData);
+    }
+
     private void confirmHotelBooking() {
         logger.info("Trying to confirm the hotel booking.");
-        String travelConfirmUri = String.format("%s/%s/confirm", hotelServiceBaseUri,
+        String hotelConfirmUri = String.format("%s/%s/confirm", hotelServiceBaseUri,
                 bookTripSagaData.getTripId());
-        WebTarget travelServiceTarget = hotelServiceClient.target(travelConfirmUri);
-        ConfirmHotelBooking confirmTripBooking = new ConfirmHotelBooking(bookTripSagaData.getHotelId(),
+        WebTarget hotelServiceTarget = hotelServiceClient.target(hotelConfirmUri);
+        ConfirmHotelBooking confirmHotelBooking = new ConfirmHotelBooking(bookTripSagaData.getHotelId(),
                 bookTripSagaData.getTripId());
-        Response confirmTripResponse = travelServiceTarget.request().put(Entity.entity(confirmTripBooking,
+        Response confirmTripResponse = hotelServiceTarget.request().put(Entity.entity(confirmHotelBooking,
                 MediaType.APPLICATION_JSON_TYPE));
         logger.info("Received from HotelService: " + confirmTripResponse.getStatus());
     }
@@ -128,6 +141,7 @@ public class SagaFactory {
         logger.info("Received from TravelService: " + confirmTripResponse.getStatus());
     }
 
+    // TODO refactor handle methods
     private void handleHotelBookingResponse(final Response hotelResponse, final BookTripSagaData bookTripSagaData) {
         if (hotelResponse.getStatusInfo().getStatusCode() == Response.Status.OK.getStatusCode()) {
             BookHotelResponse bookHotelResponse = hotelResponse.readEntity(BookHotelResponse.class);
@@ -152,6 +166,33 @@ public class SagaFactory {
             }
         } else {
             logger.warning("Something went wrong when receiving hotel answer: " + hotelResponse.getStatusInfo().getStatusCode());
+        }
+    }
+
+    private void handleFlightBookingResponse(final Response flightResponse, final BookTripSagaData bookTripSagaData) {
+        if (flightResponse.getStatusInfo().getStatusCode() == Response.Status.OK.getStatusCode()) {
+            BookFlightResponse bookFlightResponse = flightResponse.readEntity(BookFlightResponse.class);
+            logger.info("Received from FlightService: " + bookFlightResponse);
+            long flightId = bookFlightResponse == null ? -1 : bookFlightResponse.getFlightBookingId();
+            bookTripSagaData.setFlightId(flightId);
+        } else if (flightResponse.getStatusInfo().getStatusCode() == Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()) {
+            JsonObject hotelResponseFailure = flightResponse.readEntity(JsonObject.class);
+            Jsonb jsonb = JsonbBuilder.create();
+            try {
+                logger.info(hotelResponseFailure.toString());
+                NoFlightAvailable noFlightAvailable = jsonb.fromJson(hotelResponseFailure.toString(),
+                        NoFlightAvailable.class);
+                logger.info("Received response NoFlightAvailable: " + noFlightAvailable);
+            } catch (JsonbException ignore) {
+                try {
+                    ErrorMessage errorMessage = jsonb.fromJson(hotelResponseFailure.toString(), ErrorMessage.class);
+                    logger.info("Received errorMessage: " + errorMessage);
+                } catch (JsonbException jsonbException) {
+                    logger.warning("Flight answer could not be processed: " + jsonbException.getMessage());
+                }
+            }
+        } else {
+            logger.warning("Something went wrong when receiving flight answer: " + flightResponse.getStatusInfo().getStatusCode());
         }
     }
 }

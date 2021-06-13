@@ -6,14 +6,13 @@
                         http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
     <persistence-unit name="FlightBookingRepository" transaction-type="JTA">
         <jta-data-source>jdbc/FlightService</jta-data-source>
-        <class>saga.microprofile.flightservice.model.FlightInformation</class> <!--TODO-->
-        <class>saga.microprofile.flightservice.model.Flight</class> <!--TODO-->
+        <class>saga.microprofile.flightservice.model.FlightInformation</class>
+        <class>saga.microprofile.flightservice.model.Flight</class>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties>
             <property name="eclipselink.ddl-generation" value="create-tables"/>
             <property name="eclipselink.ddl-generation.output-mode" value="both"/>
-            <!--            <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>-->
-            <property name="javax.persistence.schema-generation.database.action" value="create"/>
+            <property name="eclipselink.target-database" value="MySQL"/>
         </properties>
     </persistence-unit>
 </persistence>

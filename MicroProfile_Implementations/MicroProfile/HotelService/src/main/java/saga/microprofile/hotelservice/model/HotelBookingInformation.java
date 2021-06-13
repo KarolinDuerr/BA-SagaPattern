@@ -28,7 +28,7 @@ public class HotelBookingInformation {
     public HotelBookingInformation(final Destination destination, final StayDuration duration,
                                    final String boardType) {
         this.tripId = -1; // no trip assigned to this booking
-        this.lraId = "";
+        lraId = ""; // no LRA assigned to this booking
         this.destination = destination;
         this.duration = duration;
         this.boardType = boardType;
