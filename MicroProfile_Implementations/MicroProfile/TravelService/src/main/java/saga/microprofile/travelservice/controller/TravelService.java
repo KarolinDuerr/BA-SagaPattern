@@ -72,7 +72,7 @@ public class TravelService implements ITravelService {
 
         // create and start the BookTripSaga with necessary information
         BookTripSagaData bookTripSagaData = new BookTripSagaData(tripInformation.getId(), tripInformation);
-        sagaFactory.startBookTripSaga(bookTripSagaData);
+        sagaFactory.startBookTripSaga(bookTripSagaData, tripInformation.getLraId());
 
         return tripInformation;
     }

@@ -72,8 +72,8 @@ public class TravelResource {
         return Response.ok(dtoConverter.convertToTripInformationDTO(tripInformation)).build();
     }
 
-    //    @LRA(value = LRA.Type.REQUIRES_NEW, end = false) // TODO
-    @LRA(value = LRA.Type.REQUIRES_NEW)
+    @LRA(value = LRA.Type.REQUIRES_NEW, end = false) // TODO
+//    @LRA(value = LRA.Type.REQUIRES_NEW)
     @POST
     @Path("/book")
     @Produces(MediaType.APPLICATION_JSON)
@@ -101,8 +101,8 @@ public class TravelResource {
                 tripInformation.getBookingStatus().toString())).build();
     }
 
-    //    @LRA(value = LRA.Type.MANDATORY, end = true) // TODO
-    @LRA(value = LRA.Type.MANDATORY, end = false)
+    @LRA(value = LRA.Type.MANDATORY, end = true) // TODO
+//    @LRA(value = LRA.Type.MANDATORY, end = false)
     @Path("trips/{tripId}/confirm")
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
