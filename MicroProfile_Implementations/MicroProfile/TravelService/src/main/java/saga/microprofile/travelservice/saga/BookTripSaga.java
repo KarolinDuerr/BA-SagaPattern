@@ -8,6 +8,7 @@ import saga.microprofile.hotelservice.api.dto.BookHotelResponse;
 import saga.microprofile.hotelservice.api.dto.ConfirmHotelBooking;
 import saga.microprofile.hotelservice.api.dto.NoHotelAvailable;
 import saga.microprofile.travelservice.api.dto.ConfirmTripBooking;
+import saga.microprofile.travelservice.api.dto.RejectionReason;
 import saga.microprofile.travelservice.error.ErrorMessage;
 
 import javax.annotation.PreDestroy;
@@ -65,7 +66,7 @@ public class BookTripSaga implements Runnable {
 
         bookHotel();
         bookFlight();
-        confirmHotelBooking(); // TODO behaviour when failure --> don't try the resulting steps
+        confirmHotelBooking();
         confirmTripBooking();
     }
 
@@ -73,39 +74,55 @@ public class BookTripSaga implements Runnable {
         logger.info("Trying to book a hotel.");
         WebTarget hotelServiceTarget = hotelServiceClient.target(hotelServiceBaseUri);
         BookHotelRequest bookHotelRequest = bookTripSagaData.makeBookHotelRequest();
+        // setting context header since new thread does not know about the current LRA context
         Response hotelResponse =
                 hotelServiceTarget.request().header(LRA_HTTP_CONTEXT_HEADER, lraId).post(Entity.entity(bookHotelRequest, MediaType.APPLICATION_JSON));
         handleHotelBookingResponse(hotelResponse, bookTripSagaData);
     }
 
     private void bookFlight() {
+        if (checkForFailures()) {
+            return;
+        }
+
         logger.info("Trying to book a flight.");
         WebTarget flightServiceTarget = flightServiceClient.target(flightServiceBaseUri);
         BookFlightRequest bookFlightRequest = bookTripSagaData.makeBookFlightRequest();
+        // setting context header since new thread does not know about the current LRA context
         Response flightResponse =
                 flightServiceTarget.request().header(LRA_HTTP_CONTEXT_HEADER, lraId).post(Entity.entity(bookFlightRequest, MediaType.APPLICATION_JSON));
         handleFlightBookingResponse(flightResponse, bookTripSagaData);
     }
 
     private void confirmHotelBooking() {
+        if (checkForFailures()) {
+            return;
+        }
+
         logger.info("Trying to confirm the hotel booking.");
         String hotelConfirmUri = String.format("%s/%s/confirm", hotelServiceBaseUri,
                 bookTripSagaData.getTripId());
         WebTarget hotelServiceTarget = hotelServiceClient.target(hotelConfirmUri);
         ConfirmHotelBooking confirmHotelBooking = new ConfirmHotelBooking(bookTripSagaData.getHotelId(),
                 bookTripSagaData.getTripId());
+        // setting context header since new thread does not know about the current LRA context
         Response confirmTripResponse =
                 hotelServiceTarget.request().header(LRA_HTTP_CONTEXT_HEADER, lraId).put(Entity.entity(confirmHotelBooking, MediaType.APPLICATION_JSON_TYPE));
         logger.info("Received from HotelService: " + confirmTripResponse.getStatus());
     }
 
     private void confirmTripBooking() {
+        if (checkForFailures()) {
+            return;
+        }
+
         logger.info("Trying to confirm the trip.");
         String travelConfirmUri = String.format("%s/trips/%s/confirm", travelServiceBaseUri,
                 bookTripSagaData.getTripId());
         WebTarget travelServiceTarget = travelServiceClient.target(travelConfirmUri);
         ConfirmTripBooking confirmTripBooking = new ConfirmTripBooking(bookTripSagaData.getTripId(),
                 bookTripSagaData.getHotelId(), bookTripSagaData.getFlightId());
+        // setting context header since new thread does not know about the current LRA context
         Response confirmTripResponse =
                 travelServiceTarget.request().header(LRA_HTTP_CONTEXT_HEADER, lraId).put(Entity.entity(confirmTripBooking, MediaType.APPLICATION_JSON));
         logger.info("Received from TravelService: " + confirmTripResponse.getStatus());
@@ -122,9 +139,9 @@ public class BookTripSaga implements Runnable {
             JsonObject hotelResponseFailure = hotelResponse.readEntity(JsonObject.class);
             Jsonb jsonb = JsonbBuilder.create();
             try {
-                logger.info(hotelResponseFailure.toString());
                 NoHotelAvailable noHotelAvailable = jsonb.fromJson(hotelResponseFailure.toString(),
                         NoHotelAvailable.class);
+                bookTripSagaData.setRejectionReason(RejectionReason.NO_HOTEL_AVAILABLE);
                 logger.info("Received response NoHotelAvailable: " + noHotelAvailable);
             } catch (JsonbException ignore) {
                 try {
@@ -150,9 +167,9 @@ public class BookTripSaga implements Runnable {
             JsonObject hotelResponseFailure = flightResponse.readEntity(JsonObject.class);
             Jsonb jsonb = JsonbBuilder.create();
             try {
-                logger.info(hotelResponseFailure.toString());
                 NoFlightAvailable noFlightAvailable = jsonb.fromJson(hotelResponseFailure.toString(),
                         NoFlightAvailable.class);
+                bookTripSagaData.setRejectionReason(RejectionReason.NO_FLIGHT_AVAILABLE);
                 logger.info("Received response NoFlightAvailable: " + noFlightAvailable);
             } catch (JsonbException ignore) {
                 try {
@@ -165,6 +182,10 @@ public class BookTripSaga implements Runnable {
         } else {
             logger.warning("Something went wrong when receiving flight answer: " + flightResponse.getStatusInfo().getStatusCode());
         }
+    }
+
+    private boolean checkForFailures() {
+        return bookTripSagaData.getRejectionReason() != null;
     }
 
     @PreDestroy

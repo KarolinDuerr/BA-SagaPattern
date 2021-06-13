@@ -84,18 +84,20 @@ public class FlightService implements IFlightService {
         try {
             FlightInformation flightInformation = findBookingByLraId(lraId);
 
-            // TODO
-//            if (flightInformation == null) {
-//                logger.info(String.format("No flight has been booked for this trip (LRA ID: %s) yet, therefore no " +
-//                        "need to cancel.", lraId));
-//                // no flight has been booked for this trip yet, therefore no need to cancel
-//                return;
-//            }
+            if (flightInformation == null) {
+                logger.info(String.format("No flight has been booked for this trip (LRA ID: %s) yet, therefore no " +
+                        "need to cancel.", lraId));
+                // no flight has been booked for this trip yet, therefore no need to cancel
+                return;
+            }
 
             flightInformation.cancel(BookingStatus.CANCELLED);
             flightInformationRepository.update(flightInformation);
-        } catch (FlightException e) {
-            throw new BookingNotFound(lraId); // TODO
+        } catch (FlightException exception) {
+            logger.info("Exception: " + exception.getMessage());
+            logger.info(String.format("No flight has been booked for this trip (LRA ID: %s) yet, therefore no " +
+                    "need to cancel.", lraId));
+            // no flight has been booked for this trip yet, therefore no need to cancel
         }
     }
 
@@ -138,7 +140,7 @@ public class FlightService implements IFlightService {
         List<FlightInformation> customerFlights =
                 flightInformationRepository.findByLraId(lraId.toString());
 
-        Optional<FlightInformation> existingFlightInformation = customerFlights.stream().findFirst(); // TODO check
+        Optional<FlightInformation> existingFlightInformation = customerFlights.stream().findFirst();
 
         if (!existingFlightInformation.isPresent()) {
             throw new FlightException(ErrorType.NON_EXISTING_ITEM, "Related trip could not be found");

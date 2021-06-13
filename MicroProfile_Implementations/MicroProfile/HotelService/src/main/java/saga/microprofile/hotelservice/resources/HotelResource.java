@@ -116,7 +116,7 @@ public class HotelResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response confirmHotel(@HeaderParam(LRA_HTTP_CONTEXT_HEADER) String lraId, @RequestBody final
     ConfirmHotelBooking confirmHotelBooking) {
-        logger.info("Confirming the hotel for trip ID: " + confirmHotelBooking.getTripId() + "for LRA (ID: " + lraId + ")");
+        logger.info("Confirming the hotel for trip ID: " + confirmHotelBooking.getTripId() + " for LRA (ID: " + lraId + ")");
         hotelService.confirmHotelBooking(confirmHotelBooking.getBookingId(), confirmHotelBooking.getTripId());
         return Response.ok(ParticipantStatus.Completed).build();
     }

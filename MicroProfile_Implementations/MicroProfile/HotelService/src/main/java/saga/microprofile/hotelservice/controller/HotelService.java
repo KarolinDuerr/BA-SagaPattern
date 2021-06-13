@@ -97,14 +97,21 @@ public class HotelService implements IHotelService {
         try {
             HotelBooking hotelBooking = findBookingByLraId(lraId);
 
-            if (hotelBooking.getBookingInformation() == null) {
-                throw new BookingNotFound(lraId); // TODO
+
+            if (hotelBooking == null) {
+                logger.info(String.format("No hotel has been booked for this trip (LRA ID: %s) yet, therefore no " +
+                        "need to cancel.", lraId));
+                // no hotel has been booked for this trip yet, therefore no need to cancel
+                return;
             }
 
             hotelBooking.cancel(BookingStatus.CANCELLED);
             hotelBookingRepository.update(hotelBooking);
-        } catch (HotelException e) {
-            throw new BookingNotFound(lraId);
+        } catch (HotelException hotelException) {
+            logger.info("Exception: " + hotelException.getMessage());
+            logger.info(String.format("No hotel has been booked for this trip (LRA ID: %s) yet, therefore no " +
+                    "need to cancel.", lraId));
+            // no flight has been booked for this trip yet, therefore no need to cancel
         }
     }
 
@@ -159,7 +166,7 @@ public class HotelService implements IHotelService {
         List<HotelBooking> customerHotelBookings =
                 hotelBookingRepository.findByLraId(lraId.toString());
 
-        Optional<HotelBooking> savedHotelBooking = customerHotelBookings.stream().findFirst(); // TODO check
+        Optional<HotelBooking> savedHotelBooking = customerHotelBookings.stream().findFirst();
 
         if (!savedHotelBooking.isPresent()) {
             throw new HotelException(ErrorType.NON_EXISTING_ITEM, "Related trip could not be found");
