@@ -68,7 +68,7 @@ public class FlightInformation implements Serializable {
         this.returnFlight = returnFlight;
         this.travellerName = travellerName;
         this.tripId = tripId;
-        this.lraId = null == lraId ? "" : lraId.toString();
+        this.lraId = null == lraId ? "" : String.valueOf(lraId);
         this.bookingStatus = BookingStatus.CONFIRMED;
     }
 

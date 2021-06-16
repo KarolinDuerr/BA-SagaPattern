@@ -66,7 +66,7 @@ public class TripInformation implements Serializable {
     public TripInformation(final URI lraId, final TripDuration duration, final Location start,
                            final Location destination, final String travellerName, final String boardType,
                            final long customerId) {
-        this.lraId = lraId.toString();
+        this.lraId = String.valueOf(lraId);
         this.duration = duration;
         this.start = start;
         this.destination = destination;

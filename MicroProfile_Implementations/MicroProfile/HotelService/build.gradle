@@ -52,12 +52,19 @@ task copyDependenciesToOpenLiberty(type: Copy) {
     into "$buildDir/wlp/usr/servers/HotelServiceServer/jdbc"
 }
 
+task copyDependenciesToLibs(type: Copy) {
+    from configurations.compile
+    include 'mysql-connector-java-*.jar'
+    into "$buildDir/libs"
+}
+
 liberty {
     server {
         name = "HotelServiceServer"
     }
 }
 
+build.dependsOn 'copyDependenciesToLibs'
 deploy.finalizedBy 'copyDependenciesToOpenLiberty'
 libertyDev.dependsOn 'deploy'
 clean.dependsOn 'libertyStop'

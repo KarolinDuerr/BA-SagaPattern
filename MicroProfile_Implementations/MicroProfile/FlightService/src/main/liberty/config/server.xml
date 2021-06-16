@@ -2,35 +2,26 @@
     <featureManager>
         <feature>jpa-2.2</feature>
         <feature>jndi-1.0</feature>
-        <!--        <feature>microProfile-4.0</feature>-->
-        <!--TODO check needed features MicroProfile does not work with LRAs -->
-        <feature>cdi-2.0</feature>
-        <feature>jaxrs-2.1</feature>
-        <feature>jaxrsClient-2.1</feature>
-        <feature>jsonb-1.0</feature>
-        <feature>jsonp-1.1</feature>
-        <feature>mpConfig-2.0</feature>
-        <feature>mpFaultTolerance-3.0</feature>
-        <feature>mpHealth-3.0</feature>
-        <feature>mpJwt-1.2</feature>
-        <feature>mpOpenAPI-2.0</feature>
-        <feature>mpOpenTracing-2.0</feature>
-        <feature>mpRestClient-2.0</feature>
-        <feature>servlet-4.0</feature>
-
-        <!--        <feature>microProfile-4.0</feature>-->
+        <feature>microProfile-4.0</feature>
         <feature>eventLogging-1.0</feature>
         <feature>mpLRA-1.0</feature>
     </featureManager>
 
-    <variable name="default.http.port" defaultValue="8082"/> <!--TODO keep? -->
-    <variable name="default.https.port" defaultValue="9443"/> <!--TODO keep? -->
+    <!-- Configure default values -->
+    <variable name="default.http.port" defaultValue="8082"/>
+    <variable name="default.https.port" defaultValue="9443"/>
+    <variable name="lra.coordinator.port" defaultValue="8080"/>
+    <variable name="lra.coordinator.host" defaultValue="localhost"/>
+    <variable name="lra.coordinator.path" defaultValue="lrac/lra-coordinator"/>
+
 
     <!-- Configure Logging -->
     <logging consoleLogLevel="${openLiberty.microprofile.logging.level}"
              consoleFormat="${openLiberty.microprofile.logging.format}"
              consoleSource="${openLiberty.microprofile.logging.console.source}"/>
     <logging traceSpecification="eclipselink.sql=all"/>
+
+    <mpMetrics authentication="false"/> <!--TODO: keep?-->
 
     <httpEndpoint httpPort="${default.http.port}" httpsPort="${default.https.port}"
                   id="defaultHttpEndpoint" host="*"/>
@@ -58,9 +49,9 @@
     <dataSource id="microProfileFlightService"
                 jndiName="jdbc/FlightService">
         <jdbcDriver libraryRef="mySQLLib"/>
-        <properties user="${openLiberty.microprofile.username}"
-                    password="${openLiberty.microprofile.password}"
-                    URL="${openLiberty.microprofile.url}"/>
+        <properties user="${openLiberty.mysql.username}"
+                    password="${openLiberty.mysql.password}"
+                    URL="${openLiberty.mysql.url}"/>
     </dataSource>
 
 </server>

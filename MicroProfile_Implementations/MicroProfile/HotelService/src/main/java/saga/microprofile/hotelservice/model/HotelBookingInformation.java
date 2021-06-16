@@ -37,7 +37,7 @@ public class HotelBookingInformation {
     public HotelBookingInformation(final long tripId, final URI lraId, final Destination destination, final StayDuration duration,
                                    final String boardType) {
         this.tripId = tripId;
-        this.lraId = lraId.toString();
+        this.lraId = String.valueOf(lraId);
         this.destination = destination;
         this.duration = duration;
         this.boardType = boardType;

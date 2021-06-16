@@ -80,7 +80,7 @@ public class TravelResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response bookTrip(@HeaderParam(LRA_HTTP_CONTEXT_HEADER) URI lraId,
                              @RequestBody final BookTripRequest bookTripRequest) throws TravelServiceException {
-        logger.info("Book trip: " + bookTripRequest + "with LRA ID: " + lraId);
+        logger.info("Book trip: " + bookTripRequest + " with LRA ID: " + lraId);
 
         if (bookTripRequest == null) {
             logger.info("BookTripRequest is missing, therefore no trip can be booked.");

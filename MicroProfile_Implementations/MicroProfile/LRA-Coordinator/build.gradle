@@ -29,7 +29,6 @@ repositories {
 dependencies {
     // Eclipse MicroProfile RLA
     providedCompile 'org.eclipse.microprofile:microprofile:4.0.1' // TODO check if necessary
-//    libertyRuntime "io.openliberty.beta:openliberty-runtime:21.0.0.6-beta"
     libertyRuntime "io.openliberty.beta:openliberty-runtime:21.0.0.7-beta"
 }
 
