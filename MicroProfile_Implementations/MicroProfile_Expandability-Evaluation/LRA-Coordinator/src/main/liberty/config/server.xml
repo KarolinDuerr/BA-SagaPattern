@@ -1,0 +1,33 @@
+<server description="OpenLiberty MicroProfile LRA Coordinator server">
+    <featureManager>
+        <feature>eventLogging-1.0</feature>
+        <feature>mpLRACoordinator-1.0</feature>
+        <!--        &lt;!&ndash;        <feature>microProfile-4.0</feature>&ndash;&gt;-->
+        <!--        &lt;!&ndash;TODO check if this helps with the Docker problem &ndash;&gt;-->
+        <!--        <feature>cdi-2.0</feature>-->
+        <!--        <feature>jaxrs-2.1</feature>-->
+        <!--        <feature>mpOpenAPI-2.0</feature>-->
+
+        <feature>microProfile-4.0</feature>
+    </featureManager>
+
+    <variable name="default.http.port" defaultValue="8080"/>
+    <variable name="default.https.port" defaultValue="9443"/>
+
+    <logging consoleLogLevel="${openLiberty.microprofile.logging.level}"
+             consoleFormat="${openLiberty.microprofile.logging.format}"
+             consoleSource="${openLiberty.microprofile.logging.console.source}"/>
+    <logging traceSpecification="eclipselink.sql=all"/>
+
+    <mpMetrics authentication="false"/> <!--TODO: keep?-->
+
+    <httpEndpoint httpPort="${default.http.port}" httpsPort="${default.https.port}"
+                  id="defaultHttpEndpoint" host="*"/>
+
+    <!-- Automatically expand WAR files and EAR files -->
+    <applicationManager autoExpand="true"/>
+
+    <!-- Default SSL configuration enables trust for default certificates from the Java runtime -->
+    <ssl id="defaultSSLConfig" trustDefaultCerts="true"/>
+
+</server>

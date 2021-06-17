@@ -1,0 +1,9 @@
+rootProject.name = 'SagaPattern-MicroProfile'
+include 'FlightService'
+include 'FlightService-API'
+include 'HotelService'
+include 'HotelService-API'
+include 'TravelService'
+include 'TravelService-API'
+include 'LRA-Coordinator'
+

@@ -1,0 +1,70 @@
+apply plugin: 'war'
+apply plugin: 'liberty'
+apply plugin: 'java'
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+// configure liberty-gradle-plugin
+buildscript {
+    setArchivesBaseName("FlightService")
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'io.openliberty.tools:liberty-gradle-plugin:3.1.2'
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile project(":FlightService-API")
+
+    // Javax persistence
+    compile "javax.persistence:javax.persistence-api:2.2"
+
+    // Eclipse MicroProfile using OpenLiberty implementation
+    providedCompile "jakarta.platform:jakarta.jakartaee-api:8.0.0"
+    providedCompile "org.eclipse.microprofile:microprofile:4.0.1"
+
+    // Eclipse MicroProfile LRA
+    implementation "org.eclipse.microprofile.lra:microprofile-lra-api:1.0-RC3"
+    libertyRuntime "io.openliberty.beta:openliberty-runtime:21.0.0.7-beta"
+
+    // MySQL
+    compile "mysql:mysql-connector-java:$mySQLVersion"
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+task copyDependenciesToOpenLiberty(type: Copy) {
+    from configurations.compile
+    include 'mysql-connector-java-*.jar'
+    into "$buildDir/wlp/usr/servers/FlightServiceServer/jdbc"
+}
+
+task copyDependenciesToLibs(type: Copy) {
+    from configurations.compile
+    include 'mysql-connector-java-*.jar'
+    into "$buildDir/libs"
+}
+
+liberty {
+    server {
+        name = "FlightServiceServer"
+    }
+}
+
+build.dependsOn 'copyDependenciesToLibs'
+deploy.finalizedBy 'copyDependenciesToOpenLiberty'
+libertyDev.dependsOn 'deploy'
+clean.dependsOn 'libertyStop'
