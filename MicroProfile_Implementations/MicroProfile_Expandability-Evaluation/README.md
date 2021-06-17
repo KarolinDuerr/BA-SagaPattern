@@ -1,4 +1,4 @@
-# Eventuate Tram Expandability Evaluation
+# MicroProfile LRA Expandability Evaluation
 This project is part of the evaluation of a Saga pattern implementation using [MicroProfile LRA](https://github.com/eclipse/microprofile-lra).
 The original [Saga Pattern Realization with MicroProfile LRA](https://github.com/KarolinDuerr/BA-SagaPattern/tree/master/MicroProfile_Implementations/MicroProfile)
 has been extended by a __CustomerService__ in order to evaluate the expandability of an implementation using Eventuate Tram
