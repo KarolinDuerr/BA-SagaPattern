@@ -1,34 +1,29 @@
-# Saga Pattern Realization With MicroProfile LRA
-This project includes an example implementation of the Saga pattern using [MicroProfile LRA](https://github.com/eclipse/microprofile-lra).
-The example application represents a travel application that consists of three backend services: TravelService,
-HotelService and FlightService. For simplicity reasons, only the workflow for booking a trip has been implemented.
+# Eventuate Tram Expandability Evaluation
+This project is part of the evaluation of a Saga pattern implementation using [MicroProfile LRA](https://github.com/eclipse/microprofile-lra).
+The original [Saga Pattern Realization with MicroProfile LRA](https://github.com/KarolinDuerr/BA-SagaPattern/tree/master/MicroProfile_Implementations/MicroProfile)
+has been extended by a __CustomerService__ in order to evaluate the expandability of an implementation using Eventuate Tram
+to realize the Saga pattern. The __CustomerService__ has to authorize the customer before a hotel is being booked.
+
 
 ## Start the Application
- // TODO
+// TODO currently only the local execution runs correctly
 1. Run `./gradlew clean build`
 
 
-2. Execute `docker-compose up --no-start`
+2. Execute `docker-compose up `
 
 
-3. Execute `docker-compose start elasticsearch`
-
-
-4. Execute `docker-compose start dynomite`
-
-
-5. Execute `docker-compose up`
-
-
-6. Requesting trip bookings is now possible. Either use `curl` commands,
+3. Requesting trip bookings is now possible. Either use `curl` commands,
    the provided `TravelApplication.json` insomnia file, which includes different trip booking requests,
    or access the [Swagger UI](https://swagger.io/tools/swagger-ui/) of the different services:
 
    | __Service__ | __URL to Swagger UI__ |
    |:-------|:-------------------:| 
-   |TravelService| http://localhost:8090/swagger-ui.html
-   |HotelService| http://localhost:8081/swagger-ui.html
-   |FlightService| http://localhost:8082/swagger-ui.html
+   |TravelService| http://localhost:8090/openapi/ui/
+   |HotelService| http://localhost:8081/openapi/ui/
+   |FlightService| http://localhost:8082/openapi/ui/
+   |CustomerService| http://localhost:8084/openapi/ui/
+   |LRA Coordinator| http://localhost:8080/openapi/ui/
 
 An example for such a request:
 ```
@@ -54,7 +49,7 @@ An example for such a request:
 }
 ```
 
-To simulate a Saga that fails because no hotel or no flight is available, use one of the following Strings
+To simulate a Saga that fails because __no hotel__ or __no flight__ is __available__, use one of the following Strings
 as `destination country` in the trip booking request:
 ```
 "Provoke hotel failure"
@@ -62,15 +57,26 @@ as `destination country` in the trip booking request:
 "Provoke flight failure"
 ```
 
+To simulate a Saga that fails because the __customer validation failed__, the `customerId` in the trip booking request
+has to be __smaller than 1__, for example:
+```
+{
+    ...
+    customerId: "-1"
+}
+```
+
+
 The services also provide a *health* and an *info* endpoint that show some information about the system like
 that the DB is up and running. These endpoints can be accessed via:
 
-| __Service__ | __URL to health endpoint__ |  __URL to info endpoint__ |
-|:-------:|------------------|-------------------|
-|TravelService| http://localhost:8090/api/travel/monitor/health | http://localhost:8090/api/travel/monitor/info
-|HotelService| http://localhost:8081/api/hotels/monitor/health | http://localhost:8081/api/hotels/monitor/info
-|FlightService| http://localhost:8082/api/flights/monitor/health | http://localhost:8082/api/flights/monitor/info
-
+| __Service__ | __URL to health endpoint__ |
+|:-------:|------------------|
+|TravelService| http://localhost:8090/health
+|HotelService| http://localhost:8081/health
+|FlightService| http://localhost:8082/health
+|CustomerService| http://localhost:8084/health
+|LRA Coordinator| http://localhost:8080/health
 
 If you are on Windows or Mac, you sometimes have to replace _localhost_ with the default IP of your docker machine (use `docker-machine ip default` to get this default IP).
 
@@ -80,8 +86,3 @@ To stop the application and remove the created containers, execute the following
 ```
 docker-compose down --remove-orphans
 ```
-
-----------------------------
-
-## Monitor the Application
-// TODO
