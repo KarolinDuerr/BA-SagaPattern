@@ -10,18 +10,13 @@ import java.util.List;
 
 public interface ITravelService {
 
-//    @Transactional
     List<TripInformation> getTripsInformation();
 
-//    @Transactional
     TripInformation getTripInformation(final Long tripId) throws TravelException;
 
-//    @Transactional
     TripInformation bookTrip(final TripInformation tripInformation);
 
-//    @Transactional
     void rejectTrip(final URI lraId);
 
-//    @Transactional
     void confirmTripBooking(final Long tripId, final long hotelId, final long flightId);
 }

@@ -181,13 +181,11 @@ public class TripInformation implements Serializable {
         }
     }
 
-    public void reject(final BookingStatus bookingStatus) {
+    public void reject() {
         switch (this.bookingStatus) {
             case PENDING:
-            case REJECTED_NO_FLIGHT_AVAILABLE:
-            case REJECTED_NO_HOTEL_AVAILABLE:
-            case REJECTED_UNKNOWN:
-                this.bookingStatus = bookingStatus;
+            case REJECTED:
+                this.bookingStatus = BookingStatus.REJECTED;
                 break;
             default:
                 throw new UnsupportedStateTransition("The trip can only be rejected if its still PENDING, but the " +

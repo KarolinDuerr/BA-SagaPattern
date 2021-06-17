@@ -28,7 +28,6 @@ import java.net.URI;
 import java.util.List;
 import java.util.logging.Logger;
 
-//@RequestScoped
 @ApplicationScoped
 @Path("/api/hotels")
 public class HotelResource {

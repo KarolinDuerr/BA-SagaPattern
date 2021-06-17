@@ -6,7 +6,7 @@ to realize the Saga pattern. The __CustomerService__ has to authorize the custom
 
 
 ## Start the Application
-// TODO currently only the local execution runs correctly
+
 1. Run `./gradlew clean build`
 
 
@@ -19,11 +19,11 @@ to realize the Saga pattern. The __CustomerService__ has to authorize the custom
 
    | __Service__ | __URL to Swagger UI__ |
    |:-------|:-------------------:| 
-   |TravelService| http://localhost:8090/openapi/ui/
+   |TravelService| http://localhost:8090/openapi/ui/ // TODO --> currently shows LRA Coordinator API
    |HotelService| http://localhost:8081/openapi/ui/
    |FlightService| http://localhost:8082/openapi/ui/
    |CustomerService| http://localhost:8084/openapi/ui/
-   |LRA Coordinator| http://localhost:8080/openapi/ui/
+   |LRA Coordinator| http://localhost:8080/openapi/ui/ // TODO doesn't work anymore --> included in TravelService
 
 An example for such a request:
 ```
@@ -76,7 +76,6 @@ that the DB is up and running. These endpoints can be accessed via:
 |HotelService| http://localhost:8081/health
 |FlightService| http://localhost:8082/health
 |CustomerService| http://localhost:8084/health
-|LRA Coordinator| http://localhost:8080/health
 
 If you are on Windows or Mac, you sometimes have to replace _localhost_ with the default IP of your docker machine (use `docker-machine ip default` to get this default IP).
 

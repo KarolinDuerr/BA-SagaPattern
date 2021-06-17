@@ -82,7 +82,7 @@ public class CustomerResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response validateCustomer(@HeaderParam(LRA_HTTP_CONTEXT_HEADER) URI lraId,
-                                     @RequestBody ValidateCustomerRequest validateCustomerRequest) {
+                                     @RequestBody final ValidateCustomerRequest validateCustomerRequest) {
         logger.info("Received ValidateCustomerRequest: " + validateCustomerRequest + " with LRA (ID: " + lraId + ")");
 
         try {
