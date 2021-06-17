@@ -19,7 +19,6 @@ import saga.microprofile.hotelservice.model.HotelBooking;
 import saga.microprofile.hotelservice.model.HotelBookingInformation;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -28,7 +27,6 @@ import java.net.URI;
 import java.util.List;
 import java.util.logging.Logger;
 
-//@RequestScoped
 @ApplicationScoped
 @Path("/api/hotels")
 public class HotelResource {

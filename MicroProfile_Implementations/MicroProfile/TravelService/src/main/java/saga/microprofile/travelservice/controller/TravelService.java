@@ -1,6 +1,5 @@
 package saga.microprofile.travelservice.controller;
 
-import saga.microprofile.travelservice.api.dto.RejectionReason;
 import saga.microprofile.travelservice.error.*;
 import saga.microprofile.travelservice.model.*;
 import saga.microprofile.travelservice.saga.*;
@@ -26,7 +25,6 @@ public class TravelService implements ITravelService {
     private SagaFactory sagaFactory;
 
     @Override
-//    @Transactional
     public List<TripInformation> getTripsInformation() {
         logger.info("Get trip bookings from Repository.");
 
@@ -42,7 +40,6 @@ public class TravelService implements ITravelService {
     }
 
     @Override
-//    @Transactional
     public TripInformation getTripInformation(final Long tripId) throws TravelException {
         logger.info(String.format("Get trip booking (ID: %d) from Repository.", tripId));
 
@@ -58,7 +55,6 @@ public class TravelService implements ITravelService {
     }
 
     @Override
-//    @Transactional
     public TripInformation bookTrip(final TripInformation tripInformation) {
         logger.info("Saving the booked Trip: " + tripInformation);
 
@@ -78,15 +74,13 @@ public class TravelService implements ITravelService {
     }
 
     @Override
-//    @Transactional
     public void rejectTrip(final URI lraId) {
         logger.info("Rejecting the booked trip associated with LRA ID " + lraId);
 
         try {
             TripInformation tripInformation = findBookingByLraId(lraId);
 
-            BookingStatus newBookingStatus = convertToBookingStatus(RejectionReason.REASON_UNKNOWN); // TODO
-            tripInformation.reject(newBookingStatus);
+            tripInformation.reject();
             tripInformationRepository.update(tripInformation);
         } catch (TravelException exception) {
             throw new BookingNotFound(lraId);
@@ -94,7 +88,6 @@ public class TravelService implements ITravelService {
     }
 
     @Override
-//    @Transactional
     public void confirmTripBooking(final Long tripId, final long hotelId, final long flightId) {
         logger.info("Confirming the booked trip with ID " + tripId);
 
@@ -139,16 +132,5 @@ public class TravelService implements ITravelService {
 
         logger.info("Related trip booking has been found: " + savedTripBooking);
         return savedTripBooking.get();
-    }
-
-    private BookingStatus convertToBookingStatus(final RejectionReason rejectionReason) {
-        switch (rejectionReason) {
-            case NO_HOTEL_AVAILABLE:
-                return BookingStatus.REJECTED_NO_HOTEL_AVAILABLE;
-            case NO_FLIGHT_AVAILABLE:
-                return BookingStatus.REJECTED_NO_FLIGHT_AVAILABLE;
-            default:
-                return BookingStatus.REJECTED_UNKNOWN;
-        }
     }
 }

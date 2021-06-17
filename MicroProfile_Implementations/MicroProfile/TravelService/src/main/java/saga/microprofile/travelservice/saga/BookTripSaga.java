@@ -78,6 +78,7 @@ public class BookTripSaga implements Runnable {
         Response hotelResponse =
                 hotelServiceTarget.request().header(LRA_HTTP_CONTEXT_HEADER, lraId).post(Entity.entity(bookHotelRequest, MediaType.APPLICATION_JSON));
         handleHotelBookingResponse(hotelResponse, bookTripSagaData);
+//        test(hotelResponse, NoHotelAvailable.class); // TODO
     }
 
     private void bookFlight() {
@@ -92,6 +93,7 @@ public class BookTripSaga implements Runnable {
         Response flightResponse =
                 flightServiceTarget.request().header(LRA_HTTP_CONTEXT_HEADER, lraId).post(Entity.entity(bookFlightRequest, MediaType.APPLICATION_JSON));
         handleFlightBookingResponse(flightResponse, bookTripSagaData);
+//        test(flightResponse, NoFlightAvailable.class); // TODO
     }
 
     private void confirmHotelBooking() {
@@ -141,15 +143,9 @@ public class BookTripSaga implements Runnable {
             try {
                 NoHotelAvailable noHotelAvailable = jsonb.fromJson(hotelResponseFailure.toString(),
                         NoHotelAvailable.class);
-                bookTripSagaData.setRejectionReason(RejectionReason.NO_HOTEL_AVAILABLE);
-                logger.info("Received response NoHotelAvailable: " + noHotelAvailable);
+                selectRejectionReason(noHotelAvailable);
             } catch (JsonbException ignore) {
-                try {
-                    ErrorMessage errorMessage = jsonb.fromJson(hotelResponseFailure.toString(), ErrorMessage.class);
-                    logger.info("Received errorMessage: " + errorMessage);
-                } catch (JsonbException jsonbException) {
-                    logger.warning("Hotel answer could not be processed: " + jsonbException.getMessage());
-                }
+                handleJsonbException(jsonb, hotelResponseFailure);
             }
         } else {
             logger.warning("Something went wrong when receiving hotel answer: " + hotelResponse.getStatusInfo().getStatusCode());
@@ -169,15 +165,9 @@ public class BookTripSaga implements Runnable {
             try {
                 NoFlightAvailable noFlightAvailable = jsonb.fromJson(hotelResponseFailure.toString(),
                         NoFlightAvailable.class);
-                bookTripSagaData.setRejectionReason(RejectionReason.NO_FLIGHT_AVAILABLE);
-                logger.info("Received response NoFlightAvailable: " + noFlightAvailable);
+                selectRejectionReason(noFlightAvailable);
             } catch (JsonbException ignore) {
-                try {
-                    ErrorMessage errorMessage = jsonb.fromJson(hotelResponseFailure.toString(), ErrorMessage.class);
-                    logger.info("Received errorMessage: " + errorMessage);
-                } catch (JsonbException jsonbException) {
-                    logger.warning("Flight answer could not be processed: " + jsonbException.getMessage());
-                }
+                handleJsonbException(jsonb, hotelResponseFailure);
             }
         } else {
             logger.warning("Something went wrong when receiving flight answer: " + flightResponse.getStatusInfo().getStatusCode());
@@ -186,6 +176,42 @@ public class BookTripSaga implements Runnable {
 
     private boolean checkForFailures() {
         return bookTripSagaData.getRejectionReason() != null;
+    }
+
+    // TODO
+    private <T> void test(final Response response, final Class<T> type) {
+        JsonObject responseFailure = response.readEntity(JsonObject.class);
+        Jsonb jsonb = JsonbBuilder.create();
+        try {
+            T failureResponseObject = jsonb.fromJson(response.toString(), type);
+            selectRejectionReason(failureResponseObject);
+        } catch (JsonbException ignore) {
+            handleJsonbException(jsonb, responseFailure);
+        }
+    }
+
+    private void handleJsonbException(final Jsonb jsonb, final JsonObject failureResponse) {
+        try {
+            ErrorMessage errorMessage = jsonb.fromJson(failureResponse.toString(), ErrorMessage.class);
+            logger.info("Received errorMessage: " + errorMessage);
+        } catch (JsonbException jsonbException) {
+            logger.warning("Hotel answer could not be processed: " + jsonbException.getMessage());
+        }
+    }
+
+    private void selectRejectionReason(final Object failureResponse) {
+        if (failureResponse instanceof NoHotelAvailable) {
+            bookTripSagaData.setRejectionReason(RejectionReason.NO_HOTEL_AVAILABLE);
+            logger.info("Received response NoHotelAvailable: " + failureResponse);
+            return;
+        } else if (failureResponse instanceof NoFlightAvailable) {
+            bookTripSagaData.setRejectionReason(RejectionReason.NO_FLIGHT_AVAILABLE);
+            logger.info("Received response NoFlightAvailable: " + failureResponse);
+            return;
+        }
+
+        bookTripSagaData.setRejectionReason(RejectionReason.REASON_UNKNOWN);
+        logger.info("Received response could not be identified: " + failureResponse);
     }
 
     @PreDestroy

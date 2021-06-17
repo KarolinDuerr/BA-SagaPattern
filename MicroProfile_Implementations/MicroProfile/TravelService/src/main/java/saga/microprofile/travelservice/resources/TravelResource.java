@@ -73,8 +73,7 @@ public class TravelResource {
     }
 
     @LRA(value = LRA.Type.REQUIRES_NEW, cancelOn = {Response.Status.INTERNAL_SERVER_ERROR}, cancelOnFamily =
-            {Response.Status.Family.CLIENT_ERROR}, end = false) // TODO
-//    @LRA(value = LRA.Type.REQUIRES_NEW)
+            {Response.Status.Family.CLIENT_ERROR}, end = false)
     @POST
     @Path("/book")
     @Produces(MediaType.APPLICATION_JSON)
@@ -102,8 +101,7 @@ public class TravelResource {
                 tripInformation.getBookingStatus().toString())).build();
     }
 
-    @LRA(value = LRA.Type.MANDATORY, end = true) // TODO
-//    @LRA(value = LRA.Type.MANDATORY, end = false)
+    @LRA(value = LRA.Type.MANDATORY, end = true)
     @Path("trips/{tripId}/confirm")
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
