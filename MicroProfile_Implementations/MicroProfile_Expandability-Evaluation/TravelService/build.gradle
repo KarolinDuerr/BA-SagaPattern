@@ -30,6 +30,7 @@ dependencies {
     compile project(":TravelService-API")
     compile project(":HotelService-API")
     compile project(":FlightService-API")
+    compile project(":CustomerService-API")
 
     // Javax persistence
     compile "javax.persistence:javax.persistence-api:2.2"

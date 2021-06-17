@@ -1,5 +1,8 @@
-FROM openjdk:8-jdk-alpine
+FROM open-liberty:beta
 
-COPY build/libs/CustomerService-*.jar .
+COPY --chown=1001:0 src/main/liberty/config/server.xml /config/
+COPY --chown=1001:0 src/main/liberty/config/bootstrap.properties /config/
+COPY --chown=1001:0 build/libs/mysql-connector-java-*.jar /config/jdbc/
+COPY --chown=1001:0 build/libs/CustomerService-*.war /config/apps/
 
-CMD java ${JAVA_OPTS} -jar CustomerService-*.jar
+RUN configure.sh

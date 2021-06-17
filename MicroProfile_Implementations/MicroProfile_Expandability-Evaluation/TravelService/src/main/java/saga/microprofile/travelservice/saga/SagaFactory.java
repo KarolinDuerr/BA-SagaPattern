@@ -42,9 +42,13 @@ public class SagaFactory {
     @ConfigProperty(name = "hotel.service.uri", defaultValue = "http://localhost:8081/api/hotels/bookings")
     private String hotelServiceBaseUri;
 
-        @Inject
+    @Inject
     @ConfigProperty(name = "flight.service.uri", defaultValue = "http://localhost:8082/api/flights/bookings")
     private String flightServiceBaseUri;
+
+    @Inject
+    @ConfigProperty(name = "customer.service.uri", defaultValue = "http://localhost:8084/api/customers")
+    private String customerServiceBaseUri;
 
     @Inject
     @ConfigProperty(name = "travel.service.uri", defaultValue = "http://localhost:8090/api/travel")
@@ -53,7 +57,7 @@ public class SagaFactory {
     public void startBookTripSaga(final BookTripSagaData bookTripSagaData, final String lraId) {
         logger.info("Starting BookTripSaga");
         threadFactory.newThread(new BookTripSaga(bookTripSagaData, flightServiceBaseUri, hotelServiceBaseUri,
-                travelServiceBaseUri, lraId)).start();
+                travelServiceBaseUri, customerServiceBaseUri, lraId)).start();
     }
 
 //    // TODO remove when Docker is working
@@ -152,7 +156,8 @@ public class SagaFactory {
 //            logger.info("Received from HotelService: " + bookHotelResponse);
 //            long hotelId = bookHotelResponse == null ? -1 : bookHotelResponse.getBookingId();
 //            bookTripSagaData.setHotelId(hotelId);
-//        } else if (hotelResponse.getStatusInfo().getStatusCode() == Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()) {
+//        } else if (hotelResponse.getStatusInfo().getStatusCode() == Response.Status.INTERNAL_SERVER_ERROR
+//        .getStatusCode()) {
 //            JsonObject hotelResponseFailure = hotelResponse.readEntity(JsonObject.class);
 //            Jsonb jsonb = JsonbBuilder.create();
 //            try {
@@ -169,7 +174,8 @@ public class SagaFactory {
 //                }
 //            }
 //        } else {
-//            logger.warning("Something went wrong when receiving hotel answer: " + hotelResponse.getStatusInfo().getStatusCode());
+//            logger.warning("Something went wrong when receiving hotel answer: " + hotelResponse.getStatusInfo()
+//            .getStatusCode());
 //        }
 //    }
 //
@@ -180,7 +186,8 @@ public class SagaFactory {
 //            logger.info("Received from FlightService: " + bookFlightResponse);
 //            long flightId = bookFlightResponse == null ? -1 : bookFlightResponse.getFlightBookingId();
 //            bookTripSagaData.setFlightId(flightId);
-//        } else if (flightResponse.getStatusInfo().getStatusCode() == Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()) {
+//        } else if (flightResponse.getStatusInfo().getStatusCode() == Response.Status.INTERNAL_SERVER_ERROR
+//        .getStatusCode()) {
 //            JsonObject hotelResponseFailure = flightResponse.readEntity(JsonObject.class);
 //            Jsonb jsonb = JsonbBuilder.create();
 //            try {
@@ -197,7 +204,8 @@ public class SagaFactory {
 //                }
 //            }
 //        } else {
-//            logger.warning("Something went wrong when receiving flight answer: " + flightResponse.getStatusInfo().getStatusCode());
+//            logger.warning("Something went wrong when receiving flight answer: " + flightResponse.getStatusInfo()
+//            .getStatusCode());
 //        }
 //    }
 //

@@ -3,8 +3,8 @@ version: '3'
 services:
   travelservice:
     build: ./TravelService/
-    image: travelservice:microProfile
-    container_name: travelservice_microProfile
+    image: travelservice:microProfileExpandability
+    container_name: travelservice_microProfileExpandability
     networks:
       - travel_application
     ports:
@@ -25,13 +25,14 @@ services:
       LRA_COORDINATOR_PATH: lrac/lra-coordinator
       FLIGHT_SERVICE_URI: flightservice
       HOTEL_SERVICE_URI: hotelservice
+      CUSTOMER_SERVICE_URI: customerservice
       TRAVEL_SERVICE_URI: travelservice
 
 
   hotelservice:
     build: ./HotelService/
-    image: hotelservice:microProfile
-    container_name: hotelservice_microProfile
+    image: hotelservice:microProfileExpandability
+    container_name: hotelservice_microProfileExpandability
     networks:
       - travel_application
     ports:
@@ -54,8 +55,8 @@ services:
 
   flightservice:
     build: ./FlightService/
-    image: flightservice:microProfile
-    container_name: flightservice_microProfile
+    image: flightservice:microProfileExpandability
+    container_name: flightservice_microProfileExpandability
     networks:
       - travel_application
     ports:
@@ -76,10 +77,34 @@ services:
       LRA_COORDINATOR_PATH: lrac/lra-coordinator
 
 
+  customerservice:
+    build: ./CustomerService/
+    image: customerservice:microProfileExpandability
+    container_name: customerservice_microProfileExpandability
+    networks:
+      - travel_application
+    ports:
+      - 8084:8084
+    depends_on:
+      - mysql
+      - lracoordinator
+    environment:
+      DEFAULT_HTTP_PORT: 8084
+      DEFAULT_HTTPS_PORT: -1
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: microProfile_customerService
+      OPENLIBERTY_MYSQL_USERNAME: mysqluser
+      OPENLIBERTY_MYSQL_PASSWORD: mysqlpw
+      LRA_COORDINATOR_PORT: 8080
+      LRA_COORDINATOR_HOST: lracoordinator
+      LRA_COORDINATOR_PATH: lrac/lra-coordinator
+
+
   lracoordinator:
     build: ./LRA-Coordinator/
-    image: lracoordinator:microProfile
-    container_name: lracoordinator_microProfile
+    image: lracoordinator:microProfileExpandability
+    container_name: lracoordinator_microProfileExpandability
     networks:
       - travel_application
     ports:
@@ -90,8 +115,8 @@ services:
 
 
   mysql:
-    image: library/mysql:5.6
-    container_name: mysql_microProfile
+    image: library/mysql:8.0.25
+    container_name: mysql_microProfileExpandability
     restart: always
     volumes:
       - ./init:/docker-entrypoint-initdb.d

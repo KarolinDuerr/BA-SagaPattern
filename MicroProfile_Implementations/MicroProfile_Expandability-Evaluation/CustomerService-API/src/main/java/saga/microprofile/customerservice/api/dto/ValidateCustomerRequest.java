@@ -1,14 +1,14 @@
 package saga.microprofile.customerservice.api.dto;
 
-public class ValidateCustomerCommand {
+public class ValidateCustomerRequest {
 
     private Long customerId;
 
     // default constructor necessary for Eventuate Framework
-    public ValidateCustomerCommand() {
+    public ValidateCustomerRequest() {
     }
 
-    public ValidateCustomerCommand(Long customerId) {
+    public ValidateCustomerRequest(final Long customerId) {
         this.customerId = customerId;
     }
 
@@ -16,7 +16,7 @@ public class ValidateCustomerCommand {
         return customerId;
     }
 
-    public void setCustomerId(Long customerId) {
+    public void setCustomerId(final Long customerId) {
         this.customerId = customerId;
     }
 }
