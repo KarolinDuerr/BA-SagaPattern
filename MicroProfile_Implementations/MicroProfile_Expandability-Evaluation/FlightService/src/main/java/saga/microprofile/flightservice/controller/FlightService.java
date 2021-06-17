@@ -1,6 +1,5 @@
 package saga.microprofile.flightservice.controller;
 
-import saga.microprofile.flightservice.error.BookingNotFound;
 import saga.microprofile.flightservice.error.ErrorType;
 import saga.microprofile.flightservice.error.FlightException;
 import saga.microprofile.flightservice.model.*;
@@ -21,10 +20,6 @@ public class FlightService implements IFlightService {
 
     @Inject
     private FlightInformationRepository flightInformationRepository;
-
-//    public FlightService(final FlightInformationRepository flightInformationRepository) {
-//            this.flightInformationRepository = flightInformationRepository;
-//    }
 
     public FlightService() {
 
