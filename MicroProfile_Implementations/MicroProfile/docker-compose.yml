@@ -17,6 +17,7 @@ services:
       DEFAULT_HTTPS_PORT: -1
       MYSQL_HOST: mysql
       MYSQL_PORT: 3306
+      MYSQL_DATABASE: microProfile
       OPENLIBERTY_MYSQL_USERNAME: mysqluser
       OPENLIBERTY_MYSQL_PASSWORD: mysqlpw
       LRA_COORDINATOR_PORT: 8080
@@ -24,6 +25,7 @@ services:
       LRA_COORDINATOR_PATH: lrac/lra-coordinator
       FLIGHT_SERVICE_URI: flightservice
       HOTEL_SERVICE_URI: hotelservice
+      TRAVEL_SERVICE_URI: travelservice
 
 
   hotelservice:

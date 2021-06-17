@@ -52,7 +52,7 @@ public class TravelResource {
                     Response.Status.INTERNAL_SERVER_ERROR);
         }
 
-        return Response.ok(dtoConverter.convertToTripInformationDTOList(trips)).build(); // TODO check
+        return Response.ok(dtoConverter.convertToTripInformationDTOList(trips)).build();
     }
 
     @GET
@@ -72,7 +72,8 @@ public class TravelResource {
         return Response.ok(dtoConverter.convertToTripInformationDTO(tripInformation)).build();
     }
 
-    @LRA(value = LRA.Type.REQUIRES_NEW, end = false) // TODO
+    @LRA(value = LRA.Type.REQUIRES_NEW, cancelOn = {Response.Status.INTERNAL_SERVER_ERROR}, cancelOnFamily =
+            {Response.Status.Family.CLIENT_ERROR}, end = false) // TODO
 //    @LRA(value = LRA.Type.REQUIRES_NEW)
     @POST
     @Path("/book")

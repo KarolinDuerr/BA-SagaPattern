@@ -80,7 +80,6 @@ public class HotelResource {
 
     @LRA(value = LRA.Type.MANDATORY, cancelOn = {Response.Status.INTERNAL_SERVER_ERROR}, cancelOnFamily =
             {Response.Status.Family.CLIENT_ERROR}, end = false)
-//    @LRA(value = LRA.Type.MANDATORY, end = false)
     @POST
     @Path("/bookings")
     @Produces(MediaType.APPLICATION_JSON)

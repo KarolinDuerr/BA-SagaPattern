@@ -131,7 +131,7 @@ public class TravelService implements ITravelService {
         List<TripInformation> customerTrips =
                 tripInformationRepository.findByLraId(lraId.toString());
 
-        Optional<TripInformation> savedTripBooking = customerTrips.stream().findFirst(); // TODO check
+        Optional<TripInformation> savedTripBooking = customerTrips.stream().findFirst();
 
         if (!savedTripBooking.isPresent()) {
             throw new TravelException(ErrorType.NON_EXISTING_ITEM, "Related trip could not be found");

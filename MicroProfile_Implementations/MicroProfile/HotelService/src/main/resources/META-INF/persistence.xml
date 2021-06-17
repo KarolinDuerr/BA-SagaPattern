@@ -6,16 +6,12 @@
                         http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
     <persistence-unit name="HotelBookingRepository" transaction-type="JTA">
         <jta-data-source>jdbc/HotelService</jta-data-source>
-        <class>saga.microprofile.hotelservice.model.HotelBooking</class> <!--TODO-->
+        <class>saga.microprofile.hotelservice.model.HotelBooking</class>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties>
             <property name="eclipselink.ddl-generation" value="create-tables"/>
             <property name="eclipselink.ddl-generation.output-mode" value="both"/>
-<!--            <property name="javax.persistence.schema-generation.database.action" value="create"/>-->
             <property name="eclipselink.target-database" value="MySQL"/>
-<!--            <property name="hibernate.hbm2ddl.auto" value="update"/>-->
-<!--            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>-->
-<!--            <property name="eclipselink.id-validation" value="NULL" />-->
         </properties>
     </persistence-unit>
 </persistence>

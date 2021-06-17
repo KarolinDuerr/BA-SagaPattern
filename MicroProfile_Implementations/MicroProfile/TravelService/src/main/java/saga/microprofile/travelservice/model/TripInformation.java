@@ -21,7 +21,6 @@ public class TripInformation implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-//    @GeneratedValue(strategy = GenerationType.IDENTITY) // TODO
     private Long id;
 
     @Version
