@@ -1,0 +1,40 @@
+apply plugin: 'war'
+apply plugin: 'liberty'
+apply plugin: 'java'
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+// configure liberty-gradle-plugin
+buildscript {
+    setArchivesBaseName("LRA-Coordinator")
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'io.openliberty.tools:liberty-gradle-plugin:3.1.2'
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Eclipse MicroProfile LRA runtime
+    libertyRuntime "io.openliberty.beta:openliberty-runtime:21.0.0.7-beta"
+}
+
+liberty {
+    server {
+        name = "LRACoordinatorServer"
+    }
+}
+
+clean.dependsOn 'libertyStop'

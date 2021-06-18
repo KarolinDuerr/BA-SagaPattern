@@ -1,0 +1,100 @@
+version: '3'
+
+services:
+  travelservice:
+    build: ./TravelService/
+    image: travelservice:microProfile
+    container_name: travelservice_microProfile
+    networks:
+      - travel_application
+    ports:
+      - 8090:8090
+    depends_on:
+      - mysql
+    environment:
+      DEFAULT_HTTP_PORT: 8090
+      DEFAULT_HTTPS_PORT: -1
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: microProfile
+      OPENLIBERTY_MYSQL_USERNAME: mysqluser
+      OPENLIBERTY_MYSQL_PASSWORD: mysqlpw
+      LRA_COORDINATOR_PORT: 8090
+      LRA_COORDINATOR_HOST: travelservice
+      LRA_COORDINATOR_PATH: lrac/lra-coordinator
+      FLIGHT_SERVICE_URI: flightservice
+      HOTEL_SERVICE_URI: hotelservice
+      TRAVEL_SERVICE_URI: travelservice
+
+
+  hotelservice:
+    build: ./HotelService/
+    image: hotelservice:microProfile
+    container_name: hotelservice_microProfile
+    networks:
+      - travel_application
+    ports:
+      - 8081:8081
+    depends_on:
+      - mysql
+    environment:
+      DEFAULT_HTTP_PORT: 8081
+      DEFAULT_HTTPS_PORT: -1
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: microProfile_hotelService
+      OPENLIBERTY_MYSQL_USERNAME: mysqluser
+      OPENLIBERTY_MYSQL_PASSWORD: mysqlpw
+      LRA_COORDINATOR_PORT: 8090
+      LRA_COORDINATOR_HOST: travelservice
+      LRA_COORDINATOR_PATH: lrac/lra-coordinator
+
+
+  flightservice:
+    build: ./FlightService/
+    image: flightservice:microProfile
+    container_name: flightservice_microProfile
+    networks:
+      - travel_application
+    ports:
+      - 8082:8082
+    depends_on:
+      - mysql
+    environment:
+      DEFAULT_HTTP_PORT: 8082
+      DEFAULT_HTTPS_PORT: -1
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: microProfile_flightService
+      OPENLIBERTY_MYSQL_USERNAME: mysqluser
+      OPENLIBERTY_MYSQL_PASSWORD: mysqlpw
+      LRA_COORDINATOR_PORT: 8090
+      LRA_COORDINATOR_HOST: travelservice
+      LRA_COORDINATOR_PATH: lrac/lra-coordinator
+
+
+  mysql:
+    image: library/mysql:8.0.25
+    container_name: mysql_microProfile
+    restart: always
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d
+      - travel_db_microProfile:/var/lib/mysql
+    ports:
+      - 3306:3306
+    networks:
+      - travel_application
+    expose:
+      - '3306'
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=microProfile
+      - MYSQL_USER=mysqluser
+      - MYSQL_PASSWORD=mysqlpw
+
+
+networks:
+  travel_application:
+
+volumes:
+  travel_db_microProfile:
