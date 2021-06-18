@@ -4,10 +4,13 @@ import org.eclipse.microprofile.lra.annotation.Compensate;
 import org.eclipse.microprofile.lra.annotation.Complete;
 import org.eclipse.microprofile.lra.annotation.ParticipantStatus;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
+import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 
 import static org.eclipse.microprofile.lra.annotation.ws.rs.LRA.LRA_HTTP_CONTEXT_HEADER;
 
+import org.eclipse.microprofile.openapi.annotations.servers.Server;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import saga.microprofile.travelservice.api.dto.BookTripRequest;
 import saga.microprofile.travelservice.api.dto.BookTripResponse;
 import saga.microprofile.travelservice.api.dto.ConfirmTripBooking;
@@ -27,6 +30,9 @@ import java.util.logging.Logger;
 
 @ApplicationScoped
 @Path("api/travel")
+@Tag(name = "TravelResource", description = "An example for a Travel Service that enables the user to book trips and " +
+        "to see already booked trips.")
+@Server( url = "http://localhost:8090/", description = "The server for the TravelResource endpoint.")
 public class TravelResource {
 
     private static final Logger logger = Logger.getLogger(TravelResource.class.toString());
@@ -101,7 +107,8 @@ public class TravelResource {
                 tripInformation.getBookingStatus().toString())).build();
     }
 
-    @LRA(value = LRA.Type.MANDATORY, end = true)
+    @LRA(value = LRA.Type.MANDATORY, cancelOn = {Response.Status.INTERNAL_SERVER_ERROR}, cancelOnFamily =
+            {Response.Status.Family.CLIENT_ERROR}, end = true)
     @Path("trips/{tripId}/confirm")
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
@@ -117,6 +124,9 @@ public class TravelResource {
     @Compensate
     @Path("/compensate")
     @PUT
+    @Operation(summary = "Compensate method for a failed LRA. Don't invoke from the outside.", description = "The " +
+            "compensate method for this resource that the LRA Coordinator invokes when an LRA has failed and to " +
+            "inform the participants to compensate for their performed actions.")
     public Response rejectTripBooking(@HeaderParam(LRA_HTTP_CONTEXT_HEADER) URI lraId) {
         logger.info("Compensate LRA (ID: " + lraId + ") --> Reject trip with related ID.");
         travelService.rejectTrip(lraId);
@@ -126,6 +136,9 @@ public class TravelResource {
     @Complete
     @Path("/complete")
     @PUT
+    @Operation(summary = "Confirm method for a finished LRA. Don't invoke from the outside.", description = "The " +
+            "confirm method of this resource that the LRA Coordinator invokes when an LRA has successfully finished " +
+            "and it wants to close it.")
     public Response completeTripBookingSaga(@HeaderParam(LRA_HTTP_CONTEXT_HEADER) URI lraId) {
         logger.info("Completing LRA (ID: " + lraId + ")");
         return Response.ok(ParticipantStatus.Completed).build();

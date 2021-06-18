@@ -30,12 +30,7 @@ public class HotelService implements IHotelService {
     public HotelService() {
     }
 
-//    public HotelService(final HotelBookingRepository hotelBookingRepository) {
-//        this.hotelBookingRepository = hotelBookingRepository;
-//    }
-
     @Override
-//    @Transactional
     public List<HotelBooking> getHotelBookings() {
         logger.info("Get hotel bookings from Repository.");
 
@@ -51,7 +46,6 @@ public class HotelService implements IHotelService {
     }
 
     @Override
-//    @Transactional
     public HotelBooking getHotelBooking(final Long bookingId) throws HotelException {
         logger.info(String.format("Get hotel booking (ID: %d) from Repository.", bookingId));
 
@@ -67,7 +61,6 @@ public class HotelService implements IHotelService {
     }
 
     @Override
-//    @Transactional
     public HotelBooking bookHotel(final String travellerName, final HotelBookingInformation hotelBooking) throws HotelException {
         logger.info("Saving the booked Hotel: " + hotelBooking);
 
@@ -90,7 +83,6 @@ public class HotelService implements IHotelService {
     }
 
     @Override
-//    @Transactional
     public void cancelHotelBooking(final URI lraId) {
         logger.info("Cancelling the booked hotel associated with LRA ID " + lraId);
 
@@ -116,7 +108,6 @@ public class HotelService implements IHotelService {
     }
 
     @Override
-//    @Transactional
     public void confirmHotelBooking(final Long bookingId, final Long tripId) {
         logger.info("Confirming the booked hotel with ID " + bookingId);
 

@@ -4,6 +4,7 @@ import org.eclipse.microprofile.lra.annotation.Compensate;
 import org.eclipse.microprofile.lra.annotation.Complete;
 import org.eclipse.microprofile.lra.annotation.ParticipantStatus;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
+import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import saga.microprofile.flightservice.api.dto.BookFlightRequest;
 import saga.microprofile.flightservice.api.dto.BookFlightResponse;
@@ -112,8 +113,11 @@ public class FlightResource {
     @Compensate
     @Path("/compensate")
     @PUT
+    @Operation(summary = "Compensate method for a failed LRA. Don't invoke from the outside.", description = "The " +
+            "compensate method for this resource that the LRA Coordinator invokes when an LRA has failed and to " +
+            "inform the participants to compensate for their performed actions.")
     public Response cancelFlight(@HeaderParam(LRA_HTTP_CONTEXT_HEADER) final URI lraId,
-                                @HeaderParam(LRA_HTTP_RECOVERY_HEADER) final URI recoveryId) {
+                                 @HeaderParam(LRA_HTTP_RECOVERY_HEADER) final URI recoveryId) {
         logger.info("Compensate LRA (ID: " + lraId + ") with the following recovery ID: " + recoveryId.toString());
         flightService.cancelFlightBooking(lraId);
         return Response.ok(ParticipantStatus.Compensated.name()).build();
@@ -122,6 +126,9 @@ public class FlightResource {
     @Complete
     @Path("/complete")
     @PUT
+    @Operation(summary = "Confirm method for a finished LRA. Don't invoke from the outside.", description = "The " +
+            "confirm method of this resource that the LRA Coordinator invokes when an LRA has successfully finished " +
+            "and it wants to close it.")
     public Response complete(@HeaderParam(LRA_HTTP_CONTEXT_HEADER) final URI lraId) {
         logger.info("Completing LRA (ID: " + lraId + ")");
         return Response.ok(ParticipantStatus.Completed).build();
