@@ -136,8 +136,8 @@ public class HotelResource {
     @Complete
     @Path("/complete")
     @PUT
-    @Operation(summary = "Confirm method for a finished LRA. Don't invoke from the outside.", description = "The " +
-            "confirm method of this resource that the LRA Coordinator invokes when an LRA has successfully finished " +
+    @Operation(summary = "Complete method for a finished LRA. Don't invoke from the outside.", description = "The " +
+            "complete method of this resource that the LRA Coordinator invokes when an LRA has successfully finished " +
             "and it wants to close it.")
     public Response complete(@HeaderParam(LRA_HTTP_CONTEXT_HEADER) URI lraId) {
         logger.info("Completing LRA (ID: " + lraId + ")");
