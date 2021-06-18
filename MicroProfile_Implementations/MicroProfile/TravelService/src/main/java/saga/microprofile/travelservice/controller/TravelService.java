@@ -4,12 +4,14 @@ import saga.microprofile.travelservice.error.*;
 import saga.microprofile.travelservice.model.*;
 import saga.microprofile.travelservice.saga.*;
 
+import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ThreadFactory;
 import java.util.logging.Logger;
 
 @ApplicationScoped
@@ -17,6 +19,9 @@ import java.util.logging.Logger;
 public class TravelService implements ITravelService {
 
     private static final Logger logger = Logger.getLogger(TravelService.class.toString());
+
+    @Resource(lookup = "concurrent/threadFactory2")
+    private ThreadFactory threadFactory;
 
     @Inject
     private TripInformationRepository tripInformationRepository;
@@ -61,6 +66,11 @@ public class TravelService implements ITravelService {
         // ensure idempotence of trip bookings
         TripInformation alreadyExistingTripBooking = checkIfBookingAlreadyExists(tripInformation);
         if (alreadyExistingTripBooking != null) {
+            /* LRA has to be closed here since only the confirmTrip method will end the LRA but since this booking
+               already happened, the confirmTrip method will not be called --> send close request already here to
+               ensure that the LRA is being closed.
+             */
+            threadFactory.newThread(new CloseLRARunnable(tripInformation.getLraId())).start();
             return alreadyExistingTripBooking;
         }
 
@@ -83,7 +93,10 @@ public class TravelService implements ITravelService {
             tripInformation.reject();
             tripInformationRepository.update(tripInformation);
         } catch (TravelException exception) {
-            throw new BookingNotFound(lraId);
+            logger.info("Exception: " + exception.getMessage());
+            logger.info(String.format("No trip has been booked for this LRA (ID: %s) yet, therefore no " +
+                    "need to cancel.", lraId));
+            // no trip has been booked for this LRA yet, therefore no need to cancel
         }
     }
 
