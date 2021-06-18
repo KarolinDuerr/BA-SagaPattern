@@ -67,14 +67,15 @@ has to be __smaller than 1__, for example:
 ```
 
 
-The services also provide a general *health* endpoint that shows information about the system whether it is up and running. These endpoints can be accessed via:
+The services also provide a general *health* endpoint that shows information about the system whether it is up and running.
+These endpoints can be accessed via:
 
 | __Service__ | __URL to health endpoint__ |
 |:-------:|------------------|
-|TravelService| http://localhost:8090/health
-|HotelService| http://localhost:8081/health
-|FlightService| http://localhost:8082/health
-|CustomerService| http://localhost:8083/health
+|TravelService| http://localhost:8090/health |
+|HotelService| http://localhost:8081/health |
+|FlightService| http://localhost:8082/health |
+|CustomerService| http://localhost:8083/health |
 
 If you are on Windows or Mac, you sometimes have to replace _localhost_ with the default IP of your docker machine (use `docker-machine ip default` to get this default IP).
 

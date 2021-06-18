@@ -4,31 +4,23 @@ The example application represents a travel application that consists of three b
 HotelService and FlightService. For simplicity reasons, only the workflow for booking a trip has been implemented.
 
 ## Start the Application
- // TODO
+
 1. Run `./gradlew clean build`
 
 
-2. Execute `docker-compose up --no-start`
+2. Execute `docker-compose up `
 
 
-3. Execute `docker-compose start elasticsearch`
-
-
-4. Execute `docker-compose start dynomite`
-
-
-5. Execute `docker-compose up`
-
-
-6. Requesting trip bookings is now possible. Either use `curl` commands,
+3. Requesting trip bookings is now possible. Either use `curl` commands,
    the provided `TravelApplication.json` insomnia file, which includes different trip booking requests,
    or access the [Swagger UI](https://swagger.io/tools/swagger-ui/) of the different services:
 
    | __Service__ | __URL to Swagger UI__ |
    |:-------|:-------------------:| 
-   |TravelService| http://localhost:8090/swagger-ui.html
-   |HotelService| http://localhost:8081/swagger-ui.html
-   |FlightService| http://localhost:8082/swagger-ui.html
+   |TravelService| http://localhost:8090/openapi/ui/
+   |HotelService| http://localhost:8081/openapi/ui/
+   |FlightService| http://localhost:8082/openapi/ui/
+   |LRA Coordinator (included in TravelService) | http://localhost:8090/openapi/ui/
 
 An example for such a request:
 ```
@@ -62,14 +54,14 @@ as `destination country` in the trip booking request:
 "Provoke flight failure"
 ```
 
-The services also provide a *health* and an *info* endpoint that show some information about the system like
-that the DB is up and running. These endpoints can be accessed via:
+The services also provide a general *health* endpoint that shows information about the system whether it is up and running.
+These endpoints can be accessed via:
 
-| __Service__ | __URL to health endpoint__ |  __URL to info endpoint__ |
-|:-------:|------------------|-------------------|
-|TravelService| http://localhost:8090/api/travel/monitor/health | http://localhost:8090/api/travel/monitor/info
-|HotelService| http://localhost:8081/api/hotels/monitor/health | http://localhost:8081/api/hotels/monitor/info
-|FlightService| http://localhost:8082/api/flights/monitor/health | http://localhost:8082/api/flights/monitor/info
+| __Service__ | __URL to health endpoint__ |
+|:-------:|------------------|
+|TravelService| http://localhost:8090/api/travel/monitor/health |
+|HotelService| http://localhost:8081/api/hotels/monitor/health |
+|FlightService| http://localhost:8082/api/flights/monitor/health |
 
 
 If you are on Windows or Mac, you sometimes have to replace _localhost_ with the default IP of your docker machine (use `docker-machine ip default` to get this default IP).
