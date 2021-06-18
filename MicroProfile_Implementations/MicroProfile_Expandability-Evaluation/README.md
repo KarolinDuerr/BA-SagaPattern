@@ -19,11 +19,11 @@ to realize the Saga pattern. The __CustomerService__ has to authorize the custom
 
    | __Service__ | __URL to Swagger UI__ |
    |:-------|:-------------------:| 
-   |TravelService| http://localhost:8090/openapi/ui/ // TODO --> currently shows LRA Coordinator API
+   |TravelService| http://localhost:8090/openapi/ui/
    |HotelService| http://localhost:8081/openapi/ui/
    |FlightService| http://localhost:8082/openapi/ui/
-   |CustomerService| http://localhost:8084/openapi/ui/
-   |LRA Coordinator| http://localhost:8080/openapi/ui/ // TODO doesn't work anymore --> included in TravelService
+   |CustomerService| http://localhost:8083/openapi/ui/
+   |LRA Coordinator (included in TravelService) | http://localhost:8090/openapi/ui/
 
 An example for such a request:
 ```
@@ -67,15 +67,14 @@ has to be __smaller than 1__, for example:
 ```
 
 
-The services also provide a *health* and an *info* endpoint that show some information about the system like
-that the DB is up and running. These endpoints can be accessed via:
+The services also provide a general *health* endpoint that shows information about the system whether it is up and running. These endpoints can be accessed via:
 
 | __Service__ | __URL to health endpoint__ |
 |:-------:|------------------|
 |TravelService| http://localhost:8090/health
 |HotelService| http://localhost:8081/health
 |FlightService| http://localhost:8082/health
-|CustomerService| http://localhost:8084/health
+|CustomerService| http://localhost:8083/health
 
 If you are on Windows or Mac, you sometimes have to replace _localhost_ with the default IP of your docker machine (use `docker-machine ip default` to get this default IP).
 

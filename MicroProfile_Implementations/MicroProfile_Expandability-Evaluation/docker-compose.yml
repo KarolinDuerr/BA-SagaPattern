@@ -81,11 +81,11 @@ services:
     networks:
       - travel_application
     ports:
-      - 8084:8084
+      - 8083:8083
     depends_on:
       - mysql
     environment:
-      DEFAULT_HTTP_PORT: 8084
+      DEFAULT_HTTP_PORT: 8083
       DEFAULT_HTTPS_PORT: -1
       MYSQL_HOST: mysql
       MYSQL_PORT: 3306

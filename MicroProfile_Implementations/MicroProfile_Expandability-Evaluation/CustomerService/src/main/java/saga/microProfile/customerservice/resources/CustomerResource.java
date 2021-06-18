@@ -4,6 +4,7 @@ import org.eclipse.microprofile.lra.annotation.Compensate;
 import org.eclipse.microprofile.lra.annotation.Complete;
 import org.eclipse.microprofile.lra.annotation.ParticipantStatus;
 import org.eclipse.microprofile.lra.annotation.ws.rs.LRA;
+import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import saga.microProfile.customerservice.controller.CustomerServiceImpl;
 import saga.microProfile.customerservice.controller.ICustomerService;
@@ -102,6 +103,9 @@ public class CustomerResource {
     @Compensate
     @Path("/compensate")
     @PUT
+    @Operation(summary = "Complete method for a finished LRA. Don't invoke from the outside.", description = "The " +
+            "confirm method of this resource that the LRA Coordinator invokes when an LRA has successfully finished " +
+            "and it wants to close it.")
     public Response cancelFlight(@HeaderParam(LRA_HTTP_CONTEXT_HEADER) final URI lraId,
                                  @HeaderParam(LRA_HTTP_RECOVERY_HEADER) final URI recoveryId) {
         logger.info("Compensate LRA (ID: " + lraId + ") with the following recovery ID: " + recoveryId.toString());
@@ -114,6 +118,9 @@ public class CustomerResource {
     @Complete
     @Path("/complete")
     @PUT
+    @Operation(summary = "Complete method for a finished LRA. Don't invoke from the outside.", description = "The " +
+            "complete method of this resource that the LRA Coordinator invokes when an LRA has successfully finished " +
+            "and it wants to close it.")
     public Response complete(@HeaderParam(LRA_HTTP_CONTEXT_HEADER) final URI lraId) {
         logger.info("Completing LRA (ID: " + lraId + ")");
         return Response.ok(ParticipantStatus.Completed).build();

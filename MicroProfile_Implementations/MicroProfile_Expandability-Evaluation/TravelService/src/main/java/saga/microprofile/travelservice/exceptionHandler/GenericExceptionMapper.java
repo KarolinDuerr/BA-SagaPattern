@@ -15,20 +15,14 @@ import java.util.stream.Collectors;
 @Provider
 public class GenericExceptionMapper implements ExceptionMapper<Throwable> {
 
-	@Override
-	public Response toResponse(Throwable exception) {
-	    if (exception instanceof WebApplicationException) {
+    @Override
+    public Response toResponse(Throwable exception) {
+        if (exception instanceof WebApplicationException) {
             return ((WebApplicationException) exception).getResponse();
         }
 
-	    StackTraceElement[] stacktrace = exception.getStackTrace();
-		String stackTraceAppended = Arrays.stream(stacktrace).map(Object::toString).collect(Collectors.joining(",\n "));
-
-		// TODO remove only for development purposes
-	    String message = String.format("StackTrace: %s \n Cause: %s \n message: %s, %s", stackTraceAppended, exception.getCause(), exception.getMessage(), exception.getLocalizedMessage());
-		return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-//				.entity("There has been a problem. Please check your input and try again.").build();
-				.entity(message).build();
-	}
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity("There has been a problem. Please check your input and try again.").build();
+    }
 
 }

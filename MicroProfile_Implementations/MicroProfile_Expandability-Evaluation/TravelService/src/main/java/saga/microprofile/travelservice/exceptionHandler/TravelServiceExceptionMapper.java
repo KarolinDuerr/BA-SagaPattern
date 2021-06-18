@@ -10,7 +10,6 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
-//public class TravelServiceExceptionMapper extends ResponseExceptionMapper<TravelServiceException> {
 @Provider
 public class TravelServiceExceptionMapper implements ExceptionMapper<TravelServiceException> {
 
@@ -19,11 +18,6 @@ public class TravelServiceExceptionMapper implements ExceptionMapper<TravelServi
         Status status = mapErrorTypeToResponseStatus(exception.getErrorType());
         return Response.status(status).entity(new ErrorMessage(exception.getErrorType(), exception.getMessage())).build();
     }
-
-//    @Override
-//    public TravelServiceException toThrowable(Response response) {
-//        return null;
-//    }
 
     private Status mapErrorTypeToResponseStatus(final ErrorType errorType) {
         switch (errorType) {
