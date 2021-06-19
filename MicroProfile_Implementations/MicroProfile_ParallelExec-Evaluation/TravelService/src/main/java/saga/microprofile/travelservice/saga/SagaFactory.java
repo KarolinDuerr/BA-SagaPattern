@@ -1,6 +1,8 @@
 package saga.microprofile.travelservice.saga;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import saga.microprofile.travelservice.controller.ILraCoordinatorService;
+import saga.microprofile.travelservice.controller.LraCoordinatorServiceImpl;
 
 import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
@@ -17,6 +19,10 @@ public class SagaFactory {
     private ThreadFactory threadFactory;
 
     @Inject
+    @LraCoordinatorServiceImpl
+    private ILraCoordinatorService lraCoordinatorService;
+
+    @Inject
     @ConfigProperty(name = "hotel.service.uri", defaultValue = "http://localhost:8081/api/hotels/bookings")
     private String hotelServiceBaseUri;
 
@@ -31,6 +37,6 @@ public class SagaFactory {
     public void startBookTripSaga(final BookTripSagaData bookTripSagaData, final String lraId) {
         logger.info("Starting BookTripSaga");
         threadFactory.newThread(new BookTripSaga(bookTripSagaData, flightServiceBaseUri, hotelServiceBaseUri,
-                travelServiceBaseUri, lraId)).start();
+                travelServiceBaseUri, lraId, lraCoordinatorService)).start();
     }
 }
