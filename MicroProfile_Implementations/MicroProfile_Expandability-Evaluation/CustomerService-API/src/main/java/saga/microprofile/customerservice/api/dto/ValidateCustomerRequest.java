@@ -19,4 +19,11 @@ public class ValidateCustomerRequest {
     public void setCustomerId(final Long customerId) {
         this.customerId = customerId;
     }
+
+    @Override
+    public String toString() {
+        return "ValidateCustomerRequest{" +
+                "customerId=" + customerId +
+                '}';
+    }
 }

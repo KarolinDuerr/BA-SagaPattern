@@ -14,7 +14,7 @@ public class SagaFactory {
     private static final Logger logger = Logger.getLogger(SagaFactory.class.toString());
 
     @Resource(lookup = "concurrent/threadFactory2")
-    private ThreadFactory threadFactory; // TODO fix Thread for Docker?
+    private ThreadFactory threadFactory;
 
     @Inject
     @ConfigProperty(name = "hotel.service.uri", defaultValue = "http://localhost:8081/api/hotels/bookings")

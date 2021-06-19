@@ -76,6 +76,12 @@ public class BookTripSaga implements Runnable {
         validateCustomer();
         bookHotel();
         bookFlight();
+
+        if (checkForFailures()) {
+            logger.info("Aborting Saga due to a failure. Rejection reason of trip: " + bookTripSagaData.getRejectionReason());
+            return;
+        }
+
         confirmHotelBooking();
         confirmTripBooking();
     }
@@ -88,7 +94,7 @@ public class BookTripSaga implements Runnable {
         // setting context header since new thread does not know about the current LRA context
         Response customerResponse =
                 customerServiceTarget.request().header(LRA_HTTP_CONTEXT_HEADER, lraId).post(Entity.entity(validateCustomerRequest, MediaType.APPLICATION_JSON));
-        handleValidateCustomerResponse(customerResponse, bookTripSagaData);
+        handleValidateCustomerResponse(customerResponse);
 //        test(customerResponse, CustomerValidationFailed.class); // TODO
     }
 
@@ -123,10 +129,6 @@ public class BookTripSaga implements Runnable {
     }
 
     private void confirmHotelBooking() {
-        if (checkForFailures()) {
-            return;
-        }
-
         logger.info("Trying to confirm the hotel booking.");
         String hotelConfirmUri = String.format("%s/%s/confirm", hotelServiceBaseUri,
                 bookTripSagaData.getTripId());
@@ -140,10 +142,6 @@ public class BookTripSaga implements Runnable {
     }
 
     private void confirmTripBooking() {
-        if (checkForFailures()) {
-            return;
-        }
-
         logger.info("Trying to confirm the trip.");
         String travelConfirmUri = String.format("%s/trips/%s/confirm", travelServiceBaseUri,
                 bookTripSagaData.getTripId());
@@ -157,8 +155,7 @@ public class BookTripSaga implements Runnable {
     }
 
     // TODO refactor handle methods
-    private void handleValidateCustomerResponse(final Response customerResponse,
-                                                final BookTripSagaData bookTripSagaData) {
+    private void handleValidateCustomerResponse(final Response customerResponse) {
         if (customerResponse.getStatusInfo().getStatusCode() == Response.Status.OK.getStatusCode()) {
             logger.info("Received from CustomerService: " + customerResponse.getStatusInfo().getStatusCode());
             return;
