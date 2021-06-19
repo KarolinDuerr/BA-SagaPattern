@@ -8,27 +8,18 @@ have been included that simulate different failure scenarios given a particular 
 1. Run `./gradlew clean build`
 
 
-2. Execute `docker-compose up --no-start`
+2. Execute `docker-compose up`
 
 
-3. Execute `docker-compose start elasticsearch`
-
-
-4. Execute `docker-compose start dynomite`
-
-
-5. Execute `docker-compose up`
-
-
-6. Requesting trip bookings is now possible. Either use `curl` commands,
+3. Requesting trip bookings is now possible. Either use `curl` commands,
    the provided `TravelApplication.json` insomnia file, which includes different trip booking requests,
    or access the [Swagger UI](https://swagger.io/tools/swagger-ui/) of the different services:
    
    | __Service__ | __URL to Swagger UI__ |
    |:-------|:-------------------:|
-   |TravelService| http://localhost:8090/swagger-ui.html
-   |HotelService| http://localhost:8081/swagger-ui.html
-   |FlightService| http://localhost:8082/swagger-ui.html
+   |TravelService| http://localhost:8090/openapi/ui/
+   |HotelService| http://localhost:8081/openapi/ui/
+   |FlightService| http://localhost:8082/openapi/ui/
    |LRA Coordinator (included in TravelService) | http://localhost:8090/openapi/ui/
 
 To simulate a Saga that fails because __no hotel__ or __no flight__ is __available__, use one of the following Strings
@@ -38,9 +29,6 @@ as `destination country` in the trip booking request:
 
 "Provoke flight failure"
 ```
-Additionally, the __Conductor UI__ can be accessed via 
-http://localhost:5000/ and the [Swagger UI](https://swagger.io/tools/swagger-ui/) of the __Conductor server__ via
-http://localhost:8080/.
 
 The services also provide a general *health* endpoint that shows information about the system whether it is up and running.
 These endpoints can be accessed via:

@@ -1,12 +1,17 @@
 package saga.microprofile.flightservice.controller;
 
-import saga.microprofile.flightservice.error.BookingNotFound;
+import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.core.DefaultDockerClientConfig;
+import com.github.dockerjava.core.DockerClientImpl;
+import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
+import com.github.dockerjava.transport.DockerHttpClient;
 import saga.microprofile.flightservice.error.ErrorType;
 import saga.microprofile.flightservice.error.FlightException;
 import saga.microprofile.flightservice.model.*;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.io.IOException;
 import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,10 +26,6 @@ public class FlightService implements IFlightService {
 
     @Inject
     private FlightInformationRepository flightInformationRepository;
-
-//    public FlightService(final FlightInformationRepository flightInformationRepository) {
-//            this.flightInformationRepository = flightInformationRepository;
-//    }
 
     public FlightService() {
 
@@ -69,10 +70,17 @@ public class FlightService implements IFlightService {
         // ensure idempotence of flight bookings
         FlightInformation alreadyExistingFlightInformation = checkIfBookingAlreadyExists(flightInformation);
         if (alreadyExistingFlightInformation != null) {
+            if (alreadyExistingFlightInformation.getReturnFlight().getCountry().contains("Provoke")) {
+                alreadyExistingFlightInformation.setProvokedFailure(true);
+            }
             return alreadyExistingFlightInformation;
         }
 
         flightInformationRepository.save(flightInformation);
+
+        // provoke different failure scenarios
+        provokeFailures(findAndBookFlightInformation.getDestination().getCountry(),
+                flightInformation.getProvokedFailure());
 
         return flightInformation;
     }
@@ -148,5 +156,56 @@ public class FlightService implements IFlightService {
 
         logger.info("Related flight booking has been found: " + existingFlightInformation);
         return existingFlightInformation.get();
+    }
+
+    private void provokeFailures(final String failureInput, final boolean provokedFailure) {
+
+        // provoke Orchestrator failure (TravelService)
+        provokeOrchestratorFailure(failureInput, provokedFailure);
+
+        // provoke own failure if it has not already been done before for this flight booking
+        provokeOwnFailure(failureInput, provokedFailure);
+    }
+
+    private void provokeOrchestratorFailure(String failureInput, boolean alreadyBeenProvoked) {
+        if (!failureInput.equalsIgnoreCase("Provoke orchestrator failure while executing") || alreadyBeenProvoked) {
+            return;
+        }
+
+        logger.info("Shutting down TravelService due to corresponding input.");
+        DefaultDockerClientConfig config = DefaultDockerClientConfig.createDefaultConfigBuilder()
+                .withDockerHost("unix:///var/run/docker.sock")
+                .withDockerTlsVerify(false)
+                .withDockerCertPath("/home/user/.docker/certs")
+                .withDockerConfig("/home/user/.docker")
+                .build();
+        DockerHttpClient httpClient = new ApacheDockerHttpClient.Builder()
+                .dockerHost(config.getDockerHost())
+                .sslConfig(config.getSSLConfig())
+                .build();
+        DockerClient dockerClient = DockerClientImpl.getInstance(config, httpClient);
+        dockerClient.stopContainerCmd("travelservice_microProfileFailurePerf").exec();
+        try {
+            dockerClient.close();
+        } catch (IOException e) {
+            logger.warning("Docker client could not be closed. \nException: " + e.getMessage());
+        }
+    }
+
+    private void provokeOwnFailure(String failureInput, boolean alreadyBeenProvoked) {
+        if (alreadyBeenProvoked) {
+            return;
+        }
+
+        if (failureInput.equalsIgnoreCase("Provoke exception while executing")) {
+            logger.info("Throwing runtime exception due to corresponding input.");
+            throw new RuntimeException("Test participant behaviour when provoking exception while executing");
+        }
+
+        if (failureInput.equalsIgnoreCase("Provoke participant failure while executing")) {
+            logger.info("Shutting down FlightService due to corresponding input.");
+            // Force the JVM to terminate to simulate sudden failure
+            Runtime.getRuntime().halt(1);
+        }
     }
 }

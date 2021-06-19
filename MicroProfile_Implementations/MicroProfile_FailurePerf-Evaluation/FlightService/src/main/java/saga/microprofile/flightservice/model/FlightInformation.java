@@ -43,9 +43,13 @@ public class FlightInformation implements Serializable {
 
     private String lraId;
 
+    // check if failure has already been provoked
+    private boolean provokedFailure;
+
     public FlightInformation() {
         this.tripId = -1; // no trip assigned to this booking
         lraId = ""; // no LRA assigned to this booking
+        this.provokedFailure = false;
     }
 
     public FlightInformation(final Flight outboundFlight, final Flight returnFlight, final String travellerName) throws FlightException {
@@ -57,6 +61,7 @@ public class FlightInformation implements Serializable {
         this.tripId = -1; // no trip assigned to this booking
         lraId = ""; // no LRA assigned to this booking
         this.bookingStatus = BookingStatus.CONFIRMED;
+        this.provokedFailure = false;
     }
 
     public FlightInformation(final Flight outboundFlight, final Flight returnFlight, final String travellerName,
@@ -69,6 +74,7 @@ public class FlightInformation implements Serializable {
         this.tripId = tripId;
         this.lraId = null == lraId ? "" : String.valueOf(lraId);
         this.bookingStatus = BookingStatus.CONFIRMED;
+        this.provokedFailure = false;
     }
 
     public Long getId() {
@@ -135,6 +141,14 @@ public class FlightInformation implements Serializable {
 
     public void setLraId(final String lraId) {
         this.lraId = lraId;
+    }
+
+    public boolean getProvokedFailure() {
+        return provokedFailure;
+    }
+
+    public void setProvokedFailure(final boolean provokedFailure) {
+        this.provokedFailure = provokedFailure;
     }
 
     private void validateFlightDates(final Flight outboundFlight, final Flight returnFlight) throws FlightException {

@@ -1,18 +1,19 @@
 package saga.microprofile.hotelservice.controller;
 
+import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.core.DefaultDockerClientConfig;
+import com.github.dockerjava.core.DockerClientImpl;
+import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
+import com.github.dockerjava.transport.DockerHttpClient;
 import saga.microprofile.hotelservice.error.BookingNotFound;
 import saga.microprofile.hotelservice.error.ErrorType;
 import saga.microprofile.hotelservice.error.HotelException;
 import saga.microprofile.hotelservice.model.*;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.transaction.Transactional;
+import java.io.IOException;
 import java.net.URI;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -78,6 +79,9 @@ public class HotelService implements IHotelService {
         }
 
         hotelBookingRepository.save(newHotelBooking);
+
+        // provoke different failure scenarios
+        provokeFailures(hotelBooking.getDestination().getCountry(), hotelBooking.getLraId());
 
         return newHotelBooking;
     }
@@ -165,5 +169,86 @@ public class HotelService implements IHotelService {
 
         logger.info("Related hotel booking has been found: " + savedHotelBooking);
         return savedHotelBooking.get();
+    }
+
+    private void provokeFailures(final String failureInput, final String lraId) {
+        // provoke Participant failure (FlightService)
+        provokeParticipantFailure(failureInput);
+
+        // provoke duplicate message --> acknowledge task twice // TODO
+        provokeDuplicateMessageToOrchestrator(failureInput, lraId);
+
+        // provoke sending an old message to the orchestrator // TODO
+        provokeOldMessageToOrchestrator(failureInput, lraId);
+    }
+
+    private void provokeParticipantFailure(final String failureInput) {
+        if (!failureInput.equalsIgnoreCase("Provoke participant failure before receiving task")) {
+            return;
+        }
+
+        logger.info("Shutting down FlightService due to corresponding input.");
+
+        DefaultDockerClientConfig config = DefaultDockerClientConfig.createDefaultConfigBuilder()
+                .withDockerHost("unix:///var/run/docker.sock")
+                .withDockerTlsVerify(false)
+                .withDockerCertPath("/home/user/.docker/certs")
+                .withDockerConfig("/home/user/.docker")
+                .build();
+        DockerHttpClient httpClient = new ApacheDockerHttpClient.Builder()
+                .dockerHost(config.getDockerHost())
+                .sslConfig(config.getSSLConfig())
+                .build();
+        DockerClient dockerClient = DockerClientImpl.getInstance(config, httpClient);
+        dockerClient.stopContainerCmd("flightservice_microProfileFailurePerf").exec();
+
+        try {
+            dockerClient.close();
+        } catch (IOException e) {
+            logger.warning("Docker client could not be closed. \nException: " + e.getMessage());
+        }
+    }
+
+    private void provokeDuplicateMessageToOrchestrator(final String failureInput, final String lraId) {
+        if (!failureInput.equalsIgnoreCase("Provoke duplicate message to orchestrator")) {
+            return;
+        }
+
+        logger.info("Provoking immediate duplicate message to orchestrator.");
+
+        // TODO check if provoking duplicate messages is possible
+//        String updateTaskEndpoint = "/tasks";
+//        HttpHeaders requestHeader = new HttpHeaders();
+//        requestHeader.setContentType(MediaType.APPLICATION_JSON);
+//        taskResult.setStatus(TaskResult.Status.COMPLETED);
+//        final JsonNode result =
+//                objectMapper.valueToTree(taskResult);
+//
+//        HttpEntity<JsonNode> request = new HttpEntity<>(result, requestHeader);
+//
+//        RestTemplate restTemplate = new RestTemplate();
+//        try {
+//            String taskId = restTemplate.postForObject(conductorServerUri + updateTaskEndpoint, request, String
+//            .class);
+//            logger.info("Received taskId: " + taskId);
+//        } catch (RestClientException restClientException) {
+//            logger.info("Received exception: " + restClientException.getMessage());
+//        }
+    }
+
+    private void provokeOldMessageToOrchestrator(final String failureInput, final String lraId) {
+        if (!failureInput.equalsIgnoreCase("Provoke sending old message to orchestrator")) {
+            return;
+        }
+
+        logger.info("Provoking delayed duplicate message to orchestrator --> old message");
+
+        // TODO check if provoking duplicate messages is possible
+//        taskResult.setStatus(TaskResult.Status.COMPLETED);
+//        final JsonNode result =
+//                objectMapper.valueToTree(taskResult);
+//
+//        OldMessageProvoker oldMessageProvoker = new OldMessageProvoker(conductorServerUri, result);
+//        new Thread(oldMessageProvoker).start();
     }
 }
