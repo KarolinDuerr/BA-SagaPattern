@@ -16,7 +16,7 @@ HotelService and FlightService. For simplicity reasons, only the workflow for bo
    or access the [Swagger UI](https://swagger.io/tools/swagger-ui/) of the different services:
 
    | __Service__ | __URL to Swagger UI__ |
-   |:-------|:-------------------:| 
+   |:-------|:-------------------:|
    |TravelService| http://localhost:8090/openapi/ui/
    |HotelService| http://localhost:8081/openapi/ui/
    |FlightService| http://localhost:8082/openapi/ui/
@@ -59,9 +59,9 @@ These endpoints can be accessed via:
 
 | __Service__ | __URL to health endpoint__ |
 |:-------:|------------------|
-|TravelService| http://localhost:8090/api/travel/monitor/health |
-|HotelService| http://localhost:8081/api/hotels/monitor/health |
-|FlightService| http://localhost:8082/api/flights/monitor/health |
+|TravelService| http://localhost:8090/health |
+|HotelService| http://localhost:8081/health |
+|FlightService| http://localhost:8082/health |
 
 
 If you are on Windows or Mac, you sometimes have to replace _localhost_ with the default IP of your docker machine (use `docker-machine ip default` to get this default IP).

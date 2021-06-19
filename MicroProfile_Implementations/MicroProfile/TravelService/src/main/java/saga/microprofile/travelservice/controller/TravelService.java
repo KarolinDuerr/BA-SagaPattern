@@ -4,14 +4,12 @@ import saga.microprofile.travelservice.error.*;
 import saga.microprofile.travelservice.model.*;
 import saga.microprofile.travelservice.saga.*;
 
-import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ThreadFactory;
 import java.util.logging.Logger;
 
 @ApplicationScoped
@@ -20,8 +18,9 @@ public class TravelService implements ITravelService {
 
     private static final Logger logger = Logger.getLogger(TravelService.class.toString());
 
-    @Resource(lookup = "concurrent/threadFactory2")
-    private ThreadFactory threadFactory;
+    @Inject
+    @LraCoordinatorServiceImpl
+    private ILraCoordinatorService lraCoordinatorService;
 
     @Inject
     private TripInformationRepository tripInformationRepository;
@@ -70,7 +69,7 @@ public class TravelService implements ITravelService {
                already happened, the confirmTrip method will not be called --> send close request already here to
                ensure that the LRA is being closed.
              */
-            threadFactory.newThread(new CloseLRARunnable(tripInformation.getLraId())).start();
+            lraCoordinatorService.closeActiveLra(tripInformation.getLraId());
             return alreadyExistingTripBooking;
         }
 

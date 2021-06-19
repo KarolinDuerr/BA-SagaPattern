@@ -20,4 +20,11 @@ public class NoFlightAvailable {
     public void setTripId(long tripId) {
         this.tripId = tripId;
     }
+
+    @Override
+    public String toString() {
+        return "NoFlightAvailable{" +
+                "tripId=" + tripId +
+                '}';
+    }
 }

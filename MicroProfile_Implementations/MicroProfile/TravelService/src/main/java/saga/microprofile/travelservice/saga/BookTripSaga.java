@@ -66,6 +66,12 @@ public class BookTripSaga implements Runnable {
 
         bookHotel();
         bookFlight();
+
+        if (checkForFailures()) {
+            logger.info("Aborting Saga due to a failure. Rejection reason of trip: " + bookTripSagaData.getRejectionReason());
+            return;
+        }
+
         confirmHotelBooking();
         confirmTripBooking();
     }
@@ -97,10 +103,6 @@ public class BookTripSaga implements Runnable {
     }
 
     private void confirmHotelBooking() {
-        if (checkForFailures()) {
-            return;
-        }
-
         logger.info("Trying to confirm the hotel booking.");
         String hotelConfirmUri = String.format("%s/%s/confirm", hotelServiceBaseUri,
                 bookTripSagaData.getTripId());
@@ -114,10 +116,6 @@ public class BookTripSaga implements Runnable {
     }
 
     private void confirmTripBooking() {
-        if (checkForFailures()) {
-            return;
-        }
-
         logger.info("Trying to confirm the trip.");
         String travelConfirmUri = String.format("%s/trips/%s/confirm", travelServiceBaseUri,
                 bookTripSagaData.getTripId());
