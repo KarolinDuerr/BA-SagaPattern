@@ -24,6 +24,10 @@ public class TravelService implements ITravelService {
     private ThreadFactory threadFactory;
 
     @Inject
+    @LraCoordinatorServiceImpl
+    private ILraCoordinatorService lraCoordinatorService;
+
+    @Inject
     private TripInformationRepository tripInformationRepository;
 
     @Inject
@@ -70,7 +74,7 @@ public class TravelService implements ITravelService {
                already happened, the confirmTrip method will not be called --> send close request already here to
                ensure that the LRA is being closed.
              */
-            threadFactory.newThread(new CloseLRARunnable(tripInformation.getLraId())).start();
+            lraCoordinatorService.closeActiveLra(tripInformation.getLraId());
             return alreadyExistingTripBooking;
         }
 
