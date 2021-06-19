@@ -110,9 +110,9 @@ public class BookTripSaga implements Runnable {
         ConfirmHotelBooking confirmHotelBooking = new ConfirmHotelBooking(bookTripSagaData.getHotelId(),
                 bookTripSagaData.getTripId());
         // setting context header since new thread does not know about the current LRA context
-        Response confirmTripResponse =
+        Response confirmHotelResponse =
                 hotelServiceTarget.request().header(LRA_HTTP_CONTEXT_HEADER, lraId).put(Entity.entity(confirmHotelBooking, MediaType.APPLICATION_JSON_TYPE));
-        logger.info("Received from HotelService: " + confirmTripResponse.getStatus());
+        logger.info("Received confirmation answer from HotelService: " + confirmHotelResponse.getStatus());
     }
 
     private void confirmTripBooking() {
@@ -125,7 +125,7 @@ public class BookTripSaga implements Runnable {
         // setting context header since new thread does not know about the current LRA context
         Response confirmTripResponse =
                 travelServiceTarget.request().header(LRA_HTTP_CONTEXT_HEADER, lraId).put(Entity.entity(confirmTripBooking, MediaType.APPLICATION_JSON));
-        logger.info("Received from TravelService: " + confirmTripResponse.getStatus());
+        logger.info("Received confirmation answer from TravelService: " + confirmTripResponse.getStatus());
     }
 
     // TODO refactor handle methods
