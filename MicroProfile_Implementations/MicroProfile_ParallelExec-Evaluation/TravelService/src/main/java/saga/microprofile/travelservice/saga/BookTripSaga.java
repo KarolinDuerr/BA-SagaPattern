@@ -14,7 +14,6 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.util.concurrent.CountDownLatch;
 import java.util.logging.Logger;
 
@@ -43,6 +42,8 @@ public class BookTripSaga implements Runnable {
     private final String lraId;
 
     private final CountDownLatch bookingLatch = new CountDownLatch(2);
+
+    private final CountDownLatch confirmationLatch = new CountDownLatch(2);
 
     public BookTripSaga(final BookTripSagaData bookTripSagaData, final String flightServiceUri,
                         final String hotelServiceUri, final String travelServiceUri, final String lraId,
@@ -75,7 +76,8 @@ public class BookTripSaga implements Runnable {
         }
 
         if (checkForFailures()) {
-            logger.info("Aborting Saga due to a failure. Rejection reason of trip: " + bookTripSagaData.getRejectionReason());
+            logger.info("Aborting Saga due to a failure. Rejection reason of trip: "
+                    + bookTripSagaData.getRejectionReason());
             return;
         }
 
@@ -90,7 +92,8 @@ public class BookTripSaga implements Runnable {
         BookingCallback<BookHotelResponse> hotelBookingCallback = new BookingCallback<>(bookTripSagaData, bookingLatch,
                 BookHotelResponse.class, lraCoordinatorService);
         // setting context header since new thread does not know about the current LRA context
-        hotelServiceTarget.request().header(LRA_HTTP_CONTEXT_HEADER, lraId).async().post(Entity.entity(bookHotelRequest, MediaType.APPLICATION_JSON), hotelBookingCallback);
+        hotelServiceTarget.request().header(LRA_HTTP_CONTEXT_HEADER, lraId).async()
+                .post(Entity.entity(bookHotelRequest, MediaType.APPLICATION_JSON), hotelBookingCallback);
     }
 
     private void bookFlight() {
@@ -104,7 +107,8 @@ public class BookTripSaga implements Runnable {
         BookingCallback<BookFlightResponse> flightBookingCallback = new BookingCallback<>(bookTripSagaData,
                 bookingLatch, BookFlightResponse.class, lraCoordinatorService);
         // setting context header since new thread does not know about the current LRA context
-        flightServiceTarget.request().header(LRA_HTTP_CONTEXT_HEADER, lraId).async().post(Entity.entity(bookFlightRequest, MediaType.APPLICATION_JSON), flightBookingCallback);
+        flightServiceTarget.request().header(LRA_HTTP_CONTEXT_HEADER, lraId).async()
+                .post(Entity.entity(bookFlightRequest, MediaType.APPLICATION_JSON), flightBookingCallback);
     }
 
     private void confirmHotelBooking() {
@@ -113,10 +117,11 @@ public class BookTripSaga implements Runnable {
         WebTarget hotelServiceTarget = hotelServiceClient.target(hotelConfirmUri);
         ConfirmHotelBooking confirmHotelBooking = new ConfirmHotelBooking(bookTripSagaData.getHotelId(),
                 bookTripSagaData.getTripId());
+        ConfirmationCallback<ConfirmHotelBooking> confirmHotelCallback = new ConfirmationCallback<>(confirmationLatch
+                , ConfirmHotelBooking.class, bookTripSagaData.getTripInformation().getLraId(), lraCoordinatorService);
         // setting context header since new thread does not know about the current LRA context
-        Response confirmHotelResponse =
-                hotelServiceTarget.request().header(LRA_HTTP_CONTEXT_HEADER, lraId).put(Entity.entity(confirmHotelBooking, MediaType.APPLICATION_JSON_TYPE));
-        logger.info("Received confirmation answer from HotelService: " + confirmHotelResponse.getStatus());
+        hotelServiceTarget.request().header(LRA_HTTP_CONTEXT_HEADER, lraId).async()
+                .put(Entity.entity(confirmHotelBooking, MediaType.APPLICATION_JSON_TYPE), confirmHotelCallback);
     }
 
     private void confirmTripBooking() {
@@ -126,10 +131,11 @@ public class BookTripSaga implements Runnable {
         WebTarget travelServiceTarget = travelServiceClient.target(travelConfirmUri);
         ConfirmTripBooking confirmTripBooking = new ConfirmTripBooking(bookTripSagaData.getTripId(),
                 bookTripSagaData.getHotelId(), bookTripSagaData.getFlightId());
+        ConfirmationCallback<ConfirmTripBooking> confirmTripCallback = new ConfirmationCallback<>(confirmationLatch,
+                ConfirmTripBooking.class, bookTripSagaData.getTripInformation().getLraId(), lraCoordinatorService);
         // setting context header since new thread does not know about the current LRA context
-        Response confirmTripResponse =
-                travelServiceTarget.request().header(LRA_HTTP_CONTEXT_HEADER, lraId).put(Entity.entity(confirmTripBooking, MediaType.APPLICATION_JSON));
-        logger.info("Received confirmation answer from TravelService: " + confirmTripResponse.getStatus());
+        travelServiceTarget.request().header(LRA_HTTP_CONTEXT_HEADER, lraId).async()
+                .put(Entity.entity(confirmTripBooking, MediaType.APPLICATION_JSON), confirmTripCallback);
     }
 
     private boolean checkForFailures() {
