@@ -18,7 +18,7 @@ is the **parallel execution** of specific tasks instead of a sequential one.
    the [Swagger UI](https://swagger.io/tools/swagger-ui/) of the different services:
 
    | __Service__ | __URL to Swagger UI__ |
-               |:-------|:-------------------:|
+   |:-------|:-------------------:|
    |TravelService| http://localhost:8090/openapi/ui/
    |HotelService| http://localhost:8081/openapi/ui/
    |FlightService| http://localhost:8082/openapi/ui/

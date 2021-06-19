@@ -117,7 +117,7 @@ public class HotelResource {
     ConfirmHotelBooking confirmHotelBooking) {
         logger.info("Confirming the hotel for trip ID: " + confirmHotelBooking.getTripId() + " for LRA (ID: " + lraId + ")");
         hotelService.confirmHotelBooking(confirmHotelBooking.getBookingId(), confirmHotelBooking.getTripId());
-        return Response.ok(ParticipantStatus.Completed).build();
+        return Response.ok().build();
     }
 
     @Compensate

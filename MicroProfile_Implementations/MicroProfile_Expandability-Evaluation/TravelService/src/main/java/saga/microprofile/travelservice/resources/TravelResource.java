@@ -113,7 +113,7 @@ public class TravelResource {
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response confirmTripBooking(@HeaderParam(LRA_HTTP_CONTEXT_HEADER) URI lraId,
+    public Response confirmTrip(@HeaderParam(LRA_HTTP_CONTEXT_HEADER) URI lraId,
                                        @PathParam(value = "tripId") final Long tripId,
                                        @RequestBody final ConfirmTripBooking confirmTripBooking) {
         logger.info("Confirming trip with ID: " + tripId + " for LRA (ID: " + lraId + ")");
@@ -127,7 +127,7 @@ public class TravelResource {
     @Operation(summary = "Compensate method for a failed LRA. Don't invoke from the outside.", description = "The " +
             "compensate method for this resource that the LRA Coordinator invokes when an LRA has failed and to " +
             "inform the participants to compensate for their performed actions.")
-    public Response rejectTripBooking(@HeaderParam(LRA_HTTP_CONTEXT_HEADER) URI lraId) {
+    public Response rejectTrip(@HeaderParam(LRA_HTTP_CONTEXT_HEADER) URI lraId) {
         logger.info("Compensate LRA (ID: " + lraId + ") --> Reject trip with related ID.");
         travelService.rejectTrip(lraId);
         return Response.ok(ParticipantStatus.Compensated.name()).build();
