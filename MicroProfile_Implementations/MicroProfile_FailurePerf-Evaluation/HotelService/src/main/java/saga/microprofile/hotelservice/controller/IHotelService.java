@@ -10,18 +10,16 @@ import java.util.List;
 
 public interface IHotelService {
 
-//    @Transactional
     List<HotelBooking> getHotelBookings();
 
-//    @Transactional
     HotelBooking getHotelBooking(final Long bookingId) throws HotelException;
 
-//    @Transactional
     HotelBooking bookHotel(final String travellerName, final HotelBookingInformation hotelBooking) throws HotelException;
 
-//    @Transactional
     void cancelHotelBooking(final URI lraId);
 
-//    @Transactional
     void confirmHotelBooking(final Long bookingId, final Long tripId);
+
+    // provoke sending an old message to the orchestrator
+    void provokeOldMessageToOrchestrator(final URI lraId);
 }

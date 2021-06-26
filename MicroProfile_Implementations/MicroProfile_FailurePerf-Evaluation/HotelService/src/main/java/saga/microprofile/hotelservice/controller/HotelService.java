@@ -5,11 +5,13 @@ import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientImpl;
 import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
 import com.github.dockerjava.transport.DockerHttpClient;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import saga.microprofile.hotelservice.error.BookingNotFound;
 import saga.microprofile.hotelservice.error.ErrorType;
 import saga.microprofile.hotelservice.error.HotelException;
 import saga.microprofile.hotelservice.model.*;
 
+import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.io.IOException;
@@ -17,6 +19,7 @@ import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ThreadFactory;
 import java.util.logging.Logger;
 
 @ApplicationScoped
@@ -24,6 +27,13 @@ import java.util.logging.Logger;
 public class HotelService implements IHotelService {
 
     private static final Logger logger = Logger.getLogger(HotelService.class.toString());
+
+    @Resource(lookup = "concurrent/threadFactory2")
+    private ThreadFactory threadFactory;
+
+    @Inject
+    @ConfigProperty(name = "lra.coordinator.uri", defaultValue = "http://localhost:8090/lrac/lra-coordinator")
+    private String lraCoordinatorUri;
 
     @Inject
     private HotelBookingRepository hotelBookingRepository;
@@ -129,6 +139,22 @@ public class HotelService implements IHotelService {
         }
     }
 
+    @Override
+    public void provokeOldMessageToOrchestrator(final URI lraId) {
+        try {
+            HotelBooking hotelBooking = findBookingByLraId(lraId);
+
+            if (hotelBooking == null) {
+                throw new BookingNotFound(lraId);
+            }
+
+            provokeOldMessageToOrchestrator(hotelBooking.getBookingInformation().getDestination().getCountry(), lraId);
+
+        } catch (HotelException hotelException) {
+            throw new BookingNotFound(lraId);
+        }
+    }
+
     // only mocking the general function of this method
     private HotelBooking findAvailableHotel(final String travellerName,
                                             final HotelBookingInformation hotelBookingInformation) throws HotelException {
@@ -152,7 +178,7 @@ public class HotelService implements IHotelService {
             return null;
         }
 
-        logger.info("Hotel has already been booked: " + savedHotelBooking.toString());
+        logger.info("Hotel has already been booked: " + savedHotelBooking);
         return savedHotelBooking.get();
     }
 
@@ -177,9 +203,6 @@ public class HotelService implements IHotelService {
 
         // provoke duplicate message --> acknowledge task twice // TODO
         provokeDuplicateMessageToOrchestrator(failureInput, lraId);
-
-        // provoke sending an old message to the orchestrator // TODO
-        provokeOldMessageToOrchestrator(failureInput, lraId);
     }
 
     private void provokeParticipantFailure(final String failureInput) {
@@ -236,19 +259,12 @@ public class HotelService implements IHotelService {
 //        }
     }
 
-    private void provokeOldMessageToOrchestrator(final String failureInput, final String lraId) {
+    private void provokeOldMessageToOrchestrator(final String failureInput, final URI lraId) {
         if (!failureInput.equalsIgnoreCase("Provoke sending old message to orchestrator")) {
             return;
         }
 
-        logger.info("Provoking delayed duplicate message to orchestrator --> old message");
-
-        // TODO check if provoking duplicate messages is possible
-//        taskResult.setStatus(TaskResult.Status.COMPLETED);
-//        final JsonNode result =
-//                objectMapper.valueToTree(taskResult);
-//
-//        OldMessageProvoker oldMessageProvoker = new OldMessageProvoker(conductorServerUri, result);
-//        new Thread(oldMessageProvoker).start();
+        logger.info("Provoking delayed close LRA message to orchestrator --> old message");
+        threadFactory.newThread(new OldMessageProvoker(lraCoordinatorUri, lraId)).start();
     }
 }

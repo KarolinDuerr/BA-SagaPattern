@@ -4,6 +4,7 @@
         <feature>jndi-1.0</feature>
         <feature>microProfile-4.0</feature>
         <feature>eventLogging-1.0</feature>
+        <feature>mpContextPropagation-1.2</feature>
         <feature>mpLRA-1.0</feature>
     </featureManager>
 
@@ -37,6 +38,14 @@
 
     <!-- Default SSL configuration enables trust for default certificates from the Java runtime -->
     <ssl id="defaultSSLConfig" trustDefaultCerts="true"/>
+
+    <!-- Enable Concurrency -->
+    <managedThreadFactory jndiName="concurrent/threadFactory2">
+        <contextService>
+            <classloaderContext/>
+            <jeeMetadataContext/>
+        </contextService>
+    </managedThreadFactory>
 
     <!-- Datasource Connector Location -->
     <library id="mySQLLib">

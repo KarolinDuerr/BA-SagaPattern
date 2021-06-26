@@ -141,6 +141,10 @@ public class HotelResource {
             "and it wants to close it.")
     public Response complete(@HeaderParam(LRA_HTTP_CONTEXT_HEADER) URI lraId) {
         logger.info("Completing LRA (ID: " + lraId + ")");
+
+        // provoke sending an old message to the orchestrator
+        hotelService.provokeOldMessageToOrchestrator(lraId);
+
         return Response.ok(ParticipantStatus.Completed).build();
     }
 }

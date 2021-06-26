@@ -143,4 +143,7 @@ orchestrator failures involves failures of this service.
     ```  
   The __FlightService__ terminates then the docker container of the __Conductor server__ after booking a flight, but before informing the orchestrator about it.
   Afterwards, the __Conductor server__, again, has to be __restarted__ using the same commands as above.
- 
+
+
+### 3. Breach of Saga protocol
+// TODO
