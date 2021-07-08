@@ -83,6 +83,50 @@ docker-compose down --remove-orphans
 
 ----------------------------
 
+## General Saga Characteristics
+
+### External Compensation Trigger
+
+In order to start the compensation of a currently running Saga externally, a BPMN error has to be created for a scheduled
+or still unfinished task. Before the BPMN error can be created, the task has to be fetched and locked if not an already 
+existing worker has done that. To achieve that, the following request, supplemented with the missing information, has to
+be sent as POST request to the engine's `http://localhost:8090/engine-rest/external-task/fetchAndLock` endpoint.
+Since the implementation uses mainly external tasks, the BPMN error will be created for an external task which means the
+request is sent to the engine's `/external-task` endpoint. If an existing worker has already fetched the respective task,
+this request can be skipped.
+
+```
+ {
+      "workerId":"Any name, e.g. compensationProvoker",
+      "maxTasks":2,
+	  "usePriority":true,
+      "topics":
+      [
+         {
+            "topicName": "Name of the topic where the task will be sent to, e.g. bookFlight",
+            "lockDuration": 10000
+         }
+      ]
+ }
+```
+
+Now that the respective task is locked and fetched, a BPMN error can be created. Therefore, the following request 
+supplemented with the missing information has to be sent as POST request to the engine's 
+`http://localhost:8090/engine-rest/external-task/{taskId}/bpmnError` endpoint. 
+
+```
+{
+"workerId": "Name specified in previous request: compensationProvoker",
+"errorCode": "Error Code that triggers the compensation event (check the bpmn definition for that), e.g. FLIGHT_ERROR",
+"errorMessage": "Any message: Provoke compensation externally"
+}
+```
+
+
+The `TravelApplication.json` insomnia file also includes these requests within the `ExternalCompensationTrigger` directory. 
+
+----------------------------
+
 ## Monitor the Application
 
 ### Camunda's Cockpit
@@ -95,3 +139,18 @@ Password:   admin
 
 If the respective values have been changed in the application.properties file of the TravelService
 the new values have to be used for the username and the password.
+
+### Log Files
+Each service provides a log that contains some information about it.
+The logs can be accessed using the name of the relevant container.
+The different logs can be accessed using the following commands:
+
+| __Log of__ | __Command to execute__ |
+|:-------|:-------------------|
+|TravelService| `docker logs travelservice_camunda`|
+|HotelService| `docker logs hotelservice_camunda`|
+|FlightService|  `docker logs flightservice_camunda`|
+
+By using the `--follow` supplement, it will be continued to stream the service's output to the console.
+
+The logging level can be changed in the respective `application.properties` file.
