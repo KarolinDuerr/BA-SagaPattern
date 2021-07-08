@@ -25,14 +25,14 @@ have been included that simulate different failure scenarios given a particular 
    or access the [Swagger UI](https://swagger.io/tools/swagger-ui/) of the different services:
 
    | __Service__ | __URL to Swagger UI__ |
-   |:-------|:-------------------:| 
+   |:-------|:-------------------:|
    |TravelService| http://localhost:8090/swagger-ui.html
    |HotelService| http://localhost:8081/swagger-ui.html
    |FlightService| http://localhost:8082/swagger-ui.html
    |CustomerService| http://localhost:8083/swagger-ui.html
 
 An example for such a request:
-```
+```json
 {
     "duration":
     {
@@ -63,7 +63,9 @@ as `destination country` in the trip booking request:
 "Provoke flight failure"
 ```
 
-Additionally, the Camunda Cockpit can be accessed via http://localhost:8090/ using _admin_ as username and password.
+
+Additionally, the __Camunda Cockpit__ can be accessed via
+http://localhost:8090/ with the credentials: `Username: admin | Password: admin`
 
 The services also provide a *health* and an *info* endpoint that show some information about the system like
 that the DB is up and running. These endpoints can be accessed via:
@@ -90,7 +92,7 @@ docker-compose down --remove-orphans
 The respective String has to be used as `destination country` in the trip booking request to provoke a participant failure.
 
 An example for such a request:
-```
+```json
 {
     "duration":
     {
@@ -123,7 +125,7 @@ An example for such a request:
   This can be done using one of the following commands:
     ```
     docker-compose start flightservice
-    
+
     docker start flightservice_camundaFailurePerf
     ```
 
@@ -163,7 +165,7 @@ involves failures of the __TravelService__ as well as the __CDC service__.
   This can be done using one of the following commands:
     ```
     docker-compose start cdcservice
-    
+
     docker start cdcservice
     ```
 
@@ -187,4 +189,3 @@ involves failures of the __TravelService__ as well as the __CDC service__.
   Afterwards, the __TravelService__ has to be __restarted__ manually to investigate what happens as soon as the service is running again.
   This can be done using the same commands as before, but with `travelservice` as the service name, respectively `travelservice_eventuateFailurePerf` as the container name.
   __Conductor server__, again, has to be __restarted__ using the same commands as above.
- 
