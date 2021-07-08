@@ -31,7 +31,7 @@ HotelService and FlightService. For simplicity reasons, only the workflow for bo
    |FlightService| http://localhost:8082/swagger-ui.html
 
 An example for such a request:
-```
+```json
 {
     "duration":
     {
@@ -95,7 +95,7 @@ Since the implementation uses mainly external tasks, the BPMN error will be crea
 request is sent to the engine's `/external-task` endpoint. If an existing worker has already fetched the respective task,
 this request can be skipped.
 
-```
+```json
  {
       "workerId":"Any name, e.g. compensationProvoker",
       "maxTasks":2,
@@ -114,11 +114,11 @@ Now that the respective task is locked and fetched, a BPMN error can be created.
 supplemented with the missing information has to be sent as POST request to the engine at:
 `http://localhost:8090/engine-rest/external-task/{taskId}/bpmnError`
 
-```
+```json
 {
-"workerId": "Name specified in previous request: compensationProvoker",
-"errorCode": "Error Code that triggers the compensation event (check the bpmn definition for that), e.g. FLIGHT_ERROR",
-"errorMessage": "Any message: Provoke compensation externally"
+      "workerId": "Name specified in previous request: compensationProvoker",
+      "errorCode": "Error Code that triggers the compensation event (check the bpmn definition for that), e.g. FLIGHT_ERROR",
+      "errorMessage": "Any message: Provoke compensation externally"
 }
 ```
 
@@ -129,13 +129,21 @@ The `TravelApplication.json` insomnia file also includes these requests within t
 
 ## Monitor the Application
 
+### MySQL database
+
+The camunda database, with its different tables, can be accessed with the following information,
+which is also included in the `docker-compose.yaml` file:
+
+- User: mysqluser
+- Password: mysqlpw
+
 ### Camunda's Cockpit
 The cockpit can be accessed either just via http://localhost:8090/
 or by using the whole path http://localhost:8090/camunda/app/welcome/default/#!/welcome.
 
 The following credentials are needed in order to be able to access the cockpit:
-Username:   admin
-Password:   admin
+- Username:   admin
+- Password:   admin
 
 If the respective values have been changed in the application.properties file of the TravelService
 the new values have to be used for the username and the password.
