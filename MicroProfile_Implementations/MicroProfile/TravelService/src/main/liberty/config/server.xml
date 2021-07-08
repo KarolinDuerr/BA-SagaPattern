@@ -7,6 +7,7 @@
         <feature>mpContextPropagation-1.2</feature>
         <feature>mpLRACoordinator-1.0</feature>
         <feature>mpLRA-1.0</feature>
+        <!-- The following feature is needed to use Zipkin for tracing, if Jaeger should be used uncomment the following line -->
         <feature>usr:opentracingZipkin-0.33</feature>
     </featureManager>
 
@@ -34,7 +35,7 @@
     <webApplication id="TravelService"
                     location="TravelService-1.0-SNAPSHOT.war" contextRoot="/">
         <!-- enable visibility to third party apis -->
-<!--        <classloader apiTypeVisibility="api,ibm-api,spec,stable,third-party"/>-->
+        <!--        <classloader apiTypeVisibility="api,ibm-api,spec,stable,third-party"/>-->
         <!-- enable visibility to third party apis -->
         <classloader apiTypeVisibility="+third-party"/>
     </webApplication>

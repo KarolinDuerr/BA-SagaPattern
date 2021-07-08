@@ -56,8 +56,8 @@ dependencies {
     // Downloaded from: https://github.com/WASdev/sample.opentracing.zipkintracer/releases/download/2.0.1/liberty-opentracing-zipkintracer-2.0.1-sample.zip
     compile "WASdev:sample.opentracing.zipkintracer:2.0.1@zip"
 
-    // Enable Jaeger Tracing
-    compile "io.jaegertracing:jaeger-client:1.6.0"
+    // Enable Jaeger Tracing --> activate line to use Jaeger tracing
+//    compile "io.jaegertracing:jaeger-client:1.6.0"
 
     // MySQL
     compile "mysql:mysql-connector-java:$mySQLVersion"

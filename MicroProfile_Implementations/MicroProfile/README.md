@@ -17,13 +17,13 @@ HotelService and FlightService. For simplicity reasons, only the workflow for bo
 
    | __Service__ | __URL to Swagger UI__ |
    |:-------|:-------------------:|
-   |TravelService| http://localhost:8090/openapi/ui/
-   |HotelService| http://localhost:8081/openapi/ui/
-   |FlightService| http://localhost:8082/openapi/ui/
-   |LRA Coordinator (included in TravelService) | http://localhost:8090/openapi/ui/
+   |TravelService| http://localhost:8090/openapi/ui/ |
+   |HotelService| http://localhost:8081/openapi/ui/ |
+   |FlightService| http://localhost:8082/openapi/ui/ |
+   |LRA Coordinator (included in TravelService) | http://localhost:8090/openapi/ui/ |
 
 An example for such a request:
-```
+```json
 {
     "duration":
     {
@@ -106,15 +106,86 @@ By using the `--follow` supplement, it will be continued to stream the service's
 
 The logging level can be changed in the respective `application.properties` file.
 
-### Zipkin // TODO
-The services include the necessary gradle dependencies and feature activation to enable distributed tracing with 
-[Zipkin](https://zipkin.io/).
 
-The Zipkin UI can be accessed via http://localhost:9411/zipkin/
+### Tracing
+The services include the necessary gradle dependencies as well as the feature within the `server.xml` to enable
+distributed tracing with [Zipkin](https://zipkin.io/) or with [Jaeger](https://www.jaegertracing.io/). If tracing with 
+Jaeger is enabled, Zipkin will not work. Information on how to activate/deactivate the respective tracing technology is 
+described in the following two subsections. The default is that Zipkin is activated and Jaeger deactivated. Here, the main 
+difference between Zipkin and Jaeger is that only Zipkin also shows the traces for requests to the LRA Coordinator. 
 
-### Jaeger // TODO
-The services include the necessary gradle dependencies and feature activation to enable distributed tracing with 
-[Jaeger](https://www.jaegertracing.io/). --> maybe deactivate zipkin, uncomment Jaeger integration in build gradle
-However, Jaeger does not show the traces to the LRA Coordinator.
+#### a) Zipkin
+The [Zipkin UI](http://localhost:9411/zipkin/) can be accessed via http://localhost:9411/zipkin/
 
-The Zipkin UI can be accessed via http://localhost:16686/
+The following shortly describes how to activate and deactivate tracing with Zipkin:
+- [X] __Activate Zipkin [default]__: Go to the respective `server.xml` and uncomment the following line within the __featureManager__
+  section
+  ```xml
+    <feature>usr:opentracingZipkin-0.33</feature>
+  ```
+
+  The following line must also be uncommented within the `server.xml`:
+  ```xml
+    <opentracingZipkin host="${zipkin.host}" port="9411"/>
+  ``` 
+  
+  Additionally, the following line should be active within the respective `build.gradle`:
+  ```groovy
+    compile "WASdev:sample.opentracing.zipkintracer:2.0.1@zip"
+  ``` 
+
+  Additionally, make sure that the Zipkin service is active within the `docker-compose.yml` and that the following
+  environment variable is set for each microservice:
+  ```yaml
+    ZIPKIN_URI: zipkin
+  ```
+  
+- [ ] __Deactivate Zipkin__: Go to the respective `server.xml` and comment the following line out within the __featureManager__ 
+  section
+  ```xml
+    <feature>usr:opentracingZipkin-0.33</feature>
+  ```
+  
+  Additionally, the following line must also be commented out within the `server.xml`:
+  ```xml
+    <opentracingZipkin host="${zipkin.host}" port="9411"/>
+  ```
+
+#### b) Jaeger
+The [Jaeger UI](http://localhost:16686/) can be accessed via http://localhost:16686/
+
+The following shortly describes how to activate and deactivate tracing with Jaeger:
+- [ ] __Activate Jaeger__: Go to the respective `build.gradle` files and activate within the dependencies section the 
+  following line:
+  ```groovy
+  compile "io.jaegertracing:jaeger-client:1.6.0"
+  ```
+  
+  Additionally, make sure that the Jaeger service is active within the `docker-compose.yml` and that the following four 
+  environment variables are set and active for each microservice:
+  ```yaml
+      JAEGER_AGENT_HOST: jaeger
+      JAEGER_AGENT_PORT: 6831
+      JAEGER_SAMPLER_TYPE: const
+      JAEGER_SAMPLER_PARAM: 1
+  ```
+  
+- [X] __Deactivate Jaeger [default]__: Go to the respective `build.gradle` files and comment out, within the dependencies section, 
+  the following line:
+  ```groovy
+  compile "io.jaegertracing:jaeger-client:1.6.0"
+  ```
+
+
+### Metrics
+
+The individual microservices are publishing some metrics like the number of executed requests to a specific endpoint. 
+Additionally, the LRA Coordinator publishes some metrics like the maximum duration time of closing an LRA. 
+These metrics are also published by the TravelService since the TravelService includes the coordinator. 
+
+| __Metrics of__ | __Command to execute__ |
+|:-------|:-------------------|
+|TravelService| http://localhost:8090/metrics/ |
+|HotelService| http://localhost:8081/metrics/ |
+|FlightService|  http://localhost:8082/metrics/ |
+|LRA Coordinator (included in TravelService) | http://localhost:8090/metrics/ |
