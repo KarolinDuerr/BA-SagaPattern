@@ -34,7 +34,7 @@ to realize the Saga pattern. The __CustomerService__ has to authorize the custom
    |CustomerService| http://localhost:8083/swagger-ui.html
 
 An example for such a request:
-```
+```json
 {
     "duration":
     {
