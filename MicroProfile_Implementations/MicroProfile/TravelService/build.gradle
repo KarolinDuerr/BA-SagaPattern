@@ -24,6 +24,18 @@ buildscript {
 
 repositories {
     mavenCentral()
+    // TODO Verweis?
+    def github = ivy {
+        url 'https://github.com/'
+        patternLayout {
+            artifact '/[organisation]/[module]/releases/download/[revision]/liberty-opentracing-zipkintracer-[revision]-sample.[ext]'
+        }
+        metadataSources { artifact() }
+    }
+    exclusiveContent {
+        forRepositories(github)
+        filter { includeGroup("WASdev") }
+    }
 }
 
 dependencies {
@@ -42,6 +54,10 @@ dependencies {
     implementation "org.eclipse.microprofile.lra:microprofile-lra-api:1.0-RC3"
     libertyRuntime "io.openliberty.beta:openliberty-runtime:21.0.0.7-beta"
 
+    // Enable Zipkin Tracing
+    // Downloaded from: https://github.com/WASdev/sample.opentracing.zipkintracer/releases/download/2.0.1/liberty-opentracing-zipkintracer-2.0.1-sample.zip
+    compile "WASdev:sample.opentracing.zipkintracer:2.0.1@zip"
+
     // MySQL
     compile "mysql:mysql-connector-java:$mySQLVersion"
 
@@ -57,7 +73,26 @@ task copyDependenciesToOpenLiberty(type: Copy) {
 task copyDependenciesToLibs(type: Copy) {
     from configurations.compile
     include 'mysql-connector-java-*.jar'
+    include 'sample.opentracing.zipkintracer-*'
     into "$buildDir/libs"
+}
+
+task unzipZipkinTracer(type: Copy) {
+    def zipkinTracerPath = project.configurations.compile.find {it.name.startsWith("sample.opentracing.zipkin") }
+    println zipkinTracerPath
+    def ZipkinTracerZipFile = file(zipkinTracerPath)
+
+    from zipTree(ZipkinTracerZipFile)
+    into "$buildDir/libs"
+}
+
+task unzipZipkinTracerToOpenLiberty(type: Copy) {
+    def zipkinTracerPath = project.configurations.compile.find {it.name.startsWith("sample.opentracing.zipkin") }
+    println zipkinTracerPath
+    def ZipkinTracerZipFile = file(zipkinTracerPath)
+
+    from zipTree(ZipkinTracerZipFile)
+    into "$buildDir/wlp/usr/servers/TravelServiceServer"
 }
 
 liberty {
@@ -67,6 +102,8 @@ liberty {
 }
 
 build.dependsOn 'copyDependenciesToLibs'
+copyDependenciesToLibs.finalizedBy 'unzipZipkinTracer'
 deploy.finalizedBy 'copyDependenciesToOpenLiberty'
+deploy.finalizedBy 'unzipZipkinTracerToOpenLiberty'
 libertyDev.dependsOn 'deploy'
 clean.dependsOn 'libertyStop'

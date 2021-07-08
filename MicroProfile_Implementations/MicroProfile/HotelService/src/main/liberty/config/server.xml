@@ -5,6 +5,7 @@
         <feature>microProfile-4.0</feature>
         <feature>eventLogging-1.0</feature>
         <feature>mpLRA-1.0</feature>
+        <feature>usr:opentracingZipkin-0.33</feature>
     </featureManager>
 
     <!-- Configure default values -->
@@ -30,7 +31,12 @@
 
     <webApplication id="HotelService"
                     location="HotelService-1.0-SNAPSHOT.war" contextRoot="/">
+        <!-- enable visibility to third party apis -->
+        <classloader apiTypeVisibility="+third-party"/>
     </webApplication>
+
+    <!-- Enable Zipkin Tracing provided by IBM -->
+    <opentracingZipkin host="${zipkin.host}" port="9411"/>
 
     <!-- Connect to LRA Coordinator -->
     <lra port="${lra.coordinator.port}" host="${lra.coordinator.host}" path="${lra.coordinator.path}"/>

@@ -7,6 +7,7 @@
         <feature>mpContextPropagation-1.2</feature>
         <feature>mpLRACoordinator-1.0</feature>
         <feature>mpLRA-1.0</feature>
+        <feature>usr:opentracingZipkin-0.33</feature>
     </featureManager>
 
     <!-- Configure default values -->
@@ -32,7 +33,14 @@
 
     <webApplication id="TravelService"
                     location="TravelService-1.0-SNAPSHOT.war" contextRoot="/">
+        <!-- enable visibility to third party apis -->
+<!--        <classloader apiTypeVisibility="api,ibm-api,spec,stable,third-party"/>-->
+        <!-- enable visibility to third party apis -->
+        <classloader apiTypeVisibility="+third-party"/>
     </webApplication>
+
+    <!-- Enable Zipkin Tracing provided by IBM -->
+    <opentracingZipkin host="${zipkin.host}" port="9411"/>
 
     <!-- Connect to LRA Coordinator -->
     <lra port="${lra.coordinator.port}" host="${lra.coordinator.host}" path="${lra.coordinator.path}"/>

@@ -11,6 +11,7 @@ services:
       - 8090:8090
     depends_on:
       - mysql
+      - zipkin
     environment:
       DEFAULT_HTTP_PORT: 8090
       DEFAULT_HTTPS_PORT: -1
@@ -25,6 +26,7 @@ services:
       FLIGHT_SERVICE_URI: flightservice
       HOTEL_SERVICE_URI: hotelservice
       TRAVEL_SERVICE_URI: travelservice
+      ZIPKIN_URI: zipkin
 
 
   hotelservice:
@@ -37,6 +39,7 @@ services:
       - 8081:8081
     depends_on:
       - mysql
+      - zipkin
     environment:
       DEFAULT_HTTP_PORT: 8081
       DEFAULT_HTTPS_PORT: -1
@@ -48,6 +51,7 @@ services:
       LRA_COORDINATOR_PORT: 8090
       LRA_COORDINATOR_HOST: travelservice
       LRA_COORDINATOR_PATH: lrac/lra-coordinator
+      ZIPKIN_URI: zipkin
 
 
   flightservice:
@@ -60,6 +64,7 @@ services:
       - 8082:8082
     depends_on:
       - mysql
+      - zipkin
     environment:
       DEFAULT_HTTP_PORT: 8082
       DEFAULT_HTTPS_PORT: -1
@@ -71,6 +76,7 @@ services:
       LRA_COORDINATOR_PORT: 8090
       LRA_COORDINATOR_HOST: travelservice
       LRA_COORDINATOR_PATH: lrac/lra-coordinator
+      ZIPKIN_URI: zipkin
 
 
   mysql:
@@ -91,6 +97,18 @@ services:
       - MYSQL_DATABASE=microProfile
       - MYSQL_USER=mysqluser
       - MYSQL_PASSWORD=mysqlpw
+
+
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+    networks:
+      - travel_application
+    environment:
+      JAVA_OPTS: -Xmx64m
+      STORAGE_TYPE: mem
 
 
 networks:
