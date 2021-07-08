@@ -25,7 +25,7 @@ HotelService and FlightService. For simplicity reasons, only the workflow for bo
    or access the [Swagger UI](https://swagger.io/tools/swagger-ui/) of the different services:
 
    | __Service__ | __URL to Swagger UI__ |
-   |:-------|:-------------------:| 
+   |:-------|:-------------------:|
    |TravelService| http://localhost:8090/swagger-ui.html
    |HotelService| http://localhost:8081/swagger-ui.html
    |FlightService| http://localhost:8082/swagger-ui.html
@@ -92,8 +92,8 @@ docker-compose down --remove-orphans
 
 In order to start the compensation of a currently running Saga externally, a task that is either presently *RUNNING*
 or *SCHEDULED* can be marked as *FAILED* using the API of the Conductor server. Already *COMPLETED* tasks cannot be marked
-as *FAILED* and thus not be used to start the compensation workflow. The following request, supplemented with the 
-missing information, has to be sent as POST request to the Conductor server's `/tasks` endpoint.
+as *FAILED* and thus not be used to start the compensation workflow. The following request, supplemented with the
+missing information, has to be sent as POST request to the Conductor server at: `http://localhost:8080/tasks`
 
 ```
 {
@@ -105,8 +105,11 @@ missing information, has to be sent as POST request to the Conductor server's `/
 }
 ```
 
-By using the *FAILED_WITH_TERMINAL_ERROR* status, Conductor immediately starts the compensation workflow and does not 
+By using the *FAILED_WITH_TERMINAL_ERROR* status, Conductor immediately starts the compensation workflow and does not
 retry the failed task even if a retry configuration exists.
+
+
+The `TravelApplication.json` insomnia file also includes this request within the `ExternalCompensationTrigger` directory. 
 
 ---------------------------
 
@@ -149,7 +152,7 @@ beneath the `Additional modules for metrics collection (optional)` comment withi
 
 Additionally, it can be configured that the metrics will be printed into a dedicated file instead
 of printing it as a regular log message.
-To achieve that, the `conductor-server-ui` service within the `docker-compose.yml` file has to 
+To achieve that, the `conductor-server-ui` service within the `docker-compose.yml` file has to
 include another environment variable: `LOG4J_PROP=log4j-file-appender.properties`.
 The referenced file is already included within the project's `serverAndUi` directory.
 It configures the different logging properties.
@@ -157,4 +160,3 @@ It configures the different logging properties.
 These logs could be further processed using a collector such as ElasticSearch and then visualized
 with [Kibana UI](https://www.elastic.co/de/kibana). However, this has not been realized within this project
 for information about how to achieve that see Netflix Conductor's official [documentation](https://netflix.github.io/conductor/metrics/server/).
-

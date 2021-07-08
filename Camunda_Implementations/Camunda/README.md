@@ -88,9 +88,9 @@ docker-compose down --remove-orphans
 ### External Compensation Trigger
 
 In order to start the compensation of a currently running Saga externally, a BPMN error has to be created for a scheduled
-or still unfinished task. Before the BPMN error can be created, the task has to be fetched and locked if not an already 
+or still unfinished task. Before the BPMN error can be created, the task has to be fetched and locked if not an already
 existing worker has done that. To achieve that, the following request, supplemented with the missing information, has to
-be sent as POST request to the engine's `http://localhost:8090/engine-rest/external-task/fetchAndLock` endpoint.
+be sent as POST request to the engine at: `http://localhost:8090/engine-rest/external-task/fetchAndLock`.
 Since the implementation uses mainly external tasks, the BPMN error will be created for an external task which means the
 request is sent to the engine's `/external-task` endpoint. If an existing worker has already fetched the respective task,
 this request can be skipped.
@@ -110,9 +110,9 @@ this request can be skipped.
  }
 ```
 
-Now that the respective task is locked and fetched, a BPMN error can be created. Therefore, the following request 
-supplemented with the missing information has to be sent as POST request to the engine's 
-`http://localhost:8090/engine-rest/external-task/{taskId}/bpmnError` endpoint. 
+Now that the respective task is locked and fetched, a BPMN error can be created. Therefore, the following request
+supplemented with the missing information has to be sent as POST request to the engine at:
+`http://localhost:8090/engine-rest/external-task/{taskId}/bpmnError`
 
 ```
 {
@@ -123,7 +123,7 @@ supplemented with the missing information has to be sent as POST request to the 
 ```
 
 
-The `TravelApplication.json` insomnia file also includes these requests within the `ExternalCompensationTrigger` directory. 
+The `TravelApplication.json` insomnia file also includes these requests within the `ExternalCompensationTrigger` directory.
 
 ----------------------------
 

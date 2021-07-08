@@ -75,5 +75,18 @@ docker-compose down --remove-orphans
 
 ----------------------------
 
+## General Saga Characteristics
+
+### External Compensation Trigger
+
+In order to start the compensation of a currently running Saga externally, the LRA coordinator offers an endpoint to 
+trigger the compensation of a specific LRA. To achieve that, an empty PUT request has to be sent to the LRA coordinator 
+at: `http://localhost:8090/lrac/lra-coordinator/{lraId}/cancel`
+
+
+The `TravelApplication.json` insomnia file also includes this request within the `ExternalCompensationTrigger` directory.
+
+----------------------------
+
 ## Monitor the Application
 // TODO
