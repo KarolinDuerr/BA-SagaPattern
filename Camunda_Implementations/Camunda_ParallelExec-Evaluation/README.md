@@ -87,7 +87,7 @@ docker-compose down --remove-orphans
 ----------------------------
 
 ## Parallel Execution of Tasks
-// TODO
+
 The `bookTrip`, `bookHotel` and the `bookFlight` tasks, as well as the `confirmHotel` and the `confirmTrip` tasks, are now executed in parallel
 by using _parallel gateways_. Since the Camunda process engine is responsible for the invocation of the compensating transactions,
 this execution cannot be influenced.
