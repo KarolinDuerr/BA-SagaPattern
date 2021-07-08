@@ -17,16 +17,35 @@ to realize the Saga pattern. The __CustomerService__ has to authorize the custom
    the provided `TravelApplication.json` insomnia file, which includes different trip booking requests,
    or access the [Swagger UI](https://swagger.io/tools/swagger-ui/) of the different services:
 
-   | __Service__ | __URL to Swagger UI__ |
-   |:-------|:-------------------:| 
-   |TravelService| http://localhost:8090/openapi/ui/
-   |HotelService| http://localhost:8081/openapi/ui/
-   |FlightService| http://localhost:8082/openapi/ui/
-   |CustomerService| http://localhost:8083/openapi/ui/
-   |LRA Coordinator (included in TravelService) | http://localhost:8090/openapi/ui/
+   <table>
+       <tr>
+           <th>Service</th>
+           <th style="text-align:center">URL to Swagger UI</th>
+       </tr>
+       <tr>
+           <td>TravelService</td>
+           <td rowspan="2" align="center"><a href="http://localhost:8090/openapi/ui/">http://localhost:8090/openapi/ui/</a></td>
+       </tr>
+       <tr>
+           <td>LRA Coordinator (included in TravelService)</td>
+       </tr>
+       <tr>
+           <td>HotelService</td>
+           <td><a href="http://localhost:8081/openapi/ui/">http://localhost:8081/openapi/ui/</a></td>
+       </tr>
+       <tr>
+           <td>FlightService</td>
+           <td><a href="http://localhost:8082/openapi/ui/">http://localhost:8082/openapi/ui/</a></td>
+       </tr>
+       <tr>
+           <td>CustomerService</td>
+           <td><a href="http://localhost:8083/openapi/ui/">http://localhost:8083/openapi/ui/</a></td>
+       </tr>
+   </table>
+
 
 An example for such a request:
-```
+```json
 {
     "duration":
     {
@@ -59,7 +78,7 @@ as `destination country` in the trip booking request:
 
 To simulate a Saga that fails because the __customer validation failed__, the `customerId` in the trip booking request
 has to be __smaller than 1__, for example:
-```
+```json
 {
     ...
     customerId: "-1"

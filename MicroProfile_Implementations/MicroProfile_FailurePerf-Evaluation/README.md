@@ -14,13 +14,30 @@ have been included that simulate different failure scenarios given a particular 
 3. Requesting trip bookings is now possible. Either use `curl` commands,
    the provided `TravelApplication.json` insomnia file, which includes different trip booking requests,
    or access the [Swagger UI](https://swagger.io/tools/swagger-ui/) of the different services:
-   
-   | __Service__ | __URL to Swagger UI__ |
-   |:-------|:-------------------:|
-   |TravelService| http://localhost:8090/openapi/ui/
-   |HotelService| http://localhost:8081/openapi/ui/
-   |FlightService| http://localhost:8082/openapi/ui/
-   |LRA Coordinator (included in TravelService) | http://localhost:8090/openapi/ui/
+
+    <table>
+        <tr>
+            <th>Service</th>
+            <th style="text-align:center">URL to Swagger UI</th>
+        </tr>
+        <tr>
+            <td>TravelService</td>
+            <td rowspan="2" align="center"><a href="http://localhost:8090/openapi/ui/">http://localhost:8090/openapi/ui/</a></td>
+        </tr>
+        <tr>
+            <td>LRA Coordinator (included in TravelService)</td>
+        </tr>
+        <tr>
+            <td>HotelService</td>
+            <td><a href="http://localhost:8081/openapi/ui/">http://localhost:8081/openapi/ui/</a></td>
+        </tr>
+        <tr>
+            <td>FlightService</td>
+            <td><a href="http://localhost:8082/openapi/ui/">http://localhost:8082/openapi/ui/</a></td>
+        </tr>
+    </table>
+
+
 
 To simulate a Saga that fails because __no hotel__ or __no flight__ is __available__, use one of the following Strings
 as `destination country` in the trip booking request:
@@ -54,7 +71,7 @@ docker-compose down --remove-orphans
 The respective String has to be used as `destination country` in the trip booking request to provoke a participant failure.
 
 An example for such a request:
-```
+```json
 {
     "duration":
     {
@@ -87,7 +104,7 @@ An example for such a request:
   This can be done using one of the following commands:
     ```
     docker-compose start flightservice
-    
+
     docker start flightservice_conductorFailurePerf
     ```
 
@@ -129,7 +146,7 @@ orchestrator failures involves failures of this service.
   This can be done using one of the following commands:
     ```
     docker-compose start conductor-server-ui
-    
+
     docker start conductor-server-ui
     ```
 
