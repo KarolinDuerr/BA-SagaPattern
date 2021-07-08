@@ -13,8 +13,8 @@ services:
       - mysql
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql/camunda
-      SPRING_DATASOURCE_USERNAME: camunda
-      SPRING_DATASOURCE_PASSWORD: camunda
+      SPRING_DATASOURCE_USERNAME: mysqluser
+      SPRING_DATASOURCE_PASSWORD: mysqlpw
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
 
 
@@ -31,8 +31,8 @@ services:
       - mysql
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql/camunda
-      SPRING_DATASOURCE_USERNAME: camunda
-      SPRING_DATASOURCE_PASSWORD: camunda
+      SPRING_DATASOURCE_USERNAME: mysqluser
+      SPRING_DATASOURCE_PASSWORD: mysqlpw
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
       TRAVEL_SERVICE_BASE_URL: http://travelservice:8090
 
@@ -50,8 +50,8 @@ services:
       - mysql
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql/camunda
-      SPRING_DATASOURCE_USERNAME: camunda
-      SPRING_DATASOURCE_PASSWORD: camunda
+      SPRING_DATASOURCE_USERNAME: mysqluser
+      SPRING_DATASOURCE_PASSWORD: mysqlpw
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
       TRAVEL_SERVICE_BASE_URL: http://travelservice:8090
 
@@ -69,8 +69,8 @@ services:
       - mysql
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql/camunda
-      SPRING_DATASOURCE_USERNAME: camunda
-      SPRING_DATASOURCE_PASSWORD: camunda
+      SPRING_DATASOURCE_USERNAME: mysqluser
+      SPRING_DATASOURCE_PASSWORD: mysqlpw
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
       TRAVEL_SERVICE_BASE_URL: http://travelservice:8090
 
@@ -90,8 +90,8 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=rootpassword
       - MYSQL_DATABASE=camunda
-      - MYSQL_USER=camunda
-      - MYSQL_PASSWORD=camunda
+      - MYSQL_USER=mysqluser
+      - MYSQL_PASSWORD=mysqlpw
 
 
 networks:
