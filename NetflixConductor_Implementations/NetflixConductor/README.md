@@ -86,6 +86,30 @@ docker-compose down --remove-orphans
 
 ----------------------------
 
+## General Saga Characteristics
+
+### External Compensation Trigger
+
+In order to start the compensation of a currently running Saga externally, a task that is either presently *RUNNING*
+or *SCHEDULED* can be marked as *FAILED* using the API of the Conductor server. Already *COMPLETED* tasks cannot be marked
+as *FAILED* and thus not be used to start the compensation workflow. The following request, supplemented with the 
+missing information, has to be sent as POST request to the Conductor server's `/tasks` endpoint.
+
+```
+{
+"workflowInstanceId": "ID of workflow instance that is supposed to be compensated.",
+"taskId": "ID of the task that is marked as FAILED to start compensation.",
+"reasonForIncompletion" : "Reason for failure",
+"callbackAfterSeconds": 0,
+"status": "FAILED_WITH_TERMINAL_ERROR"
+}
+```
+
+By using the *FAILED_WITH_TERMINAL_ERROR* status, Conductor immediately starts the compensation workflow and does not 
+retry the failed task even if a retry configuration exists.
+
+---------------------------
+
 ## Monitor the Application
 
 ### Conductor's UI
