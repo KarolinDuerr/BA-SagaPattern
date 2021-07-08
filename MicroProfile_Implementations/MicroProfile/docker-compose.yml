@@ -12,6 +12,7 @@ services:
     depends_on:
       - mysql
       - zipkin
+      - jaeger
     environment:
       DEFAULT_HTTP_PORT: 8090
       DEFAULT_HTTPS_PORT: -1
@@ -27,6 +28,10 @@ services:
       HOTEL_SERVICE_URI: hotelservice
       TRAVEL_SERVICE_URI: travelservice
       ZIPKIN_URI: zipkin
+      JAEGER_AGENT_HOST: jaeger
+      JAEGER_AGENT_PORT: 6831
+      JAEGER_SAMPLER_TYPE: const
+      JAEGER_SAMPLER_PARAM: 1
 
 
   hotelservice:
@@ -40,6 +45,7 @@ services:
     depends_on:
       - mysql
       - zipkin
+      - jaeger
     environment:
       DEFAULT_HTTP_PORT: 8081
       DEFAULT_HTTPS_PORT: -1
@@ -52,6 +58,10 @@ services:
       LRA_COORDINATOR_HOST: travelservice
       LRA_COORDINATOR_PATH: lrac/lra-coordinator
       ZIPKIN_URI: zipkin
+      JAEGER_AGENT_HOST: jaeger
+      JAEGER_AGENT_PORT: 6831
+      JAEGER_SAMPLER_TYPE: const
+      JAEGER_SAMPLER_PARAM: 1
 
 
   flightservice:
@@ -65,6 +75,7 @@ services:
     depends_on:
       - mysql
       - zipkin
+      - jaeger
     environment:
       DEFAULT_HTTP_PORT: 8082
       DEFAULT_HTTPS_PORT: -1
@@ -77,6 +88,10 @@ services:
       LRA_COORDINATOR_HOST: travelservice
       LRA_COORDINATOR_PATH: lrac/lra-coordinator
       ZIPKIN_URI: zipkin
+      JAEGER_AGENT_HOST: jaeger
+      JAEGER_AGENT_PORT: 6831
+      JAEGER_SAMPLER_TYPE: const
+      JAEGER_SAMPLER_PARAM: 1
 
 
   mysql:
@@ -110,6 +125,14 @@ services:
       JAVA_OPTS: -Xmx64m
       STORAGE_TYPE: mem
 
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "6831:6831/udp"
+      - "16686:16686"
+    networks:
+      - travel_application
 
 networks:
   travel_application:

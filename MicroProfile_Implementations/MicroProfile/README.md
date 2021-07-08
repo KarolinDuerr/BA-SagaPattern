@@ -90,3 +90,31 @@ The `TravelApplication.json` insomnia file also includes this request within the
 
 ## Monitor the Application
 // TODO
+
+### Log Files // TODO
+Each service provides a log that contains some information about it.
+The logs can be accessed using the name of the relevant container.
+The different logs can be accessed using the following commands:
+
+| __Log of__ | __Command to execute__ |
+|:-------|:-------------------|
+|TravelService| `docker logs travelservice_microProfile`|
+|HotelService| `docker logs hotelservice_microProfile`|
+|FlightService|  `docker logs flightservice_microProfile`|
+
+By using the `--follow` supplement, it will be continued to stream the service's output to the console.
+
+The logging level can be changed in the respective `application.properties` file.
+
+### Zipkin // TODO
+The services include the necessary gradle dependencies and feature activation to enable distributed tracing with 
+[Zipkin](https://zipkin.io/).
+
+The Zipkin UI can be accessed via http://localhost:9411/zipkin/
+
+### Jaeger // TODO
+The services include the necessary gradle dependencies and feature activation to enable distributed tracing with 
+[Jaeger](https://www.jaegertracing.io/). --> maybe deactivate zipkin, uncomment Jaeger integration in build gradle
+However, Jaeger does not show the traces to the LRA Coordinator.
+
+The Zipkin UI can be accessed via http://localhost:16686/
