@@ -31,7 +31,7 @@ is the **parallel execution** of specific tasks instead of a sequential one.
    |FlightService| http://localhost:8082/swagger-ui.html
 
 An example for such a request:
-```
+```json
 {
     "duration":
     {
@@ -62,6 +62,9 @@ as `destination country` in the trip booking request:
 "Provoke flight failure"
 ```
 
+Additionally, the __Camunda Cockpit__ can be accessed via
+http://localhost:8090/ with the credentials: `Username: admin |   Password: admin`
+
 The services also provide a *health* and an *info* endpoint that show some information about the system like
 that the DB is up and running. These endpoints can be accessed via:
 
@@ -84,7 +87,7 @@ docker-compose down --remove-orphans
 ----------------------------
 
 ## Parallel Execution of Tasks
-
-The `bookHotel` and the `bookFlight` tasks, as well as the `confirmHotel` and the `confirmTrip` tasks, are now executed in parallel
-by using Conductor's provided _fork_ and _join_ system tasks. Additionally, the compensating workflow also runs the `cancelHotel` and the
-`cancelFlight` tasks in parallel.
+// TODO
+The `bookTrip`, `bookHotel` and the `bookFlight` tasks, as well as the `confirmHotel` and the `confirmTrip` tasks, are now executed in parallel
+by using _parallel gateways_. Since the Camunda process engine is responsible for the invocation of the compensating transactions,
+this execution cannot be influenced.
