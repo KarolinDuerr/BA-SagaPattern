@@ -15,12 +15,27 @@ HotelService and FlightService. For simplicity reasons, only the workflow for bo
    the provided `TravelApplication.json` insomnia file, which includes different trip booking requests,
    or access the [Swagger UI](https://swagger.io/tools/swagger-ui/) of the different services:
 
-   | __Service__ | __URL to Swagger UI__ |
-   |:-------|:-------------------:|
-   |TravelService| http://localhost:8090/openapi/ui/ |
-   |HotelService| http://localhost:8081/openapi/ui/ |
-   |FlightService| http://localhost:8082/openapi/ui/ |
-   |LRA Coordinator (included in TravelService) | http://localhost:8090/openapi/ui/ |
+    <table>
+        <tr>
+            <th>Service</th>
+            <th style="text-align:center">URL to Swagger UI</th>
+        </tr>
+        <tr>
+            <td>TravelService</td>
+            <td rowspan="2" align="center"><a href="http://localhost:8090/openapi/ui/">http://localhost:8090/openapi/ui/</a></td>
+        </tr>
+        <tr>
+            <td>LRA Coordinator (included in TravelService)</td>
+        </tr>
+        <tr>
+            <td>HotelService</td>
+            <td><a href="http://localhost:8081/openapi/ui/">http://localhost:8081/openapi/ui/</a></td>
+        </tr>
+        <tr>
+            <td>FlightService</td>
+            <td><a href="http://localhost:8082/openapi/ui/">http://localhost:8082/openapi/ui/</a></td>
+        </tr>
+    </table>
 
 An example for such a request:
 ```json
@@ -91,7 +106,7 @@ The `TravelApplication.json` insomnia file also includes this request within the
 ## Monitor the Application
 // TODO
 
-### Log Files // TODO
+### Log Files
 Each service provides a log that contains some information about it.
 The logs can be accessed using the name of the relevant container.
 The different logs can be accessed using the following commands:
@@ -181,11 +196,25 @@ The following shortly describes how to activate and deactivate tracing with Jaeg
 
 The individual microservices are publishing some metrics like the number of executed requests to a specific endpoint. 
 Additionally, the LRA Coordinator publishes some metrics like the maximum duration time of closing an LRA. 
-These metrics are also published by the TravelService since the TravelService includes the coordinator. 
-
-| __Metrics of__ | __Command to execute__ |
-|:-------|:-------------------|
-|TravelService| http://localhost:8090/metrics/ |
-|HotelService| http://localhost:8081/metrics/ |
-|FlightService|  http://localhost:8082/metrics/ |
-|LRA Coordinator (included in TravelService) | http://localhost:8090/metrics/ |
+These metrics are also published by the TravelService since the TravelService includes the coordinator.
+<table>
+    <tr>
+        <th>Service</th>
+        <th style="text-align:center">URL to Swagger UI</th>
+    </tr>
+    <tr>
+        <td>TravelService</td>
+        <td rowspan="2" align="center"><a href="http://localhost:8090/metrics//">http://localhost:8090/metrics/</a></td>
+    </tr>
+    <tr>
+        <td>LRA Coordinator (included in TravelService)</td>
+    </tr>
+    <tr>
+        <td>HotelService</td>
+        <td><a href="http://localhost:8081/metrics//">http://localhost:8081/metrics/</a></td>
+    </tr>
+    <tr>
+        <td>FlightService</td>
+        <td><a href="http://localhost:8082/metrics//">http://localhost:8082/metrics/</a></td>
+    </tr>
+</table>
