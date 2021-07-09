@@ -56,7 +56,7 @@ An example for such a request:
 
 To simulate a Saga that fails because no hotel or no flight is available, use one of the following Strings
 as `destination country` in the trip booking request:
-```
+```text
 "Provoke hotel failure"
 
 "Provoke flight failure"
@@ -77,7 +77,7 @@ If you are on Windows or Mac, you sometimes have to replace _localhost_ with the
 ## Stop the Application
 
 To stop the application and remove the created containers, execute the following command:
-```
+```shell
 docker-compose down --remove-orphans
 ```
 

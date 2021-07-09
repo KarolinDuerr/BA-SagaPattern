@@ -57,7 +57,7 @@ An example for such a request:
 
 To simulate a Saga that fails because __no hotel__ or __no flight__ is __available__, use one of the following Strings
 as `destination country` in the trip booking request:
-```
+```text
 "Provoke hotel failure"
 
 "Provoke flight failure"
@@ -82,7 +82,7 @@ If you are on Windows or Mac, you sometimes have to replace _localhost_ with the
 ## Stop the Application
 
 To stop the application and remove the created containers, execute the following command:
-```
+```shell
 docker-compose down --remove-orphans
 ```
 
@@ -117,13 +117,13 @@ An example for such a request:
 
 ### 1. Saga Participant failure
 - Provoke a failure of the __FlightService__ participant __before__ it started to execute a local transaction with the following string as `destination country`:
-    ```  
+    ```text
     "Provoke participant failure before receiving task"
     ```
   The __HotelService__ terminates then the docker container of the __FlightService__ while it is executing the *bookHotel* request.
   Afterwards, the __FlightService__ has to be __restarted__ manually to investigate what happens as soon as the service is running again.
   This can be done using one of the following commands:
-    ```
+    ```shell
     docker-compose start flightservice
 
     docker start flightservice_camundaFailurePerf
@@ -134,7 +134,7 @@ An example for such a request:
 
 
 - Provoke a __termination__ failure of the __FlightService__ participant __while executing__ a local transaction of the *BookTripSaga* with the following string as `destination country`:
-    ```  
+    ```text
     "Provoke participant failure while executing"
     ```  
   The __FlightService__ forces then its JVM to terminate itself, after booking a flight but before informing the orchestrator about it, in order to simulate a *sudden failure* of the system.
@@ -142,13 +142,13 @@ An example for such a request:
 
 
 - Provoke an __exception__ in the __FlightService__ participant __while executing__ a local transaction of the *BookTripSaga* with the following string as `destination country`:
-    ```  
+    ```text
     "Provoke exception while executing"
     ```  
   The __FlightService__ throws then a *RuntimeException* while booking a flight to simulate *unexpected behaviour* of the system.
   Afterwards, the behaviour of the service can be observed. The easiest way is to have a look at the log of the __FlightService__ during that time.
   This can be done using the following command:
-  ```  
+  ```shell
   docker logs flightservice_camundaFailurePerf --follow
    ```  
 
@@ -157,13 +157,13 @@ The __TravelService__ plays the orchestrator role in this example application. H
 publish messages to the participants and vice versa. Consequently, observing the system's behaviour during orchestrator failures
 involves failures of the __TravelService__ as well as the __CDC service__.
 - Provoke a failure of the __CDC service__ while a trip booking __is being started__ with the following string as `destination country`:
-    ```  
+    ```text
     "Provoke orchestrator failure while starting trip booking"
     ```
   The __TravelService__ terminates then the docker container of the __CDC Service__ while it is executing the *bookTrip* request but before starting the *BookTripSaga*.
   Afterwards, the __CDC Service__ has to be __restarted__ manually to investigate what happens as soon as the service is running again.
   This can be done using one of the following commands:
-    ```
+    ```shell
     docker-compose start cdcservice
 
     docker start cdcservice
@@ -174,7 +174,7 @@ involves failures of the __TravelService__ as well as the __CDC service__.
 
 
 - Provoke a failure of the __CDC service while executing__ a local transaction of the *BookTripSaga* with the following string as `destination country`:
-    ```  
+    ```text 
     "Provoke CDC failure while executing"
     ```  
   The __FlightService__ terminates then the docker container of the __CDC Service__ after booking a flight, but before informing the orchestrator about it.
@@ -182,7 +182,7 @@ involves failures of the __TravelService__ as well as the __CDC service__.
 
 
 - Provoke a failure of the orchestrator, which means the __TravelService__, __while executing__ a local transaction of the *BookTripSaga* with the following string as `destination country`:
-    ```  
+    ```text
     "Provoke orchestrator failure while executing"
     ```  
   The __FlightService__ terminates then the docker container of the __TravelService__ after booking a flight, but before informing the orchestrator about it.

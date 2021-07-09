@@ -59,7 +59,7 @@ An example for such a request:
 
 To simulate a Saga that fails because __no hotel__ or __no flight__ is __available__, use one of the following Strings
 as `destination country` in the trip booking request:
-```
+```text
 "Provoke hotel failure"
 
 "Provoke flight failure"
@@ -67,7 +67,7 @@ as `destination country` in the trip booking request:
 
 To simulate a Saga that fails because the __customer validation failed__, the `customerId` in the trip booking request
 has to be __smaller than 1__, for example:
-```
+```json
 {
     ...
     customerId: "-1"
@@ -75,7 +75,7 @@ has to be __smaller than 1__, for example:
 ```
 
 Additionally, the __Camunda Cockpit__ can be accessed via
-http://localhost:8090/ with the credentials: `Username: admin |   Password: admin`
+http://localhost:8090/ with the credentials: `Username: admin | Password: admin`
 
 The services also provide a *health* and an *info* endpoint that show some information about the system like
 that the DB is up and running. These endpoints can be accessed via:
@@ -92,6 +92,6 @@ If you are on Windows or Mac, you sometimes have to replace _localhost_ with the
 ## Stop the Application
 
 To stop the application and remove the created containers, execute the following command:
-```
+```shell
 docker-compose down --remove-orphans
 ```
