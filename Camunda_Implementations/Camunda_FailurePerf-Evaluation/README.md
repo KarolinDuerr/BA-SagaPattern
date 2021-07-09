@@ -189,3 +189,7 @@ involves failures of the __TravelService__ as well as the __CDC service__.
   Afterwards, the __TravelService__ has to be __restarted__ manually to investigate what happens as soon as the service is running again.
   This can be done using the same commands as before, but with `travelservice` as the service name, respectively `travelservice_eventuateFailurePerf` as the container name.
   __Conductor server__, again, has to be __restarted__ using the same commands as above.
+
+
+### 3. Breach of Saga protocol
+// TODO

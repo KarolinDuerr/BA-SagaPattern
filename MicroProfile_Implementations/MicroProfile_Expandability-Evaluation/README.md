@@ -70,7 +70,7 @@ An example for such a request:
 
 To simulate a Saga that fails because __no hotel__ or __no flight__ is __available__, use one of the following Strings
 as `destination country` in the trip booking request:
-```
+```text
 "Provoke hotel failure"
 
 "Provoke flight failure"
@@ -78,7 +78,7 @@ as `destination country` in the trip booking request:
 
 To simulate a Saga that fails because the __customer validation failed__, the `customerId` in the trip booking request
 has to be __smaller than 1__, for example:
-```json
+```
 {
     ...
     customerId: "-1"
@@ -101,6 +101,6 @@ If you are on Windows or Mac, you sometimes have to replace _localhost_ with the
 ## Stop the Application
 
 To stop the application and remove the created containers, execute the following command:
-```
+```shell
 docker-compose down --remove-orphans
 ```
