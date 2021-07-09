@@ -11,9 +11,10 @@ import org.springframework.stereotype.Component;
 import saga.camunda.hotelservice.api.HotelServiceTopics;
 import saga.camunda.hotelservice.api.dto.BookHotelRequest;
 import saga.camunda.hotelservice.controller.IHotelService;
+import saga.camunda.travelservice.api.TravelServiceTopics;
 
 @Component
-@ExternalTaskSubscription("cancelHotel")
+@ExternalTaskSubscription(value = "cancelHotel", processDefinitionKey = TravelServiceTopics.Sagas.BOOK_TRIP_SAGA, lockDuration = 30000)
 public class CancelHotelWorker implements ExternalTaskHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(CancelHotelWorker.class);
@@ -35,7 +36,6 @@ public class CancelHotelWorker implements ExternalTaskHandler {
             logger.info("The given input could not be parsed to a bookHotelRequest.");
             externalTaskService.handleBpmnError(externalTask, HotelServiceTopics.BpmnError.HOTEL_ERROR, "Something went" +
                     " wrong with the given input.");
-            externalTaskService.complete(externalTask, null);
             return;
         }
 

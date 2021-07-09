@@ -11,9 +11,10 @@ import org.springframework.stereotype.Component;
 import saga.camunda.hotelservice.api.HotelServiceTopics;
 import saga.camunda.hotelservice.api.dto.BookHotelResponse;
 import saga.camunda.hotelservice.controller.IHotelService;
+import saga.camunda.travelservice.api.TravelServiceTopics;
 
 @Component
-@ExternalTaskSubscription("confirmHotel")
+@ExternalTaskSubscription(value = "confirmHotel", processDefinitionKey = TravelServiceTopics.Sagas.BOOK_TRIP_SAGA, lockDuration = 30000)
 public class ConfirmHotelWorker implements ExternalTaskHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(ConfirmHotelWorker.class);
@@ -35,7 +36,6 @@ public class ConfirmHotelWorker implements ExternalTaskHandler {
             logger.info("The given input could not be used to confirm the hotel booking.");
             externalTaskService.handleBpmnError(externalTask, HotelServiceTopics.BpmnError.HOTEL_ERROR, "Something went" +
                     " wrong with the given input.");
-            externalTaskService.complete(externalTask, null);
             return;
         }
 

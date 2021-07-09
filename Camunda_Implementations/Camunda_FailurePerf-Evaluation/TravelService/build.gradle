@@ -36,6 +36,7 @@ dependencies {
     compile "org.camunda.bpm.springboot:camunda-bpm-spring-boot-starter-webapp:$camundaVersion"
     compile "org.camunda.bpm.springboot:camunda-bpm-spring-boot-starter-rest:$camundaVersion"
     compile "org.camunda.bpm.springboot:camunda-bpm-spring-boot-starter:$camundaVersion"
+    compile "org.camunda.bpm:camunda-engine-rest-openapi:$camundaVersion" // TODO check if really useful
     compile "org.camunda.bpm:camunda-engine-plugin-spin:$camundaVersion"
     compile "org.camunda.spin:camunda-spin-dataformat-json-jackson:1.10.1"
 

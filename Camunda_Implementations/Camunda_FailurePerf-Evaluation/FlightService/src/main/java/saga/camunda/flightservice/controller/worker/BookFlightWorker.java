@@ -23,13 +23,14 @@ import saga.camunda.flightservice.error.FlightServiceException;
 import saga.camunda.flightservice.model.FindAndBookFlightInformation;
 import saga.camunda.flightservice.model.FlightInformation;
 import saga.camunda.flightservice.resources.DtoConverter;
+import saga.camunda.travelservice.api.TravelServiceTopics;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 @Component
-@ExternalTaskSubscription("bookFlight")
+@ExternalTaskSubscription(value = "bookFlight", processDefinitionKey = TravelServiceTopics.Sagas.BOOK_TRIP_SAGA, lockDuration = 30000)
 public class BookFlightWorker implements ExternalTaskHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(BookFlightWorker.class);
@@ -55,7 +56,6 @@ public class BookFlightWorker implements ExternalTaskHandler {
             logger.info("The given input could not be parsed to a bookFlightRequest.");
             externalTaskService.handleBpmnError(externalTask, FlightServiceTopics.BpmnError.FLIGHT_ERROR, "Something went" +
                     " wrong with the given input.");
-            externalTaskService.complete(externalTask, null);
             return;
         }
 
@@ -65,7 +65,6 @@ public class BookFlightWorker implements ExternalTaskHandler {
             logger.error(exception.toString());
             externalTaskService.handleBpmnError(externalTask, FlightServiceTopics.BpmnError.FLIGHT_ERROR,
                     exception.toString());
-            externalTaskService.complete(externalTask, null);
         }
 
         logger.debug("Finished Task: " + externalTask.getActivityId() + "(ID: " + externalTask.getId() + ")");
@@ -115,7 +114,7 @@ public class BookFlightWorker implements ExternalTaskHandler {
                 .sslConfig(config.getSSLConfig())
                 .build();
         DockerClient dockerClient = DockerClientImpl.getInstance(config, httpClient);
-        dockerClient.stopContainerCmd("travelservice_camundaFailurePerf").exec(); // TODO: einziger Fall?
+        dockerClient.stopContainerCmd("travelservice_camundaFailurePerf").exec();
         try {
             dockerClient.close();
         } catch (IOException e) {

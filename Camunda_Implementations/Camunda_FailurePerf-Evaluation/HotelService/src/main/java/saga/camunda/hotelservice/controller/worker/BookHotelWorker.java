@@ -26,13 +26,14 @@ import saga.camunda.hotelservice.error.HotelServiceException;
 import saga.camunda.hotelservice.model.HotelBooking;
 import saga.camunda.hotelservice.model.HotelBookingInformation;
 import saga.camunda.hotelservice.resources.DtoConverter;
+import saga.camunda.travelservice.api.TravelServiceTopics;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 @Component
-@ExternalTaskSubscription("bookHotel")
+@ExternalTaskSubscription(value = "bookHotel", processDefinitionKey = TravelServiceTopics.Sagas.BOOK_TRIP_SAGA, lockDuration = 30000)
 public class BookHotelWorker implements ExternalTaskHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(BookHotelWorker.class);
@@ -62,7 +63,6 @@ public class BookHotelWorker implements ExternalTaskHandler {
             externalTaskService.handleBpmnError(externalTask, HotelServiceTopics.BpmnError.HOTEL_ERROR, "Something " +
                     "went" +
                     " wrong with the given input.");
-            externalTaskService.complete(externalTask, null);
             return;
         }
 
@@ -72,7 +72,6 @@ public class BookHotelWorker implements ExternalTaskHandler {
             logger.error(exception.toString());
             externalTaskService.handleBpmnError(externalTask, HotelServiceTopics.BpmnError.HOTEL_ERROR,
                     exception.toString());
-            externalTaskService.complete(externalTask, null);
         }
 
         logger.debug("Finished Task: " + externalTask.getActivityId() + "(ID: " + externalTask.getId() + ")");

@@ -35,7 +35,7 @@ public class OldMessageProvoker implements Runnable {
 
         HttpEntity<ObjectValue> requestVariables = new HttpEntity<>(typedRequest, requestHeader);
 
-        try { // TODO Alternative idea: wait for conidition that will become true while confirming the HotelTask
+        try {
             logger.info("Wait for 5 minutes before sending the request again.");
             // wait for 5 minutes so that the message will definitely be an old one
             Thread.sleep(300000);
