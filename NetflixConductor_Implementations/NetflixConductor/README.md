@@ -31,7 +31,7 @@ HotelService and FlightService. For simplicity reasons, only the workflow for bo
    |FlightService| http://localhost:8082/swagger-ui.html
 
 An example for such a request:
-```
+```json
 {
     "duration":
     {
@@ -56,7 +56,7 @@ An example for such a request:
 
 To simulate a Saga that fails because no hotel or no flight is available, use one of the following Strings
 as `destination country` in the trip booking request:
-```
+```text
 "Provoke hotel failure"
 
 "Provoke flight failure"
@@ -80,7 +80,7 @@ If you are on Windows or Mac, you sometimes have to replace _localhost_ with the
 ## Stop the Application
 
 To stop the application and remove the created containers, execute the following command:
-```
+```shell
 docker-compose down --remove-orphans
 ```
 
@@ -95,13 +95,13 @@ or *SCHEDULED* can be marked as *FAILED* using the API of the Conductor server. 
 as *FAILED* and thus not be used to start the compensation workflow. The following request, supplemented with the
 missing information, has to be sent as POST request to the Conductor server at: `http://localhost:8080/tasks`
 
-```
+```json
 {
-"workflowInstanceId": "ID of workflow instance that is supposed to be compensated.",
-"taskId": "ID of the task that is marked as FAILED to start compensation.",
-"reasonForIncompletion" : "Reason for failure",
-"callbackAfterSeconds": 0,
-"status": "FAILED_WITH_TERMINAL_ERROR"
+   "workflowInstanceId": "ID of workflow instance that is supposed to be compensated.", 
+   "taskId": "ID of the task that is marked as FAILED to start compensation.", 
+   "reasonForIncompletion" : "Reason for failure", 
+   "callbackAfterSeconds": 0, 
+   "status": "FAILED_WITH_TERMINAL_ERROR"
 }
 ```
 
@@ -143,7 +143,7 @@ The __Conductor Server__ publishes some metrics concerning the server and the cl
 The necessary gradle dependency has already been added to the services.
 To connect the metrics registry with the logging framework, two lines within the `config.properties`
 have to be __activated__ as they are currently commented out:
-```
+```properties
 conductor.additional.modules=com.netflix.conductor.contribs.metrics.MetricsRegistryModule,com.netflix.conductor.contribs.metrics.LoggingMetricsModule
 com.netflix.conductor.contribs.metrics.LoggingMetricsModule.reportPeriodSeconds=15
 ```
