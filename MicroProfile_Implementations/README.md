@@ -20,10 +20,9 @@ Based on the `MicroProfile` implementation, the `MicroProfile_Expandability-Eval
 The `MicroProfile_FailurePerf-Evaluation` is also based on the `MicroProfile` application but includes additional sections that provoke different failure scenarios given a certain input.
 
 
-## Saga Pattern Realization: Interleaving Sagas Evaluation
+## Saga Pattern Realization: Parallel Execution Evaluation
 
-Based on the `MicroProfile` implementation, the `MicroProfile_InterleavingSagas` directory includes the same travel application but extended by a __CancelBookTripSaga__ which allows to cancel trips that
-have been booked or trip bookings that are currently being executed.
+Based on the `MicroProfile` implementation, the `MicroProfile_ParallelExec-Evaluation` directory includes the same travel application but some transactions within the BookTripSaga are executed in parallel instead of sequentially.
 
 -----------------------------------------------------------------------------
 For more information about the projects and their setups see the `Readme` files in the respective directories.
