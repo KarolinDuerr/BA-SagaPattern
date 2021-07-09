@@ -55,5 +55,14 @@ dependencies {
     // Swagger OpenAPI definition
     compile "org.springdoc:springdoc-openapi-ui:1.5.0"
 
+    // General Testing dependencies
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile "org.mockito:mockito-core:2.23.0"
+    testCompile "org.springframework.boot:spring-boot-starter-test:$springBootVersion"
+
+    // Eventuate Testing Support
+    testCompile "io.eventuate.tram.sagas:eventuate-tram-sagas-spring-testing-support:$eventuateTramSagasVersion"
+    testCompile "io.eventuate.tram.sagas:eventuate-tram-sagas-in-memory:0.10.0.M3"
+    testCompile "io.eventuate.util:eventuate-util-test:0.13.0.RELEASE"
+    testCompile "io.eventuate.tram.core:eventuate-tram-test-util:$eventuateTramVersion"
 }
