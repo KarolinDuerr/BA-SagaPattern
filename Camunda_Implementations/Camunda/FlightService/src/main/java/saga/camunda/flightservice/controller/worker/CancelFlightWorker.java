@@ -11,10 +11,11 @@ import org.springframework.stereotype.Component;
 import saga.camunda.flightservice.api.FlightServiceTopics;
 import saga.camunda.flightservice.api.dto.BookFlightRequest;
 import saga.camunda.flightservice.controller.IFlightService;
+import saga.camunda.travelservice.api.TravelServiceTopics;
 
 
 @Component
-@ExternalTaskSubscription("cancelFlight")
+@ExternalTaskSubscription(value = "cancelFlight", processDefinitionKey = TravelServiceTopics.Sagas.BOOK_TRIP_SAGA)
 public class CancelFlightWorker implements ExternalTaskHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(CancelFlightWorker.class);

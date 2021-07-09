@@ -18,12 +18,13 @@ import saga.camunda.flightservice.error.FlightServiceException;
 import saga.camunda.flightservice.model.FindAndBookFlightInformation;
 import saga.camunda.flightservice.model.FlightInformation;
 import saga.camunda.flightservice.resources.DtoConverter;
+import saga.camunda.travelservice.api.TravelServiceTopics;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Component
-@ExternalTaskSubscription("bookFlight")
+@ExternalTaskSubscription(value = "bookFlight", processDefinitionKey = TravelServiceTopics.Sagas.BOOK_TRIP_SAGA)
 public class BookFlightWorker implements ExternalTaskHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(BookFlightWorker.class);
