@@ -26,7 +26,7 @@ to realize the Saga pattern. The __CustomerService__ has to authorize the custom
    |CustomerService| http://localhost:8083/swagger-ui.html
 
 An example for such a request:
-```
+```json
 {
     "duration":
     {
@@ -84,6 +84,6 @@ If you are on Windows or Mac, you sometimes have to replace _localhost_ with the
 ## Stop the Application
 
 To stop the application and remove the created containers, execute the following command:
-```
+```shell
 docker-compose down --remove-orphans
 ```

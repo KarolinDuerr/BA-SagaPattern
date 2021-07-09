@@ -48,7 +48,7 @@ If you are on Windows or Mac, you sometimes have to replace _localhost_ with the
 ## Stop the Application
 
 To stop the application and remove the created containers, execute the following command:
-```
+```shell
 docker-compose down --remove-orphans
 ```
 
@@ -58,7 +58,7 @@ docker-compose down --remove-orphans
 The respective String has to be used as `destination country` in the trip booking request to provoke a participant failure.
 
 An example for such a request:
-```
+```json
 {
     "duration":
     {
@@ -89,7 +89,7 @@ An example for such a request:
     The __HotelService__ terminates then the docker container of the __FlightService__ while it is executing the *bookHotel* request.
     Afterwards, the __FlightService__ has to be __restarted__ manually to investigate what happens as soon as the service is running again.
     This can be done using one of the following commands:
-    ```
+    ```shell
     docker-compose start flightservice
     
     docker start flightservice_eventuateFailurePerf
@@ -114,7 +114,7 @@ An example for such a request:
   The __FlightService__ throws then a *RuntimeException* while booking a flight to simulate *unexpected behaviour* of the system.
   Afterwards, the behaviour of the service can be observed. The easiest way is to have a look at the log of the __FlightService__ during that time.
   This can be done using the following command:
-  ```  
+  ```shell  
   docker logs flightservice_eventuateFailurePerf --follow
    ```  
 
@@ -129,7 +129,7 @@ involves failures of the __TravelService__ as well as the __CDC service__.
   The __TravelService__ terminates then the docker container of the __CDC Service__ while it is executing the *bookTrip* request but before starting the *BookTripSaga*.
   Afterwards, the __CDC Service__ has to be __restarted__ manually to investigate what happens as soon as the service is running again.
   This can be done using one of the following commands:
-    ```
+    ```shell
     docker-compose start cdcservice
     
     docker start cdcservice

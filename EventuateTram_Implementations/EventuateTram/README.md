@@ -23,7 +23,7 @@ HotelService and FlightService. For simplicity reasons, only the workflow for bo
    |FlightService| http://localhost:8082/swagger-ui.html
 
 An example for such a request:
-```
+```json
 {
     "duration":
     {
@@ -69,7 +69,7 @@ If you are on Windows or Mac, you sometimes have to replace _localhost_ with the
 ## Stop the Application
 
 To stop the application and remove the created containers, execute the following command:
-```
+```shell
 docker-compose down --remove-orphans
 ```
 
@@ -104,7 +104,7 @@ The logging level can be changed in the respective `application.properties` file
 The services include the necessary gradle dependencies to enable distributed tracing with [Zipkin](https://zipkin.io/)
 when using the [Eventuate Tram](https://github.com/eventuate-tram/eventuate-tram-core) framework. 
 
-The Zipkin UI can be accessed via http://localhost:9411/zipkin/
+The [Zipkin UI](http://localhost:9411/zipkin/) can be accessed via http://localhost:9411/zipkin/
 
 ### Metrics of the CDC Service
 
