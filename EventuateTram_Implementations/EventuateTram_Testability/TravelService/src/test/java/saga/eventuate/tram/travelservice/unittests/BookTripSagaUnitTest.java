@@ -3,17 +3,16 @@ package saga.eventuate.tram.travelservice.unittests;
 import io.eventuate.tram.sagas.testing.SagaUnitTestSupport;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Answers;
 import org.mockito.Mockito;
 import saga.eventuate.tram.flightservice.api.FlightServiceChannels;
 import saga.eventuate.tram.flightservice.api.dto.BookFlightCommand;
 import saga.eventuate.tram.flightservice.api.dto.LocationDTO;
 import saga.eventuate.tram.hotelservice.api.HotelServiceChannels;
-import saga.eventuate.tram.hotelservice.api.dto.BookHotelRequest;
-import saga.eventuate.tram.hotelservice.api.dto.ConfirmHotelBooking;
-import saga.eventuate.tram.hotelservice.api.dto.DestinationDTO;
-import saga.eventuate.tram.hotelservice.api.dto.StayDurationDTO;
+import saga.eventuate.tram.hotelservice.api.dto.*;
 import saga.eventuate.tram.travelservice.api.TravelServiceChannels;
 import saga.eventuate.tram.travelservice.command.ConfirmTripBooking;
+import saga.eventuate.tram.travelservice.command.RejectTripCommand;
 import saga.eventuate.tram.travelservice.error.TravelException;
 import saga.eventuate.tram.travelservice.model.Location;
 import saga.eventuate.tram.travelservice.model.TripDuration;
@@ -30,60 +29,79 @@ public class BookTripSagaUnitTest {
 
 
     private BookTripSagaData bookTripSagaData;
-    private BookHotelRequest mockedBookHotelRequest;
-    private BookFlightCommand mockedBookFlightCommand;
-    private ConfirmHotelBooking mockedConfirmHotelBooking;
-    private ConfirmTripBooking mockedConfirmTripBooking;
 
     @Before
-    public void setUp() throws TravelException, ParseException {
-        TripDuration mockedTripDuration = Mockito.mock(TripDuration.class);
-        Location mockedStartLocation = Mockito.mock(Location.class);
-        Location mockedDestinationLocation = Mockito.mock(Location.class);
-        TripInformation mockedTripInformation = Mockito.mock(TripInformation.class);
-        this.bookTripSagaData = new BookTripSagaData(1L, mockedTripInformation);
-//        this.bookTripSagaData = Mockito.mock(BookTripSagaData.class);
-
-        Mockito.doReturn(mockedBookHotelRequest).when(bookTripSagaData).makeBookHotelRequest();
-        Mockito.doReturn(mockedBookFlightCommand).when(bookTripSagaData).makeBookFlightCommand();
-
-
-//        destinationDTO = Mockito.mock(DestinationDTO.class);
-//        stayDurationDTO = Mockito.mock(StayDurationDTO.class);
-//        homeLocationDTO = Mockito.mock(LocationDTO.class);
-//        destinationLocationDTO = Mockito.mock(LocationDTO.class);
+    public void setUp() throws ParseException, TravelException {
+        TripDuration tripDuration =
+                new TripDuration(Date.from(new SimpleDateFormat("dd-MM-yyyy").parse("01-12-2021").toInstant()),
+                        Date.from(new SimpleDateFormat("dd-MM-yyyy").parse("12-12-2021").toInstant()));
+        Location start = new Location("Germany", "Munich");
+        Location destination = new Location("USA", "Tampa");
+        TripInformation tripInformation = new TripInformation(tripDuration, start, destination, "Max Mustermann",
+                "breakfast", 1);
+        this.bookTripSagaData = new BookTripSagaData(1L, tripInformation);
     }
 
     @Test
     public void bookTripSagaShouldBeSuccessful() {
         // setup
+        BookHotelRequest bookHotelRequest = bookTripSagaData.makeBookHotelRequest();
+        BookFlightCommand bookFlightCommand = bookTripSagaData.makeBookFlightCommand();
+
         ConfirmHotelBooking confirmHotelBooking = new ConfirmHotelBooking(bookTripSagaData.getHotelId(),
                 bookTripSagaData.getTripId());
         ConfirmTripBooking confirmTripBooking = new ConfirmTripBooking(bookTripSagaData.getTripId(),
                 bookTripSagaData.getHotelId(), bookTripSagaData.getFlightId());
 
+        // execute and verify
         SagaUnitTestSupport.given().saga(makeBookTripSaga(), bookTripSagaData)
                 .expect()
-                    .command(mockedBookHotelRequest)
+                    .command(bookHotelRequest)
                     .to(HotelServiceChannels.hotelServiceChannel)
                 .andGiven()
                     .successReply()
                 .expect()
-                    .command(mockedBookFlightCommand)
-                    .to(FlightServiceChannels.flightServiceChannel);
-//                .andGiven()
-//                    .successReply()
-//                .expect()
-//                    .command(confirmHotelBooking)
-//                    .to(HotelServiceChannels.hotelServiceChannel)
-//                .andGiven()
-//                    .successReply()
-//                .expect()
-//                    .command(confirmTripBooking)
-//                    .to(TravelServiceChannels.travelServiceChannel)
-//                .andGiven()
-//                    .successReply()
-//                .expectCompletedSuccessfully();
+                    .command(bookFlightCommand)
+                    .to(FlightServiceChannels.flightServiceChannel)
+                .andGiven()
+                    .successReply()
+                .expect()
+                    .command(confirmHotelBooking)
+                    .to(HotelServiceChannels.hotelServiceChannel)
+                .andGiven()
+                    .successReply()
+                .expect()
+                    .command(confirmTripBooking)
+                    .to(TravelServiceChannels.travelServiceChannel)
+                .andGiven()
+                    .successReply()
+                .expectCompletedSuccessfully();
+    }
+
+    @Test
+    public void bookTripSagaHotelFailureShouldCompensate() {
+        // setup
+        BookHotelRequest bookHotelRequest = bookTripSagaData.makeBookHotelRequest();
+        BookFlightCommand bookFlightCommand = bookTripSagaData.makeBookFlightCommand();
+
+        ConfirmHotelBooking confirmHotelBooking = new ConfirmHotelBooking(bookTripSagaData.getHotelId(),
+                bookTripSagaData.getTripId());
+        ConfirmTripBooking confirmTripBooking = new ConfirmTripBooking(bookTripSagaData.getTripId(),
+                bookTripSagaData.getHotelId(), bookTripSagaData.getFlightId());
+
+        // execute and verify
+        SagaUnitTestSupport.given().saga(makeBookTripSaga(), bookTripSagaData)
+                .expect()
+                    .command(bookHotelRequest)
+                    .to(HotelServiceChannels.hotelServiceChannel)
+                .andGiven()
+                    .failureReply(new NoHotelAvailable(bookTripSagaData.getTripId()))
+                .expect()
+                    .command(new RejectTripCommand(bookTripSagaData.getTripId(), bookTripSagaData.getRejectionReason()))
+                    .to(TravelServiceChannels.travelServiceChannel)
+                .andGiven()
+                    .successReply()
+                .expectRolledBack();
     }
 
     private BookTripSaga makeBookTripSaga() {
