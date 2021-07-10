@@ -18,12 +18,13 @@ import saga.camunda.hotelservice.error.HotelServiceException;
 import saga.camunda.hotelservice.model.HotelBooking;
 import saga.camunda.hotelservice.model.HotelBookingInformation;
 import saga.camunda.hotelservice.resources.DtoConverter;
+import saga.camunda.travelservice.api.TravelServiceTopics;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Component
-@ExternalTaskSubscription("bookHotel")
+@ExternalTaskSubscription(value = "bookHotel", processDefinitionKey = TravelServiceTopics.Sagas.BOOK_TRIP_SAGA)
 public class BookHotelWorker implements ExternalTaskHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(BookHotelWorker.class);

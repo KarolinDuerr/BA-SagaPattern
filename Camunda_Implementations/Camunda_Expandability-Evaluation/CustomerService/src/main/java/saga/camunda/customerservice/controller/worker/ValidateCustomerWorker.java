@@ -11,9 +11,10 @@ import org.springframework.stereotype.Component;
 import saga.camunda.customerservice.api.CustomerServiceTopics;
 import saga.camunda.customerservice.controller.ICustomerService;
 import saga.camunda.customerservice.error.CustomerServiceException;
+import saga.camunda.travelservice.api.TravelServiceTopics;
 
 @Component
-@ExternalTaskSubscription("validateCustomer")
+@ExternalTaskSubscription(value = "validateCustomer", processDefinitionKey = TravelServiceTopics.Sagas.BOOK_TRIP_SAGA)
 public class ValidateCustomerWorker implements ExternalTaskHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(ValidateCustomerWorker.class);

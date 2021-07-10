@@ -16,6 +16,7 @@ repositories {
 
 dependencies {
     compile project(":CustomerService-API")
+    compile project(":TravelService-API")
 
     // Springframework
     compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
