@@ -4,6 +4,7 @@ import io.eventuate.tram.sagas.orchestration.SagaInstanceFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.springframework.boot.test.context.SpringBootTest;
 import saga.eventuate.tram.travelservice.controller.ITravelService;
 import saga.eventuate.tram.travelservice.controller.TravelService;
 import saga.eventuate.tram.travelservice.model.TripInformation;
@@ -14,21 +15,15 @@ import saga.eventuate.tram.travelservice.saga.BookTripSagaData;
 import java.util.LinkedList;
 import java.util.List;
 
-//@RunWith(SpringRunner.class)
-//@SpringBootTest
-//@TestPropertySource(locations = "classpath:application-test.properties")
+@SpringBootTest
 public class TravelServiceUnitTest {
 
-//    @Autowired
     private ITravelService travelService;
 
-//    @MockBean
     private TripInformationRepository tripInformationRepository;
 
-//    @MockBean
     private SagaInstanceFactory sagaInstanceFactory;
 
-//    @MockBean
     private BookTripSaga bookTripSaga;
 
     private final Long TRIP_INFORMATION_ID = 1L;

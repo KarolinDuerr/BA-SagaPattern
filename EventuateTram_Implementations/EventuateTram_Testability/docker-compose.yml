@@ -3,8 +3,8 @@ version: '3'
 services:
   travelservice:
     build: ./TravelService/
-    image: travelservice:eventuate
-    container_name: travelservice_eventuate
+    image: travelservice:eventuateTestability
+    container_name: travelservice_eventuateTestability
     ports:
       - 8090:8090
     networks:
@@ -28,8 +28,8 @@ services:
 
   hotelservice:
     build: ./HotelService/
-    image: hotelservice:eventuate
-    container_name: hotelservice_eventuate
+    image: hotelservice:eventuateTestability
+    container_name: hotelservice_eventuateTestability
     ports:
       - 8081:8081
     networks:
@@ -53,8 +53,8 @@ services:
 
   flightservice:
     build: ./FlightService/
-    image: flightservice:eventuate
-    container_name: flightservice_eventuate
+    image: flightservice:eventuateTestability
+    container_name: flightservice_eventuateTestability
     ports:
       - 8082:8082
     networks:
