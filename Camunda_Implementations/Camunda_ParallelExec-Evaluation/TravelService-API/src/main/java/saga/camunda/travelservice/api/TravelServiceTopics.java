@@ -13,4 +13,10 @@ public class TravelServiceTopics {
         public static final String REJECT_TRIP_REASON = "errorMessage";
 
     }
+
+    public static class Sagas {
+
+        public static final String BOOK_TRIP_SAGA_PARALLEL_EXEC = "BookTripSagaParallelExec";
+
+    }
 }

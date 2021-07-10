@@ -11,9 +11,10 @@ import org.springframework.stereotype.Component;
 import saga.camunda.hotelservice.api.HotelServiceTopics;
 import saga.camunda.hotelservice.api.dto.BookHotelResponse;
 import saga.camunda.hotelservice.controller.IHotelService;
+import saga.camunda.travelservice.api.TravelServiceTopics;
 
 @Component
-@ExternalTaskSubscription("confirmHotel")
+@ExternalTaskSubscription(value = "confirmHotel", processDefinitionKey = TravelServiceTopics.Sagas.BOOK_TRIP_SAGA_PARALLEL_EXEC)
 public class ConfirmHotelWorker implements ExternalTaskHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(ConfirmHotelWorker.class);
