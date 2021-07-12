@@ -50,12 +50,12 @@ public class BookTripSagaUnitTests {
         sagaInstanceFactory.startBookTripSaga(bookTripSagaData);
 
         // verify
-        /**
-         * Conductor's {@link StartWorkflowRequest} class does not provide an equals method and includes two maps
-         * and an instance of {@link com.netflix.conductor.common.metadata.workflow.WorkflowDef}. Therefore, using
-         * Mockito.eq() to check if the startWorkflow() method is called with the same information is not possible.
-         * However, in order to compare the methods which can be compared, Mockito.refEq() is used and the problematic
-         * fields (workflowDef, taskDomain and input) are excluded.
+        /*
+          Conductor's {@link StartWorkflowRequest} class does not provide an equals method and includes two maps
+          and an instance of {@link com.netflix.conductor.common.metadata.workflow.WorkflowDef}. Therefore, using
+          Mockito.eq() to check if the startWorkflow() method is called with the same information is not possible.
+          However, in order to compare the methods which can be compared, Mockito.refEq() is used and the problematic
+          fields (workflowDef, taskDomain and input) are excluded.
          */
         Mockito.verify(mockedWorkflowClient, Mockito.times(1)).startWorkflow(Mockito.refEq(bookTripSagaRequest,
                 "workflowDef", "taskToDomain", "input"));
