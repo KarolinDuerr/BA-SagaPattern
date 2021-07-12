@@ -1,0 +1,17 @@
+{
+  "name": "confirmTrip",
+  "description": "Invokes the TravelService to confirm the booked trip.",
+  "inputKeys": [
+    "confirmHotelInTripBooking",
+    "confirmFlightInTripBooking"
+  ],
+  "outputKeys": [],
+  "timeoutSeconds": 10800,
+  "timeoutPolicy": "RETRY",
+  "retryCount": 1,
+  "retryLogic": "FIXED",
+  "retryDelaySeconds": 30,
+  "responseTimeoutSeconds": 3600,
+  "pollTimeoutSeconds": 14400,
+  "ownerEmail": "travelService@exampleMail.com"
+}
