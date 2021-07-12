@@ -1,0 +1,63 @@
+<server description="OpenLiberty MicroProfile HotelService server">
+    <featureManager>
+        <feature>jpa-2.2</feature>
+        <feature>jndi-1.0</feature>
+        <feature>microProfile-4.0</feature>
+        <feature>eventLogging-1.0</feature>
+        <feature>mpLRA-1.0</feature>
+        <!-- The following feature is needed to use Zipkin for tracing, if Jaeger should be used uncomment the following line -->
+        <feature>usr:opentracingZipkin-0.33</feature>
+    </featureManager>
+
+    <!-- Configure default values -->
+    <variable name="default.http.port" defaultValue="8081"/>
+    <variable name="default.https.port" defaultValue="9443"/>
+    <variable name="lra.coordinator.port" defaultValue="8080"/>
+    <variable name="lra.coordinator.host" defaultValue="localhost"/>
+    <variable name="lra.coordinator.path" defaultValue="lrac/lra-coordinator"/>
+
+    <!-- Configure Logging -->
+    <logging consoleLogLevel="${openLiberty.microprofile.logging.level}"
+             consoleFormat="${openLiberty.microprofile.logging.format}"
+             consoleSource="${openLiberty.microprofile.logging.console.source}"/>
+    <logging traceSpecification="eclipselink.sql=all"/>
+
+    <mpMetrics authentication="false"/>
+
+    <httpEndpoint httpPort="${default.http.port}" httpsPort="${default.https.port}"
+                  id="defaultHttpEndpoint" host="*"/>
+
+    <!-- Automatically expand WAR files and EAR files -->
+    <applicationManager autoExpand="true"/>
+
+    <webApplication id="HotelService"
+                    location="HotelService-1.0-SNAPSHOT.war" contextRoot="/">
+        <!-- enable visibility to third party apis -->
+        <classloader apiTypeVisibility="+third-party"/>
+    </webApplication>
+
+    <!-- Enable Zipkin Tracing provided by IBM -->
+    <opentracingZipkin host="${zipkin.host}" port="9411"/>
+
+    <!-- Connect to LRA Coordinator -->
+    <lra port="${lra.coordinator.port}" host="${lra.coordinator.host}" path="${lra.coordinator.path}"/>
+
+    <!-- Default SSL configuration enables trust for default certificates from the Java runtime -->
+    <ssl id="defaultSSLConfig" trustDefaultCerts="true"/>
+
+    <!-- Datasource Connector Location -->
+    <library id="mySQLLib">
+        <fileset dir="jdbc"
+                 includes="mysql-connector-java-*.jar"/>
+    </library>
+
+    <!-- Datasource Configuration -->
+    <dataSource id="microProfileHotelService"
+                jndiName="jdbc/HotelService">
+        <jdbcDriver libraryRef="mySQLLib"/>
+        <properties user="${openLiberty.mysql.username}"
+                    password="${openLiberty.mysql.password}"
+                    URL="${openLiberty.mysql.url}"/>
+    </dataSource>
+
+</server>

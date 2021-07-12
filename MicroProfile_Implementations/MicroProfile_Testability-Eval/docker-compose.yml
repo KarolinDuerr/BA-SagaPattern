@@ -1,0 +1,141 @@
+version: '3'
+
+services:
+  travelservice:
+    build: ./TravelService/
+    image: travelservice:microProfileTestability
+    container_name: travelservice_microProfileTestability
+    networks:
+      - travel_application
+    ports:
+      - 8090:8090
+    depends_on:
+      - mysql
+      - zipkin
+      - jaeger
+    environment:
+      DEFAULT_HTTP_PORT: 8090
+      DEFAULT_HTTPS_PORT: -1
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: microProfile
+      OPENLIBERTY_MYSQL_USERNAME: mysqluser
+      OPENLIBERTY_MYSQL_PASSWORD: mysqlpw
+      LRA_COORDINATOR_PORT: 8090
+      LRA_COORDINATOR_HOST: travelservice
+      LRA_COORDINATOR_PATH: lrac/lra-coordinator
+      FLIGHT_SERVICE_URI: flightservice
+      HOTEL_SERVICE_URI: hotelservice
+      TRAVEL_SERVICE_URI: travelservice
+      ZIPKIN_URI: zipkin
+      JAEGER_AGENT_HOST: jaeger
+      JAEGER_AGENT_PORT: 6831
+      JAEGER_SAMPLER_TYPE: const
+      JAEGER_SAMPLER_PARAM: 1
+
+
+  hotelservice:
+    build: ./HotelService/
+    image: hotelservice:microProfileTestability
+    container_name: hotelservice_microProfileTestability
+    networks:
+      - travel_application
+    ports:
+      - 8081:8081
+    depends_on:
+      - mysql
+      - zipkin
+      - jaeger
+    environment:
+      DEFAULT_HTTP_PORT: 8081
+      DEFAULT_HTTPS_PORT: -1
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: microProfile_hotelService
+      OPENLIBERTY_MYSQL_USERNAME: mysqluser
+      OPENLIBERTY_MYSQL_PASSWORD: mysqlpw
+      LRA_COORDINATOR_PORT: 8090
+      LRA_COORDINATOR_HOST: travelservice
+      LRA_COORDINATOR_PATH: lrac/lra-coordinator
+      ZIPKIN_URI: zipkin
+      JAEGER_AGENT_HOST: jaeger
+      JAEGER_AGENT_PORT: 6831
+      JAEGER_SAMPLER_TYPE: const
+      JAEGER_SAMPLER_PARAM: 1
+
+
+  flightservice:
+    build: ./FlightService/
+    image: flightservice:microProfileTestability
+    container_name: flightservice_microProfileTestability
+    networks:
+      - travel_application
+    ports:
+      - 8082:8082
+    depends_on:
+      - mysql
+      - zipkin
+      - jaeger
+    environment:
+      DEFAULT_HTTP_PORT: 8082
+      DEFAULT_HTTPS_PORT: -1
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: microProfile_flightService
+      OPENLIBERTY_MYSQL_USERNAME: mysqluser
+      OPENLIBERTY_MYSQL_PASSWORD: mysqlpw
+      LRA_COORDINATOR_PORT: 8090
+      LRA_COORDINATOR_HOST: travelservice
+      LRA_COORDINATOR_PATH: lrac/lra-coordinator
+      ZIPKIN_URI: zipkin
+      JAEGER_AGENT_HOST: jaeger
+      JAEGER_AGENT_PORT: 6831
+      JAEGER_SAMPLER_TYPE: const
+      JAEGER_SAMPLER_PARAM: 1
+
+
+  mysql:
+    image: library/mysql:8.0.25
+    container_name: mysql_microProfile
+    restart: always
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d
+      - travel_db_microProfile:/var/lib/mysql
+    ports:
+      - 3306:3306
+    networks:
+      - travel_application
+    expose:
+      - '3306'
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=microProfile
+      - MYSQL_USER=mysqluser
+      - MYSQL_PASSWORD=mysqlpw
+
+
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+    networks:
+      - travel_application
+    environment:
+      JAVA_OPTS: -Xmx64m
+      STORAGE_TYPE: mem
+
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "6831:6831/udp"
+      - "16686:16686"
+    networks:
+      - travel_application
+
+networks:
+  travel_application:
+
+volumes:
+  travel_db_microProfile:
