@@ -1,6 +1,7 @@
-package saga.eventuate.tram.travelservice.unittests;
+package saga.eventuate.tram.travelservice.unittests.sagadefinition;
 
 import io.eventuate.tram.sagas.testing.SagaUnitTestSupport;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +16,7 @@ import saga.eventuate.tram.travelservice.command.ConfirmTripBooking;
 import saga.eventuate.tram.travelservice.command.RejectTripCommand;
 import saga.eventuate.tram.travelservice.error.TravelException;
 import saga.eventuate.tram.travelservice.model.Location;
+import saga.eventuate.tram.travelservice.model.RejectionReason;
 import saga.eventuate.tram.travelservice.model.TripDuration;
 import saga.eventuate.tram.travelservice.model.TripInformation;
 import saga.eventuate.tram.travelservice.saga.BookTripSaga;
@@ -23,6 +25,7 @@ import saga.eventuate.tram.travelservice.saga.BookTripSagaData;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.function.Consumer;
 
 @SpringBootTest
 public class BookTripSagaUnitTest {
@@ -40,6 +43,8 @@ public class BookTripSagaUnitTest {
                 "breakfast", 1);
         this.bookTripSagaData = new BookTripSagaData(1L, tripInformation);
     }
+
+    //region Validate Saga sequence
 
     @Test
     public void bookTripSagaShouldBeSuccessful() {
@@ -127,6 +132,121 @@ public class BookTripSagaUnitTest {
                     .successReply()
                 .expectRolledBack();
     }
+
+    //endregion
+
+    //region Check BookTripSagaData content
+
+    @Test
+    public void successfulBookTripSagaShouldIncludeHotelAndFlightId() {
+        // setup
+        BookHotelRequest bookHotelRequest = bookTripSagaData.makeBookHotelRequest();
+        BookFlightCommand bookFlightCommand = bookTripSagaData.makeBookFlightCommand();
+
+        ConfirmHotelBooking confirmHotelBooking = new ConfirmHotelBooking(bookTripSagaData.getHotelId(),
+                bookTripSagaData.getTripId());
+        ConfirmTripBooking confirmTripBooking = new ConfirmTripBooking(bookTripSagaData.getTripId(),
+                bookTripSagaData.getHotelId(), bookTripSagaData.getFlightId());
+
+        Consumer<BookTripSagaData> bookTripSagaDataConsumer = bookTripSagaData -> {
+            Assert.assertNull(bookTripSagaData.getRejectionReason());
+//            Assert.assertNotEquals(-1, bookTripSagaData.getHotelId()); // TODO
+//            Assert.assertNotEquals(-1, bookTripSagaData.getFlightId());
+        };
+
+        // execute and verify
+        SagaUnitTestSupport.given().saga(makeBookTripSaga(), bookTripSagaData)
+                .expect()
+                .command(bookHotelRequest)
+                .to(HotelServiceChannels.hotelServiceChannel)
+                .andGiven()
+                .successReply()
+                .expect()
+                .command(bookFlightCommand)
+                .to(FlightServiceChannels.flightServiceChannel)
+                .andGiven()
+                .successReply()
+                .expect()
+                .command(confirmHotelBooking)
+                .to(HotelServiceChannels.hotelServiceChannel)
+                .andGiven()
+                .successReply()
+                .expect()
+                .command(confirmTripBooking)
+                .to(TravelServiceChannels.travelServiceChannel)
+                .andGiven()
+                .successReply()
+                .expectCompletedSuccessfully()
+                .assertSagaData(bookTripSagaDataConsumer);
+    }
+
+    @Test
+    public void bookTripSagaHotelFailureShouldSetNoHotelAvailableRejectionReason() {
+        // setup
+        BookHotelRequest bookHotelRequest = bookTripSagaData.makeBookHotelRequest();
+
+        Consumer<BookTripSagaData> bookTripSagaDataConsumer = bookTripSagaData -> {
+            Assert.assertEquals(RejectionReason.NO_HOTEL_AVAILABLE, bookTripSagaData.getRejectionReason());
+            Assert.assertEquals(-1, bookTripSagaData.getHotelId());
+            Assert.assertEquals(-1, bookTripSagaData.getFlightId());
+        };
+
+        // execute and verify
+        SagaUnitTestSupport.given().saga(makeBookTripSaga(), bookTripSagaData)
+                .expect()
+                .command(bookHotelRequest)
+                .to(HotelServiceChannels.hotelServiceChannel)
+                .andGiven()
+                .failureReply(new NoHotelAvailable(bookTripSagaData.getTripId()))
+                .expect()
+                .command(new RejectTripCommand(bookTripSagaData.getTripId(), bookTripSagaData.getRejectionReason()))
+                .to(TravelServiceChannels.travelServiceChannel)
+                .andGiven()
+                .successReply()
+                .expectRolledBack()
+                .assertSagaData(bookTripSagaDataConsumer);
+    }
+
+    @Test
+    public void bookTripSagaFlightFailureShouldSetNoFlightAvailableRejectionReason() {
+        // setup
+        BookHotelRequest bookHotelRequest = bookTripSagaData.makeBookHotelRequest();
+        BookFlightCommand bookFlightCommand = bookTripSagaData.makeBookFlightCommand();
+
+
+        Consumer<BookTripSagaData> bookTripSagaDataConsumer = bookTripSagaData -> {
+            Assert.assertEquals(RejectionReason.NO_FLIGHT_AVAILABLE, bookTripSagaData.getRejectionReason());
+            Assert.assertEquals(-1, bookTripSagaData.getHotelId());
+            Assert.assertEquals(-1, bookTripSagaData.getFlightId());
+        };
+
+        // execute and verify
+        SagaUnitTestSupport.given().saga(makeBookTripSaga(), bookTripSagaData)
+                .expect()
+                .command(bookHotelRequest)
+                .to(HotelServiceChannels.hotelServiceChannel)
+                .andGiven()
+                .successReply()
+                .expect()
+                .command(bookFlightCommand)
+                .to(FlightServiceChannels.flightServiceChannel)
+                .andGiven()
+                .failureReply(new NoFlightAvailable(bookTripSagaData.getTripId()))
+                .expect()
+                .command(new CancelHotelBooking(bookTripSagaData.getHotelId(), bookTripSagaData.getTripId()))
+                .to(HotelServiceChannels.hotelServiceChannel)
+                .andGiven()
+                .successReply()
+                .expect()
+                .command(new RejectTripCommand(bookTripSagaData.getTripId(), bookTripSagaData.getRejectionReason()))
+                .to(TravelServiceChannels.travelServiceChannel)
+                .andGiven()
+                .successReply()
+                .expectRolledBack()
+                .assertSagaData(bookTripSagaDataConsumer);
+    }
+
+    //endregion
 
 
     //region Testing scenarios that should not happen, however to make sure the Saga definition corresponds to expectations
