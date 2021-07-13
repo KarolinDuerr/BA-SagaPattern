@@ -64,7 +64,10 @@ dependencies {
     // MySQL
     compile "mysql:mysql-connector-java:$mySQLVersion"
 
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile "junit:junit:4.12"
+    testCompile "org.microshed:microshed-testing-liberty:0.9.1"
+    testCompile 'org.junit.jupiter:junit-jupiter:5.7.2'
+    testCompile "org.mockito:mockito-core:2.23.0"
 }
 
 task copyDependenciesToOpenLiberty(type: Copy) {

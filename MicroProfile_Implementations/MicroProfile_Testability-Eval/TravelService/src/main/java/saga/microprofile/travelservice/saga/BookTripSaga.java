@@ -60,6 +60,31 @@ public class BookTripSaga implements Runnable {
         this.travelServiceBaseUri = travelServiceUri;
     }
 
+    /**
+     * Needed for testing purposes in order to be able to mock the {@link Client}s.
+     *
+     * @param bookTripSagaData
+     * @param flightServiceUri
+     * @param hotelServiceUri
+     * @param travelServiceUri
+     * @param lraId
+     * @param testClient
+     */
+    public BookTripSaga(final BookTripSagaData bookTripSagaData, final String flightServiceUri,
+                        final String hotelServiceUri, final String travelServiceUri, final String lraId,
+                        final Client testClient) {
+        this.bookTripSagaData = bookTripSagaData;
+        this.lraId = lraId;
+
+        this.hotelServiceClient = testClient;
+        this.flightServiceClient = testClient;
+        this.travelServiceClient = testClient;
+
+        this.flightServiceBaseUri = flightServiceUri;
+        this.hotelServiceBaseUri = hotelServiceUri;
+        this.travelServiceBaseUri = travelServiceUri;
+    }
+
     @Override
     public void run() {
         logger.info("Started BookTripSaga Thread.");
@@ -105,7 +130,7 @@ public class BookTripSaga implements Runnable {
     private void confirmHotelBooking() {
         logger.info("Trying to confirm the hotel booking.");
         String hotelConfirmUri = String.format("%s/%s/confirm", hotelServiceBaseUri,
-                bookTripSagaData.getTripId());
+                bookTripSagaData.getTripId()); // TODO prüfen --> nicht hotelBookingId?
         WebTarget hotelServiceTarget = hotelServiceClient.target(hotelConfirmUri);
         ConfirmHotelBooking confirmHotelBooking = new ConfirmHotelBooking(bookTripSagaData.getHotelId(),
                 bookTripSagaData.getTripId());

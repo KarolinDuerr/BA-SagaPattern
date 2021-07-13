@@ -3,6 +3,8 @@ package saga.microprofile.hotelservice.api.dto;
 import jakarta.json.bind.annotation.JsonbProperty;
 import jakarta.json.bind.annotation.JsonbPropertyOrder;
 
+import java.util.Objects;
+
 //@JsonbPropertyOrder({"trip"})
 public class BookHotelRequest {
 
@@ -92,6 +94,42 @@ public class BookHotelRequest {
                 ", boardType='" + boardType + '\'' +
                 ", travellerName='" + travellerName + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof BookHotelRequest)) {
+            return false;
+        }
+
+        BookHotelRequest bookHotelRequest = (BookHotelRequest) o;
+
+        if (Objects.equals(bookHotelRequest.getTripId(), this.getTripId())) {
+            return true;
+        }
+
+        if (!Objects.equals(bookHotelRequest.getDestination(), this.getDestination())) {
+            return false;
+        }
+
+        if (!Objects.equals(bookHotelRequest.getDuration(), this.getDuration())) {
+            return false;
+        }
+
+        if (!Objects.equals(bookHotelRequest.getBoardType(), this.getBoardType())) {
+            return false;
+        }
+
+        return Objects.equals(bookHotelRequest.getTravellerName(), this.getTravellerName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tripId, destination, duration, boardType, travellerName);
     }
 }
 

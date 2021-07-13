@@ -5,6 +5,7 @@ import jakarta.json.bind.annotation.JsonbProperty;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class BookFlightRequest implements Serializable {
 
@@ -36,7 +37,8 @@ public class BookFlightRequest implements Serializable {
         this.travellerName = travellerName;
     }
 
-    public BookFlightRequest(final long tripId, final LocationDTO home, final LocationDTO destination, final LocalDate outboundFlightDate,
+    public BookFlightRequest(final long tripId, final LocationDTO home, final LocationDTO destination,
+                             final LocalDate outboundFlightDate,
                              final LocalDate returnFlightDate, final String travellerName) {
         this.tripId = tripId;
         this.home = home;
@@ -110,6 +112,46 @@ public class BookFlightRequest implements Serializable {
                 ", returnFlightDate=" + returnFlightDate +
                 ", travellerName='" + travellerName + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof BookFlightRequest)) {
+            return false;
+        }
+
+        BookFlightRequest bookFlightRequest = (BookFlightRequest) o;
+
+        if (Objects.equals(bookFlightRequest.getTripId(), this.getTripId())) {
+            return true;
+        }
+
+        if (!Objects.equals(bookFlightRequest.getDestination(), this.getDestination())) {
+            return false;
+        }
+
+        if (!Objects.equals(bookFlightRequest.getHome(), this.getHome())) {
+            return false;
+        }
+
+        if (bookFlightRequest.getReturnFlightDate().compareTo(this.getReturnFlightDate()) != 0) {
+            return false;
+        }
+
+        if (bookFlightRequest.getOutboundFlightDate().compareTo(this.getOutboundFlightDate()) != 0) {
+            return false;
+        }
+
+        return Objects.equals(bookFlightRequest.getTravellerName(), this.getTravellerName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tripId, home, destination, outboundFlightDate, returnFlightDate, travellerName);
     }
 }
 

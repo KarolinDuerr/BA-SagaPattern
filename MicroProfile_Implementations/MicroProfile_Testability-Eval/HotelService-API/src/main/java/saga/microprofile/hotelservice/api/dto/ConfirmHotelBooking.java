@@ -1,5 +1,7 @@
 package saga.microprofile.hotelservice.api.dto;
 
+import java.util.Objects;
+
 public class ConfirmHotelBooking {
 
     private long tripId;
@@ -39,5 +41,29 @@ public class ConfirmHotelBooking {
                 "tripId=" + tripId +
                 ", bookingId=" + bookingId +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        ConfirmHotelBooking confirmHotelBooking = (ConfirmHotelBooking) o;
+
+        if (!Objects.equals(confirmHotelBooking.getTripId(), this.getTripId())) {
+            return true;
+        }
+
+        return Objects.equals(confirmHotelBooking.getBookingId(), this.getBookingId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tripId, bookingId);
     }
 }

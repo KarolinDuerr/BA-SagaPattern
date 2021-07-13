@@ -1,5 +1,7 @@
 package saga.microprofile.travelservice.api.dto;
 
+import java.util.Objects;
+
 public class ConfirmTripBooking {
 
     private long tripId;
@@ -51,5 +53,33 @@ public class ConfirmTripBooking {
                 ", hotelId=" + hotelId +
                 ", flightId=" + flightId +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        ConfirmTripBooking confirmTripBooking = (ConfirmTripBooking) o;
+
+        if (!Objects.equals(confirmTripBooking.getTripId(), this.getTripId())) {
+            return true;
+        }
+
+        if (!Objects.equals(confirmTripBooking.getHotelId(), this.getHotelId())) {
+            return false;
+        }
+
+        return Objects.equals(confirmTripBooking.getFlightId(), this.getFlightId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tripId, hotelId, flightId);
     }
 }

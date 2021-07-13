@@ -4,8 +4,7 @@ import jakarta.json.bind.annotation.JsonbDateFormat;
 import jakarta.json.bind.annotation.JsonbProperty;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.Objects;
 
 public class StayDurationDTO {
 
@@ -49,5 +48,23 @@ public class StayDurationDTO {
                 "startDate=" + arrival +
                 ", endDate=" + departure +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        StayDurationDTO stayDurationDTO = (StayDurationDTO) o;
+        return Objects.equals(getArrival(), stayDurationDTO.getArrival()) && Objects.equals(getDeparture(),
+                stayDurationDTO.getDeparture());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(arrival, departure);
     }
 }
