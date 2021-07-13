@@ -6,4 +6,6 @@ COPY --chown=1001:0 build/libs/mysql-connector-java-*.jar /config/jdbc/
 COPY --chown=1001:0 build/libs/extension liberty/usr/extension/
 COPY --chown=1001:0 build/libs/TravelService-*.war /config/apps/
 
-RUN configure.sh
+ADD build/libs/TravelService-*.war /config/dropins/
+
+#RUN configure.sh

@@ -63,12 +63,7 @@ public class BookTripSaga implements Runnable {
     /**
      * Needed for testing purposes in order to be able to mock the {@link Client}s.
      *
-     * @param bookTripSagaData
-     * @param flightServiceUri
-     * @param hotelServiceUri
-     * @param travelServiceUri
-     * @param lraId
-     * @param testClient
+     * @param testClient Used as client for all three service calls (HotelService, FlightService, TravelService)s
      */
     public BookTripSaga(final BookTripSagaData bookTripSagaData, final String flightServiceUri,
                         final String hotelServiceUri, final String travelServiceUri, final String lraId,

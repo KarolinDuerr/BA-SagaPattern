@@ -45,6 +45,11 @@ public class TravelResource {
     private DtoConverter dtoConverter;
 
     @GET
+    public Response healthEndpointForTests() {
+        return Response.ok("Ready").build();
+    }
+
+    @GET
     @Path("/trips")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getTrips() throws TravelServiceException {

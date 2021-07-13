@@ -23,4 +23,8 @@ subprojects {
         mavenCentral()
         jcenter()
     }
+
+    test {
+        useJUnitPlatform()
+    }
 }

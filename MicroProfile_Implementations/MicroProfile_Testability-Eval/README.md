@@ -5,7 +5,7 @@ has been extended by automated tests that relate to the BookTripSaga.
 
 ## Start the Application
 
-1. Run `./gradlew clean build`
+1. Run `./gradlew clean build -x test`
 
 
 2. Execute `docker-compose up `

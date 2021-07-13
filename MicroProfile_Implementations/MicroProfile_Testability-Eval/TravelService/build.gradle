@@ -64,10 +64,21 @@ dependencies {
     // MySQL
     compile "mysql:mysql-connector-java:$mySQLVersion"
 
+    // General Testing dependencies
     testCompile "junit:junit:4.12"
-    testCompile "org.microshed:microshed-testing-liberty:0.9.1"
     testCompile 'org.junit.jupiter:junit-jupiter:5.7.2'
     testCompile "org.mockito:mockito-core:2.23.0"
+    testCompile "jakarta.json:jakarta.json-api:2.0.1"
+    testCompile "org.glassfish:jakarta.json:2.0.1"
+
+    // For integration testing
+    testCompile "org.microshed:microshed-testing-liberty:0.9.1"
+    testCompile "org.microshed:microshed-testing-testcontainers:0.9.1"
+    testCompile "org.testcontainers:testcontainers:1.15.3"
+}
+
+test {
+    useJUnitPlatform()
 }
 
 task copyDependenciesToOpenLiberty(type: Copy) {
@@ -113,3 +124,4 @@ deploy.finalizedBy 'copyDependenciesToOpenLiberty'
 deploy.finalizedBy 'unzipZipkinTracerToOpenLiberty'
 libertyDev.dependsOn 'deploy'
 clean.dependsOn 'libertyStop'
+test.dependsOn 'war'
