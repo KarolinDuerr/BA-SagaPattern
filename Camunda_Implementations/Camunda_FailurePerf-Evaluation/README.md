@@ -152,44 +152,24 @@ An example for such a request:
   docker logs flightservice_camundaFailurePerf --follow
    ```  
 
-### 2. Saga Orchestrator failure __// TODO__
-The __TravelService__ plays the orchestrator role in this example application. However, it also needs Eventuate's __CDC service__ to
-publish messages to the participants and vice versa. Consequently, observing the system's behaviour during orchestrator failures
-involves failures of the __TravelService__ as well as the __CDC service__.
-- Provoke a failure of the __CDC service__ while a trip booking __is being started__ with the following string as `destination country`:
-    ```text
-    "Provoke orchestrator failure while starting trip booking"
-    ```
-  The __TravelService__ terminates then the docker container of the __CDC Service__ while it is executing the *bookTrip* request but before starting the *BookTripSaga*.
-  Afterwards, the __CDC Service__ has to be __restarted__ manually to investigate what happens as soon as the service is running again.
-  This can be done using one of the following commands:
-    ```shell
-    docker-compose start cdcservice
-
-    docker start cdcservice
-    ```
-
-  If the container name of the __CDC service__ has been changed in the `docker-compose.yml` file, the
-  container has to be started using this name.
+### 2. Saga Orchestrator failure
+The __Camunda Engine__ within the __TravelService__ plays the orchestrator role in this example application. Consequently, observing the system's behaviour during orchestrator failures involves failures of the __TravelService__.
+- Provoke a failure of the __TravelService__ while a trip booking __is being started__ is not considered, since the __TravelService__ is needed in order to make booking requests.
 
 
-- Provoke a failure of the __CDC service while executing__ a local transaction of the *BookTripSaga* with the following string as `destination country`:
+- Provoke a failure of the __TravelService while executing__ a local transaction of the *BookTripSaga* with the following string as `destination country`:
     ```text 
-    "Provoke CDC failure while executing"
-    ```  
-  The __FlightService__ terminates then the docker container of the __CDC Service__ after booking a flight, but before informing the orchestrator about it.
-  Afterwards, the __CDC service__, again, has to be __restarted__ using the same commands as above.
-
-
-- Provoke a failure of the orchestrator, which means the __TravelService__, __while executing__ a local transaction of the *BookTripSaga* with the following string as `destination country`:
-    ```text
     "Provoke orchestrator failure while executing"
     ```  
   The __FlightService__ terminates then the docker container of the __TravelService__ after booking a flight, but before informing the orchestrator about it.
   Afterwards, the __TravelService__ has to be __restarted__ manually to investigate what happens as soon as the service is running again.
-  This can be done using the same commands as before, but with `travelservice` as the service name, respectively `travelservice_eventuateFailurePerf` as the container name.
-  __Conductor server__, again, has to be __restarted__ using the same commands as above.
+  This can be done using one of the following commands:
+  ```shell
+    docker-compose start travelservice
+
+    docker start travelservice_camundaFailurePerf
+   ```
 
 
 ### 3. Breach of Saga protocol
-// TODO
+A participant might send the same message twice to the orchestrator, or even send an old one.  // TODO
