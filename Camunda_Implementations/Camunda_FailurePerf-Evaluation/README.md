@@ -168,8 +168,11 @@ The __Camunda Engine__ within the __TravelService__ plays the orchestrator role 
     docker-compose start travelservice
 
     docker start travelservice_camundaFailurePerf
-   ```
-
+  ```
+  
+  If the container name of the __TravelService__ has been changed in the `docker-compose.yml` file, the
+  container has to be started using this name.
+  
 
 ### 3. Breach of Saga protocol
 A participant might send the same message twice to the orchestrator, or even send an old one.  // TODO
