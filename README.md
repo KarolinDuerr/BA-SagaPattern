@@ -22,11 +22,12 @@ three further implementations that extend the basic one:
 
 | <center>__Directory__</center> | <center>__Short Description__</center> |
    |:----------------------------|:-------------------|
-| <center>*</center> | the travel application contains the workflow for booking a trip.|
+| <center>*</center> | The travel application contains the workflow for booking a trip.|
 |||
-| *_Expandability-Evaluation | a _CustomerService_ extends the travel application to examine how easily a new service can be included.|
-| *_FailurePerf-Evaluation |  the application includes additional sections that provoke different failure scenarios given a certain input.|
+| *_Expandability-Evaluation | A _CustomerService_ extends the travel application to examine how easily a new service can be included.|
+| *_FailurePerf-Evaluation |  The application includes additional sections that provoke different failure scenarios given a certain input.|
 | *_ParallelExec-Evaluation | If possible, some transactions within the BookTripSaga are executed in parallel. The same applies for some compensating transactions.|
+| *_Testability-Evaluation | The project includes automatic tests for some Saga related parts of the implementation.|
 
 -----------------------------------------------------------------------------
 For more information about the projects and their setups see the `Readme` files in the respective directories.
