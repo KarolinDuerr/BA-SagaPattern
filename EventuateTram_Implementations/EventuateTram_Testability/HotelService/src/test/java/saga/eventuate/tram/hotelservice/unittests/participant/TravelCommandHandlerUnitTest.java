@@ -29,8 +29,8 @@ public class TravelCommandHandlerUnitTest {
 
         BookHotelRequest bookHotelRequest = Mockito.mock(BookHotelRequest.class);
 
-        SagaParticipantChannels sagaParticipantChannels =
-                new SagaParticipantChannels(TravelServiceChannels.travelServiceChannel);
+//        SagaParticipantChannels sagaParticipantChannels =
+//                new SagaParticipantChannels(TravelServiceChannels.travelServiceChannel);
 //        MessageConsumer messageConsumer = ;
 //        MessageProducer messageProducer = ;
 //        SagaParticipantStubManager sagaParticipantStubManager =
