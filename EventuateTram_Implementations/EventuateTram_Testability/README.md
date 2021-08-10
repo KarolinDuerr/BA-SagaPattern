@@ -76,4 +76,14 @@ docker-compose down --remove-orphans
 ----------------------------
 
 ## Testability
-// TODO
+The __TravelService__ as well as the __HotelService__ have a testing directory that includes several tests concerning 
+Saga-related code.
+
+### 1. Unit test Saga definition
+Unit tests regarding the Saga orchestrator and the Saga definition can be found within the __TravelService__.
+Since Eventuate Tram provides a __testing framework__ specifically designed for testing Sagas, it is used here.
+
+### 2. Unit test Saga participant
+Examples for unit testing the Saga participant can be found within the __HotelService__.
+Again, Eventuate Tram's testing framework is used to realize the participant related unit tests.
+
