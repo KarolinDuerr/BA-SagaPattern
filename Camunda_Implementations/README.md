@@ -24,5 +24,10 @@ The `Camunda_FailurePerf-Evaluation` is also based on the `Camunda` application 
 
 Based on the `Camunda` implementation, the `Camunda_ParallelExec-Evaluation` directory includes the same travel application but some transactions within the BookTripSaga are executed in parallel instead of sequentially.
 
+
+## Saga Pattern Realization: Testability Evaluation
+
+Based on the `Camunda` implementation, the `Camunda_Testability-Evaluation` directory includes the same travel application but extended by some automatic tests for Saga related parts of the implementation.
+
 -----------------------------------------------------------------------------
 For more information about the projects and their setups see the `Readme` files in the respective directories.

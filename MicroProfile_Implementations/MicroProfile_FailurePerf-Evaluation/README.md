@@ -134,32 +134,26 @@ An example for such a request:
    ```  
 
 ### 2. Saga Orchestrator failure
-The __Conductor server__ is the orchestrator in this example application. Consequently, observing the system's behaviour during
-orchestrator failures involves failures of this service.
+The __LRA Coordinator__ within the __TravelService__, as well as the __TravelService__ itself are the orchestrator in this example application. Consequently, observing the system's behaviour during orchestrator failures involves failures of this service.
 
-- Provoke a failure of the __Conductor server__ while a trip booking __is being started__ with the following string as `destination country`:
-    ```text
-    "Provoke orchestrator failure while starting trip booking"
-    ```
-  The __TravelService__ terminates then the docker container of the __Conductor server__ while it is executing the *bookTrip* request but before starting the *BookTripSaga*.
-  Afterwards, the __Conductor server__ has to be __restarted__ manually to investigate what happens as soon as the service is running again.
-  This can be done using one of the following commands:
-    ```shell
-    docker-compose start conductor-server-ui
-
-    docker start conductor-server-ui
-    ```
-
-  If the container name of the __Conductor server__ has been changed in the `docker-compose.yml` file, the
-  container has to be started using this name.
+- Provoke a failure of the __TravelService__ while a trip booking __is being started__ is not considered, since the __TravelService__ is needed in order to make booking requests.
 
 
-- Provoke a failure of the __Conductor server while executing__ a local transaction of the *BookTripSaga* with the following string as `destination country`:
+- Provoke a failure of the __TravelService while executing__ a local transaction of the *BookTripSaga* with the following string as `destination country`:
     ```text
     "Provoke orchestrator failure while executing"
     ```  
-  The __FlightService__ terminates then the docker container of the __Conductor server__ after booking a flight, but before informing the orchestrator about it.
-  Afterwards, the __Conductor server__, again, has to be __restarted__ using the same commands as above.
+  The __FlightService__ terminates then the docker container of the __TravelService__ after booking a flight, but before informing the orchestrator about it.
+  Afterwards, the __TravelService__ has to be __restarted__ manually to investigate what happens as soon as the service is running again.
+  This can be done using one of the following commands:
+  ```shell
+    docker-compose start conductor-server-ui
+
+    docker start conductor-server-ui
+  ```
+
+  If the container name of the __TravelService__ has been changed in the `docker-compose.yml` file, the
+  container has to be started using this name.
 
 
 ### 3. Breach of Saga protocol
