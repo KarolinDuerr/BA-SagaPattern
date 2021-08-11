@@ -91,4 +91,13 @@ docker-compose down --remove-orphans
 ----------------------------
 
 ## Testability
-// TODO
+The __TravelService__ as well as the __HotelService__ have a testing directory that includes several tests concerning
+Saga-related code.
+
+### 1. Unit test Saga definition
+Unit tests regarding the Saga orchestrator and the Saga definition can be found within the __TravelService__.
+However, Camunda does __not__ provide a __testing framework__ and it is only possible to test the Saga definition for a __successful Saga execution__ due to the annotation-based compensation mechanism. 
+
+### 2. Unit test Saga participant
+Examples for unit testing the Saga participant can be found within the __HotelService__.
+Unit tests for a Saga participant are realized using [JUnit](https://junit.org/junit4/) and [Mockito](https://site.mockito.org/). 
