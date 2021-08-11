@@ -154,7 +154,3 @@ The __LRA Coordinator__ within the __TravelService__, as well as the __TravelSer
 
   If the container name of the __TravelService__ has been changed in the `docker-compose.yml` file, the
   container has to be started using this name.
-
-
-### 3. Breach of Saga protocol
-// TODO
