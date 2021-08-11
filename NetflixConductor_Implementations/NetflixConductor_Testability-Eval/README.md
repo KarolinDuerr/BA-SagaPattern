@@ -114,4 +114,15 @@ The `TravelApplication.json` insomnia file also includes this request within the
 ---------------------------
 
 ## Testability
-// TODO
+The __TravelService__ as well as the __HotelService__ have a testing directory that includes several tests concerning
+Saga-related code.
+
+### 1. Unit test Saga definition
+Unit tests regarding the Saga orchestrator and the Saga definition can be found within the __TravelService__.
+However, Netflix Conductor does __not__ provide a __testing framework__ or allow to test the workflow definition 
+__in isolation__. Therefore, it is only possible to test whether the correct workflow definition is started when 
+executing the _BookTripSaga_.
+
+### 2. Unit test Saga participant
+Examples for unit testing the Saga participant can be found within the __HotelService__.
+Unit tests for a Saga participant are realized using [JUnit](https://junit.org/junit4/) and [Mockito](https://site.mockito.org/). 
