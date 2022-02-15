@@ -1,4 +1,9 @@
 # BA-Saga Pattern
+
+Please refer to [karolinduerr.github.io/BA-SagaPattern/](karolinduerr.github.io/BA-SagaPattern/) for a better overview and more detailed documentation.
+
+-----------------------------------------------------------------------------
+
 The implementation for the paper "*An Evaluation of Saga Pattern Implementation Technologies*" of the 13th ZEUS Workshop can be found
 in the following release [An Evaluation of Saga Pattern Implementation Technologies](https://github.com/KarolinDuerr/BA-SagaPattern/releases/tag/v1.0).
 
