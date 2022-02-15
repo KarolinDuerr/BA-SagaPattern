@@ -1,6 +1,6 @@
 # BA-Saga Pattern
 
-Please refer to [karolinduerr.github.io/BA-SagaPattern/](karolinduerr.github.io/BA-SagaPattern/) for a better overview and more detailed documentation.
+Please refer to [https://karolinduerr.github.io/BA-SagaPattern/](https://karolinduerr.github.io/BA-SagaPattern/) for a better overview and more detailed documentation.
 
 -----------------------------------------------------------------------------
 
