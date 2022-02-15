@@ -154,3 +154,21 @@ orchestrator failures involves failures of this service.
     ```  
   The __FlightService__ terminates then the docker container of the __Conductor server__ after booking a flight, but before informing the orchestrator about it.
   Afterwards, the __Conductor server__, again, has to be __restarted__ using the same commands as above.
+
+### 3. Breach of Saga protocol
+A participant might send the same message twice to the orchestrator, or even send an old one.
+Therefore, two scenarios have been added to the implementation that provoke sending either an old or a duplicate message to the orchestrator in order to evaluate how an implementation using Netflix Conductor handles this situation.
+
+- Provoke the __HotelService__ to send a duplicate message to the __TravelService__ with the following string as `destination country`:
+  ```
+  "Provoke duplicate message to orchestrator"
+  ```
+  The __HotelService__ sends then the same message, in this case the `BookHotelResponse` to the __Conductor server__. To achieve this, the __HotelService__ send this message to the `/task` endpoint.
+
+
+- Provoke the __HotelService__ to send an old message to the __TravelService__ with the following string as `destination country`:
+  ```
+  "Provoke sending old message to orchestrator"
+  ```
+  The __HotelService__ creates then a new thread that waits for five minutes before it sends the same answer as before to the __Conductor servrer__ again. To achieve this, the __HotelService__ sends the old message, in this case the `BookHotelResponse`,  to the provided endpoint `/task`.
+  The service's logs document when it sends the old message.  

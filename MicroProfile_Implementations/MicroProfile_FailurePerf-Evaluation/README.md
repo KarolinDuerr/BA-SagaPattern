@@ -154,3 +154,14 @@ The __LRA Coordinator__ within the __TravelService__, as well as the __TravelSer
 
   If the container name of the __TravelService__ has been changed in the `docker-compose.yml` file, the
   container has to be started using this name.
+
+### 3. Breach of Saga protocol
+A participant might send the same message twice to the orchestrator, or even send an old one.
+Therefore, the scenario of sending an old message to the orchestrator has been added to the implementation in order to evaluate how an implementation using MicroProfile LRA handles this situation.
+
+- Provoke the __HotelService__ to send an old message to the __LRACoordinator__ with the following string as `destination country`:
+  ```
+  "Provoke sending old message to orchestrator"
+  ```
+  When the `complete` endpoint of the __HotelService__ is invoked by the __LRACoordinator__, the __HotelService__ creates then a new thread that waits for five minutes before it sends the same answer as before to the __LRACoordinator__ again. To achieve this, the __HotelService__ sends the old message, in this case the __lraId__,  to the provided endpoint `/{lraID}/close`.
+  The service's logs document when it sends the old message.  

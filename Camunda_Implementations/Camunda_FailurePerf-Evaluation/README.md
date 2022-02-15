@@ -172,3 +172,26 @@ The __Camunda Engine__ within the __TravelService__ plays the orchestrator role 
   
   If the container name of the __TravelService__ has been changed in the `docker-compose.yml` file, the
   container has to be started using this name.
+
+### 3. Breach of Saga protocol
+A participant might send the same message twice to the orchestrator, or even send an old one.
+Therefore, two scenarios have been added to the implementation that provoke sending either an old or a duplicate message
+to the orchestrator in order to evaluate how an implementation using Camunda handles this situation.
+
+- Provoke the __HotelService__ to send a duplicate message to the __TravelService__ with the following string as `destination country`:
+
+  ```
+  "Provoke duplicate message to orchestrator"
+  ```
+
+  The __HotelService__ informs then Camunda's `ExternalTaskSerice` to _complete_ the `ExternalTask` again with the respective message, this case the `BookHotelResponse`.
+
+
+- Provoke the __HotelService__ to send an old message to the __TravelService__ with the following string as `destination country`:
+
+  ```
+  "Provoke sending old message to orchestrator"
+  ```
+
+  The __HotelService__ creates then a new thread that waits for five minutes before it sends the same answer as before to the __TravelService__ again. To achieve this, the __HotelService__ sends the old message, in this case the `BookHotelResponse`,  to the provided endpoint `/external-task/{taskId}/complete`.
+  The service's logs document when it sends the old message. 

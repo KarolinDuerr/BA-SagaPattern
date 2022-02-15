@@ -154,3 +154,17 @@ involves failures of the __TravelService__ as well as the __CDC service__.
   The __FlightService__ terminates then the docker container of the __TravelService__ after booking a flight, but before informing the orchestrator about it.
   Afterwards, the __TravelService__ has to be __restarted__ manually to investigate what happens as soon as the service is running again.
   This can be done using the same commands as before, but with `travelservice` as the service name, respectively `travelservice_eventuateFailurePerf` as the container name.
+
+### 3. Breach of Saga protocol
+A participant might send the same message twice to the orchestrator, or even send an old one.
+To handle such situations, EventuateTram offers a pluggable duplicate message detction mechanism[^1].
+For this the service's `ApplicationContext` has to define a `DuplicateMessageDetector` bean and the following dependency has to be added to the `build.gradle` file:
+
+```groovy
+compile "io.eventuate.tram.core:eventuate-tram-spring-consumer-jdbc:$eventuateTramVersion"
+```
+
+Additionally, either auto–configuration has to be enabled or `@Import TramConsumerJdbcAutoConfiguration` needs to be added.
+If this DuplicateMesageDetector is being used, managing transactions in the respective message handler classes needs to be deactivated, for exmaple remove using the `@Transactional` annotation.
+
+[^1]:  [https://eventuate.io/docs/manual/eventuate-tram/latest/getting-started-eventuate-tram.html#getting-started](https://eventuate.io/docs/manual/eventuate-tram/latest/getting-started-eventuate-tram.html#getting-started), last accessed 2022-02-15
