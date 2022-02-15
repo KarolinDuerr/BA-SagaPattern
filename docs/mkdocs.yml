@@ -1,0 +1,128 @@
+site_name: Saga Pattern Evaluation
+site_author: Karolin Dürr
+repo_url: https://github.com/KarolinDuerr/BA-SagaPattern
+repo_name: KarolinDuerr/BA-SagaPattern
+theme:
+    name: material
+    custom_dir: overrides
+    palette:
+      - primary: indigo
+      - media: "(prefers-color-scheme: light)"
+        scheme: default
+        toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+      - media: "(prefers-color-scheme: dark)"
+        scheme: slate
+        toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+    icon:
+      repo: fontawesome/brands/github
+      logo: material/alpha-s-circle-outline
+
+    features:
+        - navigation.tabs
+        - navigation.tabs.sticky
+        - navigation.indexes
+        - navigation.top
+
+extra:
+    version: 1.0
+    social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/KarolinDuerr
+      name: Karolin Dürr
+    - icon: fontawesome/brands/github
+      link: https://github.com/r0light
+      name: Robin Lichtenthäler
+
+nav:
+    - Home:
+        - Home: index.md
+        - License: LICENSE.md
+    - Criteria Catalog:
+        - CriteriaCatalog/index.md
+        - General Saga Characteristics: CriteriaCatalog/GeneralSagaCharacteristics.md
+        - Monitoring: CriteriaCatalog/Monitoring.md
+        - Expandability: CriteriaCatalog/Expandability.md
+        - Fault Tolerance: CriteriaCatalog/FaultTolerance.md
+        - Security: CriteriaCatalog/Security.md
+        - Testability: CriteriaCatalog/Testability.md
+        - Portability: CriteriaCatalog/Portability.md
+        - OSS Characteristics: CriteriaCatalog/OSS_Characteristics.md
+    - Evaluation Summary:
+        - EvaluationSummary/index.md
+        - General Saga Characteristics: EvaluationSummary/GeneralSagaCharacteristicsResults.md
+        - Monitoring: EvaluationSummary/MonitoringResults.md
+        - Expandability: EvaluationSummary/ExpandabilityResults.md
+        - Fault Tolerance: EvaluationSummary/FaultToleranceResults.md
+        - Security: EvaluationSummary/SecurityResults.md
+        - Testability: EvaluationSummary/TestabilityResults.md
+        - Portability: EvaluationSummary/PortabilityResults.md
+        - OSS Characteristics: EvaluationSummary/OSS_CharacteristicsResults.md
+    - Camunda:
+        - Travel Application Realization: Camunda/Camunda_General.md
+        - Parallel Execution Evaluation: Camunda/Camunda_ParallelExec.md
+        - Expandability Evaluation: Camunda/Camunda_Expandability.md
+        - Fault Tolerance Evaluation: Camunda/Camunda_FailurePerf.md
+        - Testability Evaluation: Camunda/Camunda_Testability.md
+    - Eventuate Tram:
+        - Travel Application Realization: EventuateTram/EventuateTram_General.md
+        - Expandability Evaluation: EventuateTram/EventuateTram_Expandability.md
+        - Fault Tolerance Evaluation: EventuateTram/EventuateTram_FailurePerf.md
+        - Testability Evaluation: EventuateTram/EventuateTram_Testability.md
+    - MicroProfile LRA:
+        - Travel Application Realization: MicroProfile/MicroProfile_General.md
+        - Parallel Execution Evaluation: MicroProfile/MicroProfile_ParallelExec.md
+        - Expandability Evaluation: MicroProfile/MicroProfile_Expandability.md
+        - Fault Tolerance Evaluation: MicroProfile/MicroProfile_FailurePerf.md
+        - Testability Evaluation: MicroProfile/MicroProfile_Testability.md
+    - Netflix Conductor:
+        - Travel Application Realization: NetflixConductor/NetflixConductor_General.md
+        - Parallel Execution Evaluation: NetflixConductor/NetflixConductor_ParallelExec.md
+        - Expandability Evaluation: NetflixConductor/NetflixConductor_Expandability.md
+        - Fault Tolerance Evaluation: NetflixConductor/NetflixConductor_FailurePerf.md
+        - Testability Evaluation: NetflixConductor/NetflixConductor_Testability.md
+
+# Extensions
+markdown_extensions:
+    - markdown.extensions.footnotes
+    - markdown.extensions.tables
+    - markdown.extensions.toc
+    - markdown.extensions.wikilinks
+    - markdown.extensions.attr_list
+    - markdown.extensions.codehilite
+    - pymdownx.superfences
+    - pymdownx.inlinehilite:
+        custom_inline:
+          - name: math
+            class: arithmatex
+            format: !!python/object/apply:pymdownx.arithmatex.arithmatex_inline_format {kwds: {mode: generic}}
+    - pymdownx.highlight
+    - pymdownx.tasklist:
+        custom_checkbox: true
+        clickable_checkbox: false
+    - pymdownx.extra
+    - pymdownx.tabbed
+    - pymdownx.details
+    - pymdownx.snippets
+    - pymdownx.critic
+    - pymdownx.caret
+    - pymdownx.emoji:
+        emoji_index: !!python/name:materialx.emoji.twemoji
+        emoji_generator: !!python/name:materialx.emoji.to_svg
+    - admonition
+    - meta
+    - tables
+    - toc:
+        permalink: true
+
+# Plugins
+plugins:
+  - git-revision-date
+  - search
+
+edit_uri: ""
+
+copyright: Copyright &copy; 2022 <a href="https://github.com/KarolinDuerr"  target="_blank" rel="noopener">Karolin Dürr</a> – <a href="https://github.com/r0light"  target="_blank" rel="noopener">Robin Lichtenthäler</a>.

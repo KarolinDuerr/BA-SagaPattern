@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block extrahead %}
+  {% if page and page.meta and page.meta.context %}
+    <meta property="context" content="{{ page.meta.context }}" />
+  {% else %}
+    <meta property="context" content="index, follow" />
+  {% endif %}
+{% endblock %}
